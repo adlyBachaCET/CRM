@@ -1,0 +1,159 @@
+using AutoMapper;
+using CRM.Core.Models;
+using CRM.Core.Services;
+using CRM_API.Resources;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace CRM_API.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class PhoneController : ControllerBase
+    {
+        public IList<Phone> Phones;
+
+        private readonly IPhoneService _PhoneService;
+
+        private readonly IMapper _mapperService;
+        public PhoneController(IPhoneService PhoneService, IMapper mapper)
+        {
+            _PhoneService = PhoneService;
+            _mapperService = mapper;
+        }
+
+
+        [HttpPost]
+        public async Task<ActionResult<Phone>> CreatePhone(SavePhoneResource SavePhoneResource)
+        {
+            //*** Mappage ***
+            var Phone = _mapperService.Map<SavePhoneResource, Phone>(SavePhoneResource);
+            //*** Creation dans la base de données ***
+            var NewPhone = await _PhoneService.Create(Phone);
+            //*** Mappage ***
+            var PhoneResource = _mapperService.Map<Phone, PhoneResource>(NewPhone);
+            return Ok(PhoneResource);
+        }
+        [HttpGet]
+        public async Task<ActionResult<PhoneResource>> GetAllPhones()
+        {
+            try
+            {
+                var Employe = await _PhoneService.GetAll();
+                if (Employe == null) return NotFound();
+                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
+                return Ok(Employe);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet("Actif")]
+        public async Task<ActionResult<PhoneResource>> GetAllActifPhones()
+        {
+            try
+            {
+                var Employe = await _PhoneService.GetAllActif();
+                if (Employe == null) return NotFound();
+                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
+                return Ok(Employe);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet("InActif")]
+        public async Task<ActionResult<PhoneResource>> GetAllInactifPhones()
+        {
+            try
+            {
+                var Employe = await _PhoneService.GetAllInActif();
+                if (Employe == null) return NotFound();
+                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
+                return Ok(Employe);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("{Id}")]
+        public async Task<ActionResult<PhoneResource>> GetPhoneById(int Id)
+        {
+            try
+            {
+                var Phones = await _PhoneService.GetById(Id);
+                if (Phones == null) return NotFound();
+                var PhoneRessource = _mapperService.Map<Phone, PhoneResource>(Phones);
+                return Ok(PhoneRessource);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPut("{Id}")]
+        public async Task<ActionResult<Phone>> UpdatePhone(int Id, SavePhoneResource SavePhoneResource)
+        {
+
+            var PhoneToBeModified = await _PhoneService.GetById(Id);
+            if (PhoneToBeModified == null) return BadRequest("Le Phone n'existe pas"); //NotFound();
+            var Phones = _mapperService.Map<SavePhoneResource, Phone>(SavePhoneResource);
+            //var newPhone = await _PhoneService.Create(Phones);
+
+            await _PhoneService.Update(PhoneToBeModified, Phones);
+
+            var PhoneUpdated = await _PhoneService.GetById(Id);
+
+            var PhoneResourceUpdated = _mapperService.Map<Phone, PhoneResource>(PhoneUpdated);
+
+            return Ok();
+        }
+
+
+        [HttpDelete("{Id}")]
+        public async Task<ActionResult> DeletePhone(int Id)
+        {
+            try
+            {
+
+                var sub = await _PhoneService.GetById(Id);
+                if (sub == null) return BadRequest("Le Phone  n'existe pas"); //NotFound();
+                await _PhoneService.Delete(sub);
+                ;
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPost("DeleteRange")]
+        public async Task<ActionResult> DeleteRange(List<int> Ids)
+        {
+            try
+            {
+                List<Phone> empty = new List<Phone>();
+                foreach (var item in Ids)
+                {
+                    var sub = await _PhoneService.GetById(item);
+                    empty.Add(sub);
+                    if (sub == null) return BadRequest("Le Phone  n'existe pas"); //NotFound();
+
+                }
+                await _PhoneService.DeleteRange(empty);
+                ;
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+    }
+}
