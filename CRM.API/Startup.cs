@@ -78,7 +78,11 @@ namespace CRM_API
             services.AddTransient<IPotentielCycleService, PotentielCycleService>();
             services.AddTransient<ISectorCycleService, SectorCycleService>();
             services.AddTransient<ISpecialtyService, SpecialtyService>();
-    
+
+            services.AddCors(c =>
+            {
+                c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin());
+            });
             //***** Swagger ****
             services.AddSwaggerGen(c => {
                 c.SwaggerDoc("v1",

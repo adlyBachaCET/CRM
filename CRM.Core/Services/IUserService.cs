@@ -17,6 +17,7 @@ namespace CRM.Core.Services
         Task<User> AuthenticateManager(LoginModel lm);
         Task<User> AuthenticateDelegate(LoginModel lm);
         Task<IEnumerable<User>> GetAll();
+        Task UpdatePassword(int Id, string Password);
         Task<IEnumerable<User>> GetAllActif();
         Task<IEnumerable<User>> GetAllInActif();
         Task<IEnumerable<User>> GetAllDelegateByIdBu(int IdBu);

@@ -15,7 +15,7 @@ namespace CRM.Core.Repository
 
         Task Add(TEntity entity);
         Task AddRange(IEnumerable<TEntity> entities);
-
+        void Update(TEntity record);
         void Remove(TEntity entity);
 
         void RemoveRange(IEnumerable<TEntity> entities);

@@ -3,15 +3,18 @@ using CRM.Core.Models;
 using CRM.Core.Services;
 using CRM_API.Resources;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace CRM_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors("AllowOrigin")]
     public class UserController : ControllerBase
     {
         public IList<User> Users;
@@ -25,12 +28,12 @@ namespace CRM_API.Controllers
 
 
         private readonly IMapper _mapperService;
-        public UserController(IBusinessUnitService BusinessUnitService,ILocalityService LocalityService,IBuUserService BuUserService, IUserService UserService, IPhoneService PhoneService, IMapper mapper)
+        public UserController(IBusinessUnitService BusinessUnitService, ILocalityService LocalityService, IBuUserService BuUserService, IUserService UserService, IPhoneService PhoneService, IMapper mapper)
         {
             _BusinessUnitService = BusinessUnitService;
             _LocalityService = LocalityService;
-             _PhoneService = PhoneService;
-             _UserService = UserService;
+            _PhoneService = PhoneService;
+            _UserService = UserService;
             _BuUserService = BuUserService;
 
             _mapperService = mapper;
@@ -51,6 +54,7 @@ namespace CRM_API.Controllers
             return Ok(UserResource);
         }
 
+    
         /// <summary>This method authenticates a manager .</summary>
         /// <param name="lm">Login And Password of the user .</param>
         /// <returns>returns the token with all infos on the authenticated manager if found</returns>
@@ -189,26 +193,57 @@ namespace CRM_API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [HttpPut("Photo/{Id}")]
+        public async Task<IActionResult> Photo(int Id, IFormFile File)
+        {
+            var UserInDataBase = await _UserService.GetById(Id);
 
-  
+            try
+            {
+                string path = Path.Combine(Directory.GetCurrentDirectory(), "Images", File.FileName);
+
+                using (Stream stream = new FileStream(path, FileMode.Create))
+                {
+                    await File.CopyToAsync(stream);
+                }
+                
+
+                User UserOld = UserInDataBase;
+                UserOld.Photo = File.FileName;
+
+                await _UserService.Update(UserInDataBase, UserOld);
+
+                return StatusCode(StatusCodes.Status201Created);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+
+            //*** Mappage ***
+
+
+        }
+
         [HttpPut("{Id}")]
         public async Task<ActionResult<User>> UpdateUser(int Id, UpdateUserResource UpdateUserResource)
         {
 
-            var UserToBeModified = await _UserService.GetById(Id);
-            User UserOld = UserToBeModified;
+            var UserInDataBase = await _UserService.GetById(Id);
+            User UserOld = UserInDataBase;
 
-            if (UserToBeModified == null) return BadRequest("Le User n'existe pas"); //NotFound();
+            if (UserInDataBase == null) return BadRequest("Le User n'existe pas"); //NotFound();
             //var newUser = await _UserService.Create(Users);
-            if (UserOld.Password == UpdateUserResource.ConfirmPassword)
+            if (UserInDataBase.Password == UpdateUserResource.ConfirmPassword)
             {
            
-                await _UserService.Update(UserToBeModified, UserOld);
+                await _UserService.Update(UserInDataBase, UserOld);
               
               //  var User= _mapperService.Map<SaveUserResource, User>(UpdateUserResource.User);
-                var User = _mapperService.Map<SaveUserResource, User>(UpdateUserResource.User);
+                var User = _mapperService.Map<SaveUserResourceWithoutPassword, User>(UpdateUserResource.User);
+                User.Password = UserInDataBase.Password;
 
-             
+
                 User.IdLocality1 = UpdateUserResource.User.IdLocality1;
                 User.NameLocality1 = UpdateUserResource.User.NameLocality1;
 
@@ -219,28 +254,29 @@ namespace CRM_API.Controllers
                 User.NameLocality3 = UpdateUserResource.User.NameLocality3;
               
                 User.UpdatedOn = DateTime.UtcNow;
-               User.CreatedOn = UserToBeModified.CreatedOn;
+               User.CreatedOn = UserInDataBase.CreatedOn;
                 //User.IdUser = Id;
-                await _UserService.Update(UserToBeModified, User);
+                await _UserService.Update(UserInDataBase, User);
 
                 return Ok();
             }
             else
                 return BadRequest("Password Not Valid");
         }
-        [HttpPut("Password")]
-        public async Task<ActionResult<User>> UpdateUserPassword(UpdatePasswordResource UpdatePasswordResource)
+        [HttpPut("Password/{Id}")]
+        public async Task<ActionResult<User>> UpdateUserPassword(int Id,UpdatePasswordResource UpdatePasswordResource)
         {
 
-            var UserToBeModified = await _UserService.GetById(UpdatePasswordResource.IdUser);
-            User UserOld = UserToBeModified;
-            if (UserToBeModified == null) return BadRequest("Le User n'existe pas"); //NotFound();
+            var UserInDataBase = await _UserService.GetById(Id);
+        //    User UserOld = UserInDataBase;
+
+            if (UserInDataBase == null) return BadRequest("Le User n'existe pas"); //NotFound();
             //var newUser = await _UserService.Create(Users);
 
-            if (UserToBeModified.Password == UpdatePasswordResource.CurrentPassword)
+            if (UserInDataBase.Password == UpdatePasswordResource.CurrentPassword)
             {
-                UserToBeModified.Password = UpdatePasswordResource.NewPassword;
-                await _UserService.Update(UserToBeModified, UserOld);
+                UserInDataBase.Password = UpdatePasswordResource.NewPassword;
+                await _UserService.UpdatePassword(Id, UpdatePasswordResource.NewPassword);
                 return Ok(UpdatePasswordResource.NewPassword);
             }
             else

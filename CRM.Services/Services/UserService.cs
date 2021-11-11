@@ -105,7 +105,24 @@ namespace CRM.Services.Services
             User.IdUser = UserToBeUpdated.IdUser;
             User.Status = Status.Approuved;
             User.Active = 0;
+            User.CreatedOn = UserToBeUpdated.CreatedOn;
+            User.UpdatedOn = DateTime.UtcNow;
+            await _unitOfWork.Users.Add(User);
+            await _unitOfWork.CommitAsync();
+        }
 
+        public async Task UpdatePassword(int Id,string Password)
+        {
+            var UserInDB= await _unitOfWork.Users.SingleOrDefault(i => i.IdUser == Id && i.Active == 0);
+            UserInDB.Active = 1;
+           
+            await _unitOfWork.CommitAsync();
+            User User = new User();
+            User.Version = UserInDB.Version + 1;
+            User.IdUser = UserInDB.IdUser;
+            User.Status = Status.Approuved;
+            User.Active = 0;
+            User.Password = Password ;
             await _unitOfWork.Users.Add(User);
             await _unitOfWork.CommitAsync();
         }

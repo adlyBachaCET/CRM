@@ -7,7 +7,6 @@ namespace CRM.Core.Models
     {
 
 
-        public int IdUser { get; set; }
  
         public string CurrentPassword { get; set; }
 

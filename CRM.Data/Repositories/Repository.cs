@@ -20,6 +20,12 @@ namespace CRM.Data.Repositories
         {
             await _context.Set<TEntity>().AddAsync(entity);
         }
+        public void Update(TEntity record)
+        {
+        
+            _context.Set<TEntity>().Attach(record);
+            _context.Entry(record).State = EntityState.Modified;
+        }
 
         //public async Task IRepository<TEntity>.AddRangeAsync(IEnumerable<TEntity> entities)
         public async Task AddRange(IEnumerable<TEntity> entities)
