@@ -16,6 +16,9 @@ namespace CRM.Core.Services
         Task<IEnumerable<Pharmacy>> GetAll();
         Task<IEnumerable<Pharmacy>> GetAllActif();
         Task<IEnumerable<Pharmacy>> GetAllInActif();
+        
+        Task Approuve(Pharmacy PharmacyToBeUpdated, Pharmacy Pharmacy);
+        Task Reject(Pharmacy PharmacyToBeUpdated, Pharmacy Pharmacy);
 
     }
 }

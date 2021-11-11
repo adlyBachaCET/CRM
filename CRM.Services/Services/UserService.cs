@@ -146,7 +146,7 @@ namespace CRM.Services.Services
             List<User> listUsers = new List<User>();
             foreach(var item in list)
             {
-                var User = await _unitOfWork.Users.SingleOrDefault(o => o.IdUser== item.IdUser);
+                var User = await _unitOfWork.Users.SingleOrDefault(o => o.IdUser== item.IdUser && o.Active == 0);
 
                 listUsers.Add(User);
             }
@@ -158,10 +158,10 @@ namespace CRM.Services.Services
             List<User> listUsers = new List<User>();
 
             foreach(var i in Bu){
-                var list = await _unitOfWork.BuUsers.Find(o => o.IdBu == i);
+                var list = await _unitOfWork.BuUsers.Find(o => o.IdBu == i && o.Active == 0);
                 foreach (var item in list)
                 {
-                    var User = await _unitOfWork.Users.SingleOrDefault(o => o.UserType == UserType.Delegue);
+                    var User = await _unitOfWork.Users.SingleOrDefault(o => o.UserType == UserType.Delegue && o.Active==0);
 
                     listUsers.Add(User);
                 }

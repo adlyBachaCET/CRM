@@ -167,9 +167,9 @@ namespace CRM.Data
                   .HasForeignKey<VisitRequest>(d => new { d.IdUser, d.StatusUser, d.VersionUser })
                   .OnDelete(DeleteBehavior.ClientSetNull)
                   .HasConstraintName("FK_BuDoctor_Doctor");
+     
 
-
-            });
+        });
             modelBuilder.Entity<Message>(entity => 
             {
                 entity.HasKey(e => new { e.IdMessage, e.Status, e.Version });

@@ -126,8 +126,40 @@ namespace CRM_API.Controllers
 
             return Ok();
         }
+        [HttpPut("Approuve/{Id}")]
+        public async Task<ActionResult<Pharmacy>> ApprouvePharmacy(int Id)
+        {
 
+            var PharmacyToBeModified = await _PharmacyService.GetById(Id);
+            if (PharmacyToBeModified == null) return BadRequest("Le Pharmacy n'existe pas"); //NotFound();
+            //var newPharmacy = await _PharmacyService.Create(Pharmacys);
+            // Pharmacys.CreatedOn = SavePharmacyResource.;
+            PharmacyToBeModified.UpdatedOn = DateTime.UtcNow;
+            await _PharmacyService.Approuve(PharmacyToBeModified, PharmacyToBeModified);
 
+            var PharmacyUpdated = await _PharmacyService.GetById(Id);
+
+            var PharmacyResourceUpdated = _mapperService.Map<Pharmacy, PharmacyResource>(PharmacyUpdated);
+
+            return Ok(PharmacyResourceUpdated);
+        }
+        [HttpPut("Reject/{Id}")]
+        public async Task<ActionResult<Pharmacy>> RejectPharmacy(int Id)
+        {
+
+            var PharmacyToBeModified = await _PharmacyService.GetById(Id);
+            if (PharmacyToBeModified == null) return BadRequest("Le Pharmacy n'existe pas"); //NotFound();
+            //var newPharmacy = await _PharmacyService.Create(Pharmacys);
+            // Pharmacys.CreatedOn = SavePharmacyResource.;
+            PharmacyToBeModified.UpdatedOn = DateTime.UtcNow;
+            await _PharmacyService.Reject(PharmacyToBeModified, PharmacyToBeModified);
+
+            var PharmacyUpdated = await _PharmacyService.GetById(Id);
+
+            var PharmacyResourceUpdated = _mapperService.Map<Pharmacy, PharmacyResource>(PharmacyUpdated);
+
+            return Ok(PharmacyResourceUpdated);
+        }
         [HttpDelete("{Id}")]
         public async Task<ActionResult> DeletePharmacy(int Id)
         {

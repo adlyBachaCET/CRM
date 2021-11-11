@@ -65,7 +65,33 @@ namespace CRM.Services.Services
             await _unitOfWork.Pharmacys.Add(Pharmacy);
             await _unitOfWork.CommitAsync();
         }
+        public async Task Approuve(Pharmacy PharmacyToBeUpdated, Pharmacy Pharmacy)
+        {
+            PharmacyToBeUpdated.Active = 1;
+            await _unitOfWork.CommitAsync();
 
+            Pharmacy.Version = PharmacyToBeUpdated.Version + 1;
+            Pharmacy.IdPharmacy = PharmacyToBeUpdated.IdPharmacy;
+            Pharmacy.Status = Status.Rejected;
+            Pharmacy.Active = 0;
+
+            await _unitOfWork.Pharmacys.Add(Pharmacy);
+            await _unitOfWork.CommitAsync();
+
+        }
+        public async Task Reject(Pharmacy PharmacyToBeUpdated, Pharmacy Pharmacy)
+        {
+            PharmacyToBeUpdated.Active = 1;
+            await _unitOfWork.CommitAsync();
+
+            Pharmacy.Version = PharmacyToBeUpdated.Version + 1;
+            Pharmacy.IdPharmacy = PharmacyToBeUpdated.IdPharmacy;
+            Pharmacy.Status = Status.Rejected;
+            Pharmacy.Active = 0;
+
+            await _unitOfWork.Pharmacys.Add(Pharmacy);
+            await _unitOfWork.CommitAsync();
+        }
         public async Task Delete(Pharmacy Pharmacy)
         {
             //Pharmacy musi =  _unitOfWork.Pharmacys.SingleOrDefaultAsync(x=>x.Id == PharmacyToBeUpdated.Id);

@@ -59,11 +59,9 @@ namespace CRM_API.Controllers
         {
             IActionResult response = Unauthorized();
             var user = await _UserService.AuthenticateManager(lm);
-            //all users by BusinessUnit My team
         
             if (user != null)
             {
-     
                 var tokenString = _UserService.GenerateJSONWebToken(user);
                 response = Ok(new { token = tokenString });
             }
@@ -80,11 +78,7 @@ namespace CRM_API.Controllers
             IActionResult response = Unauthorized();
 
             var user = await _UserService.AuthenticateDelegate(lm);
-            UserProfile Profile = new UserProfile();
-            var UserResource = _mapperService.Map<User, SaveUserResource>(user);
-
-            Profile.User = UserResource;
-
+    
             if (user != null)
             {
         
@@ -105,7 +99,9 @@ namespace CRM_API.Controllers
                 //get the details of the user
                 var User = await _UserService.GetById(Id);
                 var UserResource = _mapperService.Map<User, SaveUserResource>(User);
-                Profile.User = UserResource;
+            var UserResourceWhitoutPassword = _mapperService.Map<SaveUserResource, SaveUserResourceWithoutPassword>(UserResource);
+
+            Profile.User = UserResourceWhitoutPassword;
 
           
 
@@ -136,10 +132,10 @@ namespace CRM_API.Controllers
         {
             try
             {
-                var Employe = await _UserService.GetAllDelegateByIdBu(Id);
-                if (Employe == null) return NotFound();
-                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
-                return Ok(Employe);
+                var User = await _UserService.GetAllDelegateByIdBu(Id);
+                if (User == null) return NotFound();
+                var UserResource = _mapperService.Map<IEnumerable<User>, UserResource>(User);
+                return Ok(UserResource);
             }
             catch (Exception ex)
             {
@@ -153,10 +149,10 @@ namespace CRM_API.Controllers
         {
             try
             {
-                var Employe = await _UserService.GetAllDelegateByIdBu(Id);
-                if (Employe == null) return NotFound();
-                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
-                return Ok(Employe);
+                var User = await _UserService.GetAllDelegateByIdBu(Id);
+                if (User == null) return NotFound();
+                var UserResource = _mapperService.Map<IEnumerable<User>, UserResource>(User);
+                return Ok(UserResource);
             }
             catch (Exception ex)
             {
@@ -168,10 +164,10 @@ namespace CRM_API.Controllers
         {
             try
             {
-                var Employe = await _UserService.GetAllActif();
-                if (Employe == null) return NotFound();
-                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
-                return Ok(Employe);
+                var User = await _UserService.GetAllActif();
+                if (User == null) return NotFound();
+                var UserResource = _mapperService.Map<IEnumerable<User>, UserResource>(User);
+                return Ok(UserResource);
             }
             catch (Exception ex)
             {
@@ -183,10 +179,10 @@ namespace CRM_API.Controllers
         {
             try
             {
-                var Employe = await _UserService.GetAllInActif();
-                if (Employe == null) return NotFound();
-                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
-                return Ok(Employe);
+                var User = await _UserService.GetAllInActif();
+                if (User == null) return NotFound();
+                var UserResource = _mapperService.Map<IEnumerable<User>, UserResource>(User);
+                return Ok(UserResource);
             }
             catch (Exception ex)
             {
@@ -245,7 +241,7 @@ namespace CRM_API.Controllers
             {
                 UserToBeModified.Password = UpdatePasswordResource.NewPassword;
                 await _UserService.Update(UserToBeModified, UserOld);
-                return Ok();
+                return Ok(UpdatePasswordResource.NewPassword);
             }
             else
             {
