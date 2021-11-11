@@ -1402,7 +1402,7 @@ namespace CRM.Data
                     .IsUnicode(false);
 
                 entity.Property(e => e.Photo)
-                    .HasMaxLength(50)
+                    .HasMaxLength(250)
                     .IsUnicode(false);
 
                 entity.Property(e => e.ReleaseDate).HasColumnType("date");

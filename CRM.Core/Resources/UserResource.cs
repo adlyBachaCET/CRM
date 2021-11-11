@@ -17,9 +17,14 @@ namespace CRM.Core.Models
         public DateTime? BirthDate { get; set; }
         public string Login { get; set; }
         public string Password { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+
         public UserType UserType { get; set; }
         public DateTime? HireDate { get; set; }
         public DateTime? ReleaseDate { get; set; }
+        public string Email { get; set; }
+
         public int? RegistrantionNumber { get; set; }
         public string Gender { get; set; }
         public string Photo { get; set; }

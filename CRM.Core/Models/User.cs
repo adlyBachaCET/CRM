@@ -60,7 +60,9 @@ namespace CRM.Core.Models
         public int? IdLocality2 { get; set; }
 
         public string NameLocality2 { get; set; }
-
+        public string Email { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
         public int? IdLocality3 { get; set; }
 
         public string NameLocality3 { get; set; }

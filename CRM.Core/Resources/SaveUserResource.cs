@@ -23,7 +23,9 @@ namespace CRM.Core.Models
         public string Gender { get; set; }
         public string Photo { get; set; }
         public int? IdUserDirectManager { get; set; }
-
+        public string Email { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
         public int? IdUserDotlineManager1 { get; set; }
 
         public int? IdUserDotlineManager2 { get; set; }

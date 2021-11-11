@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using CRM_API.Resources;
+using System.Security.Claims;
 
 namespace CRM.Services.Services
 {
@@ -48,24 +49,34 @@ namespace CRM.Services.Services
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-
+            var claims = new[] {
+                new Claim("Login", userInfo.Login),
+                    new Claim(JwtRegisteredClaimNames.Email, userInfo.Email),
+                      new Claim("Photo", userInfo.Photo.ToString()),
+                    new Claim("Id", userInfo.IdUser.ToString())
+                    ,
+                    new Claim("FirstName", userInfo.FirstName)
+                        ,
+                    new Claim("LastName", userInfo.LastName.ToString())
+    };
             var token = new JwtSecurityToken(_config["Jwt:Issuer"],
               _config["Jwt:Issuer"],
-              null,
+              claims,
               expires: DateTime.Now.AddMinutes(120),
               signingCredentials: credentials);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
         public async Task<User> AuthenticateManager(LoginModel lm)
         {
             return
-                           await _unitOfWork.Users.SingleOrDefault(i=>i.Login==lm.Login&&i.Password==lm.Password && i.UserType==UserType.Manager);
+                           await _unitOfWork.Users.SingleOrDefault(i=>i.Login==lm.Login&&i.Password==lm.Password && i.UserType==UserType.Manager && i.Active==0);
         }
         public async Task<User> AuthenticateDelegate(LoginModel lm)
         {
             return
-                           await _unitOfWork.Users.SingleOrDefault(i => i.Login == lm.Login && i.Password == lm.Password && i.UserType == UserType.Delegue);
+                           await _unitOfWork.Users.SingleOrDefault(i => i.Login == lm.Login && i.Password == lm.Password && i.UserType == UserType.Delegue && i.Active == 0);
         }
         /* public async Task Delete(User User)
          {
