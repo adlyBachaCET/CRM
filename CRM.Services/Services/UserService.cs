@@ -115,9 +115,11 @@ namespace CRM.Services.Services
         {
             var UserInDB= await _unitOfWork.Users.SingleOrDefault(i => i.IdUser == Id && i.Active == 0);
             UserInDB.Active = 1;
-           
+            await _unitOfWork.CommitAsync();
+
             await _unitOfWork.CommitAsync();
             User User = new User();
+            User= UserInDB;
             User.Version = UserInDB.Version + 1;
             User.IdUser = UserInDB.IdUser;
             User.Status = Status.Approuved;
@@ -184,6 +186,26 @@ namespace CRM.Services.Services
                 }
             }
             return listUsers;
+        }
+
+        public async Task UpdatePhoto(int Id, string FileName)
+        {
+            var UserDB = await _unitOfWork.Users.SingleOrDefault(o => o.IdUser== Id && o.Active == 0);
+
+            UserDB.Active = 1;
+            await _unitOfWork.CommitAsync();
+
+            User User = new User();
+            User = UserDB;
+            User.Version = UserDB.Version + 1;
+            User.IdUser = UserDB.IdUser;
+            User.Status = Status.Approuved;
+            User.Active = 0;
+            User.CreatedOn = UserDB.CreatedOn;
+            User.UpdatedOn = DateTime.UtcNow;
+            User.Photo = FileName;
+            await _unitOfWork.Users.Add(User);
+            await _unitOfWork.CommitAsync();
         }
         //public Task<User> CreateUser(User newUser)
         //{

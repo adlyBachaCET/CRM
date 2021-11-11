@@ -18,39 +18,68 @@ namespace CRM.Services.Services
         public async Task<Location> Create(Location newEstablishment)
         {
 
-            await _unitOfWork.Establishments.Add(newEstablishment);
+            await _unitOfWork.Locations.Add(newEstablishment);
             await _unitOfWork.CommitAsync();
             return newEstablishment;
         }
         public async Task<List<Location>> CreateRange(List<Location> newEstablishment)
         {
 
-            await _unitOfWork.Establishments.AddRange(newEstablishment);
+            await _unitOfWork.Locations.AddRange(newEstablishment);
             await _unitOfWork.CommitAsync();
             return newEstablishment;
         }
         public async Task<IEnumerable<Location>> GetAll()
         {
             return
-                           await _unitOfWork.Establishments.GetAll();
+                           await _unitOfWork.Locations.GetAll();
         }
 
-       /* public async Task Delete(Establishment Establishment)
-        {
-            _unitOfWork.Establishments.Remove(Establishment);
-            await _unitOfWork.CommitAsync();
-        }*/
+        /* public async Task Delete(Establishment Establishment)
+         {
+             _unitOfWork.Establishments.Remove(Establishment);
+             await _unitOfWork.CommitAsync();
+         }*/
 
         //public async Task<IEnumerable<Establishment>> GetAllWithArtiste()
         //{
         //    return await _unitOfWork.Establishments
         //          .GetAllWithArtisteAsync();
         //}
+        public async Task Approuve(Location LocationToBeUpdated, Location Location)
+        {
+            LocationToBeUpdated.Active = 1;
+            await _unitOfWork.CommitAsync();
+            Location = LocationToBeUpdated;
+            Location.Version = LocationToBeUpdated.Version + 1;
+            Location.IdLocation = LocationToBeUpdated.IdLocation;
+            Location.Status = Status.Rejected;
+            Location.UpdatedOn = System.DateTime.UtcNow;
+            Location.CreatedOn = LocationToBeUpdated.CreatedOn;
 
+            Location.Active = 0;
+
+            await _unitOfWork.Locations.Add(Location);
+            await _unitOfWork.CommitAsync();
+
+        }
+        public async Task Reject(Location LocationToBeUpdated, Location Location)
+        {
+            LocationToBeUpdated.Active = 1;
+            await _unitOfWork.CommitAsync();
+
+            Location.Version = LocationToBeUpdated.Version + 1;
+            Location.IdLocation = LocationToBeUpdated.IdLocation;
+            Location.Status = Status.Rejected;
+            Location.Active = 1;
+
+            await _unitOfWork.Locations.Add(Location);
+            await _unitOfWork.CommitAsync();
+        }
         public async Task<Location> GetById(int id)
         {
             return
-               await _unitOfWork.Establishments.SingleOrDefault(i => i.IdLocation== id &&i.Active == 0);
+               await _unitOfWork.Locations.SingleOrDefault(i => i.IdLocation== id &&i.Active == 0);
         }
    
         public async Task Update(Location EstablishmentToBeUpdated, Location Establishment)
@@ -63,7 +92,7 @@ namespace CRM.Services.Services
            Establishment.Status = Status.Pending;
            Establishment.Active =0;
 
-            await _unitOfWork.Establishments.Add(Establishment);
+            await _unitOfWork.Locations.Add(Establishment);
             await _unitOfWork.CommitAsync();
         }
 
@@ -88,13 +117,13 @@ namespace CRM.Services.Services
         public async Task<IEnumerable<Location>> GetAllActif()
         {
             return
-                             await _unitOfWork.Establishments.GetAllActif();
+                             await _unitOfWork.Locations.GetAllActif();
         }
 
         public async Task<IEnumerable<Location>> GetAllInActif()
         {
             return
-                             await _unitOfWork.Establishments.GetAllInActif();
+                             await _unitOfWork.Locations.GetAllInActif();
         }
         //public Task<Establishment> CreateEstablishment(Establishment newEstablishment)
         //{

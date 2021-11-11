@@ -22,10 +22,10 @@ namespace CRM.Core
         IAdresseRepository Adresses { get; }
         IAdresseLocalityRepository AdresseLocalitys { get; }
 
-        ILocationRepository Establishments { get; }
+        ILocationRepository Locations { get; }
         IUserRepository Users { get; }
 
-        ILocationTypeRepository EstablishmentTypes { get; }
+        ILocationTypeRepository LocationTypes { get; }
         IInfoRepository Infos { get; }
         ILocalityRepository Localitys { get; }
         IPharmacyRepository Pharmacys { get; }

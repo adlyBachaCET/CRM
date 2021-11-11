@@ -18,6 +18,8 @@ namespace CRM.Core.Services
         Task<IEnumerable<Locality>> GetAll();
         Task<IEnumerable<Locality>> GetAllActif();
         Task<IEnumerable<Locality>> GetAllInActif();
+        Task Approuve(Location LocationToBeUpdated, Location Location);
+        Task Reject(Location LocationToBeUpdated, Location Location);
 
     }
 }

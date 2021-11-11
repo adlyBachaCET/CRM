@@ -28,7 +28,39 @@ namespace CRM_API.Controllers
             _mapperService = mapper;
         }
 
+        [HttpPut("Approuve/{Id}")]
+        public async Task<ActionResult<Location>> ApprouveLocation(int Id)
+        {
 
+            var LocationToBeModified = await _LocationService.GetById(Id);
+            if (LocationToBeModified == null) return BadRequest("Le Location n'existe pas"); //NotFound();
+            //var newLocation = await _LocationService.Create(Locations);
+            // Locations.CreatedOn = SaveLocationResource.;
+            await _LocationService.Approuve(LocationToBeModified, LocationToBeModified);
+
+            var LocationUpdated = await _LocationService.GetById(Id);
+
+            var LocationResourceUpdated = _mapperService.Map<Location, LocationResource>(LocationUpdated);
+
+            return Ok(LocationResourceUpdated);
+        }
+        [HttpPut("Reject/{Id}")]
+        public async Task<ActionResult<Location>> RejectLocation(int Id)
+        {
+
+            var LocationToBeModified = await _LocationService.GetById(Id);
+            if (LocationToBeModified == null) return BadRequest("Le Location n'existe pas"); //NotFound();
+            //var newLocation = await _LocationService.Create(Locations);
+            // Locations.CreatedOn = SaveLocationResource.;
+            LocationToBeModified.UpdatedOn = DateTime.UtcNow;
+            await _LocationService.Reject(LocationToBeModified, LocationToBeModified);
+
+            var LocationUpdated = await _LocationService.GetById(Id);
+
+            var LocationResourceUpdated = _mapperService.Map<Location, LocationResource>(LocationUpdated);
+
+            return Ok(LocationResourceUpdated);
+        }
         [HttpPost]
         public async Task<ActionResult<Location>> CreateLocation(SaveLocationResource SaveLocationResource)
         {

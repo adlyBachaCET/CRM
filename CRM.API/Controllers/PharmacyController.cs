@@ -134,7 +134,6 @@ namespace CRM_API.Controllers
             if (PharmacyToBeModified == null) return BadRequest("Le Pharmacy n'existe pas"); //NotFound();
             //var newPharmacy = await _PharmacyService.Create(Pharmacys);
             // Pharmacys.CreatedOn = SavePharmacyResource.;
-            PharmacyToBeModified.UpdatedOn = DateTime.UtcNow;
             await _PharmacyService.Approuve(PharmacyToBeModified, PharmacyToBeModified);
 
             var PharmacyUpdated = await _PharmacyService.GetById(Id);

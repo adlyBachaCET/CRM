@@ -74,12 +74,12 @@ namespace CRM.Data
 
         public IAdresseRepository Adresses => _AdresseRepository = _AdresseRepository ?? new AdresseRepository(_context);
 
-        public ILocationRepository Establishments =>_EstablishmentRepository = _EstablishmentRepository ?? new LocationRepository(_context);
+        public ILocationRepository Locations =>_EstablishmentRepository = _EstablishmentRepository ?? new LocationRepository(_context);
 
         public IUserRepository Users => _UserRepository = _UserRepository ?? new UserRepository(_context);
 
 
-        public ILocationTypeRepository EstablishmentTypes =>_EstablishmentTypeRepository = _EstablishmentTypeRepository ?? new LocationTypeRepository(_context);
+        public ILocationTypeRepository LocationTypes =>_EstablishmentTypeRepository = _EstablishmentTypeRepository ?? new LocationTypeRepository(_context);
 
         public IInfoRepository Infos =>_InfoRepository = _InfoRepository ?? new InfoRepository(_context);
 

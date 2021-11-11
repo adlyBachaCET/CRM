@@ -69,10 +69,13 @@ namespace CRM.Services.Services
         {
             PharmacyToBeUpdated.Active = 1;
             await _unitOfWork.CommitAsync();
-
+            Pharmacy = PharmacyToBeUpdated;
             Pharmacy.Version = PharmacyToBeUpdated.Version + 1;
             Pharmacy.IdPharmacy = PharmacyToBeUpdated.IdPharmacy;
             Pharmacy.Status = Status.Rejected;
+            Pharmacy.UpdatedOn = System.DateTime.UtcNow;
+            Pharmacy.CreatedOn = PharmacyToBeUpdated.CreatedOn;
+
             Pharmacy.Active = 0;
 
             await _unitOfWork.Pharmacys.Add(Pharmacy);

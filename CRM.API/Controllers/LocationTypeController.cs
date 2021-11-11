@@ -26,7 +26,39 @@ namespace CRM_API.Controllers
             _mapperService = mapper;
         }
 
+        [HttpPut("Approuve/{Id}")]
+        public async Task<ActionResult<LocationType>> ApprouveLocationType(int Id)
+        {
 
+            var LocationTypeToBeModified = await _LocationTypeService.GetById(Id);
+            if (LocationTypeToBeModified == null) return BadRequest("Le LocationType n'existe pas"); //NotFound();
+            //var newLocationType = await _LocationTypeService.Create(LocationTypes);
+            // LocationTypes.CreatedOn = SaveLocationTypeResource.;
+            await _LocationTypeService.Approuve(LocationTypeToBeModified, LocationTypeToBeModified);
+
+            var LocationTypeUpdated = await _LocationTypeService.GetById(Id);
+
+            var LocationTypeResourceUpdated = _mapperService.Map<LocationType, LocationTypeResource>(LocationTypeUpdated);
+
+            return Ok(LocationTypeResourceUpdated);
+        }
+        [HttpPut("Reject/{Id}")]
+        public async Task<ActionResult<LocationType>> RejectLocationType(int Id)
+        {
+
+            var LocationTypeToBeModified = await _LocationTypeService.GetById(Id);
+            if (LocationTypeToBeModified == null) return BadRequest("Le LocationType n'existe pas"); //NotFound();
+            //var newLocationType = await _LocationTypeService.Create(LocationTypes);
+            // LocationTypes.CreatedOn = SaveLocationTypeResource.;
+            LocationTypeToBeModified.UpdatedOn = DateTime.UtcNow;
+            await _LocationTypeService.Reject(LocationTypeToBeModified, LocationTypeToBeModified);
+
+            var LocationTypeUpdated = await _LocationTypeService.GetById(Id);
+
+            var LocationTypeResourceUpdated = _mapperService.Map<LocationType, LocationTypeResource>(LocationTypeUpdated);
+
+            return Ok(LocationTypeResourceUpdated);
+        }
         [HttpPost]
         public async Task<ActionResult<LocationType>> CreateLocationType(SaveLocationTypeResource SaveLocationTypeResource)
         {

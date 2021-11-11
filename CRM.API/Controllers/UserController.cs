@@ -196,8 +196,6 @@ namespace CRM_API.Controllers
         [HttpPut("Photo/{Id}")]
         public async Task<IActionResult> Photo(int Id, IFormFile File)
         {
-            var UserInDataBase = await _UserService.GetById(Id);
-
             try
             {
                 string path = Path.Combine(Directory.GetCurrentDirectory(), "Images", File.FileName);
@@ -208,10 +206,9 @@ namespace CRM_API.Controllers
                 }
                 
 
-                User UserOld = UserInDataBase;
-                UserOld.Photo = File.FileName;
 
-                await _UserService.Update(UserInDataBase, UserOld);
+
+                await _UserService.UpdatePhoto(Id, File.FileName);
 
                 return StatusCode(StatusCodes.Status201Created);
             }
@@ -237,7 +234,7 @@ namespace CRM_API.Controllers
             if (UserInDataBase.Password == UpdateUserResource.ConfirmPassword)
             {
            
-                await _UserService.Update(UserInDataBase, UserOld);
+             //   await _UserService.Update(UserInDataBase, UserOld);
               
               //  var User= _mapperService.Map<SaveUserResource, User>(UpdateUserResource.User);
                 var User = _mapperService.Map<SaveUserResourceWithoutPassword, User>(UpdateUserResource.User);
@@ -268,14 +265,13 @@ namespace CRM_API.Controllers
         {
 
             var UserInDataBase = await _UserService.GetById(Id);
-        //    User UserOld = UserInDataBase;
 
-            if (UserInDataBase == null) return BadRequest("Le User n'existe pas"); //NotFound();
-            //var newUser = await _UserService.Create(Users);
+
 
             if (UserInDataBase.Password == UpdatePasswordResource.CurrentPassword)
             {
-                UserInDataBase.Password = UpdatePasswordResource.NewPassword;
+
+              
                 await _UserService.UpdatePassword(Id, UpdatePasswordResource.NewPassword);
                 return Ok(UpdatePasswordResource.NewPassword);
             }
