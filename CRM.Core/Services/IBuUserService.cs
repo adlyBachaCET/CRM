@@ -11,7 +11,7 @@ namespace CRM.Core.Services
         Task<List<BuUser>> CreateRange(List<BuUser> newBuUser);
         Task Delete(BuUser BuUserToBeDeleted);
         Task DeleteRange(List<BuUser> BuUser);
-
+        Task<BuUser> GetByIdUser(int id);
         Task<IEnumerable<BuUser>> GetAll();
         Task<IEnumerable<BuUser>> GetAllActif();
         Task<IEnumerable<BuUser>> GetAllInActif();

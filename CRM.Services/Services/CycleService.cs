@@ -56,13 +56,13 @@ namespace CRM.Services.Services
    
         public async Task Update(Cycle CycleToBeUpdated, Cycle Cycle)
         {
-            CycleToBeUpdated.Active = 0;
+          CycleToBeUpdated.Active = 1;
             await _unitOfWork.CommitAsync();
 
-            Cycle.Version = CycleToBeUpdated.Version + 1;
-            Cycle.IdCycle = CycleToBeUpdated.IdCycle;
-            Cycle.Status = Status.Pending;
-            Cycle.Active = 1;
+          Cycle.Version = CycleToBeUpdated.Version + 1;
+          Cycle.IdCycle = CycleToBeUpdated.IdCycle;
+          Cycle.Status = Status.Approuved;
+          Cycle.Active = 0;
 
             await _unitOfWork.Cycles.Add(Cycle);
             await _unitOfWork.CommitAsync();

@@ -54,13 +54,13 @@ namespace CRM.Services.Services
    
         public async Task Update(Specialty SpecialtyToBeUpdated, Specialty Specialty)
         {
-            SpecialtyToBeUpdated.Active = 0;
+            SpecialtyToBeUpdated.Active = 1;
             await _unitOfWork.CommitAsync();
 
             Specialty.Version = SpecialtyToBeUpdated.Version + 1;
             Specialty.IdSpecialty = SpecialtyToBeUpdated.IdSpecialty;
             Specialty.Status = Status.Pending;
-            Specialty.Active = 1;
+            Specialty.Active = 0;
 
             await _unitOfWork.Specialtys.Add(Specialty);
             await _unitOfWork.CommitAsync();

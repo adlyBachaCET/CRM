@@ -5,10 +5,7 @@ namespace CRM.Core.Models
 {
     public partial class Specialty
     {
-        public Specialty()
-        {
-            SpecialityDoctor = new HashSet<SpecialityDoctor>();
-        }
+   
         public int Version { get; set; }
 
         public int IdSpecialty { get; set; }
@@ -18,6 +15,5 @@ namespace CRM.Core.Models
         public string Name { get; set; }
         public string Abreviation { get; set; }
         public Status Status { get; set; }
-        public virtual ICollection<SpecialityDoctor> SpecialityDoctor { get; set; }
     }
 }

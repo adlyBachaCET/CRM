@@ -2,6 +2,7 @@ using AutoMapper;
 using CRM.Core.Models;
 using CRM.Core.Services;
 using CRM_API.Resources;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -11,16 +12,19 @@ namespace CRM_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+
     public class PhoneController : ControllerBase
     {
         public IList<Phone> Phones;
 
         private readonly IPhoneService _PhoneService;
+        private readonly IUserService _UserService;
 
         private readonly IMapper _mapperService;
-        public PhoneController(IPhoneService PhoneService, IMapper mapper)
+        public PhoneController(IUserService UserService,IPhoneService PhoneService, IMapper mapper)
         {
-            _PhoneService = PhoneService;
+            _UserService = UserService;
+               _PhoneService = PhoneService;
             _mapperService = mapper;
         }
 
@@ -30,6 +34,7 @@ namespace CRM_API.Controllers
         {
             //*** Mappage ***
             var Phone = _mapperService.Map<SavePhoneResource, Phone>(SavePhoneResource);
+
             //*** Creation dans la base de données ***
             var NewPhone = await _PhoneService.Create(Phone);
             //*** Mappage ***
@@ -45,6 +50,52 @@ namespace CRM_API.Controllers
                 if (Employe == null) return NotFound();
                 // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
                 return Ok(Employe);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet("Doctor/{Id}")]
+        public async Task<ActionResult<PhoneResource>> GetAllPhonesByDoctor(int Id)
+        {
+            try
+            {
+                var Users = await _PhoneService.GetByIdDoctor(Id);
+                if (Users == null) return NotFound();
+                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
+                return Ok(Users);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+      
+        [HttpGet("Pharmacy/{Id}")]
+        public async Task<ActionResult<PhoneResource>> GetAllPhonesByPharmacy(int Id)
+        {
+            try
+            {
+                var Users = await _PhoneService.GetByIdPharmacy(Id);
+                if (Users == null) return NotFound();
+                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
+                return Ok(Users);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet("WholeSaler/{Id}")]
+        public async Task<ActionResult<PhoneResource>> GetAllPhonesByWholeSaler(int Id)
+        {
+            try
+            {
+                var Users = await _PhoneService.GetByIdWholeSaler(Id);
+                if (Users == null) return NotFound();
+                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
+                return Ok(Users);
             }
             catch (Exception ex)
             {

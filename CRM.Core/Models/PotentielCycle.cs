@@ -21,5 +21,7 @@ namespace CRM.Core.Models
         public DateTime? CreatedOn { get; set; }
         public DateTime? UpdatedOn { get; set; }
         public int Active { get; set; }
+        public int Freq { get; set; }
+
     }
 }

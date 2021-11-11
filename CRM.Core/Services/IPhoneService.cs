@@ -7,6 +7,10 @@ namespace CRM.Core.Services
     public interface IPhoneService
     {
         Task<Phone> GetById(int id);
+        Task<IEnumerable<Phone>> GetByIdDoctor(int id);
+        Task<IEnumerable<Phone>> GetByIdPharmacy(int id);
+        Task<IEnumerable<Phone>> GetByIdWholeSaler(int id);
+        Task<Phone> GetByNumber(int Num);
         Task<Phone> Create(Phone newPhone);
         Task<List<Phone>> CreateRange(List<Phone> newPhone);
         Task Update(Phone PhoneToBeUpdated, Phone Phone);

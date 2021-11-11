@@ -6,8 +6,8 @@ namespace CRM.Core.Services
 {
     public interface ICycleService
     {
-        Task<Cycle> GetById(int id);
-        Task<Cycle> Create(Cycle newCycle);
+        Task<Cycle> GetById(int id);//
+        Task<Cycle> Create(Cycle newCycle);//
         Task<List<Cycle>> CreateRange(List<Cycle> newCycle);
         Task Update(Cycle CycleToBeUpdated, Cycle Cycle);
         Task Delete(Cycle CycleToBeDeleted);

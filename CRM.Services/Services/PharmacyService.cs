@@ -54,13 +54,13 @@ namespace CRM.Services.Services
    
         public async Task Update(Pharmacy PharmacyToBeUpdated, Pharmacy Pharmacy)
         {
-            PharmacyToBeUpdated.Active = 0;
+            PharmacyToBeUpdated.Active = 1;
             await _unitOfWork.CommitAsync();
 
             Pharmacy.Version = PharmacyToBeUpdated.Version + 1;
             Pharmacy.IdPharmacy = PharmacyToBeUpdated.IdPharmacy;
             Pharmacy.Status = Status.Pending;
-            Pharmacy.Active = 1;
+            Pharmacy.Active = 0;
 
             await _unitOfWork.Pharmacys.Add(Pharmacy);
             await _unitOfWork.CommitAsync();

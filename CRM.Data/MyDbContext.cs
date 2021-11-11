@@ -20,36 +20,72 @@ namespace CRM.Data
         public virtual DbSet<BrickLocality> BrickLocality { get; set; }
         public virtual DbSet<BuDoctor> BuDoctor { get; set; }
         public virtual DbSet<BuUser> BuUser { get; set; }
+        public virtual DbSet<BuFile> BuFile { get; set; }
+        public virtual DbSet<ProductFile> ProductFile { get; set; }
+        public virtual DbSet<ProductSellingObjectives> ProductSellingObjectives { get; set; }
+        public virtual DbSet<SellingObjectives> SellingObjectives { get; set; }
+        public virtual DbSet<ProductPharmacy> ProductPharmacy { get; set; }
+        public virtual DbSet<RequestRp> RequestRp { get; set; }
+
+        public virtual DbSet<TagsRequestRp> TagsRequestRp { get; set; }
+
+        public virtual DbSet<File> File { get; set; }
+        public virtual DbSet<VisitUser> VisitUser { get; set; }
+        public virtual DbSet<Visit> Visit { get; set; }
+        public virtual DbSet<VisitChannel> VisitChannel { get; set; }
+        public virtual DbSet<VisitReport> VisitReport { get; set; }
+
+        public virtual DbSet<Tracking> Tracking { get; set; }
+        public virtual DbSet<VisitFileTracking> VisitFileTracking { get; set; }
+
         public virtual DbSet<BusinessUnit> BusinessUnit { get; set; }
         public virtual DbSet<Cycle> Cycle { get; set; }
         public virtual DbSet<CycleBu> CycleBu { get; set; }
-        public virtual DbSet<CycleSectorWeekDoctors> CycleSectorWeekDoctors { get; set; }
-        public virtual DbSet<DelegateManager> DelegateManager { get; set; }
+        public virtual DbSet<ProductBu> ProductBu { get; set; }
+        public virtual DbSet<Holidays> Holidays { get; set; }
+        public virtual DbSet<Activity> Activity { get; set; }
+
+        public virtual DbSet<Commande> Commande { get; set; }
+        public virtual DbSet<Objection> Objection { get; set; }
+        public virtual DbSet<VisitRequest> VisitRequest { get; set; }
+
+        public virtual DbSet<CommandeProduct> CommandeProduct { get; set; }
+
+        public virtual DbSet<Target> Target { get; set; }
+        public virtual DbSet<SharedFiles> SharedFiles { get; set; }
+        public virtual DbSet<FavouriteFiles> FavouriteFiles { get; set; }
+
+        public virtual DbSet<Planification> Planification { get; set; }
+        public virtual DbSet<PlanificationTarget> PlanificationTarget { get; set; }
+
+        public virtual DbSet<Adresse> Adresses { get; set; }
+        public virtual DbSet<AdresseLocality> AdresseLocalitys { get; set; }
+
         public virtual DbSet<Doctor> Doctor { get; set; }
-        public virtual DbSet<Establishment> Establishment { get; set; }
-        public virtual DbSet<EstablishmentDoctor> EstablishmentDoctor { get; set; }
-        public virtual DbSet<EstablishmentLocality> EstablishmentLocality { get; set; }
-        public virtual DbSet<EstablishmentService> EstablishmentService { get; set; }
-        public virtual DbSet<EstablishmentType> EstablishmentType { get; set; }
-        public virtual DbSet<EstablishmentUser> EstablishmentUser { get; set; }
+        public virtual DbSet<Location> Location { get; set; }
+        public virtual DbSet<LocationDoctor> LocationDoctor { get; set; }
+        public virtual DbSet<Participant> Participant { get; set; }
+
+        public virtual DbSet<LocationType> LocationType { get; set; }
         public virtual DbSet<Info> Info { get; set; }
         public virtual DbSet<Locality> Locality { get; set; }
         public virtual DbSet<Pharmacy> Pharmacy { get; set; }
-        public virtual DbSet<PharmacyLocality> PharmacyLocality { get; set; }
         public virtual DbSet<Phone> Phone { get; set; }
         public virtual DbSet<Potentiel> Potentiel { get; set; }
         public virtual DbSet<PotentielCycle> PotentielCycle { get; set; }
         public virtual DbSet<Sector> Sector { get; set; }
         public virtual DbSet<SectorLocality> SectorLocality { get; set; }
         public virtual DbSet<Service> Service { get; set; }
-        public virtual DbSet<ServiceDoctor> ServiceDoctor { get; set; }
-        public virtual DbSet<SpecialityDoctor> SpecialityDoctor { get; set; }
+        public virtual DbSet<Message> Message { get; set; }
+        public virtual DbSet<MessageUser> MessageUser { get; set; }
+
         public virtual DbSet<Specialty> Specialty { get; set; }
+        public virtual DbSet<TagsDoctor> TagsDoctor { get; set; }
+        public virtual DbSet<Tags> Tags { get; set; }
         public virtual DbSet<User> User { get; set; }
-        public virtual DbSet<WeekInCycle> WeekInCycle { get; set; }
         public virtual DbSet<WeekInYear> WeekInYear { get; set; }
-        public virtual DbSet<WeekSectorCycle> WeekSectorCycle { get; set; }
-        public virtual DbSet<WeekSectorCycleInYear> WeekSectorCycleInYear { get; set; }
+        public virtual DbSet<SectorCycle> SectorCycle { get; set; }
+        public virtual DbSet<SectorCycleInYear> SectorCycleInYear { get; set; }
         public virtual DbSet<WholeSaler> WholeSaler { get; set; }
         public virtual DbSet<WholeSalerLocality> WholeSalerLocality { get; set; }
 
@@ -64,6 +100,7 @@ namespace CRM.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
+     
             modelBuilder.Entity<Brick>(entity =>
             {
                 entity.HasKey(e => new { e.IdBrick,e.Status,e.Version });
@@ -81,6 +118,78 @@ namespace CRM.Data
                         .HasMaxLength(50)
                         .IsUnicode(false);
             });
+
+            modelBuilder.Entity<Tracking>(entity =>
+            {
+                entity.HasKey(e => new { e.IdTracking, e.Status, e.Version });
+
+                entity.Property(x => x.IdTracking).UseIdentityColumn();
+                entity.HasIndex(e => new { e.Active, e.IdTracking, e.Status, e.Version }).IsUnique();
+                entity.HasIndex(e => e.IdTracking).IsUnique(false);
+
+                entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
+
+                entity.Property(e => e.UpdatedOn).HasColumnType("timestamp");
+                entity.Property(e => e.Date).HasColumnType("date");
+
+
+            });
+            modelBuilder.Entity<Planification>(entity =>
+            {
+                entity.HasKey(e => new { e.IdPlanification, e.Status, e.Version });
+
+                entity.Property(x => x.IdPlanification).UseIdentityColumn();
+                entity.HasIndex(e => new { e.Active, e.IdPlanification, e.Status, e.Version }).IsUnique();
+                entity.HasIndex(e => e.IdPlanification).IsUnique(false);
+                entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
+
+                entity.Property(e => e.UpdatedOn).HasColumnType("timestamp");
+
+                entity.Property(e => e.Description)
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+        
+            });
+            modelBuilder.Entity<VisitRequest>(entity =>
+            {
+                entity.HasKey(e => new { e.IdVisitRequest, e.Status, e.Version });
+
+                entity.Property(x => x.IdVisitRequest).UseIdentityColumn();
+                entity.HasIndex(e => new { e.Active, e.IdVisitRequest, e.Status, e.Version }).IsUnique();
+                entity.HasIndex(e => e.IdVisitRequest).IsUnique(false);
+                entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
+
+                entity.Property(e => e.UpdatedOn).HasColumnType("timestamp");
+
+                entity.HasOne(d => d.IdUserNavigation)
+                  .WithOne()
+                  .HasForeignKey<VisitRequest>(d => new { d.IdUser, d.StatusUser, d.VersionUser })
+                  .OnDelete(DeleteBehavior.ClientSetNull)
+                  .HasConstraintName("FK_BuDoctor_Doctor");
+
+
+            });
+            modelBuilder.Entity<Message>(entity => 
+            {
+                entity.HasKey(e => new { e.IdMessage, e.Status, e.Version });
+
+                entity.Property(x => x.IdMessage).UseIdentityColumn();
+                entity.HasIndex(e => new { e.Active, e.IdMessage, e.Status, e.Version }).IsUnique();
+                entity.HasIndex(e => e.IdMessage).IsUnique(false);
+
+            });
+
+            modelBuilder.Entity<Activity>(entity =>
+            {
+                entity.HasKey(e => new { e.IdActivity, e.Status, e.Version });
+
+                entity.Property(x => x.IdActivity).UseIdentityColumn();
+                entity.HasIndex(e => new { e.Active, e.IdActivity, e.Status, e.Version }).IsUnique();
+                entity.HasIndex(e => e.IdActivity).IsUnique(false);
+
+            });
+
             modelBuilder.Entity<BrickLocality>(entity =>
             {
                 entity.HasKey(e => new { e.IdLocality, e.StatusBrick, e.VersionBrick, e.IdBrick, e.StatusLocality, e.VersionLocality });
@@ -104,11 +213,11 @@ namespace CRM.Data
 
                 entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
 
-                entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
+                entity.Property(e => e.UpdatedOn).HasColumnType("timestamp");
 
                 entity.HasOne(d => d.IdBuNavigation)
                     .WithMany(p => p.BuDoctor)
-                    .HasForeignKey(d => new { d.IdBu, d.StatusBu, d.VersionBu })
+                    .HasForeignKey(d => new { d.IdBu, d.StatusBu, d.VersionBu})
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_BuDoctor_BusinessUnit");
 
@@ -117,6 +226,8 @@ namespace CRM.Data
                     .HasForeignKey(d => new { d.IdDoctor, d.StatusDoctor, d.VersionDoctor })
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_BuDoctor_Doctor");
+   
+
             });
 
             modelBuilder.Entity<BuUser>(entity =>
@@ -139,7 +250,154 @@ namespace CRM.Data
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_BuUser_User");
             });
+            modelBuilder.Entity<VisitUser>(entity =>
+            {
+                entity.HasKey(e => new { e.IdUser, e.StatusUser, e.VersionUser, e.StatusVisit, e.VersionVisit, e.IdVisit });
 
+                entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
+
+                entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
+
+                entity.HasOne(d => d.Visit)
+                    .WithMany(p => p.VisitUser)
+                    .HasForeignKey(d => new { d.IdVisit, d.StatusVisit, d.VersionVisit })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_VisitUser_Visit");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.VisitUser)
+                    .HasForeignKey(d => new { d.IdUser, d.StatusUser, d.VersionUser })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_VisitUser_User");
+            });
+            modelBuilder.Entity<ActivityUser>(entity =>
+            {
+                entity.HasKey(e => new { e.IdUser, e.StatusUser, e.VersionUser, e.StatusActivity, e.VersionActivity, e.IdActivity });
+
+                entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
+
+                entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
+
+                entity.HasOne(d => d.Activity)
+                    .WithMany(p => p.ActivityUser)
+                    .HasForeignKey(d => new { d.IdActivity, d.StatusActivity, d.VersionActivity })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ActivityUser_Activity");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.ActivityUser)
+                    .HasForeignKey(d => new { d.IdUser, d.StatusUser, d.VersionUser })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ActivityUser_User");
+            });
+
+
+            modelBuilder.Entity<BuFile>(entity =>
+            {
+                entity.HasKey(e => new { e.IdFile, e.StatusFile, e.VersionFile, e.StatusBu, e.VersionBu, e.IdBu });
+
+                entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
+
+                entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
+
+                entity.HasOne(d => d.IdBuNavigation)
+                    .WithMany(p => p.BuFile)
+                    .HasForeignKey(d => new { d.IdBu, d.StatusBu, d.VersionBu })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_BuFile_BusinessUnit");
+
+                entity.HasOne(d => d.File)
+                    .WithMany(p => p.BuFile)
+                    .HasForeignKey(d => new { d.IdFile, d.StatusFile, d.VersionFile })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_BuFile_File");
+            });
+            modelBuilder.Entity<ProductFile>(entity =>
+            {
+                entity.HasKey(e => new { e.IdFile, e.StatusFile, e.VersionFile, e.StatusProduct, e.VersionProduct, e.IdProduct });
+
+                entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
+
+                entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
+
+                entity.HasOne(d => d.IdProductNavigation)
+                    .WithMany(p => p.ProductFile)
+                    .HasForeignKey(d => new { d.IdProduct, d.StatusProduct, d.VersionProduct })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ProductFile_Product");
+
+                entity.HasOne(d => d.IdFileNavigation)
+                    .WithMany(p => p.ProductFile)
+                    .HasForeignKey(d => new { d.IdFile, d.StatusFile, d.VersionFile })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ProductFile_File");
+            });
+            modelBuilder.Entity<ProductPharmacy>(entity =>
+            {
+                entity.HasKey(e => new { e.IdPharmacy, e.StatusPharmacy, e.VersionPharmacy, e.StatusProduct, e.VersionProduct, e.IdProduct });
+
+                entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
+
+                entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
+
+                entity.HasOne(d => d.IdProductNavigation)
+                    .WithMany(p => p.ProductPharmacy)
+                    .HasForeignKey(d => new { d.IdProduct, d.StatusProduct, d.VersionProduct })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ProductPharmacy_Product");
+
+                entity.HasOne(d => d.IdPharmacyNavigation)
+                    .WithMany(p => p.ProductPharmacy)
+                    .HasForeignKey(d => new { d.IdPharmacy, d.StatusPharmacy, d.VersionPharmacy })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ProductPharmacy_Pharmacy");
+            });
+            modelBuilder.Entity<ProductSellingObjectives>(entity =>
+            {
+                entity.HasKey(e => new { e.IdSellingObjectives, e.StatusSellingObjectives, e.VersionSellingObjectives, e.StatusProduct, e.VersionProduct, e.IdProduct });
+
+                entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
+
+                entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
+
+                entity.HasOne(d => d.IdProductNavigation)
+                    .WithMany(p => p.ProductSellingObjectives)
+                    .HasForeignKey(d => new { d.IdProduct, d.StatusProduct, d.VersionProduct })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ProductSellingObjectives_Product");
+
+                entity.HasOne(d => d.IdSellingObjectivesNavigation)
+                    .WithMany(p => p.ProductSellingObjectives)
+                    .HasForeignKey(d => new { d.IdSellingObjectives, d.StatusSellingObjectives, d.VersionSellingObjectives })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ProductSellingObjectives_Objectives");
+            });
+            modelBuilder.Entity<MessageUser>(entity =>
+            {
+                entity.HasKey(e => new { e.IdUser1, e.StatusUser1, e.VersionUser1,
+                    e.IdUser2, e.StatusUser2, e.VersionUser2, e.StatusMessage, e.VersionMessage, e.IdMessage });
+
+                entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
+
+                entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
+
+                entity.HasOne(d => d.Message)
+                    .WithMany(p => p.MessageUser)
+                    .HasForeignKey(d => new { d.IdMessage, d.StatusMessage, d.VersionMessage })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_MessageUser_Message");
+
+                entity.HasOne(d => d.User1)
+                    .WithMany(p => p.MessageUser1)
+                    .HasForeignKey(d => new { d.IdUser1, d.StatusUser1, d.VersionUser1 })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_MessageUser_User1"); 
+                entity.HasOne(d => d.User2)
+            .WithMany(p => p.MessageUser2)
+            .HasForeignKey(d => new { d.IdUser2, d.StatusUser2, d.VersionUser2 })
+            .OnDelete(DeleteBehavior.ClientSetNull)
+            .HasConstraintName("FK_MessageUser_User2");
+            });
             modelBuilder.Entity<BusinessUnit>(entity =>
             {
                 entity.HasKey(e => new { e.IdBu, e.Status, e.Version });
@@ -177,7 +435,7 @@ namespace CRM.Data
 
             modelBuilder.Entity<CycleBu>(entity =>
             {
-                entity.HasKey(e => new { e.IdCycle, e.StatusCycle, e.VersionCycle, e.IdBu, e.StatusBu, e.VersionBu });
+                entity.HasKey(e => new { e.IdCycle, e.NameBu, e.StatusCycle, e.VersionCycle, e.IdBu, e.StatusBu, e.VersionBu });
 
                 entity.HasOne(d => d.IdBuNavigation)
                     .WithMany(p => p.CycleBu)
@@ -191,11 +449,41 @@ namespace CRM.Data
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_CycleBu_Cycle");
             });
+            modelBuilder.Entity<ProductBu>(entity =>
+            {
+                entity.HasKey(e => new { e.IdProduct, e.StatusProduct, e.VersionProduct, e.IdBu, e.StatusBu, e.VersionBu });
 
-            modelBuilder.Entity<CycleSectorWeekDoctors>(entity =>
+                entity.HasOne(d => d.IdBuNavigation)
+                    .WithMany(p => p.ProductBu)
+                    .HasForeignKey(d => new { d.IdBu, d.StatusBu, d.VersionBu })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ProductBu_BusinessUnit");
+
+                entity.HasOne(d => d.IdProductNavigation)
+                    .WithMany(p => p.ProductBu)
+                    .HasForeignKey(d => new { d.IdProduct, d.StatusProduct, d.VersionProduct })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_CycleBu_Cycle");
+            });
+            modelBuilder.Entity<PlanificationTarget>(entity =>
+            {
+                entity.HasKey(e => new { e.IdPlanification, e.StatusPlanification, e.VersionPlanification, e.IdTarget, e.StatusTarget, e.VersionTarget });
+
+                entity.HasOne(d => d.Planification)
+                    .WithMany(p => p.PlanificationTarget)
+                    .HasForeignKey(d => new { d.IdPlanification, d.StatusPlanification, d.VersionPlanification })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_PlanificationTarget_Planification");
+
+                entity.HasOne(d => d.Target)
+                    .WithMany(p => p.PlanificationTarget)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_PlanificationTarget_Target");
+            });
+            modelBuilder.Entity<Target>(entity =>
             {
                 entity.HasKey(e => new { e.IdCycle, e.StatusCycle, e.VersionCycle, e.IdUser, e.StatusUser, e.VersionUser, e.IdDoctor,e.StatusDoctor, 
-                    e.VersionDoctor, e.IdWeekCycle, e.StatusWeekCycle, e.VersionWeekCycle });
+                    e.VersionDoctor });
 
                 entity.HasOne(d => d.IdCycleNavigation)
                     .WithMany(p => p.CycleSectorWeekDoctors)
@@ -220,41 +508,10 @@ namespace CRM.Data
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_CycleSectorWeekDoctors_User");
 
-                entity.HasOne(d => d.IdWeekCycleNavigation)
-                    .WithMany(p => p.CycleSectorWeekDoctors)
-                    .HasForeignKey(d => new { d.IdWeekCycle, d.StatusWeekCycle, d.VersionWeekCycle })
-                    .HasConstraintName("FK_CycleSectorWeekDoctors_WeekInCycle");
+
             });
 
-            modelBuilder.Entity<DelegateManager>(entity =>
-            {
-                entity.HasKey(e => new { e.IdDelegate, e.VersionDelegate, e.StatusDelegate, e.IdManager, e.VersionManager, e.StatusManager });
-
-                entity.Property(e => e.IdDelegate).HasColumnName("Id_Delegate");
-
-                entity.Property(e => e.IdManager).HasColumnName("Id_Manager");
-
-                entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
-
-                entity.Property(e => e.TypeRelation)
-                    .HasColumnName("Type_Relation")
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
-
-                entity.HasOne(d => d.IdDelegateNavigation)
-                    .WithMany(p => p.DelegateManagerIdDelegateNavigation)
-                    .HasForeignKey(d => new { d.IdDelegate, d.StatusDelegate, d.VersionDelegate })
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_DelegateManager_User");
-
-                entity.HasOne(d => d.IdManagerNavigation)
-                    .WithMany(p => p.DelegateManagerIdManagerNavigation)
-                    .HasForeignKey(d => new { d.IdManager, d.StatusManager, d.VersionManager })
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_DelegateManager_User1");
-            });
+           
 
             modelBuilder.Entity<Doctor>(entity =>
             {
@@ -281,27 +538,67 @@ namespace CRM.Data
 
                 entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
 
-                entity.HasOne(d => d.IdDoctorNavigation)
-                    .WithOne(p => p.Doctor)
-                    .HasForeignKey<Doctor>(d => new { d.IdDoctor, d.Status, d.Version })
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Doctor_Potentiel");
+ 
+
+         
 
                 entity.HasOne(d => d.Linked)
                     .WithMany(p => p.InverseLinked)
                     .HasForeignKey(d => new { d.LinkedId, d.StatusLink, d.VersionLink })
-                    .HasConstraintName("FK_Doctor_Doctor");
+                    .HasConstraintName("FK_Doctor_Doctor").IsRequired(false);
             });
-
-            modelBuilder.Entity<Establishment>(entity =>
+            modelBuilder.Entity<Commande>(entity =>
             {
-                entity.HasKey(e => new { e.IdEstablishment, e.Status, e.Version });
-                entity.Property(x => x.IdEstablishment).UseIdentityColumn();
-                entity.HasIndex(e => new { e.Active, e.IdEstablishment, e.Status,e.Version }).IsUnique();
-                entity.HasIndex(e => e.IdEstablishment).IsUnique(false);
-                entity.Property(e => e.Adresse)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
+                entity.HasKey(e => new { e.IdCommande, e.Status, e.Version });
+
+                entity.Property(x => x.IdCommande).UseIdentityColumn();
+                entity.HasIndex(e => new { e.Active, e.IdCommande, e.Status, e.Version }).IsUnique();
+                entity.HasIndex(e => e.IdCommande).IsUnique(false);
+         
+
+    
+            });
+            modelBuilder.Entity<CommandeProduct>(entity =>
+            {
+                entity.HasKey(e => new { e.IdCommandeProduct, e.Status, e.Version });
+
+                entity.Property(x => x.IdCommandeProduct).UseIdentityColumn();
+                entity.HasIndex(e => new { e.Active, e.IdCommandeProduct, e.Status, e.Version }).IsUnique();
+                entity.HasIndex(e => e.IdCommandeProduct).IsUnique(false);
+              
+           entity.HasOne(d => d.Product)
+            .WithOne()
+            .HasForeignKey<CommandeProduct>(d => new { d.IdProduct, d.StatusProduct, d.VersionProduct })
+            .OnDelete(DeleteBehavior.ClientSetNull)
+            .HasConstraintName("FK_CommandeProduct_Product").IsRequired(false);
+
+                entity.HasOne(d => d.Commande)
+                        .WithOne()
+                        .HasForeignKey<CommandeProduct>(d => new { d.IdCommande, d.StatusCommande, d.VersionCommande })
+                        .OnDelete(DeleteBehavior.ClientSetNull)
+                        .HasConstraintName("FK_CommandeProduct_Commande").IsRequired(false);
+            });
+            modelBuilder.Entity<Appointement>(entity =>
+            {
+                entity.HasKey(e => new { e.IdAppointement, e.Status, e.Version });
+
+                entity.Property(x => x.IdAppointement).UseIdentityColumn();
+                entity.HasIndex(e => new { e.Active, e.IdAppointement, e.Status, e.Version }).IsUnique();
+                entity.HasIndex(e => e.IdAppointement).IsUnique(false);
+                entity.HasOne(d => d.Doctor).WithOne()
+                     .HasForeignKey<Appointement>(d => new { d.IdDoctor, d.StatusDoctor, d.VersionsDoctor })
+                     .HasConstraintName("FK_Doctor_Appointement").IsRequired(false);
+                entity.HasOne(d => d.User).WithOne()
+                    .HasForeignKey<Appointement>(d => new { d.IdUser, d.StatusUser, d.VersionsUser })
+                    .HasConstraintName("FK_User_Appointement").IsRequired(false);
+            });
+            modelBuilder.Entity<Location>(entity =>
+            {
+                entity.HasKey(e => new { e.IdLocation, e.Status, e.Version });
+                entity.Property(x => x.IdLocation).UseIdentityColumn();
+                entity.HasIndex(e => new { e.Active, e.IdLocation, e.Status,e.Version }).IsUnique();
+                entity.HasIndex(e => e.IdLocation).IsUnique(false);
+     
 
                 entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
 
@@ -311,74 +608,126 @@ namespace CRM.Data
 
                 entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
 
-                entity.HasOne(d => d.IdEstablishmentTypeNavigation)
-                    .WithMany(p => p.Establishment)
-                    .HasForeignKey(d => new { d.IdEstablishmentType, d.StatusEstablishmentType, d.VersionEstablishmentType })
-                    .HasConstraintName("FK_Establishment_EstablishmentType");
+                entity.HasOne(d => d.IdLocationTypeNavigation)
+                    .WithMany()
+                    .HasForeignKey(d => new { d.IdLocationType, d.StatusLocationType, d.VersionLocationType })
+                    .HasConstraintName("FK_Location_LocationType").IsRequired(false);
+
+   
             });
 
-            modelBuilder.Entity<EstablishmentDoctor>(entity =>
+            modelBuilder.Entity<LocationDoctor>(entity =>
             {
-                entity.HasKey(e => new { e.IdEstablishment, e.StatusEstablishment, e.VersionEstablishment, e.IdDoctor, e.StatusDoctor, e.VersionDoctor });
+                entity.HasKey(e => new { e.IdLocation, e.StatusLocation, e.VersionLocation, e.IdDoctor, e.StatusDoctor, e.VersionDoctor
+                ,
+                    e.IdService,
+                    e.StatusService,
+                    e.VersionService
+                });
 
                 entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
 
                 entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
 
                 entity.HasOne(d => d.IdDoctorNavigation)
-                    .WithMany(p => p.EstablishmentDoctor)
+                    .WithMany(p => p.LocationDoctor)
                     .HasForeignKey(d => new { d.IdDoctor, d.StatusDoctor, d.VersionDoctor })
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_EstablishmentDoctor_Doctor");
-
-                entity.HasOne(d => d.IdEstablishmentNavigation)
-                    .WithMany(p => p.EstablishmentDoctor)
-                    .HasForeignKey(d => new { d.IdEstablishment, d.StatusEstablishment, d.VersionEstablishment })
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_EstablishmentDoctor_Establishment");
-            });
-
-            modelBuilder.Entity<EstablishmentLocality>(entity =>
-            {
-                entity.HasKey(e => new { e.IdEstablishment, e.IdLocality });
-
-                entity.HasOne(d => d.IdEstablishmentNavigation)
-                    .WithMany(p => p.EstablishmentLocality)
-                    .HasForeignKey(d => new { d.IdEstablishment, d.StatusEstablishment, d.VersionEstablishment })
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_EstablishmentLocality_Establishment");
-
-                entity.HasOne(d => d.IdLocalityNavigation)
-                    .WithMany(p => p.EstablishmentLocality)
-                    .HasForeignKey(d => new { d.IdLocality, d.StatusLocality, d.VersionLocality })
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_EstablishmentLocality_Locality");
-            });
-
-            modelBuilder.Entity<EstablishmentService>(entity =>
-            {
-                entity.HasKey(e => new { e.IdEstablishment, e.IdService });
-
-                entity.HasOne(d => d.IdEstablishmentNavigation)
-                    .WithMany(p => p.EstablishmentService)
-                    .HasForeignKey(d => new { d.IdEstablishment, d.StatusEstablishment, d.VersionEstablishment })
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_EstablishmentService_Establishment");
+                    .HasConstraintName("FK_LocationDoctor_Doctor");
 
                 entity.HasOne(d => d.IdServiceNavigation)
-                    .WithMany(p => p.EstablishmentService)
-                    .HasForeignKey(d => new { d.IdService, d.StatusService, d.VersionService })
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_EstablishmentService_Service");
-            });
+                        .WithMany(p => p.LocationDoctor)
+                        .HasForeignKey(d => new { d.IdService, d.StatusService, d.VersionService })
+                        .OnDelete(DeleteBehavior.ClientSetNull)
+                        .HasConstraintName("FK_LocationService_Doctor");
 
-            modelBuilder.Entity<EstablishmentType>(entity =>
+                entity.HasOne(d => d.IdLocationNavigation)
+                    .WithMany(p => p.LocationDoctor)
+                    .HasForeignKey(d => new { d.IdLocation, d.StatusLocation, d.VersionLocation })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_LocationDoctor_Location");
+            });
+            modelBuilder.Entity<Participant>(entity =>
             {
-                entity.HasKey(e => new { e.IdEstablishmentType, e.Status, e.Version });
-                entity.Property(x => x.IdEstablishmentType).UseIdentityColumn();
-                entity.HasIndex(e => new { e.Active, e.IdEstablishmentType, e.Status,e.Version }).IsUnique();
-                entity.HasIndex(e => e.IdEstablishmentType).IsUnique(false);
-                entity.Property(e => e.IdEstablishmentType).HasColumnName("idEstablishmentType");
+                entity.HasKey(e => new {
+                    e.IdUser,
+                    e.StatusUser,
+                    e.VersionUser,
+                    e.IdDoctor,
+                    e.StatusDoctor,
+                    e.VersionDoctor
+                ,
+                    e.IdRequestRp,
+                    e.StatusRequestRp,
+                    e.VersionRequestRp
+                });
+
+                entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
+
+                entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
+
+                entity.HasOne(d => d.IdDoctorNavigation)
+                    .WithMany(p => p.Participant)
+                    .HasForeignKey(d => new { d.IdDoctor, d.StatusDoctor, d.VersionDoctor })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Participant_Doctor");
+
+                entity.HasOne(d => d.IdRequestRpNavigation)
+                        .WithMany(p => p.Participant)
+                        .HasForeignKey(d => new { d.IdRequestRp, d.StatusRequestRp, d.VersionRequestRp })
+                        .OnDelete(DeleteBehavior.ClientSetNull)
+                        .HasConstraintName("FK_Participant_RequestRp");
+
+                entity.HasOne(d => d.IdUserNavigation)
+                    .WithMany(p => p.Participant)
+                    .HasForeignKey(d => new { d.IdUser, d.StatusUser, d.VersionUser })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Participant_User");
+            });
+            modelBuilder.Entity<VisitFileTracking>(entity =>
+            {
+                entity.HasKey(e => new {
+                    e.IdTracking,
+                    e.StatusTracking,
+                    e.VersionTracking,
+
+                    e.IdVisit,
+                    e.StatusVisit,
+                    e.VersionVisit,
+                    e.IdFile,
+                    e.StatusFile,
+                    e.VersionFile
+                });
+
+                entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
+
+                entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
+
+                entity.HasOne(d => d.IdTrackingNavigation)
+                    .WithMany(p => p.VisitFileTracking)
+                    .HasForeignKey(d => new { d.IdTracking, d.StatusTracking, d.VersionTracking })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_TrackingVisitFile_Tracking");
+
+                entity.HasOne(d => d.IdFileNavigation)
+                        .WithMany(p => p.VisitFileTracking)
+                        .HasForeignKey(d => new { d.IdFile, d.StatusFile, d.VersionFile })
+                        .OnDelete(DeleteBehavior.ClientSetNull)
+                        .HasConstraintName("FK_TrackingVisitFile_File");
+
+                entity.HasOne(d => d.IdVisitNavigation)
+                    .WithMany(p => p.VisitFileTracking)
+                    .HasForeignKey(d => new { d.IdVisit, d.StatusVisit, d.VersionVisit })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_TrackingVisitFile_Visit");
+            });
+            modelBuilder.Entity<LocationType>(entity =>
+            {
+                entity.HasKey(e => new { e.IdLocationType, e.Status, e.Version });
+                entity.Property(x => x.IdLocationType).UseIdentityColumn();
+                entity.HasIndex(e => new { e.Active, e.IdLocationType, e.Status,e.Version }).IsUnique();
+                entity.HasIndex(e => e.IdLocationType).IsUnique(false);
+                entity.Property(e => e.IdLocationType).HasColumnName("idLocationType");
 
                 entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
 
@@ -393,26 +742,7 @@ namespace CRM.Data
                 entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
             });
 
-            modelBuilder.Entity<EstablishmentUser>(entity =>
-            {
-                entity.HasKey(e => new { e.IdEstablishment, e.IdUser });
-
-                entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
-
-                entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
-
-                entity.HasOne(d => d.IdEstablishmentNavigation)
-                    .WithMany(p => p.EstablishmentUser)
-                    .HasForeignKey(d => new { d.IdEstablishment, d.StatusEstablishment, d.VersionEstablishment })
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_EstablishmentUser_Establishment");
-
-                entity.HasOne(d => d.IdUserNavigation)
-                    .WithMany(p => p.EstablishmentUser)
-                    .HasForeignKey(d => new { d.IdUser, d.StatusUser, d.VersionUser })
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_EstablishmentUser_User");
-            });
+   
 
             modelBuilder.Entity<Info>(entity =>
             {
@@ -439,7 +769,7 @@ namespace CRM.Data
                 entity.HasOne(d => d.IdDoctorNavigation)
                     .WithMany(p => p.Info)
                     .HasForeignKey(d => new { d.IdDoctor, d.StatusDoctor, d.VersionDoctor })
-                    .HasConstraintName("FK_Info_Doctor");
+                    .HasConstraintName("FK_Info_Doctor").IsRequired(false);
             });
 
             modelBuilder.Entity<Locality>(entity =>
@@ -459,9 +789,102 @@ namespace CRM.Data
                 entity.HasOne(d => d.IdParentNavigation)
                     .WithMany(p => p.InverseIdParentNavigation)
                     .HasForeignKey(d => new { d.IdParent, d.StatusParent, d.VersionParent })
-                    .HasConstraintName("FK_Locality_Locality");
+                    .HasConstraintName("FK_Locality_Locality").IsRequired(false);
+            });
+            modelBuilder.Entity<File>(entity =>
+            {
+                entity.HasKey(e => new { e.IdFile, e.Status, e.Version });
+                entity.Property(x => x.IdFile).UseIdentityColumn();
+                entity.HasIndex(e => new { e.Active, e.IdFile, e.Status, e.Version }).IsUnique();
+                entity.HasIndex(e => e.IdFile).IsUnique(false);
+                entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
+
+             
+
+                entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
+
+                entity.HasOne(d => d.File1)
+                    .WithMany(e=>e.File1Nav)
+                    .HasForeignKey(d => new { d.IdParent, d.StatusParent, d.VersionParent })
+                    .HasConstraintName("FK_File_File").IsRequired(false);
+            });
+            modelBuilder.Entity<Holidays>(entity =>
+            {
+                entity.HasKey(e => new { e.IdHolidays, e.Status, e.Version });
+                entity.Property(x => x.IdHolidays).UseIdentityColumn();
+                entity.HasIndex(e => new { e.Active, e.IdHolidays, e.Status, e.Version }).IsUnique();
+                entity.HasIndex(e => e.IdHolidays).IsUnique(false);
+                entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
+
+
+
+                entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
+
             });
 
+            modelBuilder.Entity<Product>(entity =>
+            {
+                entity.HasKey(e => new { e.IdProduct, e.Status, e.Version });
+                entity.Property(x => x.IdProduct).UseIdentityColumn();
+                entity.HasIndex(e => new { e.Active, e.IdProduct, e.Status, e.Version }).IsUnique();
+                entity.HasIndex(e => e.IdProduct).IsUnique(false);
+                entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
+
+                entity.Property(e => e.Designation)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
+
+                entity.HasOne(d => d.ProductSample)
+                    .WithOne()
+                    .HasForeignKey<Product>(d => new { d.IdProductSample, d.StatusProductSample, d.VersionProductSample })
+                    .HasConstraintName("FK_Product_ProductSample").IsRequired(false);
+            });
+            modelBuilder.Entity<ProductSample>(entity =>
+            {
+                entity.HasKey(e => new { e.IdProductSample, e.Status, e.Version });
+                entity.Property(x => x.IdProductSample).UseIdentityColumn();
+                entity.HasIndex(e => new { e.Active, e.IdProductSample, e.Status, e.Version }).IsUnique();
+                entity.HasIndex(e => e.IdProductSample).IsUnique(false);
+                entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
+
+                entity.Property(e => e.Designation)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
+
+              
+            });
+            modelBuilder.Entity<Adresse>(entity =>
+            {
+                entity.HasKey(e => new { e.IdAdresse, e.Status, e.Version });
+                entity.Property(x => x.IdAdresse).UseIdentityColumn();
+                entity.HasIndex(e => new { e.Active, e.IdAdresse, e.Status, e.Version }).IsUnique();
+                entity.HasIndex(e => e.IdAdresse).IsUnique(false);
+                entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
+
+                entity.Property(e => e.StreetName)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
+
+  
+            });
+            modelBuilder.Entity<WeekInYear>(entity =>
+            {
+                entity.HasKey(e => new { e.Order, e.Status, e.Version,e.Year });
+                entity.HasIndex(e => new { e.Order,e.Active, e.Year, e.Status, e.Version }).IsUnique();
+                entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
+
+     
+
+                entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
+
+
+            });
             modelBuilder.Entity<Pharmacy>(entity =>
             {
                 entity.HasKey(e => new { e.IdPharmacy, e.Status, e.Version });
@@ -470,40 +893,32 @@ namespace CRM.Data
                 entity.HasIndex(e => e.IdPharmacy).IsUnique(false);
                 entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
 
-                entity.Property(e => e.FirstNameOwner)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.LastNameOwner)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
+     
 
                 entity.Property(e => e.Name)
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Seller)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
+               
                 entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
             });
 
-            modelBuilder.Entity<PharmacyLocality>(entity =>
+    
+            modelBuilder.Entity<AdresseLocality>(entity =>
             {
-                entity.HasKey(e => new { e.IdPharmacy, e.IdLocality });
+                entity.HasKey(e => new { e.IdAdresse, e.IdLocality });
 
                 entity.HasOne(d => d.IdLocalityNavigation)
-                    .WithMany(p => p.PharmacyLocality)
+                    .WithMany(p => p.AdresseLocality)
                     .HasForeignKey(d => new { d.IdLocality, d.StatusLocality, d.VersionLocality })
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_PharmacyLocality_Locality");
+                    .HasConstraintName("FK_AdresseLocality_Locality");
 
-                entity.HasOne(d => d.IdPharmacyNavigation)
-                    .WithMany(p => p.PharmacyLocality)
-                    .HasForeignKey(d => new { d.IdPharmacy, d.StatusPharmacy, d.VersionPharmacy })
+                entity.HasOne(d => d.IdAdresseNavigation)
+                    .WithMany(p => p.AdresseLocality)
+                    .HasForeignKey(d => new { d.IdAdresse, d.StatusAdresse, d.VersionAdresse })
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_PharmacyLocality_Pharmacy");
+                    .HasConstraintName("FK_AdresseLocality_Adresse");
             });
 
             modelBuilder.Entity<Phone>(entity =>
@@ -516,30 +931,161 @@ namespace CRM.Data
 
                 entity.Property(e => e.IdPharmacy).HasColumnName("idPharmacy");
 
-                entity.Property(e => e.IdUser).HasColumnName("idUser");
 
 
                 entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
 
-                entity.HasOne(d => d.IdDoctorNavigation)
+                entity.HasOne(d => d.Doctor)
                     .WithMany(p => p.Phone)
                     .HasForeignKey(d => new { d.IdDoctor, d.StatusDoctor, d.VersionDoctor })
-                    .HasConstraintName("FK_Phone_Doctor");
-                entity.HasOne(d => d.IdWholeSalerNavigation)
+                    .HasConstraintName("FK_Phone_Doctor").IsRequired(false);
+                entity.HasOne(d => d.Pharmacy)
+                 .WithMany(p => p.Phone)
+                 .HasForeignKey(d => new { d.IdPharmacy, d.StatusPharmacy, d.VersionPharmacy })
+                 .HasConstraintName("FK_Phone_Pharmacy").IsRequired(false);
+                entity.HasOne(d => d.WholeSaler)
                 .WithMany(p => p.Phone)
                 .HasForeignKey(d => new { d.IdWholeSaler, d.StatusWholeSaler, d.VersionWholeSaler })
-                .HasConstraintName("FK_WholeSaler_Doctor");
-                entity.HasOne(d => d.IdPharmacyNavigation)
-                    .WithMany(p => p.Phone)
-                    .HasForeignKey(d => new { d.IdPharmacy, d.StatusPharmacy, d.VersionPharmacy })
-                    .HasConstraintName("FK_Phone_Pharmacy");
+                .HasConstraintName("FK_WholeSaler_Doctor").IsRequired(false);
+             
 
-                entity.HasOne(d => d.IdUserNavigation)
-                    .WithMany(p => p.Phone)
-                    .HasForeignKey(d => new { d.IdUser, d.StatusUser, d.VersionUser })
-                    .HasConstraintName("FK_Phone_User");
+       
             });
 
+            modelBuilder.Entity<VisitChannel>(entity =>
+            {
+                entity.HasKey(e => new { e.IdChannel, e.Status, e.Version });
+                entity.Property(x => x.IdChannel).UseIdentityColumn();
+                entity.HasIndex(e => new { e.Active, e.IdChannel, e.Status, e.Version }).IsUnique();
+                entity.HasIndex(e => e.IdChannel).IsUnique(false);
+                entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
+
+
+
+
+                entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
+
+                entity.HasOne(d => d.Visit)
+                    .WithOne()
+                    .HasForeignKey<VisitChannel>(d => new { d.IdVisit, d.StatusVisit, d.VersionVisit })
+                    .HasConstraintName("FK_Phone_Doctor").IsRequired(false);
+        
+
+
+
+            });
+            modelBuilder.Entity<Objection>(entity =>
+            {
+                entity.HasKey(e => new { e.IdObjection, e.Status, e.Version });
+                entity.Property(x => x.IdObjection).UseIdentityColumn();
+                entity.HasIndex(e => new { e.Active, e.IdObjection, e.Status, e.Version }).IsUnique();
+                entity.HasIndex(e => e.IdObjection).IsUnique(false);
+                entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
+
+
+
+
+                entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
+
+                entity.HasOne(d => d.Doctor)
+                    .WithMany()
+                    .HasForeignKey(d => new { d.IdDoctor, d.StatusDoctor, d.VersionDoctor })
+                    .HasConstraintName("FK_Objection_Doctor").IsRequired(false);
+            });
+            modelBuilder.Entity<Phone>(entity =>
+            {
+                entity.HasKey(e => new { e.IdPhone, e.Status, e.Version });
+                entity.Property(x => x.IdPhone).UseIdentityColumn();
+                entity.HasIndex(e => new { e.Active, e.IdPhone, e.Status, e.Version }).IsUnique();
+                entity.HasIndex(e => e.IdPhone).IsUnique(false);
+                entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
+
+                entity.Property(e => e.IdPharmacy).HasColumnName("idPharmacy");
+
+
+
+                entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
+
+                entity.HasOne(d => d.Doctor)
+                    .WithMany(p => p.Phone)
+                    .HasForeignKey(d => new { d.IdDoctor, d.StatusDoctor, d.VersionDoctor })
+                    .HasConstraintName("FK_Phone_Doctor").IsRequired(false);
+                entity.HasOne(d => d.Pharmacy)
+                 .WithMany(p => p.Phone)
+                 .HasForeignKey(d => new { d.IdPharmacy, d.StatusPharmacy, d.VersionPharmacy })
+                 .HasConstraintName("FK_Phone_Pharmacy").IsRequired(false);
+                entity.HasOne(d => d.WholeSaler)
+                .WithMany(p => p.Phone)
+                .HasForeignKey(d => new { d.IdWholeSaler, d.StatusWholeSaler, d.VersionWholeSaler })
+                .HasConstraintName("FK_WholeSaler_Doctor").IsRequired(false);
+
+
+
+            });
+
+            modelBuilder.Entity<RequestRp>(entity =>
+            {
+                entity.HasKey(e => new { e.IdRequestRp, e.Status, e.Version });
+                entity.Property(x => x.IdRequestRp).UseIdentityColumn();
+                entity.HasIndex(e => new { e.Active, e.IdRequestRp, e.Status, e.Version }).IsUnique();
+                entity.HasIndex(e => e.IdRequestRp).IsUnique(false);
+                entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
+
+
+
+
+                entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
+
+ 
+
+            });
+            modelBuilder.Entity<SellingObjectives>(entity =>
+            {
+                entity.HasKey(e => new { e.IdSellingObjectives, e.Status, e.Version });
+                entity.Property(x => x.IdSellingObjectives).UseIdentityColumn();
+                entity.HasIndex(e => new { e.Active, e.IdSellingObjectives, e.Status, e.Version }).IsUnique();
+                entity.HasIndex(e => e.IdSellingObjectives).IsUnique(false);
+                entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
+
+                entity.Property(e => e.IdPharmacy).HasColumnName("idPharmacy");
+
+
+
+                entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
+
+                entity.HasOne(d => d.Pharmacy)
+                .WithOne()
+                    .HasForeignKey<SellingObjectives>(d => new { d.IdPharmacy, d.StatusPharmacy, d.VersionPharmacy })
+                    .HasConstraintName("FK_SellingObjectives_Pharmacy").IsRequired(false);
+                entity.HasOne(d => d.User)
+                .WithOne()
+                 .HasForeignKey<SellingObjectives>(d => new { d.IdUser, d.StatusUser, d.VersionUser })
+                 .HasConstraintName("FK_SellingObjectives_User").IsRequired(false);
+                entity.HasOne(d => d.Doctor)
+                .WithOne()
+                .HasForeignKey<SellingObjectives>(d => new { d.IdDoctor, d.StatusDoctor, d.VersionDoctor })
+                .HasConstraintName("FK_SellingObjectives_Doctor").IsRequired(false);
+
+
+
+            });
+            modelBuilder.Entity<VisitReport>(entity =>
+            {
+                entity.HasKey(e => new { e.IdReport, e.Status, e.Version });
+                entity.Property(x => x.IdReport).UseIdentityColumn();
+                entity.HasIndex(e => new { e.Active, e.IdReport, e.Status, e.Version }).IsUnique();
+                entity.HasIndex(e => e.IdReport).IsUnique(false);
+                entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
+
+
+
+                entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
+
+                entity.HasOne(d => d.Visit)
+                .WithOne()
+                    .HasForeignKey<VisitReport>(d => new { d.IdVisit, d.StatusVisit, d.VersionVisit })
+                    .HasConstraintName("FK_SellingObjectives_Pharmacy").IsRequired(false);
+                           });
             modelBuilder.Entity<Potentiel>(entity =>
             {
                 entity.HasKey(e => new { e.IdPotentiel, e.Status, e.Version });
@@ -623,39 +1169,8 @@ namespace CRM.Data
                 entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
             });
 
-            modelBuilder.Entity<ServiceDoctor>(entity =>
-            {
-                entity.HasKey(e => new { e.IdService,e.StatusService,e.VersionService, e.IdDoctor,e.StatusDoctor,e.VersionDoctor });
+           
 
-                entity.HasOne(d => d.IdDoctorNavigation)
-                    .WithMany(p => p.ServiceDoctor)
-                    .HasForeignKey(d => new { d.IdDoctor, d.StatusDoctor, d.VersionDoctor })
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ServiceDoctor_Doctor");
-
-                entity.HasOne(d => d.IdServiceNavigation)
-                    .WithMany(p => p.ServiceDoctor)
-                    .HasForeignKey(d => new { d.IdService, d.StatusService, d.VersionService })
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ServiceDoctor_Service");
-            });
-
-            modelBuilder.Entity<SpecialityDoctor>(entity =>
-            {
-                entity.HasKey(e => new { e.IdDoctor, e.StatusDoctor, e.VersionDoctor, e.IdSpecialty, e.StatusSpecialty, e.VersionSpecialty });
-
-                entity.HasOne(d => d.IdDoctorNavigation)
-                    .WithMany(p => p.SpecialityDoctor)
-                    .HasForeignKey(d => new { d.IdDoctor, d.StatusDoctor, d.VersionDoctor })
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_SpecialityDoctor_Doctor");
-
-                entity.HasOne(d => d.IdSpecialtyNavigation)
-                    .WithMany(p => p.SpecialityDoctor)
-                    .HasForeignKey(d => new { d.IdSpecialty, d.StatusSpecialty, d.VersionSpecialty })
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_SpecialityDoctor_Specialty");
-            });
 
             modelBuilder.Entity<Specialty>(entity =>
             {
@@ -673,8 +1188,192 @@ namespace CRM.Data
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
+   
+
                 entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
             });
+            modelBuilder.Entity<TagsDoctor>(entity =>
+            {
+                entity.HasKey(e => new { e.IdDoctor, e.StatusDoctor, e.VersionDoctor, e.IdTags, e.StatusTags, e.VersionTags });
+
+                entity.HasOne(d => d.IdDoctorNavigation)
+                    .WithMany(p => p.TagsDoctor)
+                    .HasForeignKey(d => new { d.IdDoctor, d.StatusDoctor, d.VersionDoctor })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_TagsDoctor_Doctor");
+
+                entity.HasOne(d => d.IdTagsNavigation)
+                    .WithMany(p => p.TagsDoctor)
+                    .HasForeignKey(d => new { d.IdTags, d.StatusTags, d.VersionTags })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_TagsDoctor_Specialty");
+            });
+            modelBuilder.Entity<VisitVisitReport>(entity =>
+            {
+                entity.HasKey(e => new { e.IdVisit, e.StatusVisit, e.VersionVisit, e.IdReport, e.StatusReport, e.VersionReport });
+
+                entity.HasOne(d => d.Visit)
+                    .WithMany(p => p.VisitVisitReport)
+                    .HasForeignKey(d => new { d.IdVisit, d.StatusVisit, d.VersionVisit })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_VisitVisitReport_Visit");
+
+                entity.HasOne(d => d.Report)
+                    .WithMany(p => p.VisitVisitReport)
+                    .HasForeignKey(d => new { d.IdReport, d.StatusReport, d.VersionReport })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_VisitVisitReport_Report");
+            });
+            modelBuilder.Entity<ProductSampleVisitReport>(entity =>
+            {
+                entity.HasKey(e => new { e.IdProductSample, e.StatusProductSample, e.VersionProductSample, e.IdReport, e.StatusReport, e.VersionReport });
+
+                entity.HasOne(d => d.ProductSample)
+                    .WithMany(p => p.ProductSampleVisitReport)
+                    .HasForeignKey(d => new { d.IdProductSample, d.StatusProductSample, d.VersionProductSample })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_VisitVisitReport_Visit");
+
+                entity.HasOne(d => d.Report)
+                    .WithMany(p => p.ProductSampleVisitReport)
+                    .HasForeignKey(d => new { d.IdReport, d.StatusReport, d.VersionReport })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_VisitVisitReport_Report");
+            });
+            modelBuilder.Entity<VisitRequestReport>(entity =>
+            {
+                entity.HasKey(e => new { e.IdVisitRequest, e.StatusVisitRequest, e.VersionVisitRequest, e.IdReport, e.StatusReport, e.VersionReport });
+
+                entity.HasOne(d => d.VisitRequest)
+                    .WithMany(p => p.VisitRequestReport)
+                    .HasForeignKey(d => new { d.IdVisitRequest, d.StatusVisitRequest, d.VersionVisitRequest })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_VisitVisitReport_Visit");
+
+                entity.HasOne(d => d.Report)
+                    .WithMany(p => p.VisitRequestReport)
+                    .HasForeignKey(d => new { d.IdReport, d.StatusReport, d.VersionReport })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_VisitVisitReport_Report");
+            });
+
+            modelBuilder.Entity<ProductVisitReport>(entity =>
+            {
+                entity.HasKey(e => new { e.IdProduct, e.StatusProduct, e.VersionProduct, e.IdReport, e.StatusReport, e.VersionReport });
+
+                entity.HasOne(d => d.Product)
+                    .WithMany(p => p.ProductVisitReport)
+                    .HasForeignKey(d => new { d.IdProduct, d.StatusProduct, d.VersionProduct })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_VisitVisitReport_Visit");
+
+                entity.HasOne(d => d.Report)
+                    .WithMany(p => p.ProductVisitReport)
+                    .HasForeignKey(d => new { d.IdReport, d.StatusReport, d.VersionReport })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_VisitVisitReport_Report");
+            });
+            modelBuilder.Entity<TagsRequestRp>(entity =>
+            {
+                entity.HasKey(e => new { e.IdRequestRp, e.StatusRequestRp, e.VersionRequestRp, e.IdTags, e.StatusTags, e.VersionTags });
+
+                entity.HasOne(d => d.IdRequestRpNavigation)
+                    .WithMany(p => p.TagsRequestRp)
+                    .HasForeignKey(d => new { d.IdRequestRp, d.StatusRequestRp, d.VersionRequestRp })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_TagsRequestRp_RequestRp");
+
+                entity.HasOne(d => d.IdTagsNavigation)
+                    .WithMany(p => p.TagsRequestRp)
+                    .HasForeignKey(d => new { d.IdTags, d.StatusTags, d.VersionTags })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_TagsRequestRp_Tags");
+            });
+            modelBuilder.Entity<SharedFiles>(entity =>
+            {
+                entity.HasKey(e => new { e.IdDoctor, e.StatusDoctor, e.VersionDoctor, e.IdFile, e.StatusFile, e.VersionFile,
+                    e.IdUser, e.StatusUser, e.VersionUser });
+
+                entity.HasOne(d => d.Doctor)
+                    .WithMany(p => p.SharedFiles)
+                    .HasForeignKey(d => new { d.IdDoctor, d.StatusDoctor, d.VersionDoctor })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SharedFiles_Doctor");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.SharedFiles)
+                    .HasForeignKey(d => new { d.IdUser, d.StatusUser, d.VersionUser })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SharedFiles_User");
+                entity.HasOne(d => d.File)
+                  .WithMany(p => p.SharedFiles)
+                  .HasForeignKey(d => new { d.IdFile, d.StatusFile, d.VersionFile })
+                  .OnDelete(DeleteBehavior.ClientSetNull)
+                  .HasConstraintName("FK_SharedFiles_File");
+            });
+            modelBuilder.Entity<FavouriteFiles>(entity =>
+            {
+                entity.HasKey(e => new {
+
+                    e.IdFile,
+                    e.StatusFile,
+                    e.VersionFile,
+                    e.IdUser,
+                    e.StatusUser,
+                    e.VersionUser
+                });
+
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.FavouriteFiles)
+                    .HasForeignKey(d => new { d.IdUser, d.StatusUser, d.VersionUser })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_FavouriteFiles_User");
+                entity.HasOne(d => d.File)
+                  .WithMany(p => p.FavouriteFiles)
+                  .HasForeignKey(d => new { d.IdFile, d.StatusFile, d.VersionFile })
+                  .OnDelete(DeleteBehavior.ClientSetNull)
+                  .HasConstraintName("FK_FavouriteFiles_File");
+            });
+
+            modelBuilder.Entity<Tags>(entity =>
+            {
+                entity.HasKey(e => new { e.IdTags, e.Status, e.Version });
+                entity.Property(x => x.IdTags).UseIdentityColumn();
+                entity.HasIndex(e => new { e.Active, e.IdTags, e.Status, e.Version }).IsUnique();
+                entity.HasIndex(e => e.IdTags).IsUnique(false);
+                entity.Property(e => e.Description)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
+
+                entity.Property(e => e.Name)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
+            });
+
+                      modelBuilder.Entity<Visit>(entity =>
+                      {
+                          entity.HasKey(e => new { e.IdVisit, e.Status, e.Version });
+                          entity.Property(x => x.IdVisit).UseIdentityColumn();
+                          entity.HasIndex(e => new { e.Active, e.IdVisit, e.Status, e.Version }).IsUnique();
+                          entity.HasIndex(e => e.IdVisit).IsUnique(false);
+                          entity.Property(e => e.Description)
+                              .HasMaxLength(50)
+                              .IsUnicode(false);
+
+                          entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
+
+                          entity.Property(e => e.UpdatedOn).HasColumnType("timestamp");
+
+
+
+
+
+                      });
 
             modelBuilder.Entity<User>(entity =>
             {
@@ -713,49 +1412,28 @@ namespace CRM.Data
                 entity.Property(e => e.UserType)
                     .HasMaxLength(50)
                     .IsUnicode(false);
+
+                entity.HasOne(d => d.DirectManager)
+            .WithOne(p => p.Delegates).HasForeignKey<User>(d=> new { d.IdUserDirectManager, d.StatusDirectManager, d.VersionDirectManager })
+            .HasConstraintName("FK_Delegate_Manager").IsRequired(false);
+
+                entity.HasOne(d => d.DotlineManager1)
+                  .WithOne(p => p.DelegatesDotlineManager1).HasForeignKey<User>(d => new { d.IdUserDotlineManager1, d.StatusDotlineManager1, d.VersionDotlineManager1 })
+                  .HasConstraintName("FK_Delegate_DotlineManager1").IsRequired(false);
+                entity.HasOne(d => d.DotlineManager2)
+.WithOne(p => p.DelegatesDotlineManager2).HasForeignKey<User>(d => new { d.IdUserDotlineManager2, d.StatusDotlineManager2, d.VersionDotlineManager2 })
+.HasConstraintName("FK_Delegate_DotlineManager2").IsRequired(false);
+
+
+   
+   ;
             });
 
-            modelBuilder.Entity<WeekInCycle>(entity =>
+            
+
+            modelBuilder.Entity<SectorCycle>(entity =>
             {
-                entity.HasKey(e => new { e.IdWeekCycle, e.Status, e.Version });
-                entity.Property(x => x.IdWeekCycle).UseIdentityColumn();
-                entity.HasIndex(e => new { e.Active, e.IdWeekCycle, e.Status,e.Version }).IsUnique();
-                entity.HasIndex(e => e.IdWeekCycle).IsUnique(false);
-                entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
-
-                entity.Property(e => e.Name)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
-            });
-
-            modelBuilder.Entity<WeekInYear>(entity =>
-            {
-                entity.HasKey(e => new { e.Year, e.Order, e.Status, e.Version })
-                    .HasName("PK_WeekInYear_1")
-                    .IsClustered(false);
-
-                entity.HasIndex(e => e.Order)
-                    .HasName("IX_WeekInYear")
-                    .IsUnique();
-
-                entity.HasIndex(e => e.Year)
-                    .HasName("IX_WeekInYear_1")
-                    .IsUnique();
-
-                entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
-
-                entity.Property(e => e.Name)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
-            });
-
-            modelBuilder.Entity<WeekSectorCycle>(entity =>
-            {
-                entity.HasKey(e => new { e.IdCycle, e.StatusCycle, e.VersionCycle, e.IdWeekCycle, e.StatusWeekCycle, e.VersionWeekCycle, e.IdSector,e.StatusSector, e.VersionSector });
+                entity.HasKey(e => new { e.IdCycle, e.StatusCycle, e.VersionCycle,  e.IdSector,e.StatusSector, e.VersionSector });
 
                 entity.HasOne(d => d.IdCycleNavigation)
                     .WithMany(p => p.WeekSectorCycle)
@@ -769,16 +1447,14 @@ namespace CRM.Data
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_WeekSectorCycle_Sector");
 
-                entity.HasOne(d => d.IdWeekCycleNavigation)
-                    .WithMany(p => p.WeekSectorCycle)
-                    .HasForeignKey(d => new { d.IdWeekCycle, d.StatusWeekCycle, d.VersionWeekCycle })
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_WeekSectorCycle_WeekInCycle");
+    
             });
 
-            modelBuilder.Entity<WeekSectorCycleInYear>(entity =>
+            modelBuilder.Entity<SectorCycleInYear>(entity =>
             {
-                entity.HasKey(e => new { e.IdCycle,e.StatusCycle,e.VersionCycle, e.IdWeekCycle,e.VersionSector,e.StatusSector, e.IdSector,e.StatusWeekCycle,e.VersionWeekCycle });
+                entity.HasKey(e => new { e.IdCycle,e.StatusCycle,e.VersionCycle
+                    ,e.VersionSector,e.StatusSector, e.IdSector
+                    , e.VersionWeekInYear, e.StatusWeekInYear,e.Order,e.Year });
 
                 entity.HasOne(d => d.IdCycleNavigation)
                     .WithMany(p => p.WeekSectorCycleInYear)
@@ -792,25 +1468,13 @@ namespace CRM.Data
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_WeekSectorCycleInYear_Sector");
 
-                entity.HasOne(d => d.IdWeekCycleNavigation)
-                    .WithMany(p => p.WeekSectorCycleInYear)
-                    .HasForeignKey(d => new { d.IdWeekCycle, d.StatusWeekCycle, d.VersionWeekCycle })
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_WeekSectorCycleInYear_WeekInCycle");
 
                 entity.HasOne(d => d.OrderNavigation)
                     .WithMany(p => p.WeekSectorCycleInYearOrderNavigation)
-                    .HasPrincipalKey(p => p.Order)
-                    .HasForeignKey(d => d.Order)
+                    .HasPrincipalKey(p => new { p.Order, p.Year,p.Version,p.Status })
+                    .HasForeignKey(p=> new { p.Order, p.Year, p.Version, p.Status })
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_WeekSectorCycleInYear_WeekSectorCycleInYear");
-
-                entity.HasOne(d => d.YearNavigation)
-                    .WithMany(p => p.WeekSectorCycleInYearYearNavigation)
-                    .HasPrincipalKey(p => p.Year)
-                    .HasForeignKey(d => d.Year)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_WeekSectorCycleInYear_WeekInYear");
             });
 
             modelBuilder.Entity<WholeSaler>(entity =>

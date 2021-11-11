@@ -34,12 +34,23 @@ namespace CRM.Services.Services
             return
                            await _unitOfWork.Doctors.GetAll();
         }
-
-       /* public async Task Delete(Doctor Doctor)
+        public async Task<IEnumerable<Doctor>> GetAllDoctorsByBu(int Id)
         {
-            _unitOfWork.Doctors.Remove(Doctor);
-            await _unitOfWork.CommitAsync();
-        }*/
+            List<Doctor> list = new List<Doctor>();
+            var Bu = await _unitOfWork.BuDoctors.Find(i => i.IdBu == Id);
+            foreach(var item in Bu)
+            {
+                list.Add(await _unitOfWork.Doctors.SingleOrDefault(i => i.IdDoctor == item.IdDoctor));
+            }
+            return
+                           list;
+        }
+
+        /* public async Task Delete(Doctor Doctor)
+         {
+             _unitOfWork.Doctors.Remove(Doctor);
+             await _unitOfWork.CommitAsync();
+         }*/
 
         //public async Task<IEnumerable<Doctor>> GetAllWithArtiste()
         //{
@@ -51,6 +62,41 @@ namespace CRM.Services.Services
         {
             return
                  await _unitOfWork.Doctors.SingleOrDefault(i => i.IdDoctor == id && i.Active==0);
+        }
+        public async Task<IEnumerable<Doctor>> GetDoctorsAssignedByBu(int Id)
+        {
+            List<Doctor> list = new List<Doctor>();
+            var Bu = await _unitOfWork.BuDoctors.Find(i => i.IdBu == Id);
+            foreach (var item in Bu)
+            {
+                list.Add(await _unitOfWork.Doctors.SingleOrDefault(i => i.IdDoctor == item.IdDoctor));
+            }
+            List<Doctor> doctors = new List<Doctor>();
+            //var a = await _unitOfWork.CycleSectorWeekDoctors.Find(i => i.IdDoctorNavigation.Active == 0 && i.IdDoctorNavigation.LinkedId == null);
+            foreach (var item in list)
+            {
+                doctors.Add(item);
+            }
+            return doctors;
+        }
+        public async Task<IEnumerable<Doctor>> GetDoctorsNotAssignedByBu(int Id)
+        {
+            List<Doctor> list = new List<Doctor>();
+            var Bu = await _unitOfWork.BuDoctors.Find(i => i.IdBu == Id);
+            foreach (var item in Bu)
+            {
+                list.Add(await _unitOfWork.Doctors.SingleOrDefault(i => i.IdDoctor == item.IdDoctor));
+            }
+
+            List<Doctor> DoctorsAssigned = new List<Doctor>();
+            var list1 = await _unitOfWork.CycleSectorWeekDoctors.Find(i => i.IdDoctorNavigation.Active == 0 && i.IdDoctorNavigation.LinkedId == null);
+            foreach (var item in list)
+            {
+                DoctorsAssigned.Add(item);
+            }
+            var Alldoctors = await _unitOfWork.Doctors.Find(i => i.Status == Status.Approuved && i.Active == 0);
+            var result = Alldoctors.Except(DoctorsAssigned).ToList();
+            return DoctorsAssigned;
         }
         public async Task<IEnumerable<Doctor>> GetDoctorsAssigned()
         {

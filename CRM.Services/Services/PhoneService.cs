@@ -35,33 +35,53 @@ namespace CRM.Services.Services
                            await _unitOfWork.Phones.GetAll();
         }
 
-       /* public async Task Delete(Phone Phone)
-        {
-            _unitOfWork.Phones.Remove(Phone);
-            await _unitOfWork.CommitAsync();
-        }*/
+        /* public async Task Delete(Phone Phone)
+         {
+             _unitOfWork.Phones.Remove(Phone);
+             await _unitOfWork.CommitAsync();
+         }*/
 
         //public async Task<IEnumerable<Phone>> GetAllWithArtiste()
         //{
         //    return await _unitOfWork.Phones
         //          .GetAllWithArtisteAsync();
         //}
-
+   
         public async Task<Phone> GetById(int id)
         {
             return
                await _unitOfWork.Phones.SingleOrDefault(i => i.IdPhone == id && i.Active == 0);
         }
-   
+        public async Task<Phone> GetByNumber(int Num)
+        {
+            return
+               await _unitOfWork.Phones.SingleOrDefault(i => i.PhoneNumber == Num && i.Active == 0);
+        }
+     
+        public async Task<IEnumerable<Phone>> GetByIdPharmacy(int id)
+        {
+            return
+               await _unitOfWork.Phones.Find(i => i.IdPharmacy == id && i.Active == 0);
+        }
+        public async Task<IEnumerable<Phone>> GetByIdWholeSaler(int id)
+        {
+            return
+               await _unitOfWork.Phones.Find(i => i.IdWholeSaler == id && i.Active == 0);
+        }
+        public async Task<IEnumerable<Phone>> GetByIdDoctor(int id)
+        {
+            return
+               await _unitOfWork.Phones.Find(i => i.IdDoctor == id && i.Active == 0);
+        }
         public async Task Update(Phone PhoneToBeUpdated, Phone Phone)
         {
-            PhoneToBeUpdated.Active = 0;
+            PhoneToBeUpdated.Active = 1;
             await _unitOfWork.CommitAsync();
 
             Phone.Version = PhoneToBeUpdated.Version + 1;
             Phone.IdPhone = PhoneToBeUpdated.IdPhone;
             Phone.Status = Status.Pending;
-            Phone.Active = 1;
+            Phone.Active = 0;
 
             await _unitOfWork.Phones.Add(Phone);
             await _unitOfWork.CommitAsync();

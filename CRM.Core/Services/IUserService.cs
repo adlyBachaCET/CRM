@@ -1,4 +1,5 @@
 ﻿using CRM.Core.Models;
+using CRM_API.Resources;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -18,6 +19,8 @@ namespace CRM.Core.Services
         Task<IEnumerable<User>> GetAll();
         Task<IEnumerable<User>> GetAllActif();
         Task<IEnumerable<User>> GetAllInActif();
+        Task<IEnumerable<User>> GetAllDelegateByIdBu(int IdBu);
+        Task<IEnumerable<User>> GetAllDelegateByIdBu(List<int> Bu);
 
     }
 }

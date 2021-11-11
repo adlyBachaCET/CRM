@@ -54,13 +54,13 @@ namespace CRM.Services.Services
    
         public async Task Update(Potentiel PotentielToBeUpdated, Potentiel Potentiel)
         {
-            PotentielToBeUpdated.Active = 0;
+            PotentielToBeUpdated.Active = 1;
             await _unitOfWork.CommitAsync();
 
             Potentiel.Version = PotentielToBeUpdated.Version + 1;
             Potentiel.IdPotentiel = PotentielToBeUpdated.IdPotentiel;
             Potentiel.Status = Status.Pending;
-            Potentiel.Active = 1;
+            Potentiel.Active = 0;
 
             await _unitOfWork.Potentiels.Add(Potentiel);
             await _unitOfWork.CommitAsync();

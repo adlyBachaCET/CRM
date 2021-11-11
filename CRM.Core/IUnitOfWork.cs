@@ -16,36 +16,34 @@ namespace CRM.Core
         IBuUserRepository BuUsers { get; }
         ICycleBuRepository CycleBus { get; }
         ICycleRepository Cycles { get; }
-        ICycleSectorWeekDoctorsRepository CycleSectorWeekDoctors { get; }
-        IDelegateManagerRepository DelegateManagers { get; }
+        ITargetRepository CycleSectorWeekDoctors { get; }
         IDoctorRepository Doctors{ get; }
-        IEstablishmentDoctorRepository EstablishmentDoctors { get; }
-        IEstablishmentLocalityRepository EstablishmentLocalitys { get; }
-        IEstablishmentRepository Establishments { get; }
-        IEstablishmentServiceRepository EstablishmentServices { get; }
-        IEstablishmentUserRepository EstablishmentUsers { get; }
+        ILocationDoctorRepository EstablishmentDoctors { get; }
+        IAdresseRepository Adresses { get; }
+        IAdresseLocalityRepository AdresseLocalitys { get; }
+
+        ILocationRepository Establishments { get; }
         IUserRepository Users { get; }
 
-        IEstablishmentTypeRepository EstablishmentTypes { get; }
+        ILocationTypeRepository EstablishmentTypes { get; }
         IInfoRepository Infos { get; }
         ILocalityRepository Localitys { get; }
-        IPharmacyLocalityRepository PharmacyLocalitys { get; }
         IPharmacyRepository Pharmacys { get; }
         IPhoneRepository Phones { get; }
         IPotentielCycleRepository PotentielCycles { get; }
         ISectorLocalityRepository SectorLocalitys { get; }
         IPotentielRepository Potentiels { get; }
         ISectorRepository Sectors { get; }
-        IServiceDoctorRepository ServiceDoctors { get; }
         IServiceRepository Services { get; }
-        ISpecialityDoctorRepository SpecialityDoctors { get; }
         ISpecialtyRepository Specialtys { get; }
+        ITagsDoctorRepository TagsDoctors { get; }
+        ITagsRepository Tagss { get; }
 
-        IWeekInCycleRepository WeekInCycles { get; }
         IWeekInYearRepository WeekInYears { get; }
         IWholeSalerLocalityRepository WholeSalerLocalitys { get; }
         IWholeSalerRepository WholeSales { get; }
-        IWeekSectorCycleInYearRepository WeekSectorCycleInYears { get; }
+        ISectorCycleInYearRepository WeekSectorCycleInYears { get; }
+        ISectorCycleRepository WeekSectorCycles { get; }
 
         Task<int> CommitAsync();
     }

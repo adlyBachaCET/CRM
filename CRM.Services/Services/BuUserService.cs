@@ -51,7 +51,12 @@ namespace CRM.Services.Services
             return
                 await _unitOfWork.BuUsers.GetById(id);
         }
-   
+        public async Task<BuUser> GetByIdUser(int id)
+        {
+            return
+                await _unitOfWork.BuUsers.SingleOrDefault(i=>i.IdUser==id);
+        }
+
         public async Task Update(BuUser BuUserToBeUpdated, BuUser BuUser)
         {
             BuUser.Active = 1;

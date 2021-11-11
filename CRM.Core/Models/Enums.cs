@@ -10,4 +10,9 @@ namespace CRM.Core.Models
         Rejected,
         Pending
     }
+    public enum Organism
+    {
+        Pharmacy,
+        WholeSaler
+    }
 }

@@ -19,7 +19,6 @@
     </PackageReference>
     <PackageReference Include="MimeKit" Version="2.11.0" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="3.1.0" />
-    <PackageReference Include="PDFsharp" Version="1.50.5147" />
   </ItemGroup>
 
   <ItemGroup>

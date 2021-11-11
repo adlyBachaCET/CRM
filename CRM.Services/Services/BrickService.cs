@@ -54,13 +54,13 @@ namespace CRM.Services.Services
    
         public async Task Update(Brick BrickToBeUpdated, Brick Brick)
         {
-            BrickToBeUpdated.Active = 0;
+            BrickToBeUpdated.Active = 1;
             await _unitOfWork.CommitAsync();
 
             Brick.Version = BrickToBeUpdated.Version + 1;
             Brick.IdBrick = BrickToBeUpdated.IdBrick;
             Brick.Status = Status.Pending;
-            Brick.Active = 1;
+            Brick.Active = 0;
 
             await _unitOfWork.Bricks.Add(Brick);
             await _unitOfWork.CommitAsync();

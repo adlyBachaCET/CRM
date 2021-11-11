@@ -8,9 +8,7 @@ namespace CRM.Core.Models
         public Locality()
         {
             BrickLocality = new HashSet<BrickLocality>();
-            EstablishmentLocality = new HashSet<EstablishmentLocality>();
             InverseIdParentNavigation = new HashSet<Locality>();
-            PharmacyLocality = new HashSet<PharmacyLocality>();
             SectorLocality = new HashSet<SectorLocality>();
             WholeSalerLocality = new HashSet<WholeSalerLocality>();
         }
@@ -22,7 +20,6 @@ namespace CRM.Core.Models
         public DateTime? CreatedOn { get; set; }
         public DateTime? UpdatedOn { get; set; }
         public int Active { get; set; }
-        public int? Codepostal { get; set; }
         public int? IdParent { get; set; }
         public Status StatusParent { get; set; }
         public int VersionParent { get; set; }
@@ -31,10 +28,10 @@ namespace CRM.Core.Models
 
         public virtual Locality IdParentNavigation { get; set; }
         public virtual ICollection<BrickLocality> BrickLocality { get; set; }
-        public virtual ICollection<EstablishmentLocality> EstablishmentLocality { get; set; }
         public virtual ICollection<Locality> InverseIdParentNavigation { get; set; }
-        public virtual ICollection<PharmacyLocality> PharmacyLocality { get; set; }
         public virtual ICollection<SectorLocality> SectorLocality { get; set; }
         public virtual ICollection<WholeSalerLocality> WholeSalerLocality { get; set; }
+        public virtual ICollection<AdresseLocality> AdresseLocality { get; set; }
+
     }
 }

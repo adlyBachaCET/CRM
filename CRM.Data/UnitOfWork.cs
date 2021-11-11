@@ -17,18 +17,17 @@ namespace CRM.Data
         private IBuUserRepository _BuUserRepository;
         private ICycleBuRepository _CycleBuRepository;
         private ICycleRepository _CycleRepository;
-        private ICycleSectorWeekDoctorsRepository _CycleSectorWeekDoctorRepository;
-        private IDelegateManagerRepository _DelegateManagerRepository;
+        private ITargetRepository _CycleSectorWeekDoctorRepository;
         private IDoctorRepository _DoctorRepository;
-        private IEstablishmentDoctorRepository _EstablishmentDoctorRepository;
-        private IEstablishmentLocalityRepository _EstablishmentLocalityRepository;
-        private IEstablishmentRepository _EstablishmentRepository;
-        private IEstablishmentServiceRepository _EstablishmentServiceRepository;
-        private IEstablishmentUserRepository _EstablishmentUserRepository;
-        private IEstablishmentTypeRepository _EstablishmentTypeRepository;
+        private ILocationDoctorRepository _EstablishmentDoctorRepository;
+        private IAdresseRepository _AdresseRepository;
+
+        private ILocationRepository _EstablishmentRepository;
+        private ILocationTypeRepository _EstablishmentTypeRepository;
         private IInfoRepository _InfoRepository;
         private ILocalityRepository _LocalityRepository;
-        private IPharmacyLocalityRepository _PharmacyLocalityRepository;
+        private IAdresseLocalityRepository _AdresseLocalityRepository;
+
         private IPharmacyRepository _PharmacyRepository;
         private IPhoneRepository _PhoneRepository;
         private ISectorLocalityRepository _SectorLocalityRepository;
@@ -36,23 +35,23 @@ namespace CRM.Data
         private IPotentielCycleRepository _PotentielCycleRepository;
 
         private ISectorRepository _SectorRepository;
-        private IServiceDoctorRepository _ServiceDoctorRepository;
         private IServiceRepository _ServiceRepository;
         private ISpecialtyRepository _SpecialtyRepository;
-        private ISpecialityDoctorRepository _SpecialityDoctorRepository;
-
-        private IWeekInCycleRepository _WeekInCycleRepository;
+        private ITagsRepository _TagsRepository;
+        private ITagsDoctorRepository _TagsDoctorRepository;
         private IWeekInYearRepository _WeekInYearRepository;
         private IWholeSalerLocalityRepository _WholeSalerLocalityRepository;
         private IWholeSalerRepository _WholeSaleRepository;
         private IUserRepository _UserRepository;
-        private IWeekSectorCycleInYearRepository _WeekSectorCycleInYearRepository;
+        private ISectorCycleInYearRepository _WeekSectorCycleInYearRepository;
 
+        private ISectorCycleRepository _WeekSectorCycleRepository;
 
 
         //        public IUserRepository Users => throw new NotImplementedException();
         public IBrickRepository Bricks => _BrickRepository = _BrickRepository ?? new BrickRepository(_context);
-        public IWeekSectorCycleInYearRepository WeekSectorCycleInYears => _WeekSectorCycleInYearRepository = _WeekSectorCycleInYearRepository ?? new WeekSectorCycleInYearRepository(_context);
+        public ISectorCycleInYearRepository WeekSectorCycleInYears => _WeekSectorCycleInYearRepository = _WeekSectorCycleInYearRepository ?? new SectorCycleInYearRepository(_context);
+        public ISectorCycleRepository WeekSectorCycles => _WeekSectorCycleRepository = _WeekSectorCycleRepository ?? new SectorCycleRepository(_context);
 
         public IBrickLocalityRepository BrickLocalitys =>_BrickLocalityRepository = _BrickLocalityRepository ?? new BrickLocalityRepository(_context);
 
@@ -66,30 +65,27 @@ namespace CRM.Data
 
         public ICycleRepository Cycles =>_CycleRepository = _CycleRepository ?? new CycleRepository(_context);
 
-        public ICycleSectorWeekDoctorsRepository CycleSectorWeekDoctors =>_CycleSectorWeekDoctorRepository = _CycleSectorWeekDoctorRepository ?? new CycleSectorWeekDoctorsRepository(_context);
+        public ITargetRepository CycleSectorWeekDoctors =>_CycleSectorWeekDoctorRepository = _CycleSectorWeekDoctorRepository ?? new TargetRepository(_context);
 
-        public IDelegateManagerRepository DelegateManagers =>_DelegateManagerRepository = _DelegateManagerRepository ?? new DelegateManagerRepository(_context);
 
         public IDoctorRepository Doctors =>_DoctorRepository = _DoctorRepository ?? new DoctorRepository(_context);
 
-        public IEstablishmentDoctorRepository EstablishmentDoctors =>_EstablishmentDoctorRepository = _EstablishmentDoctorRepository ?? new EstablishmentDoctorRepository(_context);
+        public ILocationDoctorRepository EstablishmentDoctors =>_EstablishmentDoctorRepository = _EstablishmentDoctorRepository ?? new LocationDoctorRepository(_context);
 
-        public IEstablishmentLocalityRepository EstablishmentLocalitys =>_EstablishmentLocalityRepository = _EstablishmentLocalityRepository ?? new EstablishmentLocalityRepository(_context);
+        public IAdresseRepository Adresses => _AdresseRepository = _AdresseRepository ?? new AdresseRepository(_context);
 
-        public IEstablishmentRepository Establishments =>_EstablishmentRepository = _EstablishmentRepository ?? new EstablishmentRepository(_context);
+        public ILocationRepository Establishments =>_EstablishmentRepository = _EstablishmentRepository ?? new LocationRepository(_context);
 
-        public IEstablishmentServiceRepository EstablishmentServices =>_EstablishmentServiceRepository = _EstablishmentServiceRepository ?? new EstablishmentServiceRepository(_context);
         public IUserRepository Users => _UserRepository = _UserRepository ?? new UserRepository(_context);
 
-        public IEstablishmentUserRepository EstablishmentUsers =>_EstablishmentUserRepository = _EstablishmentUserRepository ?? new EstablishmentUserRepository(_context);
 
-        public IEstablishmentTypeRepository EstablishmentTypes =>_EstablishmentTypeRepository = _EstablishmentTypeRepository ?? new EstablishmentTypeRepository(_context);
+        public ILocationTypeRepository EstablishmentTypes =>_EstablishmentTypeRepository = _EstablishmentTypeRepository ?? new LocationTypeRepository(_context);
 
         public IInfoRepository Infos =>_InfoRepository = _InfoRepository ?? new InfoRepository(_context);
 
         public ILocalityRepository Localitys =>_LocalityRepository = _LocalityRepository ?? new LocalityRepository(_context);
 
-        public IPharmacyLocalityRepository PharmacyLocalitys =>_PharmacyLocalityRepository = _PharmacyLocalityRepository ?? new PharmacyLocalityRepository(_context);
+        public IAdresseLocalityRepository AdresseLocalitys => _AdresseLocalityRepository = _AdresseLocalityRepository ?? new AdresseLocalityRepository(_context);
 
         public IPharmacyRepository Pharmacys =>_PharmacyRepository = _PharmacyRepository ?? new PharmacyRepository(_context);
 
@@ -103,14 +99,13 @@ namespace CRM.Data
 
         public ISectorRepository Sectors =>_SectorRepository = _SectorRepository ?? new SectorRepository(_context);
 
-        public IServiceDoctorRepository ServiceDoctors =>_ServiceDoctorRepository = _ServiceDoctorRepository ?? new ServiceDoctorRepository(_context);
 
         public IServiceRepository Services =>_ServiceRepository = _ServiceRepository ?? new ServiceRepository(_context);
+        public ITagsRepository Tagss => _TagsRepository = _TagsRepository ?? new TagsRepository(_context);
 
         public ISpecialtyRepository Specialtys =>_SpecialtyRepository = _SpecialtyRepository ?? new SpecialtyRepository(_context);
-        public ISpecialityDoctorRepository SpecialityDoctors => _SpecialityDoctorRepository = _SpecialityDoctorRepository ?? new SpecialityDoctorRepository(_context);
+        public ITagsDoctorRepository TagsDoctors => _TagsDoctorRepository = _TagsDoctorRepository ?? new TagsDoctorRepository(_context);
 
-        public IWeekInCycleRepository WeekInCycles =>_WeekInCycleRepository = _WeekInCycleRepository ?? new WeekInCycleRepository(_context);
 
         public IWeekInYearRepository WeekInYears =>_WeekInYearRepository = _WeekInYearRepository ?? new WeekInYearRepository(_context);
 

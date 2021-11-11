@@ -12,7 +12,9 @@ namespace CRM.Core.Services
         Task Update(Doctor DoctorToBeUpdated, Doctor Doctor);
         Task Delete(Doctor DoctorToBeDeleted);
         Task DeleteRange(List<Doctor> Doctor);
-
+        Task<IEnumerable<Doctor>> GetAllDoctorsByBu(int Id);
+        Task<IEnumerable<Doctor>> GetDoctorsAssignedByBu(int Id);
+        Task<IEnumerable<Doctor>> GetDoctorsNotAssignedByBu(int Id);
         Task<IEnumerable<Doctor>> GetAll();
         Task<IEnumerable<Doctor>> GetAllActif();
         Task<IEnumerable<Doctor>> GetAllInActif();

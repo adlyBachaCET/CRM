@@ -95,6 +95,12 @@ namespace CRM.Services.Services
             return
                              await _unitOfWork.Localitys.GetAllInActif();
         }
+
+        public async Task<Locality> GetByIdAndName(int? id, string Name)
+        {
+            return
+                 await _unitOfWork.Localitys.SingleOrDefault(i => i.IdLocality == id && i.Active == 0 && i.Name== Name);
+        }
         //public Task<Locality> CreateLocality(Locality newLocality)
         //{
         //    throw new NotImplementedException();

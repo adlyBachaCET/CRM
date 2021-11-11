@@ -8,6 +8,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
+using CRM_API.Resources;
 
 namespace CRM.Services.Services
 {
@@ -86,13 +87,13 @@ namespace CRM.Services.Services
    
         public async Task Update(User UserToBeUpdated, User User)
         {
-            UserToBeUpdated.Active = 0;
+            UserToBeUpdated.Active = 1;
             await _unitOfWork.CommitAsync();
 
             User.Version = UserToBeUpdated.Version + 1;
             User.IdUser = UserToBeUpdated.IdUser;
-            User.Status = Status.Pending;
-            User.Active = 1;
+            User.Status = Status.Approuved;
+            User.Active = 0;
 
             await _unitOfWork.Users.Add(User);
             await _unitOfWork.CommitAsync();
@@ -126,6 +127,35 @@ namespace CRM.Services.Services
         {
             return
                              await _unitOfWork.Users.GetAllInActif();
+        }
+
+        public async Task<IEnumerable<User>> GetAllDelegateByIdBu(int IdBu)
+        {
+            var list = await _unitOfWork.BuUsers.Find(i=>i.IdBu==IdBu);
+            List<User> listUsers = new List<User>();
+            foreach(var item in list)
+            {
+                var User = await _unitOfWork.Users.SingleOrDefault(o => o.IdUser== item.IdUser);
+
+                listUsers.Add(User);
+            }
+            return listUsers;
+        }
+
+        public async Task<IEnumerable<User>> GetAllDelegateByIdBu(List<int> Bu)
+        {
+            List<User> listUsers = new List<User>();
+
+            foreach(var i in Bu){
+                var list = await _unitOfWork.BuUsers.Find(o => o.IdBu == i);
+                foreach (var item in list)
+                {
+                    var User = await _unitOfWork.Users.SingleOrDefault(o => o.UserType == UserType.Delegue);
+
+                    listUsers.Add(User);
+                }
+            }
+            return listUsers;
         }
         //public Task<User> CreateUser(User newUser)
         //{

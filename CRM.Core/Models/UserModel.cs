@@ -8,10 +8,8 @@ namespace CRM.Core.Models
         public UserModel()
         {
             BuUser = new HashSet<BuUser>();
-            CycleSectorWeekDoctors = new HashSet<CycleSectorWeekDoctors>();
-            DelegateManagerIdDelegateNavigation = new HashSet<DelegateManager>();
-            DelegateManagerIdManagerNavigation = new HashSet<DelegateManager>();
-            EstablishmentUser = new HashSet<EstablishmentUser>();
+            CycleSectorWeekDoctors = new HashSet<Target>();
+        
             Phone = new HashSet<Phone>();
         }
         public int Version { get; set; }
@@ -31,10 +29,8 @@ namespace CRM.Core.Models
         public string Photo { get; set; }
         public Status Status { get; set; }
         public virtual ICollection<BuUser> BuUser { get; set; }
-        public virtual ICollection<CycleSectorWeekDoctors> CycleSectorWeekDoctors { get; set; }
-        public virtual ICollection<DelegateManager> DelegateManagerIdDelegateNavigation { get; set; }
-        public virtual ICollection<DelegateManager> DelegateManagerIdManagerNavigation { get; set; }
-        public virtual ICollection<EstablishmentUser> EstablishmentUser { get; set; }
+        public virtual ICollection<Target> CycleSectorWeekDoctors { get; set; }
+
         public virtual ICollection<Phone> Phone { get; set; }
     }
 }

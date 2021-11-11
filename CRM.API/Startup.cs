@@ -50,15 +50,39 @@ namespace CRM_API
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             //Services 
+
             services.AddTransient<IBrickService, BrickService>();
+            services.AddTransient<IPhoneService, PhoneService>();
+            services.AddTransient<IAdresseLocalityService, AdresseLocalityService>();
+
             services.AddTransient<IBrickLocalityService, BrickLocalityService>();
             services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IBuUserService, BuUserService>();
+            services.AddTransient<ILocalityService, LocalityService>();
 
+            services.AddTransient<ITagsService, TagsService>();
+            services.AddTransient<ITagsDoctorService, TagsDoctorService>();
+            services.AddTransient<ISpecialtyService, SpecialtyService>();
+            services.AddTransient<IInfoService, InfoService>();
+            services.AddTransient<ILocationService, LocationService>();
+            services.AddTransient<ILocationTypeService, LocationTypeService>();
 
+            services.AddTransient<ILocationDoctorService, LocationDoctorService>();
+            services.AddTransient<IServiceService, ServiceService>();
+            services.AddTransient<IBusinessUnitService, BusinessUnitService>();
+            services.AddTransient<IBuDoctorService, BuDoctorService>();
+            services.AddTransient<IPharmacyService, PharmacyService>();
+            services.AddTransient<IWholeSalerService, WholeSaleservice>();
+            services.AddTransient<ICycleService, CycleService>();
+            services.AddTransient<ICycleBuService, CycleBuService>();
+            services.AddTransient<IPotentielCycleService, PotentielCycleService>();
+            services.AddTransient<ISectorCycleService, SectorCycleService>();
+            services.AddTransient<ISpecialtyService, SpecialtyService>();
+    
             //***** Swagger ****
             services.AddSwaggerGen(c => {
                 c.SwaggerDoc("v1",
-                new OpenApiInfo { Title = "Galderma", Description = "Dot Net Core api 3- with swagger" });
+                new OpenApiInfo { Title = "Phalcon", Description = "Galderma" });
             });
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -74,6 +98,7 @@ namespace CRM_API
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
         };
     });
+   
             // ***** AutoMapper *****
             services.AddAutoMapper(typeof(Startup));
         }
@@ -106,6 +131,9 @@ namespace CRM_API
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My User V1");
             }
                 );
+            //Cors
+            app.UseCors(options => options.AllowAnyOrigin());
+
         }
     }
 }

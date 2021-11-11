@@ -54,7 +54,7 @@ namespace CRM.Services.Services
    
         public async Task Update(WeekInYear WeekInYearToBeUpdated, WeekInYear WeekInYear)
         {
-            WeekInYearToBeUpdated.Active = 0;
+            WeekInYearToBeUpdated.Active = 1;
             await _unitOfWork.CommitAsync();
 
             WeekInYear.Version = WeekInYearToBeUpdated.Version + 1;
@@ -62,7 +62,7 @@ namespace CRM.Services.Services
             WeekInYear.Year = WeekInYearToBeUpdated.Year;
 
             WeekInYear.Status = Status.Pending;
-            WeekInYear.Active = 1;
+            WeekInYear.Active = 0;
 
             await _unitOfWork.WeekInYears.Add(WeekInYear);
             await _unitOfWork.CommitAsync();

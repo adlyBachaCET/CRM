@@ -2,6 +2,7 @@ using AutoMapper;
 using CRM.Core.Models;
 using CRM.Core.Services;
 using CRM_API.Resources;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -11,50 +12,51 @@ namespace CRM_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+
     public class DoctorController : ControllerBase
     {
         public IList<Doctor> Doctors;
 
         private readonly IDoctorService _DoctorService;
+
         private readonly IBusinessUnitService _BusinessUnitService;
 
         private readonly IBuDoctorService _BuDoctorService;
-        private readonly IServiceDoctorService _ServiceDoctorService;
         private readonly IServiceService _ServiceService;
 
-        private readonly IEstablishmentDoctorService _EstablishmentDoctorService;
-        private readonly IEstablishmentService _EstablishmentService;
+        private readonly ILocationDoctorService _LocationDoctorService;
+        private readonly ILocationService _LocationService;
         private readonly IPhoneService _PhoneService;
+        private readonly ITagsDoctorService _TagsDoctorService;
+        private readonly ITagsService _TagsService;
 
         private readonly IInfoService _InfoService;
         private readonly IPotentielService _PotentielService;
         private readonly ISpecialtyService _SpecialtyService;
-        private readonly ISpecialityDoctorService _SpecialityDoctorService;
         private readonly IMapper _mapperService;
-        public DoctorController(IEstablishmentDoctorService EstablishmentDoctorService,
+        public DoctorController(ILocationDoctorService LocationDoctorService,
             IPhoneService PhoneService,
-            IEstablishmentService EstablishmentService,
-            IServiceDoctorService ServiceDoctorService,
+            ILocationService LocationService,
             IServiceService ServiceService,
             IDoctorService DoctorService,
             IPotentielService PotentielService,
             ISpecialtyService SpecialtyService,
             IBusinessUnitService BusinessUnitService,
-            ISpecialityDoctorService SpecialityDoctorService,
             IInfoService InfoService,
+            ITagsService TagsService,
 
             IBuDoctorService BuDoctorService, IMapper mapper)
         {
-            _EstablishmentDoctorService = EstablishmentDoctorService;
-            _EstablishmentService = EstablishmentService;
-            _PotentielService=PotentielService;
+            _LocationDoctorService = LocationDoctorService;
+            _LocationService = LocationService;
+            _TagsService = TagsService;
+
+            _PotentielService = PotentielService;
             _BuDoctorService = BuDoctorService;
             _DoctorService = DoctorService;
-            _ServiceDoctorService = ServiceDoctorService;
             _ServiceService = ServiceService;
             _SpecialtyService=SpecialtyService;
             _PhoneService = PhoneService;
-            _SpecialityDoctorService=SpecialityDoctorService;
             _BusinessUnitService=BusinessUnitService;
            _InfoService = InfoService;
             _mapperService = mapper;
@@ -69,59 +71,76 @@ namespace CRM_API.Controllers
             var Doctor = _mapperService.Map<SaveDoctorResource, Doctor>(SaveDoctorResource);
             var NewDoctor = await _DoctorService.Create(Doctor);
 
-            if (SaveDoctorResource.BusinessUnits != null) { 
-            foreach (var item in SaveDoctorResource.BusinessUnits)
-            {
-                BuDoctor Budoctor = new BuDoctor();
-                var Bu = await _BusinessUnitService.GetById(item.idBu);
-                Budoctor.IdBu = Bu.IdBu;
-                Budoctor.IdBuNavigation = Bu;
-                Budoctor.IdDoctor = NewDoctor.IdDoctor;
-                Budoctor.IdDoctorNavigation = NewDoctor;
-                await _BuDoctorService.Create(Budoctor);
-            }
-            }
+    
 
             if (SaveDoctorResource.Establishments != null)
             {
-                var Esa = _mapperService.Map<List<SaveEstablishmentResource>, List<Establishment>>(SaveDoctorResource.Establishments);
+                var Esa = _mapperService.Map<List<SaveLocationResource>, List<Location>>(SaveDoctorResource.Establishments);
 
-                var listEstablishment = await _EstablishmentService.CreateRange(Esa);
+                var listLocation = await _LocationService.CreateRange(Esa);
 
-                foreach (var item in listEstablishment)
+                foreach (var item in listLocation)
                 {
-                    EstablishmentDoctor EstablishmentDoctor = new EstablishmentDoctor();
-                    EstablishmentDoctor.IdEstablishment = item.IdEstablishment;
-                    var Bu = await _EstablishmentService.GetById(item.IdEstablishment);
+                    LocationDoctor LocationDoctor = new LocationDoctor();
+                    LocationDoctor.IdLocation = item.IdLocation;
+                    LocationDoctor.VersionLocation = item.Version;
+                    LocationDoctor.StatusLocation = item.Status;
 
-                    EstablishmentDoctor.IdEstablishmentNavigation = item;
+                    var Bu = await _LocationService.GetById(item.IdLocation);
 
-                    EstablishmentDoctor.IdDoctorNavigation = NewDoctor;
-                    EstablishmentDoctor.IdDoctor = NewDoctor.IdDoctor;
-                    await _EstablishmentDoctorService.Create(EstablishmentDoctor);
+                    LocationDoctor.IdLocationNavigation = item;
+
+                    LocationDoctor.IdDoctorNavigation = NewDoctor;
+                    LocationDoctor.IdDoctor = NewDoctor.IdDoctor;
+                    LocationDoctor.VersionDoctor = NewDoctor.Version;
+                    LocationDoctor.StatusDoctor = NewDoctor.Status;
+
+                    await _LocationDoctorService.Create(LocationDoctor);
 
                 }
             }
-            if (SaveDoctorResource.Specialtys != null)
+           /* if (SaveDoctorResource.TagsDoctor != null)
             {
-                var Esa = _mapperService.Map<List<SaveEstablishmentResource>, List<Establishment>>(SaveDoctorResource.Establishments);
+                var Esa = _mapperService.Map<List<SaveTagsResource>, List<Tags>>(SaveDoctorResource.TagsDoctor);
 
-                var listEstablishment = await _EstablishmentService.CreateRange(Esa);
+                var listTags = await _TagsService.CreateRange(Esa);
 
-                foreach (var item in listEstablishment)
+                foreach (var item in listLocation)
                 {
-                    EstablishmentDoctor EstablishmentDoctor = new EstablishmentDoctor();
-                    EstablishmentDoctor.IdEstablishment = item.IdEstablishment;
-                    var Bu = await _EstablishmentService.GetById(item.IdEstablishment);
+                    LocationDoctor LocationDoctor = new LocationDoctor();
+                    LocationDoctor.IdLocation = item.IdLocation;
+                    var Bu = await _LocationService.GetById(item.IdLocation);
 
-                    EstablishmentDoctor.IdEstablishmentNavigation = item;
+                    LocationDoctor.IdLocationNavigation = item;
 
-                    EstablishmentDoctor.IdDoctorNavigation = NewDoctor;
-                    EstablishmentDoctor.IdDoctor = NewDoctor.IdDoctor;
-                    await _EstablishmentDoctorService.Create(EstablishmentDoctor);
+                    LocationDoctor.IdDoctorNavigation = NewDoctor;
+                    LocationDoctor.IdDoctor = NewDoctor.IdDoctor;
+                    await _LocationDoctorService.Create(LocationDoctor);
 
                 }
-            }
+            }*/
+             if (SaveDoctorResource.Specialtys != null)
+             {
+                var Esa = _mapperService.Map<List<SaveSpecialtyResource>, List<Specialty>>(SaveDoctorResource.Specialtys);
+
+
+                foreach (var item in Esa)
+                 {
+                     SpecialityDoctor SpecialityDoctor = new SpecialityDoctor();
+                     var Specialty = await _SpecialtyService.GetById(item.IdSpecialty);
+                   
+                    SpecialityDoctor.IdSpecialty = Specialty.IdSpecialty;
+                    SpecialityDoctor.IdSpecialtyNavigation = Specialty;
+                    SpecialityDoctor.VersionSpecialty = Specialty.Version;
+                    SpecialityDoctor.StatusSpecialty = Specialty.Status;
+
+                    SpecialityDoctor.IdDoctor = NewDoctor.IdDoctor;
+                    SpecialityDoctor.IdDoctorNavigation = NewDoctor;
+                    SpecialityDoctor.VersionDoctor = NewDoctor.Version;
+                    SpecialityDoctor.StatusDoctor = NewDoctor.Status;
+
+                }
+             }
 
             if (SaveDoctorResource.Infos != null)
             {
@@ -146,9 +165,9 @@ namespace CRM_API.Controllers
                 foreach (var item in listPhone)
                 {
                     item.IdDoctor = NewDoctor.IdDoctor;
-                    item.IdDoctorNavigation = NewDoctor;
+                    item.Doctor = NewDoctor;
 
-                    //await _EstablishmentDoctorService.Create(EstablishmentDoctor);
+                    //await _LocationDoctorService.Create(LocationDoctor);
 
                 }
             }
@@ -166,6 +185,25 @@ namespace CRM_API.Controllers
                 var Employe = await _DoctorService.GetAll();
                 if (Employe == null) return NotFound();
                 // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
+
+                return Ok(Employe);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        /// <summary>This method returns the list of All the doctors of the same BusinessUnit .</summary>
+        /// <param name="Id">Id of the BusinessUnit .</param>
+        [HttpGet("AllDoctorsByBu/{Id}")]
+        public async Task<ActionResult<DoctorResource>> GetAllDoctorsByBu(int Id)
+        {
+            try
+            {
+                var Employe = await _DoctorService.GetAllDoctorsByBu(Id);
+                if (Employe == null) return NotFound();
+                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
+
                 return Ok(Employe);
             }
             catch (Exception ex)
@@ -188,6 +226,7 @@ namespace CRM_API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
         [HttpGet("InActif")]
         public async Task<ActionResult<DoctorResource>> GetAllInactifDoctors()
         {
@@ -203,7 +242,66 @@ namespace CRM_API.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
+        [HttpGet("Assigned")]
+        public async Task<ActionResult<DoctorResource>> GetAllAssignedDoctors()
+        {
+            try
+            {
+                var Employe = await _DoctorService.GetDoctorsAssigned();
+                if (Employe == null) return NotFound();
+                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
+                return Ok(Employe);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet("NotAssigned")]
+        public async Task<ActionResult<DoctorResource>> GetAllNotAssignedDoctors()
+        {
+            try
+            {
+                var Employe = await _DoctorService.GetDoctorsAssigned();
+                if (Employe == null) return NotFound();
+                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
+                return Ok(Employe);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet("Assigned/{Id}")]
+        public async Task<ActionResult<DoctorResource>> GetAllAssignedDoctorsByBu(int Id)
+        {
+            try
+            {
+                var Employe = await _DoctorService.GetDoctorsAssignedByBu(Id);
+                if (Employe == null) return NotFound();
+                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
+                return Ok(Employe);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet("NotAssigned/{Id}")]
+        public async Task<ActionResult<DoctorResource>> GetAllNotAssignedDoctorsByBu(int Id)
+        {
+            try
+            {
+                var Employe = await _DoctorService.GetDoctorsNotAssignedByBu(Id);
+                if (Employe == null) return NotFound();
+                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
+                return Ok(Employe);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
         [HttpGet("{Id}")]
         public async Task<ActionResult<DoctorResource>> GetDoctorById(int Id)
         {

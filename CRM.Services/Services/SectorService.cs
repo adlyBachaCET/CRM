@@ -54,13 +54,13 @@ namespace CRM.Services.Services
    
         public async Task Update(Sector SectorToBeUpdated, Sector Sector)
         {
-            SectorToBeUpdated.Active = 0;
+            SectorToBeUpdated.Active = 1;
             await _unitOfWork.CommitAsync();
 
             Sector.Version = SectorToBeUpdated.Version + 1;
             Sector.IdSector = SectorToBeUpdated.IdSector;
             Sector.Status = Status.Pending;
-            Sector.Active = 1;
+            Sector.Active = 0;
 
             await _unitOfWork.Sectors.Add(Sector);
             await _unitOfWork.CommitAsync();
