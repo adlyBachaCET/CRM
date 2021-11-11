@@ -118,6 +118,8 @@ namespace CRM_API
             app.UseHttpsRedirection();
 
             app.UseRouting();
+            app.UseCors(options => options.AllowAnyOrigin());
+
             app.UseAuthentication();
 
             app.UseAuthorization();
@@ -136,7 +138,6 @@ namespace CRM_API
             }
                 );
             //Cors
-            app.UseCors(options => options.AllowAnyOrigin());
 
         }
     }
