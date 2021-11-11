@@ -81,7 +81,7 @@ namespace CRM_API
 
             services.AddCors(c =>
             {
-                c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin());
+                c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             });
             //***** Swagger ****
             services.AddSwaggerGen(c => {
