@@ -1,4 +1,5 @@
 ﻿using CRM.Core.Models;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -19,6 +20,9 @@ namespace CRM.Core.Services
         
         Task Approuve(Pharmacy PharmacyToBeUpdated, Pharmacy Pharmacy);
         Task Reject(Pharmacy PharmacyToBeUpdated, Pharmacy Pharmacy);
+        Task<PharmacyExiste> Verify(SaveAddPharmacyResource SaveAddPharmacyResource);
+        Task<IEnumerable<Pharmacy>> GetByExistantPhoneNumberActif(int PhoneNumber);
+        Task<IEnumerable<Pharmacy>> GetByNearByActif(string Locality1, string Locality2, string Locality3, int CodePostal);
 
     }
 }

@@ -22,6 +22,12 @@ namespace CRM.Services.Services
             await _unitOfWork.CommitAsync();
             return newEstablishment;
         }
+
+        public async Task<IEnumerable<Location>> GetByNearByActif(string Locality1, string Locality2, string Locality3, int CodePostal)
+        {
+            return
+                       await _unitOfWork.Locations.GetByNearByActif(Locality1, Locality2, Locality3, CodePostal);
+        }
         public async Task<List<Location>> CreateRange(List<Location> newEstablishment)
         {
 
@@ -124,6 +130,14 @@ namespace CRM.Services.Services
         {
             return
                              await _unitOfWork.Locations.GetAllInActif();
+        }
+
+        public async Task<Location> GetByExistantActif(string Name, int? IdlocationType)
+        {
+            {
+                return
+                                 await _unitOfWork.Locations.GetByExistantActif(Name, IdlocationType);
+            }
         }
         //public Task<Establishment> CreateEstablishment(Establishment newEstablishment)
         //{

@@ -124,6 +124,13 @@ namespace CRM.Services.Services
             return
                              await _unitOfWork.LocationTypes.GetAllInActif();
         }
+
+        public async Task<LocationType> GetByExistantActif(string Name, string Type)
+        {
+            return await _unitOfWork.LocationTypes.GetByExistantActif(Name, Type);
+                }
+
+
         //public Task<EstablishmentType> CreateEstablishmentType(EstablishmentType newEstablishmentType)
         //{
         //    throw new NotImplementedException();

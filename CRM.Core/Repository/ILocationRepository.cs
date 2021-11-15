@@ -14,5 +14,10 @@ namespace CRM.Core.Repository
 
         Task<IEnumerable<Location>> GetAllPending();
         Task<IEnumerable<Location>> GetAllRejected();
+
+        Task<Location> GetByExistantActif(string Name, int? IdlocationType);
+        Task<Location> GetByExistantNameActif(string Name);
+
+        Task<IEnumerable<Location>> GetByNearByActif(string Locality1, string Locality2, string Locality3, int CodePostal);
     }
 }

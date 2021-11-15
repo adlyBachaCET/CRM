@@ -15,6 +15,8 @@ namespace CRM.Core
         IBusinessUnitRepository BusinessUnits { get; }
         IBuUserRepository BuUsers { get; }
         ICycleBuRepository CycleBus { get; }
+        ICycleUserRepository CycleUsers { get; }
+
         ICycleRepository Cycles { get; }
         ITargetRepository CycleSectorWeekDoctors { get; }
         IDoctorRepository Doctors{ get; }

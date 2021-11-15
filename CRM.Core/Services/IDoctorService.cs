@@ -20,5 +20,9 @@ namespace CRM.Core.Services
         Task<IEnumerable<Doctor>> GetAllInActif();
         Task<IEnumerable<Doctor>> GetDoctorsAssigned();
         Task<IEnumerable<Doctor>> GetDoctorsNotAssigned();
+        Task Approuve(Doctor DoctorToBeUpdated, Doctor Doctor);
+        Task Reject(Doctor DoctorToBeUpdated, Doctor Doctor); 
+        Task<IEnumerable<Doctor>> GetByExistantPhoneNumberActif(int PhoneNumber);
+
     }
 }

@@ -31,5 +31,13 @@ namespace CRM.Core.Models
 
         public string StreetName { get; set; }
         public int PostalCode { get; set; }
+        public int IdPotentiel { get; set; }
+
+        public string NamePotentiel { get; set; }
+
+        public string FirstNameOwner { get; set; }
+        public string LastNameOwner { get; set; }
+        public string Email { get; set; }
+
     }
 }

@@ -60,6 +60,12 @@ namespace CRM.Data.Repositories
             var result = await MyDbContext.LocationType.Where(a => a.Status == Status.Pending).ToListAsync();
             return result;
         }
+
+        public async Task<LocationType> GetByExistantActif(string Name, string Type)
+        {
+            var result = await MyDbContext.LocationType.Where(a => a.Name == Name&& a.Type==Type && a.Active==0).FirstOrDefaultAsync();
+            return result;
+        }
         //public async Task<IEnumerable<LocationType>> GetAllWithArtisteAsync()
         //{
         //    return await MyLocationTypeDbContext.LocationTypes

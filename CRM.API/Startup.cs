@@ -58,6 +58,8 @@ namespace CRM_API
             services.AddTransient<IBrickLocalityService, BrickLocalityService>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IBuUserService, BuUserService>();
+            services.AddTransient<ICycleUserService, CycleUserService>();
+
             services.AddTransient<ILocalityService, LocalityService>();
 
             services.AddTransient<ITagsService, TagsService>();

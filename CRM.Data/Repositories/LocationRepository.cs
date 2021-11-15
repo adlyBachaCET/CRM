@@ -61,7 +61,27 @@ namespace CRM.Data.Repositories
             var result = await MyDbContext.Location.Where(a => a.Status == Status.Pending).ToListAsync();
             return result;
         }
+        public async Task<Location> GetByExistantActif(string Name,int? IdlocationType)
+        {
+            var LocationType = await MyDbContext.LocationType.Where(a => a.Active == 0 && a.IdLocationType == IdlocationType).FirstOrDefaultAsync();
 
+            var Location = await MyDbContext.Location.Where(a => a.Active == 0 && a.Name == Name&& a.IdLocationType== LocationType.IdLocationType).FirstOrDefaultAsync();
+            return Location;
+        }
+        public async Task<Location> GetByExistantNameActif(string Name)
+        {
+            var result = await MyDbContext.Location.Where(a => a.Active == 0 && a.Name == Name).FirstOrDefaultAsync();
+            return result;
+        }
+
+        public async Task<IEnumerable<Location>> GetByNearByActif(string Locality1, string Locality2, string Locality3, int CodePostal)
+        {
+            var Location = await MyDbContext.Location.Where(a => a.Active == 0 && a.NameLocality1 == Locality1
+
+            && a.NameLocality2 == Locality2 && a.NameLocality3 == Locality3 &&
+            a.PostalCode == CodePostal).ToListAsync();
+            return Location;
+        }
         //public async Task<IEnumerable<Location>> GetAllWithArtisteAsync()
         //{
         //    return await MyLocationDbContext.Locations

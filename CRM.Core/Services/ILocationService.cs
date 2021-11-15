@@ -17,6 +17,8 @@ namespace CRM.Core.Services
         Task<IEnumerable<Location>> GetAllActif();
         Task<IEnumerable<Location>> GetAllInActif();
         Task Approuve(Location LocationToBeUpdated, Location Location);
-        Task Reject(Location LocationToBeUpdated, Location Location);
+        Task Reject(Location LocationToBeUpdated, Location Location); 
+        Task<IEnumerable<Location>> GetByNearByActif(string Locality1, string Locality2, string Locality3, int CodePostal);
+        Task<Location> GetByExistantActif(string Name, int? IdlocationType);
     }
 }

@@ -14,5 +14,7 @@ namespace CRM.Core.Repository
         Task<LocationType> GetByIdActif(int id);
 
         Task<IEnumerable<LocationType>> GetAllRejected();
+        Task<LocationType> GetByExistantActif(string Name, string Type);
+
     }
 }

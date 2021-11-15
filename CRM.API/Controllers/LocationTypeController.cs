@@ -62,6 +62,8 @@ namespace CRM_API.Controllers
         [HttpPost]
         public async Task<ActionResult<LocationType>> CreateLocationType(SaveLocationTypeResource SaveLocationTypeResource)
         {
+            var Exist = await _LocationTypeService.GetByExistantActif(SaveLocationTypeResource.Name, SaveLocationTypeResource.Type);
+            if (Exist == null) { 
             //*** Mappage ***
             var LocationType = _mapperService.Map<SaveLocationTypeResource, LocationType>(SaveLocationTypeResource);
             LocationType.UpdatedOn = DateTime.UtcNow;
@@ -72,6 +74,14 @@ namespace CRM_API.Controllers
             //*** Mappage ***
             var LocationTypeResource = _mapperService.Map<LocationType, LocationTypeResource>(NewLocationType);
             return Ok(LocationTypeResource);
+            }
+            else
+            {
+                var genericResult = new { Exist = "Already exists", Location = Exist };
+                return Ok(genericResult);
+
+
+            }
         }
         [HttpGet]
         public async Task<ActionResult<LocationTypeResource>> GetAllLocationTypes()

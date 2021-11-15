@@ -13,6 +13,13 @@ namespace CRM.Core.Repository
         Task<IEnumerable<Pharmacy>> GetAllPending();
         Task<IEnumerable<Pharmacy>> GetAllRejected();
         Task<Pharmacy> GetByIdActif(int id);
+        Task<Pharmacy> GetByExistantEmailActif(string Email);
+        Task<Pharmacy> GetByExistantLastNameActif( string LastName);
 
+        Task<Pharmacy> GetByExistantNameActif(string Name);
+
+        Task<Pharmacy> GetByExistantFirstNameActif(string FirstName);
+        Task<IEnumerable<Pharmacy>> GetByExistantPhoneNumberActif(int PhoneNumber);
+        Task<IEnumerable<Pharmacy>> GetByNearByActif(string Locality1, string Locality2, string Locality3, int CodePostal);
     }
 }

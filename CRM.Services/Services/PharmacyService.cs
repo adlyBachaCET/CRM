@@ -1,7 +1,9 @@
 ﻿using CRM.Core;
 using CRM.Core.Models;
 using CRM.Core.Services;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace CRM.Services.Services
@@ -33,12 +35,60 @@ namespace CRM.Services.Services
             return
                            await _unitOfWork.Pharmacys.GetAll();
         }
-
-       /* public async Task Delete(Pharmacy Pharmacy)
+        public async Task<PharmacyExiste> Verify(SaveAddPharmacyResource SaveAddPharmacyResource)
         {
-            _unitOfWork.Pharmacys.Remove(Pharmacy);
-            await _unitOfWork.CommitAsync();
-        }*/
+            PharmacyExiste Object = new PharmacyExiste();
+            Object.ExistPharmacyEmail = false;
+            Object.ExistPharmacyFirstName = false;
+            Object.ExistPharmacyLastName= false;
+            Object.ExistPharmacyName= false;
+
+
+            var PharmacyEmail = await _unitOfWork.Pharmacys.GetByExistantEmailActif(SaveAddPharmacyResource.SavePharmacyResource.Email);
+            var PharmacyFirstNameOwner = await _unitOfWork.Pharmacys.GetByExistantFirstNameActif(SaveAddPharmacyResource.SavePharmacyResource.FirstNameOwner);
+            var PharmacyLastNameOwner = await _unitOfWork.Pharmacys.GetByExistantLastNameActif( SaveAddPharmacyResource.SavePharmacyResource.LastNameOwner);
+            var PharmacyName = await _unitOfWork.Pharmacys.GetByExistantNameActif(SaveAddPharmacyResource.SavePharmacyResource.Name);
+
+
+            if (PharmacyEmail != null)
+            {
+                Object.PharmacyEmail = PharmacyEmail;
+                Object.ExistPharmacyEmail = true;
+            }
+            if (PharmacyFirstNameOwner != null)
+            {
+                Object.PharmacyFirstName = PharmacyFirstNameOwner;
+                Object.ExistPharmacyFirstName = true;
+            }
+            if (PharmacyLastNameOwner!= null)
+            {
+                Object.PharmacyLastName = PharmacyEmail;
+                Object.ExistPharmacyLastName = true;
+            }
+            if (PharmacyName != null)
+            {
+                Object.PharmacyName = PharmacyName;
+                Object.ExistPharmacyName = true;
+            }
+            /*      var PharmacysNearBy = await _unitOfWork.Pharmacys.Find(i => i.NameLocality1 == SaveAddPharmacyResource.SavePharmacyResource.NameLocality1
+                  && i.NameLocality2 == SaveAddPharmacyResource.SavePharmacyResource.NameLocality2
+                              && i.NameLocality3 == SaveAddPharmacyResource.SavePharmacyResource.NameLocality3
+                     && i.Active == 0);
+                  if (PharmacysNearBy != null)
+                  {
+                      Object.PharmacyNearBy = PharmacysNearBy;
+                  }*/
+
+
+
+            return
+                           Object;
+        }
+        /* public async Task Delete(Pharmacy Pharmacy)
+         {
+             _unitOfWork.Pharmacys.Remove(Pharmacy);
+             await _unitOfWork.CommitAsync();
+         }*/
 
         //public async Task<IEnumerable<Pharmacy>> GetAllWithArtiste()
         //{
@@ -123,6 +173,18 @@ namespace CRM.Services.Services
         {
             return
                              await _unitOfWork.Pharmacys.GetAllInActif();
+        }
+
+        public async Task<IEnumerable<Pharmacy>> GetByExistantPhoneNumberActif(int PhoneNumber)
+        {
+            return
+                                 await _unitOfWork.Pharmacys.GetByExistantPhoneNumberActif(PhoneNumber); 
+        }
+
+        public async Task<IEnumerable<Pharmacy>> GetByNearByActif(string Locality1, string Locality2, string Locality3, int CodePostal)
+        {
+            return
+                       await _unitOfWork.Pharmacys.GetByNearByActif( Locality1,  Locality2,  Locality3,  CodePostal);
         }
         //public Task<Pharmacy> CreatePharmacy(Pharmacy newPharmacy)
         //{

@@ -64,21 +64,32 @@ namespace CRM_API.Controllers
         [HttpPost]
         public async Task<ActionResult<Location>> CreateLocation(SaveLocationResource SaveLocationResource)
         {
-            //*** Mappage ***
-            var Location = _mapperService.Map<SaveLocationResource, Location>(SaveLocationResource);
-            Location.UpdatedOn = DateTime.UtcNow;
-            Location.CreatedOn = DateTime.UtcNow;
-            var NewLocationType = await _LocationTypeService.GetById(SaveLocationResource.IdLocationType);
-            Location.NameLocationType = NewLocationType.Name;
-            Location.StatusLocationType = NewLocationType.Status;
-            Location.VersionLocationType = NewLocationType.Version;
-            Location.TypeLocationType = NewLocationType.Type;
+            var LocationExiste = await _LocationService.GetByExistantActif(SaveLocationResource.Name, SaveLocationResource.IdLocationType);
+            LocationResource LocationResourceOld = new LocationResource();
+            if (LocationExiste == null)
+            { //*** Mappage ***
+                var Location = _mapperService.Map<SaveLocationResource, Location>(SaveLocationResource);
+                Location.UpdatedOn = DateTime.UtcNow;
+                Location.CreatedOn = DateTime.UtcNow;
+                var NewLocationType = await _LocationTypeService.GetById(SaveLocationResource.IdLocationType);
+                Location.NameLocationType = NewLocationType.Name;
+                Location.StatusLocationType = NewLocationType.Status;
+                Location.VersionLocationType = NewLocationType.Version;
+                Location.TypeLocationType = NewLocationType.Type;
 
-            //*** Creation dans la base de données ***
-            var NewLocation = await _LocationService.Create(Location);
-            //*** Mappage ***
-            var LocationResource = _mapperService.Map<Location, LocationResource>(NewLocation);
-            return Ok(LocationResource);
+                //*** Creation dans la base de données ***
+                var NewLocation = await _LocationService.Create(Location);
+                //*** Mappage ***
+                var LocationResource = _mapperService.Map<Location, LocationResource>(NewLocation);
+
+                return Ok(LocationResource);
+            }
+            else
+            {
+                var genericResult = new { Exist = "Already exists", Location = LocationExiste };
+
+                return Ok(genericResult);
+            }
         }
         [HttpGet]
         public async Task<ActionResult<LocationResource>> GetAllLocations()

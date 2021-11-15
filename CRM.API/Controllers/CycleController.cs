@@ -18,13 +18,16 @@ namespace CRM_API.Controllers
         public IList<Cycle> Cycles;
 
         private readonly ICycleService _CycleService;
+        private readonly ICycleUserService _CycleUserService;
+
         private readonly ISectorService _SectorService;
         private readonly ISectorCycleService _SectorCycleService;
 
         private readonly IMapper _mapperService;
-        public CycleController(ISectorCycleService SectorCycleService,ISectorService SectorService,ICycleService CycleService, IMapper mapper)
+        public CycleController(ICycleUserService CycleUserService,ISectorCycleService SectorCycleService,ISectorService SectorService,ICycleService CycleService, IMapper mapper)
         {
-            _SectorCycleService = SectorCycleService;
+            _CycleUserService=CycleUserService;
+               _SectorCycleService = SectorCycleService;
             _SectorService = SectorService;
             _CycleService = CycleService;
             _mapperService = mapper;
@@ -32,15 +35,16 @@ namespace CRM_API.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult<Cycle>> CreateCycle(SaveCycleResource SaveCycleResource)
+        public async Task<ActionResult<Cycle>> CreateCycle(AffectationCycleUser AffectationCycleUser)
         {
             //*** Mappage ***
-            var Cycle = _mapperService.Map<SaveCycleResource, Cycle>(SaveCycleResource);
+            var Cycle = _mapperService.Map<SaveCycleResource, Cycle>(AffectationCycleUser.SaveCycleResource);
             //*** Creation dans la base de données ***
             var NewCycle = await _CycleService.Create(Cycle);
             //*** Mappage ***
             var CycleResource = _mapperService.Map<Cycle, CycleResource>(NewCycle);
-            for (int i=1;i==SaveCycleResource.NbSemaine;i++)
+
+            for (int i=1;i== AffectationCycleUser.SaveCycleResource.NbSemaine;i++)
             {
                 SaveSectorResource sectorResource = new SaveSectorResource();
                 sectorResource.Name = "S" + i;
@@ -52,16 +56,23 @@ namespace CRM_API.Controllers
                 NewSector.CreatedOn = DateTime.UtcNow;
                 await _SectorService.Create(NewSector);
                 SaveSectorCycleResource Affectation = new SaveSectorCycleResource();
-                Affectation.IdCycle = NewCycle.IdCycle;
+                Affectation.IdCycle = CycleResource.IdCycle;
                 Affectation.IdSector = NewSector.IdSector;
                 var AffectationCycleSector = _mapperService.Map<SaveSectorCycleResource, SectorCycle>(Affectation);
                 AffectationCycleSector.UpdatedOn = DateTime.UtcNow;
                 AffectationCycleSector.CreatedOn = DateTime.UtcNow;
                 await _SectorCycleService.Create(AffectationCycleSector);
+                foreach (var item in AffectationCycleUser.Ids)
+                {
+                    SaveCycleUserResource SaveCycleUserResource = new SaveCycleUserResource();
+                    SaveCycleUserResource.IdCycle = CycleResource.IdCycle;
+                    SaveCycleUserResource.IdUser = item;
+                    var CycleUser = _mapperService.Map<SaveCycleUserResource, CycleUser>(SaveCycleUserResource);
+                    CycleUser.CreatedOn = DateTime.UtcNow;
+                    CycleUser.UpdatedOn = DateTime.UtcNow;
+                    await _CycleUserService.Create(CycleUser);
             }
-
-     
-
+            }
             return Ok(CycleResource);
         }
         [HttpGet]

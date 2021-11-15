@@ -30,6 +30,8 @@ namespace CRM_API.Controllers
         [HttpPost]
         public async Task<ActionResult<Tags>> CreateTags(SaveTagsResource SaveTagsResource)
         {
+            var Exist = await _TagsService.GetByExistantActif(SaveTagsResource.Name);
+            if(Exist == null){ 
             //*** Mappage ***
             var Tags = _mapperService.Map<SaveTagsResource, Tags>(SaveTagsResource);
             //*** Creation dans la base de données ***
@@ -37,6 +39,12 @@ namespace CRM_API.Controllers
             //*** Mappage ***
             var TagsResource = _mapperService.Map<Tags, TagsResource>(NewTags);
             return Ok(TagsResource);
+            }
+            else
+            {
+                var genericResult = new { Exist = "Already exists", Location = Exist };
+                return Ok(genericResult);
+            }
         }
         [HttpGet]
         public async Task<ActionResult<TagsResource>> GetAllTagss()

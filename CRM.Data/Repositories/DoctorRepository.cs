@@ -26,7 +26,13 @@ namespace CRM.Data.Repositories
             var result = await MyDbContext.Doctor.Where(a => a.Active == 0).ToListAsync();
             return result;
         }
+        public async Task<IEnumerable<Doctor>> GetByExistantPhoneNumberActif(int PhoneNumber)
+        {
+            var result = await MyDbContext.Phone.Where(a => a.Active == 0 && a.PhoneNumber == PhoneNumber).FirstOrDefaultAsync();
 
+            var Doctor = await MyDbContext.Doctor.Where(a => a.Active == 0 && a.IdDoctor == result.IdDoctor).ToListAsync();
+            return Doctor;
+        }
         public async Task<IEnumerable<Doctor>> GetAllInActif()
         {
             var result = await MyDbContext.Doctor.Where(a => a.Active == 1).ToListAsync();

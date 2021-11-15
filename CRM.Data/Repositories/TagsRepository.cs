@@ -20,7 +20,11 @@ namespace CRM.Data.Repositories
         {
 
         }
-
+        public async Task<Tags> GetByExistantActif(string Name)
+        {
+            var result = await MyDbContext.Tags.Where(a => a.Name == Name && a.Active == 0).FirstOrDefaultAsync();
+            return result;
+        }
         public async Task<IEnumerable<Tags>> GetAllActif()
         {
             var result = await MyDbContext.Tags.Where(a => a.Active == 0).ToListAsync();

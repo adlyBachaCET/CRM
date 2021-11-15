@@ -75,6 +75,7 @@ namespace CRM.Core.Models
         public virtual ICollection<SellingObjectives> SellingObjectives { get; set; }
 
         public virtual ICollection<Participant> Participant { get; set; }
+        public virtual ICollection<CycleUser> CycleUser { get; set; }
 
 
     }

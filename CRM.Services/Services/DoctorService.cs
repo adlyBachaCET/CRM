@@ -22,12 +22,48 @@ namespace CRM.Services.Services
             await _unitOfWork.CommitAsync();
             return newDoctor;
         }
+        public async Task<IEnumerable<Doctor>> GetByExistantPhoneNumberActif(int PhoneNumber)
+        {
+            return
+                                 await _unitOfWork.Doctors.GetByExistantPhoneNumberActif(PhoneNumber);
+        }
+
         public async Task<List<Doctor>> CreateRange(List<Doctor> newDoctor)
         {
 
             await _unitOfWork.Doctors.AddRange(newDoctor);
             await _unitOfWork.CommitAsync();
             return newDoctor;
+        }
+        public async Task Approuve(Doctor DoctorToBeUpdated, Doctor Doctor)
+        {
+            DoctorToBeUpdated.Active = 1;
+            await _unitOfWork.CommitAsync();
+            Doctor = DoctorToBeUpdated;
+            Doctor.Version = DoctorToBeUpdated.Version + 1;
+            Doctor.IdDoctor = DoctorToBeUpdated.IdDoctor;
+            Doctor.Status = Status.Rejected;
+            Doctor.UpdatedOn = System.DateTime.UtcNow;
+            Doctor.CreatedOn = DoctorToBeUpdated.CreatedOn;
+
+            Doctor.Active = 0;
+
+            await _unitOfWork.Doctors.Add(Doctor);
+            await _unitOfWork.CommitAsync();
+
+        }
+        public async Task Reject(Doctor DoctorToBeUpdated, Doctor Doctor)
+        {
+            DoctorToBeUpdated.Active = 1;
+            await _unitOfWork.CommitAsync();
+
+            Doctor.Version = DoctorToBeUpdated.Version + 1;
+            Doctor.IdDoctor = DoctorToBeUpdated.IdDoctor;
+            Doctor.Status = Status.Rejected;
+            Doctor.Active = 1;
+
+            await _unitOfWork.Doctors.Add(Doctor);
+            await _unitOfWork.CommitAsync();
         }
         public async Task<IEnumerable<Doctor>> GetAll()
         {

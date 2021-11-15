@@ -20,6 +20,8 @@ namespace CRM.Data
         public virtual DbSet<BrickLocality> BrickLocality { get; set; }
         public virtual DbSet<BuDoctor> BuDoctor { get; set; }
         public virtual DbSet<BuUser> BuUser { get; set; }
+        public virtual DbSet<CycleUser> CycleUser { get; set; }
+
         public virtual DbSet<BuFile> BuFile { get; set; }
         public virtual DbSet<ProductFile> ProductFile { get; set; }
         public virtual DbSet<ProductSellingObjectives> ProductSellingObjectives { get; set; }
@@ -249,6 +251,27 @@ namespace CRM.Data
                     .HasForeignKey(d => new { d.IdUser, d.StatusUser, d.VersionUser })
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_BuUser_User");
+            });
+
+            modelBuilder.Entity<CycleUser>(entity =>
+            {
+                entity.HasKey(e => new { e.IdUser, e.StatusUser, e.VersionUser, e.StatusCycle, e.VersionCycle, e.IdCycle });
+
+                entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
+
+                entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
+
+                entity.HasOne(d => d.Cycle)
+                    .WithMany(p => p.CycleUser)
+                    .HasForeignKey(d => new { d.IdCycle, d.StatusCycle, d.VersionCycle })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_CycleUser_CyclesinessUnit");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.CycleUser)
+                    .HasForeignKey(d => new { d.IdUser, d.StatusUser, d.VersionUser })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_CycleUser_User");
             });
             modelBuilder.Entity<VisitUser>(entity =>
             {

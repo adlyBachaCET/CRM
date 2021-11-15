@@ -35,7 +35,11 @@ namespace CRM_API.Mapping
             CreateMap<BuUser, SaveBuUserResource>();
             CreateMap<SaveBuUserResource, BuUser>();
             CreateMap<BuUser, IEnumerable<BuUserResource>>();
-           
+            //CycleUser
+            CreateMap<CycleUser, CycleUserResource>();
+            CreateMap<CycleUser, SaveCycleUserResource>();
+            CreateMap<SaveCycleUserResource, CycleUser>();
+            CreateMap<CycleUser, IEnumerable<CycleUserResource>>();
             //User
             CreateMap<User, UserResource>();
             CreateMap<User, UpdateUserResource>();

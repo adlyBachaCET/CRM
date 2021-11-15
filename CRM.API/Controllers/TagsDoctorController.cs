@@ -36,6 +36,17 @@ namespace CRM_API.Controllers
             var TagsDoctorResource = _mapperService.Map<TagsDoctor, TagsDoctorResource>(NewTagsDoctor);
             return Ok(TagsDoctorResource);
         }
+        [HttpPost("Range")]
+        public async Task<ActionResult<TagsDoctor>> CreateTagsDoctor(List<SaveTagsDoctorResource> SaveTagsDoctorResource)
+        {
+            //*** Mappage ***
+            var TagsDoctor = _mapperService.Map<List<SaveTagsDoctorResource>, TagsDoctor>(SaveTagsDoctorResource);
+            //*** Creation dans la base de données ***
+            var NewTagsDoctor = await _TagsDoctorService.Create(TagsDoctor);
+            //*** Mappage ***
+            var TagsDoctorResource = _mapperService.Map<TagsDoctor, TagsDoctorResource>(NewTagsDoctor);
+            return Ok(TagsDoctorResource);
+        }
         [HttpGet]
         public async Task<ActionResult<TagsDoctorResource>> GetAllTagsDoctors()
         {

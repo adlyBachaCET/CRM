@@ -30,5 +30,7 @@ namespace CRM.Core.Models
         public virtual ICollection<PotentielCycle> PotentielCycle { get; set; }
         public virtual ICollection<SectorCycle> WeekSectorCycle { get; set; }
         public virtual ICollection<SectorCycleInYear> WeekSectorCycleInYear { get; set; }
+        public virtual ICollection<CycleUser> CycleUser { get; set; }
+
     }
 }

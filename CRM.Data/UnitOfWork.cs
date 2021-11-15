@@ -15,6 +15,8 @@ namespace CRM.Data
         private IBuDoctorRepository _BuDoctorRepository;
         private IBusinessUnitRepository _BusinessUnitRepository;
         private IBuUserRepository _BuUserRepository;
+        private ICycleUserRepository _CycleUserRepository;
+
         private ICycleBuRepository _CycleBuRepository;
         private ICycleRepository _CycleRepository;
         private ITargetRepository _CycleSectorWeekDoctorRepository;
@@ -60,6 +62,7 @@ namespace CRM.Data
         public IBusinessUnitRepository BusinessUnits =>_BusinessUnitRepository = _BusinessUnitRepository ?? new BusinessUnitRepository(_context);
 
         public IBuUserRepository BuUsers =>_BuUserRepository = _BuUserRepository ?? new BuUserRepository(_context);
+        public ICycleUserRepository CycleUsers => _CycleUserRepository = _CycleUserRepository ?? new CycleUserRepository(_context);
 
         public ICycleBuRepository CycleBus =>_CycleBuRepository = _CycleBuRepository ?? new CycleBuRepository(_context);
 

@@ -18,6 +18,7 @@ namespace CRM.Core.Services
         Task<IEnumerable<LocationType>> GetAllInActif();
         Task Approuve(LocationType LocationTypeToBeUpdated, LocationType LocationType);
         Task Reject(LocationType LocationTypeToBeUpdated, LocationType LocationType);
+        Task<LocationType> GetByExistantActif(string Name, string Type);
 
 
     }
