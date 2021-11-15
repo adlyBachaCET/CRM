@@ -18,6 +18,9 @@ namespace CRM.Core.Repository
         Task<Location> GetByExistantActif(string Name, int? IdlocationType);
         Task<Location> GetByExistantNameActif(string Name);
 
-        Task<IEnumerable<Location>> GetByNearByActif(string Locality1, string Locality2, string Locality3, int CodePostal);
+        Task<IEnumerable<Location>> GetByNearByActif(string Locality1, string Locality2, int CodePostal);
+        Task<IEnumerable<Location>> GetByExactExistantActif(string Name, int PostalCode, string Locality1, string Locality2);
+
+
     }
 }

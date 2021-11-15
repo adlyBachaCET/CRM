@@ -76,7 +76,7 @@ namespace CRM_API.Controllers
             {
                 foreach(var item in SaveDoctorResource.Location)
                 { 
-                var location = await _LocationService.GetByExistantActif(item.Name, item.IdLocationType);
+                var location = await _LocationService.GetByExactExistantActif(item.Name,item.PostalCode,item.NameLocality1,item.NameLocality2);
                 }
             }
 

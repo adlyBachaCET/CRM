@@ -63,9 +63,7 @@ namespace CRM.Core.Models
         public string Email { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public int? IdLocality3 { get; set; }
 
-        public string NameLocality3 { get; set; }
         public virtual ICollection<MessageUser> MessageUser1 { get; set; }
         public virtual ICollection<MessageUser> MessageUser2 { get; set; }
         public virtual ICollection<SharedFiles> SharedFiles { get; set; }

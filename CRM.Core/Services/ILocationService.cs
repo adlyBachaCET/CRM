@@ -20,5 +20,7 @@ namespace CRM.Core.Services
         Task Reject(Location LocationToBeUpdated, Location Location); 
         Task<IEnumerable<Location>> GetByNearByActif(string Locality1, string Locality2, string Locality3, int CodePostal);
         Task<Location> GetByExistantActif(string Name, int? IdlocationType);
+        Task<IEnumerable<Location>> GetByExactExistantActif(string Name, int PostalCode, string Locality1, string Locality2);
+
     }
 }

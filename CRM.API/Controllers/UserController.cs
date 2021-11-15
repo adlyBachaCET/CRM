@@ -247,9 +247,7 @@ namespace CRM_API.Controllers
                 User.IdLocality2 = UpdateUserResource.User.IdLocality2;
                 User.NameLocality2 = UpdateUserResource.User.NameLocality2;
 
-                User.IdLocality3 = UpdateUserResource.User.IdLocality3;
-                User.NameLocality3 = UpdateUserResource.User.NameLocality3;
-              
+            
                 User.UpdatedOn = DateTime.UtcNow;
                User.CreatedOn = UserInDataBase.CreatedOn;
                 //User.IdUser = Id;

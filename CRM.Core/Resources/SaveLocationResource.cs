@@ -25,9 +25,7 @@ namespace CRM.Core.Models
 
         public string NameLocality2 { get; set; }
 
-        public int IdLocality3 { get; set; }
 
-        public string NameLocality3 { get; set; }
 
         public double? Longitude { get; set; }
         public double? Altitude { get; set; }

@@ -93,11 +93,11 @@ namespace CRM.Data.Repositories
             var Pharmacy = await MyDbContext.Pharmacy.Where(a => a.Active == 0 && a.IdPharmacy == result.IdPharmacy).ToListAsync();
             return Pharmacy;
         }
-        public async Task<IEnumerable<Pharmacy>> GetByNearByActif(string Locality1,string Locality2,string Locality3,int CodePostal)
+        public async Task<IEnumerable<Pharmacy>> GetByNearByActif(string Locality1,string Locality2,int CodePostal)
         {
             var Pharmacy = await MyDbContext.Pharmacy.Where(a => a.Active == 0 && a.NameLocality1 == Locality1
 
-            && a.NameLocality2 == Locality2 && a.NameLocality3 == Locality3&&
+            && a.NameLocality2 == Locality2 && 
             a.PostalCode == CodePostal).ToListAsync();
             return Pharmacy;
         }

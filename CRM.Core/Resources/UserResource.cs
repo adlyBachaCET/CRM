@@ -68,11 +68,7 @@ namespace CRM.Core.Models
         public string NameLocality2 { get; set; }
 
         public virtual Locality Locality2 { get; set; }
-        public int IdLocality3 { get; set; }
-        public Status StatusLocality3 { get; set; }
-        public int VersionLocality3 { get; set; }
-        public string NameLocality3 { get; set; }
-        public virtual Locality Locality3 { get; set; }
+
         public virtual ICollection<MessageUser> MessageUser1 { get; set; }
         public virtual ICollection<MessageUser> MessageUser2 { get; set; }
         public virtual ICollection<SharedFiles> SharedFiles { get; set; }

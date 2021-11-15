@@ -181,10 +181,10 @@ namespace CRM.Services.Services
                                  await _unitOfWork.Pharmacys.GetByExistantPhoneNumberActif(PhoneNumber); 
         }
 
-        public async Task<IEnumerable<Pharmacy>> GetByNearByActif(string Locality1, string Locality2, string Locality3, int CodePostal)
+        public async Task<IEnumerable<Pharmacy>> GetByNearByActif(string Locality1, string Locality2, int CodePostal)
         {
             return
-                       await _unitOfWork.Pharmacys.GetByNearByActif( Locality1,  Locality2,  Locality3,  CodePostal);
+                       await _unitOfWork.Pharmacys.GetByNearByActif( Locality1,  Locality2,  CodePostal);
         }
         //public Task<Pharmacy> CreatePharmacy(Pharmacy newPharmacy)
         //{

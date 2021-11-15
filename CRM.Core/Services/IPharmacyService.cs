@@ -22,7 +22,7 @@ namespace CRM.Core.Services
         Task Reject(Pharmacy PharmacyToBeUpdated, Pharmacy Pharmacy);
         Task<PharmacyExiste> Verify(SaveAddPharmacyResource SaveAddPharmacyResource);
         Task<IEnumerable<Pharmacy>> GetByExistantPhoneNumberActif(int PhoneNumber);
-        Task<IEnumerable<Pharmacy>> GetByNearByActif(string Locality1, string Locality2, string Locality3, int CodePostal);
+        Task<IEnumerable<Pharmacy>> GetByNearByActif(string Locality1, string Locality2, int CodePostal);
 
     }
 }

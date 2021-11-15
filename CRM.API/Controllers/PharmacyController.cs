@@ -98,7 +98,7 @@ namespace CRM_API.Controllers
         {
             try
             {
-                var Employe = await _PharmacyService.GetByNearByActif(Nearby.Locality1, Nearby.Locality2, Nearby.Locality3, Nearby.CodePostal);
+                var Employe = await _PharmacyService.GetByNearByActif(Nearby.Locality1, Nearby.Locality2, Nearby.CodePostal);
                 if (Employe == null) return NotFound();
                 // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
                 return Ok(Employe);
