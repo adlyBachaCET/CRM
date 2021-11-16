@@ -55,12 +55,11 @@ namespace CRM.Services.Services
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
             var claims = new[] {
-                new Claim(JwtRegisteredClaimNames.Sub, userInfo.Login),
+                new Claim("Login", userInfo.Login),
                     new Claim(JwtRegisteredClaimNames.Email, userInfo.Email),
-                    new Claim(JwtRegisteredClaimNames.AuthTime, DateTime.UtcNow.ToString()),
 
                       new Claim("Photo", userInfo.Photo.ToString()),
-                    new Claim(JwtRegisteredClaimNames.Jti, userInfo.IdUser.ToString())
+                    new Claim("Id", userInfo.IdUser.ToString())
                 //,   new Claim("User", json)
                     ,
                     new Claim("FirstName", userInfo.FirstName)
