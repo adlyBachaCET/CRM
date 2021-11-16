@@ -12,6 +12,7 @@ namespace CRM_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors("AllowOrigin")]
 
     public class LocalityController : ControllerBase
     {
@@ -84,22 +85,25 @@ namespace CRM_API.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpGet("LVL2/{Id}")]
+        [HttpGet("LVL/{Id}")]
         public async Task<ActionResult<LocalityResource>> GetAllActifLocalitysLVL2(int Id)
         {
+
             try
             {
                 var Employe = await _LocalityService.GetAllActifLVL2(Id);
                 if (Employe == null) return NotFound();
                 // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
-                return Ok(Employe);
+               return Ok(Employe);
+
+
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
         }
-        [HttpGet("LVL1")]
+        [HttpGet("LVL")]
         public async Task<ActionResult<LocalityResource>> GetAllActifLocalitysLVL1()
         {
             try

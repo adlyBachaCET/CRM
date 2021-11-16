@@ -14,6 +14,7 @@ namespace CRM_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors("AllowOrigin")]
 
     public class PharmacyController : ControllerBase
     {

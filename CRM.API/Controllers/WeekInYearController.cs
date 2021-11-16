@@ -4,6 +4,7 @@ using AutoMapper;
 using CRM.Core.Models;
 using CRM.Core.Services;
 using CRM_API.Resources;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,8 @@ namespace CRM_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors("AllowOrigin")]
+
     public class WeekInYearController : ControllerBase
     {
         public IList<WeekInYear> WeekInYears;

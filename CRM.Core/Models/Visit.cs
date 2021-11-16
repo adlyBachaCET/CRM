@@ -22,7 +22,6 @@ namespace CRM.Core.Models
 
         public virtual ICollection<VisitUser> VisitUser { get; set; }
 
-        public ICollection<VisitVisitReport> VisitVisitReport { get; set; }
 
 
         public int IdLocality1 { get; set; }

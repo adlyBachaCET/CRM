@@ -11,6 +11,9 @@ namespace CRM.Data
        
 
         private IBrickRepository _BrickRepository;
+        private IVisitReportRepository _VisitReportRepository;
+        private IVisitRepository _VisitRepository;
+
         private IBrickLocalityRepository _BrickLocalityRepository;
         private IBuDoctorRepository _BuDoctorRepository;
         private IBusinessUnitRepository _BusinessUnitRepository;
@@ -52,6 +55,9 @@ namespace CRM.Data
 
         //        public IUserRepository Users => throw new NotImplementedException();
         public IBrickRepository Bricks => _BrickRepository = _BrickRepository ?? new BrickRepository(_context);
+        public IVisitReportRepository VisitReports => _VisitReportRepository = _VisitReportRepository ?? new VisitReportRepository(_context);
+        public IVisitRepository Visits => _VisitRepository = _VisitRepository ?? new VisitRepository(_context);
+
         public ISectorCycleInYearRepository WeekSectorCycleInYears => _WeekSectorCycleInYearRepository = _WeekSectorCycleInYearRepository ?? new SectorCycleInYearRepository(_context);
         public ISectorCycleRepository WeekSectorCycles => _WeekSectorCycleRepository = _WeekSectorCycleRepository ?? new SectorCycleRepository(_context);
 

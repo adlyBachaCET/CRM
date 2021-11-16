@@ -22,7 +22,7 @@ namespace CRM.Core.Models
         public virtual Visit Visit { get; set; }
         public string VisiteType { get; set; }
 
-        public string Accompaniement        { get; set; }
+        public string Accompaniement { get; set; }
         public string InfoAccompaniement { get; set; }
         public string Competitiveintelligence { get; set; }
 
@@ -30,12 +30,12 @@ namespace CRM.Core.Models
         public string ObjectifNextVisit { get; set; }
 
         public string CycleTtype { get; set; }
-        public ICollection<VisitVisitReport> VisitVisitReport { get; set; }
         public ICollection<VisitRequestReport> VisitRequestReport { get; set; }
 
         public ICollection<ProductSampleVisitReport> ProductSampleVisitReport { get; set; }
 
         public ICollection<ProductVisitReport> ProductVisitReport { get; set; }
+
 
     }
 }

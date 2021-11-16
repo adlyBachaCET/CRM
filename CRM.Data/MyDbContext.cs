@@ -1216,22 +1216,7 @@ namespace CRM.Data
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_TagsDoctor_Specialty");
             });
-            modelBuilder.Entity<VisitVisitReport>(entity =>
-            {
-                entity.HasKey(e => new { e.IdVisit, e.StatusVisit, e.VersionVisit, e.IdReport, e.StatusReport, e.VersionReport });
 
-                entity.HasOne(d => d.Visit)
-                    .WithMany(p => p.VisitVisitReport)
-                    .HasForeignKey(d => new { d.IdVisit, d.StatusVisit, d.VersionVisit })
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_VisitVisitReport_Visit");
-
-                entity.HasOne(d => d.Report)
-                    .WithMany(p => p.VisitVisitReport)
-                    .HasForeignKey(d => new { d.IdReport, d.StatusReport, d.VersionReport })
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_VisitVisitReport_Report");
-            });
             modelBuilder.Entity<ProductSampleVisitReport>(entity =>
             {
                 entity.HasKey(e => new { e.IdProductSample, e.StatusProductSample, e.VersionProductSample, e.IdReport, e.StatusReport, e.VersionReport });

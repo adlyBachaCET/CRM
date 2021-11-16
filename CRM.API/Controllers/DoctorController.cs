@@ -12,12 +12,14 @@ namespace CRM_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors("AllowOrigin")]
 
     public class DoctorController : ControllerBase
     {
         public IList<Doctor> Doctors;
 
         private readonly IDoctorService _DoctorService;
+        private readonly IVisitReportService _VisitReportService;
 
         private readonly IBusinessUnitService _BusinessUnitService;
 
@@ -45,9 +47,10 @@ namespace CRM_API.Controllers
             IInfoService InfoService,
             ITagsService TagsService,
             ITagsDoctorService TagsDoctorService,
-
+            IVisitReportService VisitReportService,
             IBuDoctorService BuDoctorService, IMapper mapper)
         {
+            _VisitReportService = VisitReportService;
             _TagsDoctorService = TagsDoctorService;
             _LocationDoctorService = LocationDoctorService;
             _LocationService = LocationService;
@@ -435,6 +438,9 @@ namespace CRM_API.Controllers
                 var Phone = (List<Phone>)await _PhoneService.GetAllById(Id);
                 DoctorProfile.Phone = Phone;
                 var DoctorLocation = await _LocationDoctorService.GetAllAcceptedActif(Id);
+
+                var DoctorVisit = await _VisitReportService.GetByIdDoctor(Id);
+
 
                 return Ok(DoctorProfile);
             }
