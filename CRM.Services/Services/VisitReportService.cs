@@ -55,7 +55,7 @@ namespace CRM.Services.Services
         public async Task<IEnumerable<VisitReport>> GetByIdDoctor(int id)
         {
             return
-               await _unitOfWork.VisitReports.GetAllById(id);
+               await _unitOfWork.VisitReports.GetByIdDoctor(id);
         }
 
 

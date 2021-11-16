@@ -8,6 +8,8 @@ namespace CRM.Core
     {
     
         IBrickRepository Bricks { get; }
+        IObjectionRepository Objections { get; }
+        IRequestDoctorRepository RequestDoctors { get; }
 
         IVisitReportRepository VisitReports { get; }
         IVisitRepository Visits { get; }

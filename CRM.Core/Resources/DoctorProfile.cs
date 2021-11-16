@@ -16,6 +16,9 @@ namespace CRM.Core.Models
 
         public List<LocationDoctor> LocationDoctor { get; set; }
         public List<VisitReport> VisitReports { get; set; }
+        public List<Objection> Objection { get; set; }
+        public List<RequestDoctor> RequestDoctor { get; set; }
+
 
     }
 

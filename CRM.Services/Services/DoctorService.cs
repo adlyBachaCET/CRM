@@ -206,6 +206,10 @@ namespace CRM.Services.Services
                              await _unitOfWork.Doctors.GetServiceByIdLocationActif(IdLocation);
         }
 
+        public async Task<Doctor> GetById(int? id)
+        {
+            return await _unitOfWork.Doctors.GetById(id);  }
+
         //public Task<Doctor> CreateDoctor(Doctor newDoctor)
         //{
         //    throw new NotImplementedException();

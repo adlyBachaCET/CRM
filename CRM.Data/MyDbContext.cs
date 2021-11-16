@@ -15,6 +15,7 @@ namespace CRM.Data
             : base(options)
         {
         }
+        public virtual DbSet<RequestDoctor> RequestDoctors { get; set; }
 
         public virtual DbSet<Brick> Brick { get; set; }
         public virtual DbSet<BrickLocality> BrickLocality { get; set; }
@@ -997,6 +998,24 @@ namespace CRM.Data
                     .WithMany()
                     .HasForeignKey(d => new { d.IdDoctor, d.StatusDoctor, d.VersionDoctor })
                     .HasConstraintName("FK_Objection_Doctor").IsRequired(false);
+            });
+            modelBuilder.Entity<RequestDoctor>(entity =>
+            {
+                entity.HasKey(e => new { e.IdRequestDoctor, e.Status, e.Version });
+                entity.Property(x => x.IdRequestDoctor).UseIdentityColumn();
+                entity.HasIndex(e => new { e.Active, e.IdRequestDoctor, e.Status, e.Version }).IsUnique();
+                entity.HasIndex(e => e.IdRequestDoctor).IsUnique(false);
+                entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
+
+
+
+
+                entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
+
+                entity.HasOne(d => d.Doctor)
+                    .WithMany()
+                    .HasForeignKey(d => new { d.IdDoctor, d.StatusDoctor, d.VersionDoctor })
+                    .HasConstraintName("FK_RequestDoctor_Doctor").IsRequired(false);
             });
             modelBuilder.Entity<Phone>(entity =>
             {

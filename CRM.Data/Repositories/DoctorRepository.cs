@@ -43,6 +43,11 @@ namespace CRM.Data.Repositories
             var result = await MyDbContext.Doctor.Where(a => a.Active == 0 && a.IdDoctor == id).FirstOrDefaultAsync();
             return result;
         }
+        public async Task<Doctor> GetById(int? id)
+        {
+            var result = await MyDbContext.Doctor.Where(a => a.Active == 0 && a.IdDoctor == id).FirstOrDefaultAsync();
+            return result;
+        }
 
         public async Task<IEnumerable<Doctor>> GetAllAcceptedActif()
         {

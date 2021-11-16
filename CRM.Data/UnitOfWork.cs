@@ -8,11 +8,13 @@ namespace CRM.Data
     public class UnitOfWork : IUnitOfWork
     {
         private readonly MyDbContext _context;
-       
+
+        private IObjectionRepository _ObjectionRepository;
 
         private IBrickRepository _BrickRepository;
         private IVisitReportRepository _VisitReportRepository;
         private IVisitRepository _VisitRepository;
+        private IRequestDoctorRepository _RequestDoctorRepository;
 
         private IBrickLocalityRepository _BrickLocalityRepository;
         private IBuDoctorRepository _BuDoctorRepository;
@@ -57,6 +59,9 @@ namespace CRM.Data
         public IBrickRepository Bricks => _BrickRepository = _BrickRepository ?? new BrickRepository(_context);
         public IVisitReportRepository VisitReports => _VisitReportRepository = _VisitReportRepository ?? new VisitReportRepository(_context);
         public IVisitRepository Visits => _VisitRepository = _VisitRepository ?? new VisitRepository(_context);
+        public IRequestDoctorRepository RequestDoctors => _RequestDoctorRepository = _RequestDoctorRepository ?? new RequestDoctorRepository(_context);
+
+        public IObjectionRepository Objections => _ObjectionRepository = _ObjectionRepository ?? new ObjectionRepository(_context);
 
         public ISectorCycleInYearRepository WeekSectorCycleInYears => _WeekSectorCycleInYearRepository = _WeekSectorCycleInYearRepository ?? new SectorCycleInYearRepository(_context);
         public ISectorCycleRepository WeekSectorCycles => _WeekSectorCycleRepository = _WeekSectorCycleRepository ?? new SectorCycleRepository(_context);

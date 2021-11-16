@@ -16,7 +16,18 @@ namespace CRM_API.Mapping
             CreateMap<Brick, SaveBrickResource>();
             CreateMap<SaveBrickResource, Brick>();
             CreateMap<Brick, IEnumerable<BrickResource>>();
-
+            //RequestDoctor
+            CreateMap<RequestDoctor, RequestDoctorResource>();
+            CreateMap<RequestDoctor, SaveRequestDoctorResource>();
+            CreateMap<RequestDoctor, SaveRequestDoctorResource>();
+            CreateMap<SaveRequestDoctorResource, RequestDoctor>();
+            CreateMap<RequestDoctor, IEnumerable<RequestDoctorResource>>();
+            //Objection
+            CreateMap<Objection, ObjectionResource>();
+            CreateMap<Objection, SaveObjectionResource>();
+            CreateMap<Objection, SaveObjectionResource>();
+            CreateMap<SaveObjectionResource, Objection>();
+            CreateMap<Objection, IEnumerable<ObjectionResource>>();
             //Visit
             CreateMap<Visit, VisitResource>();
             CreateMap<Visit, SaveVisitResource>();

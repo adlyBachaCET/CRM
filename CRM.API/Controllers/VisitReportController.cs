@@ -60,7 +60,110 @@ namespace CRM_API.Controllers
             return Ok(VisitReportResource);
         }
 
+        [HttpGet("Actif")]
+        public async Task<ActionResult<VisitReportResource>> GetAllActifVisitReports()
+        {
+            try
+            {
+                var Employe = await _VisitReportService.GetAllActif();
+                if (Employe == null) return NotFound();
+                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
+                return Ok(Employe);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet("InActif")]
+        public async Task<ActionResult<VisitReportResource>> GetAllInactifVisitReports()
+        {
+            try
+            {
+                var Employe = await _VisitReportService.GetAllInActif();
+                if (Employe == null) return NotFound();
+                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
+                return Ok(Employe);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
+        [HttpGet("{Id}")]
+        public async Task<ActionResult<VisitReportResource>> GetVisitReportById(int Id)
+        {
+            try
+            {
+                var VisitReports = await _VisitReportService.GetById(Id);
+                if (VisitReports == null) return NotFound();
+                var VisitReportRessource = _mapperService.Map<VisitReport, VisitReportResource>(VisitReports);
+                return Ok(VisitReportRessource);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPut("{Id}")]
+        public async Task<ActionResult<VisitReport>> UpdateVisitReport(int Id, SaveVisitReportResource SaveVisitReportResource)
+        {
+
+            var VisitReportToBeModified = await _VisitReportService.GetById(Id);
+            if (VisitReportToBeModified == null) return BadRequest("Le VisitReport n'existe pas"); //NotFound();
+            var VisitReports = _mapperService.Map<SaveVisitReportResource, VisitReport>(SaveVisitReportResource);
+            //var newVisitReport = await _VisitReportService.Create(VisitReports);
+
+            await _VisitReportService.Update(VisitReportToBeModified, VisitReports);
+
+            var VisitReportUpdated = await _VisitReportService.GetById(Id);
+
+            var VisitReportResourceUpdated = _mapperService.Map<VisitReport, VisitReportResource>(VisitReportUpdated);
+
+            return Ok();
+        }
+
+
+        [HttpDelete("{Id}")]
+        public async Task<ActionResult> DeleteVisitReport(int Id)
+        {
+            try
+            {
+
+                var sub = await _VisitReportService.GetById(Id);
+                if (sub == null) return BadRequest("Le VisitReport  n'existe pas"); //NotFound();
+                await _VisitReportService.Delete(sub);
+                ;
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPost("DeleteRange")]
+        public async Task<ActionResult> DeleteRange(List<int> Ids)
+        {
+            try
+            {
+                List<VisitReport> empty = new List<VisitReport>();
+                foreach (var item in Ids)
+                {
+                    var sub = await _VisitReportService.GetById(item);
+                    empty.Add(sub);
+                    if (sub == null) return BadRequest("Le VisitReport  n'existe pas"); //NotFound();
+
+                }
+                await _VisitReportService.DeleteRange(empty);
+                ;
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
 
 

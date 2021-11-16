@@ -31,6 +31,8 @@ namespace CRM_API.Controllers
         private readonly IPhoneService _PhoneService;
         private readonly ITagsDoctorService _TagsDoctorService;
         private readonly ITagsService _TagsService;
+        private readonly IObjectionService _ObjectionService;
+        private readonly IRequestDoctorService _RequestDoctorService;
 
         private readonly IInfoService _InfoService;
         private readonly IPotentielService _PotentielService;
@@ -40,8 +42,8 @@ namespace CRM_API.Controllers
             IPhoneService PhoneService,
             ILocationService LocationService,
             IServiceService ServiceService,
-            IDoctorService DoctorService,
-            IPotentielService PotentielService,
+            IDoctorService DoctorService, IRequestDoctorService RequestDoctorService,
+            IPotentielService PotentielService, IObjectionService ObjectionService,
             ISpecialtyService SpecialtyService,
             IBusinessUnitService BusinessUnitService,
             IInfoService InfoService,
@@ -55,8 +57,10 @@ namespace CRM_API.Controllers
             _LocationDoctorService = LocationDoctorService;
             _LocationService = LocationService;
             _TagsService = TagsService;
-
             _PotentielService = PotentielService;
+            _RequestDoctorService = RequestDoctorService;
+
+            _ObjectionService = ObjectionService;
             _BuDoctorService = BuDoctorService;
             _DoctorService = DoctorService;
             _ServiceService = ServiceService;
@@ -447,7 +451,10 @@ namespace CRM_API.Controllers
                 var DoctorVisit = await _VisitReportService.GetByIdDoctor(Id);
                 DoctorProfile.VisitReports = (List<VisitReport>)DoctorVisit;
 
-
+                var Objections = await _ObjectionService.GetByIdActifDoctor(Id);
+                DoctorProfile.Objection = (List<Objection>)Objections;
+                var RequestDoctors = await _RequestDoctorService.GetByIdActifDoctor(Id);
+                DoctorProfile.RequestDoctor = (List<RequestDoctor>)RequestDoctors;
                 return Ok(DoctorProfile);
             }
             catch (Exception ex)

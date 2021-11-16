@@ -7,6 +7,8 @@ namespace CRM.Core.Services
     public interface IDoctorService
     {
         Task<Doctor> GetById(int id);
+        Task<Doctor> GetById(int? id);
+
         Task<Doctor> Create(Doctor newDoctor);
         Task<List<Doctor>> CreateRange(List<Doctor> newDoctor);
         Task Update(Doctor DoctorToBeUpdated, Doctor Doctor);
