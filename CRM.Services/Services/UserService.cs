@@ -60,7 +60,7 @@ namespace CRM.Services.Services
                     new Claim("FirstName", userInfo.FirstName)
                         ,
                     new Claim("LastName", userInfo.LastName.ToString())
-    };
+                                  };
             var token = new JwtSecurityToken(_config["Jwt:Issuer"],
               _config["Jwt:Issuer"],
               claims,
