@@ -20,6 +20,7 @@ namespace CRM.Core.Services
         Task<IEnumerable<Phone>> GetAll();
         Task<IEnumerable<Phone>> GetAllActif();
         Task<IEnumerable<Phone>> GetAllInActif();
+        Task<IEnumerable<Phone>> GetAllById(int Id);
 
     }
 }

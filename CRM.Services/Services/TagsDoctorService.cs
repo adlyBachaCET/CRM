@@ -46,10 +46,10 @@ namespace CRM.Services.Services
         //          .GetAllWithArtisteAsync();
         //}
 
-        public async Task<TagsDoctor> GetById(int id)
+        public async Task<IEnumerable<TagsDoctor>> GetByIdActif(int id)
         {
             return
-                await _unitOfWork.TagsDoctors.GetById(id);
+                await _unitOfWork.TagsDoctors.GetByIdActif(id);
         }
    
         public async Task Update(TagsDoctor TagsDoctorToBeUpdated, TagsDoctor TagsDoctor)

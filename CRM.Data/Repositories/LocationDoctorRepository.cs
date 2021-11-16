@@ -32,9 +32,9 @@ namespace CRM.Data.Repositories
             var result = await MyDbContext.LocationDoctor.Where(a => a.Active == 1).ToListAsync();
             return result;
         }
-        public async Task<LocationDoctor> GetByIdActif(int id)
+        public async Task<LocationDoctor> GetByIdActif(int IdDoctor,int IdLocation)
         {
-            var result = await MyDbContext.LocationDoctor.Where(a => a.Active == 0 && a.IdDoctor == id).FirstOrDefaultAsync();
+            var result = await MyDbContext.LocationDoctor.Where(a => a.Active == 0 && a.IdDoctor == IdDoctor&& a.IdLocation== IdLocation).FirstOrDefaultAsync();
             return result;
         }
 
@@ -43,7 +43,11 @@ namespace CRM.Data.Repositories
             var result = await MyDbContext.LocationDoctor.Where(a => a.Active == 0 && a.Status == Status.Approuved).ToListAsync();
             return result;
         }
-
+        public async Task<IEnumerable<LocationDoctor>> GetAllAcceptedActif(int Id)
+        {
+            var result = await MyDbContext.LocationDoctor.Where(a => a.Active == 0 && a.IdDoctor==Id).ToListAsync();
+            return result;
+        }
         public async Task<IEnumerable<LocationDoctor>> GetAllAcceptedInactifActif()
         {
             var result = await MyDbContext.LocationDoctor.Where(a => a.Active == 1 && a.Status == Status.Approuved).ToListAsync();

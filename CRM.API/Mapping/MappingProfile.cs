@@ -13,8 +13,15 @@ namespace CRM_API.Mapping
             //Brick
             CreateMap<Brick, BrickResource>();
             CreateMap<Brick, SaveBrickResource>();
+            CreateMap<Brick, SaveBrickResource>();
             CreateMap<SaveBrickResource, Brick>();
             CreateMap<Brick, IEnumerable<BrickResource>>();
+            //Specialty
+            CreateMap<Specialty, SpecialtyResource>();
+            CreateMap<Specialty, SaveSpecialtyResource>();
+            CreateMap<Specialty, SaveSpecialtyResource>();
+            CreateMap<SaveSpecialtyResource, Specialty>();
+            CreateMap<Specialty, IEnumerable<SpecialtyResource>>();
             //Pharmacy
             CreateMap<Pharmacy, PharmacyResource>();
             CreateMap<Pharmacy, SavePharmacyResource>();
@@ -93,6 +100,8 @@ namespace CRM_API.Mapping
             CreateMap<SaveTagsResource, Tags>();
             CreateMap<List<SaveTagsResource>, List<Tags>>();
             CreateMap<Tags, IEnumerable<TagsResource>>();
+            CreateMap<TagsResource, Tags>();
+
             //TagsDoctor
             CreateMap<TagsDoctor, TagsDoctorResource>();
             CreateMap<TagsDoctor, SaveTagsDoctorResource>();

@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using CRM_API.Resources;
 using System.Security.Claims;
+using Newtonsoft.Json;
 
 namespace CRM.Services.Services
 {
@@ -47,13 +48,15 @@ namespace CRM.Services.Services
 
         public string GenerateJSONWebToken(User userInfo)
         {
+            var jsonString = JsonConvert.SerializeObject(userInfo);
+
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
             var claims = new[] {
                 new Claim("Login", userInfo.Login),
                     new Claim(JwtRegisteredClaimNames.Email, userInfo.Email),
                       new Claim("Photo", userInfo.Photo.ToString()),
-                    new Claim("Id", userInfo.IdUser.ToString())
+                    new Claim("User", jsonString)
                     ,
                     new Claim("FirstName", userInfo.FirstName)
                         ,

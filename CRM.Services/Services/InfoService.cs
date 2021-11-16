@@ -95,6 +95,12 @@ namespace CRM.Services.Services
             return
                              await _unitOfWork.Infos.GetAllInActif();
         }
+
+        public async Task<IEnumerable<Info>> GetByIdDoctor(int id)
+        {
+            return
+                            await _unitOfWork.Infos.GetByIdDoctor(id);
+        }
         //public Task<Info> CreateInfo(Info newInfo)
         //{
         //    throw new NotImplementedException();

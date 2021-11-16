@@ -73,6 +73,11 @@ namespace CRM.Services.Services
             return
                await _unitOfWork.Phones.Find(i => i.IdDoctor == id && i.Active == 0);
         }
+        public async Task<IEnumerable<Phone>> GetAllById(int id)
+        {
+            return
+               await _unitOfWork.Phones.GetAllById(id);
+        }
         public async Task Update(Phone PhoneToBeUpdated, Phone Phone)
         {
             PhoneToBeUpdated.Active = 1;
@@ -116,6 +121,8 @@ namespace CRM.Services.Services
             return
                              await _unitOfWork.Phones.GetAllInActif();
         }
+
+
         //public Task<Phone> CreatePhone(Phone newPhone)
         //{
         //    throw new NotImplementedException();

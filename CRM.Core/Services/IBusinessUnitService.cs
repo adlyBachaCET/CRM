@@ -12,6 +12,7 @@ namespace CRM.Core.Services
         Task Update(BusinessUnit BusinessUnitToBeUpdated, BusinessUnit BusinessUnit);
         Task Delete(BusinessUnit BusinessUnitToBeDeleted);
         Task DeleteRange(List<BusinessUnit> BusinessUnit);
+        Task<BusinessUnit> GetByNames(string Names);
 
         Task<IEnumerable<BusinessUnit>> GetAll();
         Task<IEnumerable<BusinessUnit>> GetAllActif();

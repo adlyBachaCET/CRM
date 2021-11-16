@@ -37,6 +37,6 @@ namespace CRM.Core.Models
         public string NameBrick { get; set; }
 
 
-
+        public SaveServiceResource SaveServiceResource { get; set; }
     }
 }

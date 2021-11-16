@@ -13,6 +13,7 @@ namespace CRM.Core.Repository
         Task<IEnumerable<BusinessUnit>> GetAllAcceptedInactifActif();
         Task<IEnumerable<BusinessUnit>> GetAllPending();
         Task<IEnumerable<BusinessUnit>> GetAllRejected();
+        Task<BusinessUnit> GetByNames(string Names);
 
     }
 }

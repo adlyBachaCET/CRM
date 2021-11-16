@@ -6,7 +6,7 @@ namespace CRM.Core.Services
 {
     public interface IServiceService
     {
-        Task<Service> GetById(int id);
+        Task<Service> GetById(int? id);
         Task<Service> Create(Service newService);
         Task<List<Service>> CreateRange(List<Service> newService);
         Task Update(Service ServiceToBeUpdated, Service Service);
@@ -16,6 +16,8 @@ namespace CRM.Core.Services
         Task<IEnumerable<Service>> GetAll();
         Task<IEnumerable<Service>> GetAllActif();
         Task<IEnumerable<Service>> GetAllInActif();
+        Task<Service> GetByNameActif(string Name);
+
 
     }
 }

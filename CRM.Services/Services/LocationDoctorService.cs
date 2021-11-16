@@ -46,10 +46,10 @@ namespace CRM.Services.Services
         //          .GetAllWithArtisteAsync();
         //}
 
-        public async Task<LocationDoctor> GetById(int id)
+        public async Task<LocationDoctor> GetByIdActif(int id,int IdLocation)
         {
             return
-                await _unitOfWork.EstablishmentDoctors.GetById(id);
+                await _unitOfWork.EstablishmentDoctors.GetByIdActif(id, IdLocation);
         }
    
         public async Task Update(LocationDoctor EstablishmentDoctorToBeUpdated, LocationDoctor EstablishmentDoctor)
@@ -86,6 +86,12 @@ namespace CRM.Services.Services
         {
             return
                              await _unitOfWork.EstablishmentDoctors.GetAllInActif();
+        }
+
+        public async  Task<IEnumerable<LocationDoctor>> GetAllAcceptedActif(int Id)
+        {
+            return
+                         await _unitOfWork.EstablishmentDoctors.GetAllAcceptedActif(Id);
         }
         //public Task<EstablishmentDoctor> CreateEstablishmentDoctor(EstablishmentDoctor newEstablishmentDoctor)
         //{

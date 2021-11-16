@@ -200,6 +200,12 @@ namespace CRM.Services.Services
                              await _unitOfWork.Doctors.GetAllInActif();
         }
 
+        public async Task<IEnumerable<Service>> GetServiceByIdLocationActif(int IdLocation)
+        {
+            return
+                             await _unitOfWork.Doctors.GetServiceByIdLocationActif(IdLocation);
+        }
+
         //public Task<Doctor> CreateDoctor(Doctor newDoctor)
         //{
         //    throw new NotImplementedException();

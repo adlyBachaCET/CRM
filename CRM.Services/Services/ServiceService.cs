@@ -46,7 +46,7 @@ namespace CRM.Services.Services
         //          .GetAllWithArtisteAsync();
         //}
 
-        public async Task<Service> GetById(int id)
+        public async Task<Service> GetById(int? id)
         {
             return
                       await _unitOfWork.Services.SingleOrDefault(i => i.IdService == id && i.Active == 0);
@@ -94,6 +94,12 @@ namespace CRM.Services.Services
         {
             return
                              await _unitOfWork.Services.GetAllInActif();
+        }
+
+        public async Task<Service> GetByNameActif(string Name)
+        {
+            return
+                                      await _unitOfWork.Services.GetByNameActif(Name);
         }
         //public Task<Service> CreateService(Service newService)
         //{

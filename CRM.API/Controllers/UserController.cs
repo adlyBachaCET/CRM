@@ -110,12 +110,12 @@ namespace CRM_API.Controllers
           
 
                 //all users by BusinessUnit My team
-                var MyBusinessUnit = await _BuUserService.GetByIdUser(Id);
+            var MyBusinessUnit = await _BuUserService.GetByIdUser(Id);
             var Bu = await _BusinessUnitService.GetById(MyBusinessUnit.IdBu);
             var BuResource = _mapperService.Map<BusinessUnit , SaveBusinessUnitResource>(Bu);
 
             Profile.BusinessUnit = BuResource;
-                var Delegates = await _UserService.GetAllDelegateByIdBu(MyBusinessUnit.IdBu);
+            var Delegates = await _UserService.GetAllDelegateByIdBu(MyBusinessUnit.IdBu);
             //var Users = _mapperService.Map< IEnumerable < User >, IEnumerable<SaveUserResource>>(Delegates);
 
             Profile.UserOfBu = Delegates;
@@ -251,7 +251,7 @@ namespace CRM_API.Controllers
                 User.UpdatedOn = DateTime.UtcNow;
                User.CreatedOn = UserInDataBase.CreatedOn;
                 //User.IdUser = Id;
-                await _UserService.Update(UserInDataBase, User);
+                 await _UserService.Update(UserInDataBase, User);
 
                 return Ok();
             }

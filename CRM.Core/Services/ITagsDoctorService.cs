@@ -6,7 +6,7 @@ namespace CRM.Core.Services
 {
     public interface ITagsDoctorService
     {
-        Task<TagsDoctor> GetById(int id);
+        Task<IEnumerable<TagsDoctor>> GetByIdActif(int id);
         Task<TagsDoctor> Create(TagsDoctor newTagsDoctor);
         Task<List<TagsDoctor>> CreateRange(List<TagsDoctor> newTagsDoctor);
         Task Update(TagsDoctor TagsDoctorToBeUpdated, TagsDoctor TagsDoctor);

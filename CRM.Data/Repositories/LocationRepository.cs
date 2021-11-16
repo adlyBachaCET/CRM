@@ -73,14 +73,14 @@ namespace CRM.Data.Repositories
             var result = await MyDbContext.Location.Where(a => a.Active == 0 && a.Name == Name).FirstOrDefaultAsync();
             return result;
         }
-        public async Task<IEnumerable<Location>> GetByExactExistantActif(string Name,int PostalCode ,string Locality1, string Locality2)
+        public async Task<Location> GetByExactExistantActif(string Name,int PostalCode ,string Locality1, string Locality2)
         {
             var Location = await MyDbContext.Location.Where(a => a.Active == 0 
             && a.NameLocality1 == Locality1
             && a.PostalCode == PostalCode 
             && a.Name==Name
             && a.NameLocality2 == Locality2 &&
-            a.PostalCode == PostalCode).ToListAsync();
+            a.PostalCode == PostalCode).FirstOrDefaultAsync();
             return Location;
         }
         public async Task<IEnumerable<Location>> GetByNearByActif(string Locality1, string Locality2, int CodePostal)

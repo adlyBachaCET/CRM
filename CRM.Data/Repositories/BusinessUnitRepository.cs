@@ -61,6 +61,12 @@ namespace CRM.Data.Repositories
             return result;
         }
 
+        public async  Task<BusinessUnit> GetByNames(string Names)
+        {
+            var result = await MyDbContext.BusinessUnit.Where(a => a.Active == 0 && a.Name== Names).FirstOrDefaultAsync();
+            return result;
+        }
+
         //public async Task<IEnumerable<BusinessUnit>> GetAllWithArtisteAsync()
         //{
         //    return await MyBusinessUnitDbContext.BusinessUnits

@@ -66,6 +66,18 @@ namespace CRM.Data.Repositories
             var result = await MyDbContext.Doctor.Where(a => a.Status == Status.Pending).ToListAsync();
             return result;
         }
+
+        public async Task<IEnumerable<Service>> GetServiceByIdLocationActif(int IdLocation)
+        {
+            List<Service> list = new List<Service>();
+            var result = await MyDbContext.LocationDoctor.Where(a => a.Active == 0 && a.IdLocation== IdLocation).ToListAsync();
+            foreach(var item in result)
+            {
+                var Service=await MyDbContext.Service.Where(a => a.Active == 0 && a.IdService == item.IdService).FirstOrDefaultAsync();
+                list.Add(Service);
+            }
+            return list;
+        }
         //public async Task<IEnumerable<Doctor>> GetAllWithArtisteAsync()
         //{
         //    return await MyDoctorDbContext.Doctors

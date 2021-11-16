@@ -140,7 +140,7 @@ namespace CRM.Services.Services
             }
         }
 
-        public async Task<IEnumerable<Location>> GetByExactExistantActif(string Name, int PostalCode, string Locality1, string Locality2)
+        public async Task<Location> GetByExactExistantActif(string Name, int PostalCode, string Locality1, string Locality2)
         {
             return
                             await _unitOfWork.Locations.GetByExactExistantActif(Name, PostalCode, Locality1, Locality2);

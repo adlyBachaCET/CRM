@@ -12,7 +12,8 @@ namespace CRM.Core.Repository
         Task<IEnumerable<Service>> GetAllAcceptedInactifActif();
         Task<IEnumerable<Service>> GetAllPending();
         Task<IEnumerable<Service>> GetAllRejected();
-        Task<Service> GetByIdActif(int id);
+        Task<Service> GetByIdActif(int? id);
+        Task<Service> GetByNameActif(string Name);
 
     }
 }

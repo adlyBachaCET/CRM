@@ -96,6 +96,13 @@ namespace CRM.Services.Services
             return
                              await _unitOfWork.BusinessUnits.GetAllInActif();
         }
+
+        public async Task<BusinessUnit> GetByNames(string Names)
+        {
+            return await _unitOfWork.BusinessUnits.GetByNames(Names);
+
+
+        }
         //public Task<BusinessUnit> CreateBusinessUnit(BusinessUnit newBusinessUnit)
         //{
         //    throw new NotImplementedException();

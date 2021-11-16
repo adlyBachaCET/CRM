@@ -36,12 +36,17 @@ namespace CRM.Data.Repositories
 
 
      
-        public async Task<Service> GetByIdActif(int id)
+        public async Task<Service> GetByIdActif(int? id)
         {
             var result = await MyDbContext.Service.Where(a => a.Active == 0 && a.IdService == id).FirstOrDefaultAsync();
             return result;
         }
 
+        public async Task<Service> GetByNameActif(string Name)
+        {
+            var result = await MyDbContext.Service.Where(a => a.Active == 0 && a.Name == Name).FirstOrDefaultAsync();
+            return result;
+        }
         public async Task<IEnumerable<Service>> GetAllAcceptedActif()
         {
             var result = await MyDbContext.Service.Where(a => a.Active == 0 && a.Status == Status.Approuved).ToListAsync();

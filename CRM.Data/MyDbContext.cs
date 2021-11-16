@@ -641,34 +641,13 @@ namespace CRM.Data
 
             modelBuilder.Entity<LocationDoctor>(entity =>
             {
-                entity.HasKey(e => new { e.IdLocation, e.StatusLocation, e.VersionLocation, e.IdDoctor, e.StatusDoctor, e.VersionDoctor
-                ,
-                    e.IdService,
-                    e.StatusService,
-                    e.VersionService
-                });
+                entity.HasKey(e => e.IdLocationDoctorService);
+                entity.Property(x => x.IdLocationDoctorService).UseIdentityColumn();
 
                 entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
 
                 entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
 
-                entity.HasOne(d => d.IdDoctorNavigation)
-                    .WithMany(p => p.LocationDoctor)
-                    .HasForeignKey(d => new { d.IdDoctor, d.StatusDoctor, d.VersionDoctor })
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_LocationDoctor_Doctor");
-
-                entity.HasOne(d => d.IdServiceNavigation)
-                        .WithMany(p => p.LocationDoctor)
-                        .HasForeignKey(d => new { d.IdService, d.StatusService, d.VersionService })
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK_LocationService_Doctor");
-
-                entity.HasOne(d => d.IdLocationNavigation)
-                    .WithMany(p => p.LocationDoctor)
-                    .HasForeignKey(d => new { d.IdLocation, d.StatusLocation, d.VersionLocation })
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_LocationDoctor_Location");
             });
             modelBuilder.Entity<Participant>(entity =>
             {

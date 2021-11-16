@@ -12,7 +12,6 @@ namespace CRM.Core.Repository
         Task<IEnumerable<TagsDoctor>> GetAllAcceptedInactifActif();
         Task<IEnumerable<TagsDoctor>> GetAllPending();
         Task<IEnumerable<TagsDoctor>> GetAllRejected();
-        Task<TagsDoctor> GetByIdActif(int id);
-
+        Task<IEnumerable<TagsDoctor>> GetByIdActif(int id);
     }
 }

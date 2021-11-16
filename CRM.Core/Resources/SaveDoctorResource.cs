@@ -27,11 +27,11 @@ namespace CRM.Core.Models
 
         public int IdPotentiel { get; set; }
         public string NamePotentiel { get; set; }
-        public virtual List<SaveBusinessUnitResource> BusinessUnits { get; set; }
-        public virtual List<SaveLocationResource> Location { get; set; }
+        public virtual List<int> BusinessUnits { get; set; }
+        public virtual List<SaveLocationSelectResource> Location { get; set; }
         public virtual List<SaveInfoResource> Infos { get; set; }
         public virtual List<SavePhoneResource> Phones { get; set; }
-        public virtual ICollection<SaveTagsResource> TagsDoctor { get; set; }
+        public virtual ICollection<SaveTagsResource> Tags { get; set; }
 
     }
 

@@ -60,6 +60,12 @@ namespace CRM.Data.Repositories
             var result = await MyDbContext.Phone.Where(a => a.Status == Status.Pending).ToListAsync();
             return result;
         }
+
+        public async Task<IEnumerable<Phone>> GetAllById(int Id)
+        {
+            var result = await MyDbContext.Phone.Where(a =>a.Active==0 && a.IdDoctor==Id).ToListAsync();
+            return result;
+        }
         //public async Task<IEnumerable<Phone>> GetAllWithArtisteAsync()
         //{
         //    return await MyPhoneDbContext.Phones

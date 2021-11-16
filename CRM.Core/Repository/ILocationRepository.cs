@@ -19,7 +19,7 @@ namespace CRM.Core.Repository
         Task<Location> GetByExistantNameActif(string Name);
 
         Task<IEnumerable<Location>> GetByNearByActif(string Locality1, string Locality2, int CodePostal);
-        Task<IEnumerable<Location>> GetByExactExistantActif(string Name, int PostalCode, string Locality1, string Locality2);
+        Task<Location> GetByExactExistantActif(string Name, int PostalCode, string Locality1, string Locality2);
 
 
     }

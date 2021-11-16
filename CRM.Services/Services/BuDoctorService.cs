@@ -87,6 +87,13 @@ namespace CRM.Services.Services
             return
                              await _unitOfWork.BuDoctors.GetAllInActif();
         }
+
+        public async Task<IEnumerable<BuDoctor>> GetByIdDoctor(int id)
+        {
+            return await _unitOfWork.BuDoctors.Find(i => i.IdDoctor == id&& i.Active==0);
+        }
+
+
         //public Task<BuDoctor> CreateBuDoctor(BuDoctor newBuDoctor)
         //{
         //    throw new NotImplementedException();

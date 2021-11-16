@@ -16,6 +16,6 @@ namespace CRM.Core.Services
         Task<IEnumerable<Info>> GetAll();
         Task<IEnumerable<Info>> GetAllActif();
         Task<IEnumerable<Info>> GetAllInActif();
-
+        Task<IEnumerable<Info>> GetByIdDoctor(int id);
     }
 }

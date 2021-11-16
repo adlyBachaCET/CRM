@@ -68,6 +68,8 @@ namespace CRM_API
             services.AddTransient<IInfoService, InfoService>();
             services.AddTransient<ILocationService, LocationService>();
             services.AddTransient<ILocationTypeService, LocationTypeService>();
+            services.AddTransient<IDoctorService, DoctorService>();
+            services.AddTransient<IPotentielService, PotentielService>();
 
             services.AddTransient<ILocationDoctorService, LocationDoctorService>();
             services.AddTransient<IServiceService, ServiceService>();

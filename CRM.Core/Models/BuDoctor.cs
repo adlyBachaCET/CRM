@@ -9,7 +9,7 @@ namespace CRM.Core.Models
         public Status StatusBu { get; set; }
         public int VersionBu { get; set; }
 
-        public int NameBu { get; set; }
+        public string NameBu { get; set; }
 
         public int IdDoctor { get; set; }
         public Status StatusDoctor { get; set; }
