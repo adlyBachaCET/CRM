@@ -13,6 +13,9 @@ namespace CRM.Core.Repository
         Task<IEnumerable<Locality>> GetAllPending();
         Task<IEnumerable<Locality>> GetAllRejected();
         Task<Locality> GetByIdActif(int id);
+        Task<Locality> GetByIdActif(int? id);
+        Task<IEnumerable<Locality>> GetAllActifLVL1();
+        Task<IEnumerable<Locality>> GetAllActifLVL2(int Id);
 
     }
 }

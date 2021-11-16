@@ -18,7 +18,9 @@ namespace CRM.Core.Services
         Task<IEnumerable<Locality>> GetAll();
         Task<IEnumerable<Locality>> GetAllActif();
         Task<IEnumerable<Locality>> GetAllInActif();
-
+        Task<Locality> GetByIdActif(int? id);
+        Task<IEnumerable<Locality>> GetAllActifLVL1();
+        Task<IEnumerable<Locality>> GetAllActifLVL2(int Id);
 
     }
 }

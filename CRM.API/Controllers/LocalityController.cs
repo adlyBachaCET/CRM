@@ -32,6 +32,22 @@ namespace CRM_API.Controllers
         {
             //*** Mappage ***
             var Locality = _mapperService.Map<SaveLocalityResource, Locality>(SaveLocalityResource);
+            Locality.UpdatedOn = DateTime.UtcNow;
+            Locality.CreatedOn = DateTime.UtcNow;
+            Locality LocalityParent = new Locality();
+            if (SaveLocalityResource.IdParent!=null)
+            {
+                LocalityParent = await _LocalityService.GetByIdActif(SaveLocalityResource.IdParent);
+
+                Locality.IdParent = LocalityParent.IdLocality;
+                Locality.InverseIdParentNavigation.Add(LocalityParent);
+                Locality.StatusParent = LocalityParent.Status;
+                Locality.VersionParent = LocalityParent.Version;
+            }
+
+
+
+
             //*** Creation dans la base de données ***
             var NewLocality = await _LocalityService.Create(Locality);
             //*** Mappage ***
@@ -59,6 +75,36 @@ namespace CRM_API.Controllers
             try
             {
                 var Employe = await _LocalityService.GetAllActif();
+                if (Employe == null) return NotFound();
+                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
+                return Ok(Employe);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet("LVL2/{Id}")]
+        public async Task<ActionResult<LocalityResource>> GetAllActifLocalitysLVL2(int Id)
+        {
+            try
+            {
+                var Employe = await _LocalityService.GetAllActifLVL2(Id);
+                if (Employe == null) return NotFound();
+                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
+                return Ok(Employe);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet("LVL1")]
+        public async Task<ActionResult<LocalityResource>> GetAllActifLocalitysLVL1()
+        {
+            try
+            {
+                var Employe = await _LocalityService.GetAllActifLVL1();
                 if (Employe == null) return NotFound();
                 // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
                 return Ok(Employe);

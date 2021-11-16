@@ -51,7 +51,11 @@ namespace CRM.Services.Services
             return
                  await _unitOfWork.Localitys.SingleOrDefault(i => i.IdLocality == id && i.Active == 0);
         }
-   
+        public async Task<Locality> GetByIdActif(int? id)
+        {
+            return
+                 await _unitOfWork.Localitys.GetByIdActif(id);
+        }
         public async Task Update(Locality LocalityToBeUpdated, Locality Locality)
         {
             LocalityToBeUpdated.Active = 0;
@@ -100,6 +104,18 @@ namespace CRM.Services.Services
         {
             return
                  await _unitOfWork.Localitys.SingleOrDefault(i => i.IdLocality == id && i.Active == 0 && i.Name== Name);
+        }
+
+        public async Task<IEnumerable<Locality>> GetAllActifLVL1()
+        {
+            return
+                            await _unitOfWork.Localitys.GetAllActifLVL1();
+        }
+
+        public async Task<IEnumerable<Locality>> GetAllActifLVL2(int id)
+        {
+            return
+                                       await _unitOfWork.Localitys.GetAllActifLVL2(id);
         }
         //public Task<Locality> CreateLocality(Locality newLocality)
         //{

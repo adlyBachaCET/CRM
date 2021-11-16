@@ -40,7 +40,8 @@ namespace CRM_API.Controllers
             _mapperService = mapper;
         }
 
-
+        /// <summary>This method returns the new User .</summary>
+        /// <param name="SaveUserResource"> Parameters for the new user .</param>
         [HttpPost]
         public async Task<ActionResult<User>> CreateUser(SaveUserResource SaveUserResource)
         {
@@ -94,7 +95,7 @@ namespace CRM_API.Controllers
         }
   
         /// <summary>This method returns the list of All the details of the selected user (Profil) .</summary>
-        /// <param name="Id">Id of the BusinessUnit .</param>
+        /// <param name="Id">Id of the user .</param>
         [HttpGet("Profil/{Id}")]
         public async Task<ActionResult<UserProfile>> GetAllProfilById(int Id)
         {
@@ -164,6 +165,9 @@ namespace CRM_API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        /// <summary>This method returns the list of all actif users .</summary>
+        /// 
         [HttpGet("Actif")]
         public async Task<ActionResult<UserResource>> GetAllActifUsers()
         {
@@ -179,6 +183,8 @@ namespace CRM_API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        /// <summary>This method returns the list of all inactif users .</summary>
+        /// 
         [HttpGet("InActif")]
         public async Task<ActionResult<UserResource>> GetAllInactifUsers()
         {
@@ -194,6 +200,8 @@ namespace CRM_API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        /// <summary>This method updates .</summary>
+        /// <param name="Id">Id of the BusinessUnit .</param>
         [HttpPut("Photo/{Id}")]
         public async Task<IActionResult> Photo(int Id, UpdatePhoto File)
         {

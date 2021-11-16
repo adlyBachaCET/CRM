@@ -625,6 +625,9 @@ namespace CRM.Data
 
                 entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
 
+                entity.Property(e => e.tel)
+                  .HasMaxLength(50);
+
                 entity.Property(e => e.Name)
                     .HasMaxLength(50)
                     .IsUnicode(false);
@@ -933,6 +936,7 @@ namespace CRM.Data
 
                 entity.Property(e => e.IdPharmacy).HasColumnName("idPharmacy");
 
+                entity.Property(e => e.PhoneNumber).HasMaxLength(15);
 
 
                 entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
@@ -1164,6 +1168,8 @@ namespace CRM.Data
                 entity.HasIndex(e => e.IdService).IsUnique(false);
                 entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
 
+                entity.Property(e => e.tel)
+                  .HasMaxLength(50);
                 entity.Property(e => e.Name)
                     .HasMaxLength(50)
                     .IsUnicode(false);
@@ -1390,6 +1396,8 @@ namespace CRM.Data
                 entity.Property(e => e.Gender)
                     .HasMaxLength(50)
                     .IsUnicode(false);
+                entity.Property(e => e.tel1).HasMaxLength(15);
+                entity.Property(e => e.tel2).HasMaxLength(15);
 
                 entity.Property(e => e.HireDate).HasColumnType("date");
 

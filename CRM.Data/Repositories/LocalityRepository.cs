@@ -26,6 +26,16 @@ namespace CRM.Data.Repositories
             var result = await MyDbContext.Locality.Where(a => a.Active == 0).ToListAsync();
             return result;
         }
+        public async Task<IEnumerable<Locality>> GetAllActifLVL1()
+        {
+            var result = await MyDbContext.Locality.Where(a => a.Active == 0&& a.lvl==1).ToListAsync();
+            return result;
+        }
+        public async Task<IEnumerable<Locality>> GetAllActifLVL2(int id)
+        {
+            var result = await MyDbContext.Locality.Where(a => a.Active == 0&& a.lvl==2&& a.IdParent==id).ToListAsync();
+            return result;
+        }
 
         public async Task<IEnumerable<Locality>> GetAllInActif()
         {
@@ -37,7 +47,11 @@ namespace CRM.Data.Repositories
             var result = await MyDbContext.Locality.Where(a => a.Active == 0 && a.IdLocality == id).FirstOrDefaultAsync();
             return result;
         }
-
+        public async Task<Locality> GetByIdActif(int? id)
+        {
+            var result = await MyDbContext.Locality.Where(a => a.Active == 0 && a.IdLocality == id).FirstOrDefaultAsync();
+            return result;
+        }
         public async Task<IEnumerable<Locality>> GetAllAcceptedActif()
         {
             var result = await MyDbContext.Locality.Where(a => a.Active == 0 && a.Status == Status.Approuved).ToListAsync();

@@ -17,6 +17,7 @@ namespace CRM.Core.Models
         public int? IdParent { get; set; }
         public Status StatusParent { get; set; }
         public int VersionParent { get; set; }
+        public int lvl { get; set; }
 
         public Status Status { get; set; }
         public int? CreatedBy { get; set; }
