@@ -17,7 +17,8 @@ namespace CRM.Core.Models
         public string TypeVisit { get; set; }
         public string Request { get; set; }
         public string Urgency { get; set; }
-
+        public int? CreatedBy { get; set; }
+        public int? UpdatedBy { get; set; }
         public DateTime DateRequest { get; set; }
         public DateTime Deadline { get; set; }
         public int IdUser { get; set; }

@@ -18,7 +18,8 @@ namespace CRM.Core.Models
         public int Active { get; set; }
         public DateTime? CreatedOn { get; set; }
         public string Name { get; set; }
-
+        public int? CreatedBy { get; set; }
+        public int? UpdatedBy { get; set; }
         public virtual ICollection<BuDoctor> BuDoctor { get; set; }
         public virtual ICollection<BuUserResource> BuUser { get; set; }
         public virtual ICollection<CycleBu> CycleBu { get; set; }

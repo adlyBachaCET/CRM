@@ -6,6 +6,9 @@ namespace CRM.Core.Models
 {
     public class Appointement
     {
+        public int? CreatedBy { get; set; }
+        public int? UpdatedBy { get; set; }
+
         public int IdAppointement { get; set; }
         public int Version { get; set; }
         public Status Status { get; set; }

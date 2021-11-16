@@ -13,7 +13,8 @@ namespace CRM.Core.Models
         public Status StatusSpecialty { get; set; }
 
         public int VersionSpecialty { get; set; }
-
+        public int? CreatedBy { get; set; }
+        public int? UpdatedBy { get; set; }
         public int Version { get; set; }
 
         public virtual Doctor IdDoctorNavigation { get; set; }

@@ -12,7 +12,8 @@ namespace CRM.Core.Models
         public Status StatusVisitRequest{ get; set; }
         public int VersionVisitRequest{ get; set; }
         public int NameVisitRequest{ get; set; }
-
+        public int? CreatedBy { get; set; }
+        public int? UpdatedBy { get; set; }
         public int VersionReport{ get; set; }
         public int Version { get; set; }
 

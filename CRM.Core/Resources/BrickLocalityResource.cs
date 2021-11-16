@@ -13,7 +13,8 @@ namespace CRM.Core.Models
         public int VersionBrick { get; set; }
         public int VersionLocality { get; set; }
         public int Version { get; set; }
-
+        public int? CreatedBy { get; set; }
+        public int? UpdatedBy { get; set; }
 
         public virtual Brick IdBrickNavigation { get; set; }
         public virtual Locality IdLocalityNavigation { get; set; }

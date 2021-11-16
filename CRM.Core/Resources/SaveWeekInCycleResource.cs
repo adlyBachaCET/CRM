@@ -7,7 +7,8 @@ namespace CRM.Core.Models
     {
  
         public int Version { get; set; }
-
+        public int? CreatedBy { get; set; }
+        public int? UpdatedBy { get; set; }
         public string Name { get; set; }
         public int Active { get; set; }
 

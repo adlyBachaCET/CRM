@@ -13,6 +13,8 @@ namespace CRM.Core.Models
 
         public string Description { get; set; }
         public Status Status { get; set; }
+        public int? CreatedBy { get; set; }
+        public int? UpdatedBy { get; set; }
 
     }
 }

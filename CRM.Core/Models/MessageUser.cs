@@ -15,7 +15,8 @@ namespace CRM.Core.Models
         public Status StatusMessage { get; set; }
         public int VersionMessage { get; set; }
         public int NameMessage { get; set; }
-
+        public int? CreatedBy { get; set; }
+        public int? UpdatedBy { get; set; }
 
         public int Version { get; set; }
 

@@ -3,8 +3,10 @@ using System.Collections.Generic;
 
 namespace CRM.Core.Models
 {
-    public partial class BuDoctor 
+    public partial class BuDoctor
     {
+        public int? CreatedBy { get; set; }
+        public int? UpdatedBy { get; set; }
         public int IdBu { get; set; }
         public Status StatusBu { get; set; }
         public int VersionBu { get; set; }

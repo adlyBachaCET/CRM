@@ -15,6 +15,8 @@ namespace CRM.Core.Models
         public int Order { get; set; }
         public int? Lock { get; set; }
         public Status Status { get; set; }
+        public int? CreatedBy { get; set; }
+        public int? UpdatedBy { get; set; }
 
     }
 }

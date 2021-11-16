@@ -10,7 +10,8 @@ namespace CRM.Core.Models
             WholeSalerLocality = new HashSet<WholeSalerLocality>();
         }
         public int Version { get; set; }
-
+        public int? CreatedBy { get; set; }
+        public int? UpdatedBy { get; set; }
         public int IdPwholeSaler { get; set; }
         public string Name { get; set; }
         public DateTime? CreatedOn { get; set; }

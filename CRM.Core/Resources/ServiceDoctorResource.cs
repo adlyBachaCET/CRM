@@ -14,7 +14,8 @@ namespace CRM.Core.Models
 
         public int VersionDoctor { get; set; }
         public int Version { get; set; }
-
+        public int? CreatedBy { get; set; }
+        public int? UpdatedBy { get; set; }
         public virtual Doctor IdDoctorNavigation { get; set; }
         public virtual ServiceResource IdServiceNavigation { get; set; }
         public Status Status { get; set; }

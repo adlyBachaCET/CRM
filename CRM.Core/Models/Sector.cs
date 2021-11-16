@@ -13,7 +13,8 @@ namespace CRM.Core.Models
             WeekSectorCycleInYear = new HashSet<SectorCycleInYear>();
         }
         public int Version { get; set; }
-
+        public int? CreatedBy { get; set; }
+        public int? UpdatedBy { get; set; }
         public int Active { get; set; }
         public int IdSector { get; set; }
         public string Name { get; set; }

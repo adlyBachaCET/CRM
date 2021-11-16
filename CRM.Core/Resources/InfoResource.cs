@@ -9,7 +9,8 @@ namespace CRM.Core.Models
         public DateTime? CreatedOn { get; set; }
         public DateTime? UpdatedOn { get; set; }
         public int Version { get; set; }
-
+        public int? CreatedBy { get; set; }
+        public int? UpdatedBy { get; set; }
         public int Active { get; set; }
         public string Datatype { get; set; }
         public string TypeInfo { get; set; }

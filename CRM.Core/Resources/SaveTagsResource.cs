@@ -7,5 +7,7 @@ namespace CRM.Core.Models
     {
         public string Name { get; set; }
         public string Description { get; set; }
+        public int? CreatedBy { get; set; }
+        public int? UpdatedBy { get; set; }
     }
 }

@@ -6,16 +6,13 @@ namespace CRM_API.Resources
 {
     public class SaveBrickResource
     {
-        public SaveBrickResource()
-        {
-            BrickLocality = new HashSet<BrickLocality>();
-        }
+   
 
         public string Name { get; set; }
         public string Description { get; set; }
 
-        public virtual ICollection<BrickLocality> BrickLocality { get; set; }
 
-        public int? Active { get; set; }
+        public int? CreatedBy { get; set; }
+        public int? UpdatedBy { get; set; }
     }
 }

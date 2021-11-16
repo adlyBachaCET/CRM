@@ -32,6 +32,8 @@ namespace CRM.Core.Models
         public virtual List<SaveInfoResource> Infos { get; set; }
         public virtual List<SavePhoneResource> Phones { get; set; }
         public virtual ICollection<SaveTagsResource> Tags { get; set; }
+        public int? CreatedBy { get; set; }
+        public int? UpdatedBy { get; set; }
 
     }
 

@@ -8,5 +8,6 @@ namespace CRM.Core.Resources
    public  class UpdatePhoto
     {
         public IFormFile FormFile { get; set; }
+        public int? UpdatedBy { get; set; }
     }
 }

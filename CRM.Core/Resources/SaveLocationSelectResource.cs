@@ -11,7 +11,8 @@ namespace CRM.Core.Models
 
         public int? IdService { get; set; }
         public int Order { get; set; }
-
+        public int? CreatedBy { get; set; }
+        public int? UpdatedBy { get; set; }
         public bool ChefService { get; set; }
     }
 }

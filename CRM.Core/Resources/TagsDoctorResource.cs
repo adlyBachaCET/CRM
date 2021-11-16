@@ -11,7 +11,8 @@ namespace CRM.Core.Models
         public int VersionDoctor { get; set; }
         public int IdTags { get; set; }
         public Status StatusTags { get; set; }
-
+        public int? CreatedBy { get; set; }
+        public int? UpdatedBy { get; set; }
         public int VersionTags { get; set; }
 
         public int Version { get; set; }

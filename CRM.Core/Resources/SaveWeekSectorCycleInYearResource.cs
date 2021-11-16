@@ -16,7 +16,8 @@ namespace CRM.Core.Models
         public int Year { get; set; }
 
         public int Version { get; set; }
-
+        public int? CreatedBy { get; set; }
+        public int? UpdatedBy { get; set; }
 
         public Status Status { get; set; }
 

@@ -14,7 +14,8 @@ namespace CRM.Core.Models
         public int VersionSellingObjectives{ get; set; }
         public int VersionProduct { get; set; }
         public int NameSellingObjectives{ get; set; }
-
+        public int? CreatedBy { get; set; }
+        public int? UpdatedBy { get; set; }
         public virtual SellingObjectives IdSellingObjectivesNavigation { get; set; }
         public virtual Product IdProductNavigation { get; set; }
         public Status Status { get; set; }

@@ -10,7 +10,8 @@ namespace CRM.Core.Models
             SpecialityDoctor = new HashSet<SaveSpecialityDoctorResource>();
         }
         public int Version { get; set; }
-
+        public int? CreatedBy { get; set; }
+        public int? UpdatedBy { get; set; }
         public int IdSpecialty { get; set; }
         public DateTime? UpdatedOn { get; set; }
         public int Active { get; set; }

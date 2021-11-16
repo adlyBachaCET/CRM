@@ -16,7 +16,8 @@ namespace CRM.Core.Models
         public Status StatusFile { get; set; }
         public int VersionFile { get; set; }
         public int Version { get; set; }
-
+        public int? CreatedBy { get; set; }
+        public int? UpdatedBy { get; set; }
         public Status Status { get; set; }
         public virtual File IdFileNavigation { get; set; }
         public virtual Visit IdVisitNavigation { get; set; }

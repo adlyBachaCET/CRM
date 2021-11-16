@@ -9,7 +9,8 @@ namespace CRM.Core.Models
         public Status StatusCycle { get; set; }
         public int VersionCycle { get; set; }
 
-
+        public int? CreatedBy { get; set; }
+        public int? UpdatedBy { get; set; }
         public int IdUser { get; set; }
         public Status StatusUser { get; set; }
         public int VersionUser { get; set; }

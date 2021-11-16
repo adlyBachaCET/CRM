@@ -15,7 +15,8 @@ namespace CRM.Core.Models
 
         public int IdLocality { get; set; }
         public int Version { get; set; }
-
+        public int? CreatedBy { get; set; }
+        public int? UpdatedBy { get; set; }
         public string Name { get; set; }
         public DateTime? CreatedOn { get; set; }
         public DateTime? UpdatedOn { get; set; }

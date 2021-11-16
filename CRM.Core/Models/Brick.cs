@@ -9,7 +9,8 @@ namespace CRM.Core.Models
         {
             BrickLocality = new HashSet<BrickLocality>();
         }
-
+        public int? CreatedBy { get; set; }
+        public int? UpdatedBy { get; set; }
         public int IdBrick { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }

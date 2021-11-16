@@ -14,7 +14,8 @@ namespace CRM.Core.Models
 
         public int VersionPwholeSaler { get; set; }
         public int Version { get; set; }
-
+        public int? CreatedBy { get; set; }
+        public int? UpdatedBy { get; set; }
         public virtual Locality IdLocalityNavigation { get; set; }
         public virtual WholeSaler IdPwholeSalerNavigation { get; set; }
         public Status Status { get; set; }

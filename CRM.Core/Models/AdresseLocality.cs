@@ -4,8 +4,11 @@ using System.Collections.Generic;
 
 namespace CRM.Core.Models
 {
-    public partial class AdresseLocality 
+    public partial class AdresseLocality
     {
+        public int? CreatedBy { get; set; }
+        public int? UpdatedBy { get; set; }
+
         public int IdAdresse { get; set; }
         public int VersionAdresse { get; set; }
         public Status StatusAdresse { get; set; }

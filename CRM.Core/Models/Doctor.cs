@@ -13,6 +13,8 @@ namespace CRM.Core.Models
             InverseLinked = new HashSet<Doctor>();
             Phone = new HashSet<Phone>();
         }
+        public int? CreatedBy { get; set; }
+        public int? UpdatedBy { get; set; }
         public int IdDoctor { get; set; }
         public int Version { get; set; }
         public Status Status { get; set; }

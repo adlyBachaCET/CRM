@@ -19,7 +19,8 @@ namespace CRM.Core.Models
         public int VersionParent { get; set; }
 
         public Status Status { get; set; }
-
+        public int? CreatedBy { get; set; }
+        public int? UpdatedBy { get; set; }
         public virtual Locality IdParentNavigation { get; set; }
         public virtual ICollection<BrickLocality> BrickLocality { get; set; }
         public virtual ICollection<Locality> InverseIdParentNavigation { get; set; }

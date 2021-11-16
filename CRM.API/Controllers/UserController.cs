@@ -1,5 +1,6 @@
 using AutoMapper;
 using CRM.Core.Models;
+using CRM.Core.Resources;
 using CRM.Core.Services;
 using CRM_API.Resources;
 using Microsoft.AspNetCore.Cors;
@@ -194,21 +195,21 @@ namespace CRM_API.Controllers
             }
         }
         [HttpPut("Photo/{Id}")]
-        public async Task<IActionResult> Photo(int Id, IFormFile File)
+        public async Task<IActionResult> Photo(int Id, UpdatePhoto File)
         {
             try
             {
-                string path = Path.Combine(Directory.GetCurrentDirectory(), "Images", File.FileName);
+                string path = Path.Combine(Directory.GetCurrentDirectory(), "Images", File.FormFile.FileName);
 
                 using (Stream stream = new FileStream(path, FileMode.Create))
                 {
-                    await File.CopyToAsync(stream);
+                    await File.FormFile.CopyToAsync(stream);
                 }
                 
 
 
 
-                await _UserService.UpdatePhoto(Id, File.FileName);
+                await _UserService.UpdatePhoto(Id, File.FormFile.FileName);
 
                 return StatusCode(StatusCodes.Status201Created);
             }

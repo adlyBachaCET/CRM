@@ -24,7 +24,8 @@ namespace CRM.Core.Models
         public string Description { get; set; }
         public int? NbDays { get; set; }
         public int? NbSemaine { get; set; }
-
+        public int? CreatedBy { get; set; }
+        public int? UpdatedBy { get; set; }
         public virtual ICollection<CycleBu> CycleBu { get; set; }
         public virtual ICollection<Target> CycleSectorWeekDoctors { get; set; }
         public virtual ICollection<PotentielCycle> PotentielCycle { get; set; }

@@ -16,7 +16,8 @@ namespace CRM.Core.Models
 
         public int VersionSector { get; set; }
 
-
+        public int? CreatedBy { get; set; }
+        public int? UpdatedBy { get; set; }
 
         public int Active { get; set; }
         public int nbvisite { get; set; }

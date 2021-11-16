@@ -6,6 +6,8 @@ namespace CRM.Core.Models
 {
     public class Adresse
     {
+        public int? CreatedBy { get; set; }
+        public int? UpdatedBy { get; set; }
         public int IdAdresse { get; set; }
         public int Version { get; set; }
         public Status Status { get; set; }

@@ -7,6 +7,7 @@ namespace CRM.Core.Models
     {
         public int IdCycle { get; set; }
         public int IdSector { get; set; }
-
+        public int? CreatedBy { get; set; }
+        public int? UpdatedBy { get; set; }
     }
 }

@@ -24,6 +24,8 @@ namespace CRM.Core.Models
         public string UserModelType { get; set; }
         public DateTime? HireDate { get; set; }
         public DateTime? ReleaseDate { get; set; }
+        public int? CreatedBy { get; set; }
+        public int? UpdatedBy { get; set; }
         public int? RegistrantionNumber { get; set; }
         public string Gender { get; set; }
         public string Photo { get; set; }

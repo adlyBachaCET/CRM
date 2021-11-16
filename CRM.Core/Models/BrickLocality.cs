@@ -7,7 +7,8 @@ namespace CRM.Core.Models
     {
         public int IdLocality { get; set; }
         public Status StatusLocality { get; set; }
-
+        public int? CreatedBy { get; set; }
+        public int? UpdatedBy { get; set; }
         public int IdBrick { get; set; }
         public Status StatusBrick { get; set; }
         public int VersionBrick { get; set; }

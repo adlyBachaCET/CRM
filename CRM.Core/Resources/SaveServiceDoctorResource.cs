@@ -14,5 +14,7 @@ namespace CRM.Core.Models
         public Status Status { get; set; }
 
         public int Active { get; set; }
+        public int? CreatedBy { get; set; }
+        public int? UpdatedBy { get; set; }
     }
 }

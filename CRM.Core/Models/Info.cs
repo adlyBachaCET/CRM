@@ -16,7 +16,8 @@ namespace CRM.Core.Models
         public int? IdDoctor { get; set; }
         public int VersionDoctor { get; set; }
         public Status StatusDoctor { get; set; }
-
+        public int? CreatedBy { get; set; }
+        public int? UpdatedBy { get; set; }
         public string Data { get; set; }
         public Status Status { get; set; }
         public virtual Doctor IdDoctorNavigation { get; set; }

@@ -7,6 +7,8 @@ namespace CRM.Core.Models
     {
         public int IdUser { get; set; }
         public Status StatusUser { get; set; }
+        public int? CreatedBy { get; set; }
+        public int? UpdatedBy { get; set; }
 
         public int IdActivity { get; set; }
         public Status StatusActivity { get; set; }

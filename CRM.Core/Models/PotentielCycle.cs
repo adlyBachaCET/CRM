@@ -11,7 +11,8 @@ namespace CRM.Core.Models
 
         public int IdPotentiel { get; set; }
         public Status StatusPotentiel { get; set; }
-
+        public int? CreatedBy { get; set; }
+        public int? UpdatedBy { get; set; }
         public int VersionPotentiel { get; set; }
         public int Version { get; set; }
 

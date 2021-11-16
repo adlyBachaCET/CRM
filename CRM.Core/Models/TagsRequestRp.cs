@@ -15,7 +15,8 @@ namespace CRM.Core.Models
         public int VersionTags { get; set; }
 
         public int Version { get; set; }
-
+        public int? CreatedBy { get; set; }
+        public int? UpdatedBy { get; set; }
         public virtual RequestRp IdRequestRpNavigation { get; set; }
         public virtual Tags IdTagsNavigation { get; set; }
         public Status Status { get; set; }

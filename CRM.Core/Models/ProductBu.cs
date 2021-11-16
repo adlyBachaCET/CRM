@@ -14,7 +14,8 @@ namespace CRM.Core.Models
         public int VersionBu { get; set; }
         public int VersionProduct { get; set; }
         public int NameBu { get; set; }
-
+        public int? CreatedBy { get; set; }
+        public int? UpdatedBy { get; set; }
         public virtual BusinessUnit IdBuNavigation { get; set; }
         public virtual Product IdProductNavigation { get; set; }
         public Status Status { get; set; }

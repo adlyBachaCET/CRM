@@ -14,7 +14,8 @@ namespace CRM.Core.Models
         public int VersionPlanification { get; set; }
         public int VersionTarget{ get; set; }
         public int NamePlanification { get; set; }
-
+        public int? CreatedBy { get; set; }
+        public int? UpdatedBy { get; set; }
         public virtual Planification Planification { get; set; }
         public virtual Target Target { get; set; }
         public Status Status { get; set; }

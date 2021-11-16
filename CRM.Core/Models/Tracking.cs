@@ -16,7 +16,8 @@ namespace CRM.Core.Models
 
         public string TimeElapsed { get; set; }
         public DateTime Date { get; set; }
-  
+        public int? CreatedBy { get; set; }
+        public int? UpdatedBy { get; set; }
         public virtual ICollection<VisitFileTracking> VisitFileTracking { get; set; }
 
 

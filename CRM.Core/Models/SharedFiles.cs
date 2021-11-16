@@ -12,7 +12,8 @@ namespace CRM.Core.Models
         public DateTime? UpdatedOn { get; set; }
         public int Active { get; set; }
         public DateTime? CreatedOn { get; set; }
-   
+        public int? CreatedBy { get; set; }
+        public int? UpdatedBy { get; set; }
         public int IdFile { get; set; }
         public int VersionFile { get; set; }
         public Status StatusFile { get; set; }

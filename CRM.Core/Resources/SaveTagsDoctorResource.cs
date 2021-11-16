@@ -10,6 +10,7 @@ namespace CRM.Core.Models
         public int IdTags { get; set; }
 
 
-
+        public int? CreatedBy { get; set; }
+        public int? UpdatedBy { get; set; }
     }
 }
