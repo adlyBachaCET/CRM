@@ -4,7 +4,7 @@ using System.Text;
 
 namespace CRM.Core.Models
 {
-    public class SaveVisitRepportResource
+    public class VisitReportResource
     {
         public int IdReport { get; set; }
 

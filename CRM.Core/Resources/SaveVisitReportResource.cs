@@ -4,7 +4,7 @@ using System.Text;
 
 namespace CRM.Core.Models
 {
-    public class VisitRepportResource
+    public class SaveVisitReportResource
     {
         public int IdReport { get; set; }
 
@@ -17,9 +17,7 @@ namespace CRM.Core.Models
         public DateTime? CreatedOn { get; set; }
    
         public int IdVisit { get; set; }
-        public int VersionVisit { get; set; }
-        public Status StatusVisit { get; set; }
-        public virtual Visit Visit { get; set; }
+
         public string VisiteType { get; set; }
 
         public string Accompaniement { get; set; }
@@ -30,11 +28,7 @@ namespace CRM.Core.Models
         public string ObjectifNextVisit { get; set; }
 
         public string CycleTtype { get; set; }
-        public ICollection<VisitRequestReport> VisitRequestReport { get; set; }
 
-        public ICollection<ProductSampleVisitReport> ProductSampleVisitReport { get; set; }
-
-        public ICollection<ProductVisitReport> ProductVisitReport { get; set; }
 
 
     }

@@ -35,16 +35,16 @@ namespace CRM_API.Controllers
             var Locality = _mapperService.Map<SaveLocalityResource, Locality>(SaveLocalityResource);
             Locality.UpdatedOn = DateTime.UtcNow;
             Locality.CreatedOn = DateTime.UtcNow;
-            Locality LocalityParent = new Locality();
+            var Parent = await _LocalityService.GetByIdActif(SaveLocalityResource.IdParent);
             if (SaveLocalityResource.IdParent!=null)
             {
-                LocalityParent = await _LocalityService.GetByIdActif(SaveLocalityResource.IdParent);
 
-                Locality.IdParent = LocalityParent.IdLocality;
-                Locality.InverseIdParentNavigation.Add(LocalityParent);
-                Locality.StatusParent = LocalityParent.Status;
-                Locality.VersionParent = LocalityParent.Version;
+                Locality.IdParent = SaveLocalityResource.IdParent;
+               // Locality.InverseIdParentNavigation.Add(LocalityParent);
+                Locality.StatusParent = Parent.Status;
+                Locality.VersionParent = Parent.Version;
             }
+
 
 
 
