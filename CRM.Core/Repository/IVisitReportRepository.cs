@@ -14,6 +14,6 @@ namespace CRM.Core.Repository
         Task<IEnumerable<VisitReport>> GetAllRejected();
         Task<VisitReport> GetByIdActif(int id);
         Task<IEnumerable<VisitReport>> GetAllById(int Id);
-        Task<VisitReport> GetByIdDoctor(int id);
+        Task<IEnumerable<VisitReport>> GetByIdDoctor(int id);   
     }
 }

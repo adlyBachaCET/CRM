@@ -440,6 +440,7 @@ namespace CRM_API.Controllers
                 var DoctorLocation = await _LocationDoctorService.GetAllAcceptedActif(Id);
 
                 var DoctorVisit = await _VisitReportService.GetByIdDoctor(Id);
+                DoctorProfile.VisitReports = (List<VisitReport>)DoctorVisit;
 
 
                 return Ok(DoctorProfile);

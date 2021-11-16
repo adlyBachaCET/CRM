@@ -67,9 +67,9 @@ namespace CRM.Data.Repositories
             return result;
         }
 
-        public async Task<VisitReport> GetByIdDoctor(int id)
+        public async Task<IEnumerable<VisitReport>> GetByIdDoctor(int id)
         {
-            var result = await MyDbContext.VisitReport.Where(a => a.Active == 0 && a.Visit.IdDoctor == id).FirstOrDefaultAsync();
+            var result = await MyDbContext.VisitReport.Where(a => a.Active == 0 && a.Visit.IdDoctor == id).ToListAsync();
             return result;
         }
         //public async Task<IEnumerable<VisitReport>> GetAllWithArtisteAsync()

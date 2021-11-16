@@ -18,6 +18,6 @@ namespace CRM.Core.Services
         Task<IEnumerable<VisitReport>> GetAllActif();
         Task<IEnumerable<VisitReport>> GetAllInActif();
         Task<IEnumerable<VisitReport>> GetAllById(int Id);
-        Task<VisitReport> GetByIdDoctor(int id);
+        Task<IEnumerable<VisitReport>> GetByIdDoctor(int id);
     }
 }

@@ -52,10 +52,10 @@ namespace CRM.Services.Services
             return
                await _unitOfWork.VisitReports.SingleOrDefault(i => i.IdReport == id && i.Active == 0);
         }
-        public async Task<VisitReport> GetByIdDoctor(int id)
+        public async Task<IEnumerable<VisitReport>> GetByIdDoctor(int id)
         {
             return
-               await _unitOfWork.VisitReports.SingleOrDefault(i => i.Visit.IdDoctor == id && i.Active == 0);
+               await _unitOfWork.VisitReports.GetAllById(id);
         }
 
 
