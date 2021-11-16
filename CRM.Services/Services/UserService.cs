@@ -48,7 +48,6 @@ namespace CRM.Services.Services
 
         public string GenerateJSONWebToken(User userInfo)
         {
-            var jsonString = JsonConvert.SerializeObject(userInfo);
 
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
@@ -56,7 +55,7 @@ namespace CRM.Services.Services
                 new Claim("Login", userInfo.Login),
                     new Claim(JwtRegisteredClaimNames.Email, userInfo.Email),
                       new Claim("Photo", userInfo.Photo.ToString()),
-                    new Claim("User", jsonString)
+                    new Claim("Id", userInfo.IdUser.ToString())
                     ,
                     new Claim("FirstName", userInfo.FirstName)
                         ,
