@@ -50,40 +50,40 @@ namespace CRM_API
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             //Services 
-            services.AddTransient<IVisitReportService, VisitReportService>();
-            services.AddTransient<IVisitService, VisitService>();
+            services.AddScoped<IVisitReportService, VisitReportService>();
+            services.AddScoped<IVisitService, VisitService>();
 
-            services.AddTransient<IBrickService, BrickService>();
-            services.AddTransient<IPhoneService, PhoneService>();
-            services.AddTransient<IAdresseLocalityService, AdresseLocalityService>();
+            services.AddScoped<IBrickService, BrickService>();
+            services.AddScoped<IPhoneService, PhoneService>();
+            services.AddScoped<IAdresseLocalityService, AdresseLocalityService>();
 
-            services.AddTransient<IBrickLocalityService, BrickLocalityService>();
-            services.AddTransient<IUserService, UserService>();
-            services.AddTransient<IBuUserService, BuUserService>();
-            services.AddTransient<ICycleUserService, CycleUserService>();
+            services.AddScoped<IBrickLocalityService, BrickLocalityService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IBuUserService, BuUserService>();
+            services.AddScoped<ICycleUserService, CycleUserService>();
 
-            services.AddTransient<ILocalityService, LocalityService>();
+            services.AddScoped<ILocalityService, LocalityService>();
 
-            services.AddTransient<ITagsService, TagsService>();
-            services.AddTransient<ITagsDoctorService, TagsDoctorService>();
-            services.AddTransient<ISpecialtyService, SpecialtyService>();
-            services.AddTransient<IInfoService, InfoService>();
-            services.AddTransient<ILocationService, LocationService>();
-            services.AddTransient<ILocationTypeService, LocationTypeService>();
-            services.AddTransient<IDoctorService, DoctorService>();
-            services.AddTransient<IPotentielService, PotentielService>();
+            services.AddScoped<ITagsService, TagsService>();
+            services.AddScoped<ITagsDoctorService, TagsDoctorService>();
+            services.AddScoped<ISpecialtyService, SpecialtyService>();
+            services.AddScoped<IInfoService, InfoService>();
+            services.AddScoped<ILocationService, LocationService>();
+            services.AddScoped<ILocationTypeService, LocationTypeService>();
+            services.AddScoped<IDoctorService, DoctorService>();
+            services.AddScoped<IPotentielService, PotentielService>();
 
-            services.AddTransient<ILocationDoctorService, LocationDoctorService>();
-            services.AddTransient<IServiceService, ServiceService>();
-            services.AddTransient<IBusinessUnitService, BusinessUnitService>();
-            services.AddTransient<IBuDoctorService, BuDoctorService>();
-            services.AddTransient<IPharmacyService, PharmacyService>();
-            services.AddTransient<IWholeSalerService, WholeSaleservice>();
-            services.AddTransient<ICycleService, CycleService>();
-            services.AddTransient<ICycleBuService, CycleBuService>();
-            services.AddTransient<IPotentielCycleService, PotentielCycleService>();
-            services.AddTransient<ISectorCycleService, SectorCycleService>();
-            services.AddTransient<ISpecialtyService, SpecialtyService>();
+            services.AddScoped<ILocationDoctorService, LocationDoctorService>();
+            services.AddScoped<IServiceService, ServiceService>();
+            services.AddScoped<IBusinessUnitService, BusinessUnitService>();
+            services.AddScoped<IBuDoctorService, BuDoctorService>();
+            services.AddScoped<IPharmacyService, PharmacyService>();
+            services.AddScoped<IWholeSalerService, WholeSaleservice>();
+            services.AddScoped<ICycleService, CycleService>();
+            services.AddScoped<ICycleBuService, CycleBuService>();
+            services.AddScoped<IPotentielCycleService, PotentielCycleService>();
+            services.AddScoped<ISectorCycleService, SectorCycleService>();
+            services.AddScoped<ISpecialtyService, SpecialtyService>();
 
             services.AddCors(c =>
             {

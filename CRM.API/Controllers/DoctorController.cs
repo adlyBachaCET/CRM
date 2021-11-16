@@ -153,12 +153,17 @@ namespace CRM_API.Controllers
                 }
             }
             //Add Tags to database and assign them to The new Doctor
+            List<Tags> Tags = new List<Tags>();
+            List<TagsDoctor> TagsDoctors = new List<TagsDoctor>();
+            Tags newTag = new Tags(); 
+            Tags TagExist = new Tags();
 
             if (SaveDoctorResource.Tags != null)
             {
-                foreach(var item in SaveDoctorResource.Tags) {
-                var Tag = await _TagsService.GetByExistantActif(item.Name);
-                    if(Tag==null)
+                foreach(var item in SaveDoctorResource.Tags) 
+                {
+                    TagExist = await _TagsService.GetByExistantActif(item.Name);
+                    if(TagExist == null)
                     {
                    var NewTag = _mapperService.Map<SaveTagsResource, Tags>(item);
                    NewTag.Status = Status.Approuved;
@@ -166,42 +171,42 @@ namespace CRM_API.Controllers
                    NewTag.Active = 0;
                    NewTag.CreatedOn = DateTime.UtcNow;
                    NewTag.UpdatedOn = DateTime.UtcNow;
-                   var TagCreated=await _TagsService.Create(NewTag);
-                  var TagResource = _mapperService.Map<Tags, TagsResource>(TagCreated);
+                 newTag = await _TagsService.Create(NewTag);
 
-                        TagsDoctor TagsDoctor = new TagsDoctor();
-                        TagsDoctor.Status = Status.Approuved;
-                        TagsDoctor.Version = 0;
-                        TagsDoctor.Active = 0;
-                        TagsDoctor.CreatedOn = DateTime.UtcNow;
-                        TagsDoctor.UpdatedOn = DateTime.UtcNow;
-                        TagsDoctor.IdDoctor = NewDoctor.IdDoctor;
-                        TagsDoctor.IdDoctorNavigation = NewDoctor;
-                        var TagResourceNavigation = _mapperService.Map<TagsResource, Tags>(TagResource);
+                var TagResource = _mapperService.Map<Tags, TagsResource>(newTag);
+                        Tags.Add(newTag);
 
-                        TagsDoctor.IdTags = TagResourceNavigation.IdTags;
-                        TagsDoctor.IdTagsNavigation = TagResourceNavigation;
-                        await _TagsDoctorService.Create(TagsDoctor);
+
                     }
                     else
                     {
-                        TagsDoctor TagsDoctor = new TagsDoctor();
-                        TagsDoctor.Status = Status.Approuved;
-                        TagsDoctor.Version = 0;
-                        TagsDoctor.Active = 0;
-                        TagsDoctor.CreatedOn = DateTime.UtcNow;
-                        TagsDoctor.UpdatedOn = DateTime.UtcNow;
-                        TagsDoctor.IdDoctor = NewDoctor.IdDoctor;
-                        TagsDoctor.IdDoctorNavigation = NewDoctor;
-                        //var TagResource = await _TagsService.GetByExistantActif(item.Name);
-                        TagsDoctor.IdTags = Tag.IdTags;
-                       TagsDoctor.IdTagsNavigation = Tag;
-
-                        await _TagsDoctorService.Create(TagsDoctor);
+                        Tags.Add(TagExist);
+            
                     }
 
-                        }
+                   
 
+                }
+                foreach(var item in Tags) { 
+                TagsDoctor TagsDoctor = new TagsDoctor();
+                TagsDoctor.Status = Status.Approuved;
+                TagsDoctor.Version = 0;
+                TagsDoctor.Active = 0;
+                TagsDoctor.CreatedOn = DateTime.UtcNow;
+                TagsDoctor.UpdatedOn = DateTime.UtcNow;
+                TagsDoctor.VersionDoctor = NewDoctor.Version;
+                TagsDoctor.StatusDoctor = NewDoctor.Status;
+                TagsDoctor.IdDoctor = NewDoctor.IdDoctor;
+
+                TagsDoctor.IdDoctorNavigation = NewDoctor;
+
+                TagsDoctor.IdTags = item.IdTags;
+                TagsDoctor.StatusTags = item.Status;
+                TagsDoctor.VersionTags = item.Version;
+                TagsDoctor.IdTagsNavigation = item;
+
+                await _TagsDoctorService.Create(TagsDoctor);
+                }
 
             }
 

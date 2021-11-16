@@ -88,7 +88,6 @@ namespace CRM_API.Controllers
         [HttpGet("LVL/{Id}")]
         public async Task<ActionResult<LocalityResource>> GetAllActifLocalitysLVL2(int Id)
         {
-
             try
             {
                 var Employe = await _LocalityService.GetAllActifLVL2(Id);
