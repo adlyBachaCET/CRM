@@ -50,6 +50,8 @@ namespace CRM_API
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             //Services 
+            services.AddTransient<IVisitReportService, VisitReportService>();
+            services.AddTransient<IVisitService, VisitService>();
 
             services.AddTransient<IBrickService, BrickService>();
             services.AddTransient<IPhoneService, PhoneService>();
