@@ -93,9 +93,9 @@ namespace CRM_API.Controllers
             }
             else
             {
-                errorHandling.ErrorMessage = "Login/Password incorrect";
-                errorHandling.StatusCode = 200;
-                return StatusCode(404, errorHandling);
+                errorHandling.ErrorMessage = "Unauthorized";
+                errorHandling.StatusCode = 401;
+                return StatusCode(401, errorHandling);
             }
 
 
