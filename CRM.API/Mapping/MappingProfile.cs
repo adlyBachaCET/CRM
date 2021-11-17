@@ -81,6 +81,8 @@ namespace CRM_API.Mapping
             CreateMap< IEnumerable<User>, IEnumerable < UserResource >>();
             CreateMap<IEnumerable<User>, UserResource>();
             CreateMap<SaveUserResourceWithoutPassword, User > ();
+            CreateMap<SaveUserResourceWithoutPasswordUpdate, User>();
+
             CreateMap<User, IEnumerable<UserResource>>();
             CreateMap<IEnumerable<User>, IEnumerable<SaveUserResource>>();
 

@@ -4,12 +4,10 @@ using System.Collections.Generic;
 
 namespace CRM.Core.Models
 {
-    public partial class SaveUserResourceWithoutPassword
+    public partial class SaveUserResourceWithoutPasswordUpdate
     {
 
         public int Version { get; set; }
-        public int IdUser { get; set; }
-
         public Status Status { get; set; }
         public int? CreatedBy { get; set; }
         public int? UpdatedBy { get; set; }

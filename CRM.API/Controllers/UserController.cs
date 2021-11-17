@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace CRM_API.Controllers
@@ -61,17 +62,29 @@ namespace CRM_API.Controllers
         /// <param name="lm">Login And Password of the user .</param>
         /// <returns>returns the token with all infos on the authenticated manager if found</returns>
         [HttpPost("Login/Manager")]
-        public async Task<IActionResult> LoginManager(LoginModel lm)
+        public async Task<HttpResponseMessage> LoginManager(LoginModel lm)
         {
             IActionResult response = Unauthorized();
+            HttpResponseMessage res = new HttpResponseMessage();
             var user = await _UserService.AuthenticateManager(lm);
         
             if (user != null)
             {
                 var tokenString = _UserService.GenerateJSONWebToken(user);
+
                 response = Ok(new { token = tokenString });
+                var cookieOptions = new CookieOptions
+                {
+                    HttpOnly = true,
+                    Expires = DateTime.UtcNow.AddDays(7)
+                };
+                Response.Cookies.Append("refreshToken", tokenString, cookieOptions);
+                res.Headers.Add("token", tokenString);
+               
             }
-            return response;   
+            
+
+            return res;   
         }
 
         /// <summary>This method authenticates a delegate .</summary>
@@ -84,12 +97,20 @@ namespace CRM_API.Controllers
             IActionResult response = Unauthorized();
 
             var user = await _UserService.AuthenticateDelegate(lm);
-    
+            HttpResponseMessage res = new HttpResponseMessage();
+
             if (user != null)
             {
         
                 var tokenString = _UserService.GenerateJSONWebToken(user);
                 response = Ok(new { token = tokenString });
+                var cookieOptions = new CookieOptions
+                {
+                    HttpOnly = true,
+                    Expires = DateTime.UtcNow.AddDays(7)
+                };
+                Response.Cookies.Append("refreshToken", tokenString, cookieOptions);
+                res.Headers.Add("token", tokenString);
             }
             return response;
         }
@@ -106,7 +127,7 @@ namespace CRM_API.Controllers
                 var User = await _UserService.GetById(Id);
                 var UserResource = _mapperService.Map<User, SaveUserResource>(User);
             var UserResourceWhitoutPassword = _mapperService.Map<SaveUserResource, SaveUserResourceWithoutPassword>(UserResource);
-
+            UserResourceWhitoutPassword.IdUser = Id;
             Profile.User = UserResourceWhitoutPassword;
 
           
@@ -246,7 +267,7 @@ namespace CRM_API.Controllers
              //   await _UserService.Update(UserInDataBase, UserOld);
               
               //  var User= _mapperService.Map<SaveUserResource, User>(UpdateUserResource.User);
-                var User = _mapperService.Map<SaveUserResourceWithoutPassword, User>(UpdateUserResource.User);
+                var User = _mapperService.Map<SaveUserResourceWithoutPasswordUpdate, User>(UpdateUserResource.User);
                 User.Password = UserInDataBase.Password;
 
 
