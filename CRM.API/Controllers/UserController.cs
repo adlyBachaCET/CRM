@@ -55,6 +55,7 @@ namespace CRM_API.Controllers
             var User = _mapperService.Map<SaveUserResource, User>(SaveUserResource);
             User.UpdatedOn = DateTime.UtcNow;
             User.CreatedOn = DateTime.UtcNow;
+
             //*** Creation dans la base de données ***
             var NewUser = await _UserService.Create(User);
             //*** Mappage ***
@@ -107,26 +108,34 @@ namespace CRM_API.Controllers
         [HttpPost("Login/Delegate")]
         public async Task<IActionResult> LoginDelegate(LoginModel lm)
         {
-            List<Locality> localities = new List<Locality>();
             IActionResult response = Unauthorized();
-
-            var user = await _UserService.AuthenticateDelegate(lm);
-            HttpResponseMessage res = new HttpResponseMessage();
+            ErrorHandling errorHandling = new ErrorHandling();
+            var user = await _UserService.AuthenticateManager(lm);
 
             if (user != null)
             {
-        
                 var tokenString = _UserService.GenerateJSONWebToken(user);
+
                 response = Ok(new { token = tokenString });
                 var cookieOptions = new CookieOptions
                 {
                     HttpOnly = true,
                     Expires = DateTime.UtcNow.AddDays(7)
                 };
-                Response.Cookies.Append("refreshToken", tokenString, cookieOptions);
-                res.Headers.Add("token", tokenString);
+                Response.Cookies.Append("token", tokenString, cookieOptions);
+                Response.Headers.Append("token", tokenString);
+                errorHandling.ErrorMessage = "Authentification effectué";
+                errorHandling.StatusCode = 200;
+                return StatusCode(200, errorHandling);
+
+                //  res.Headers.Add("token", tokenString);
             }
-            return response;
+            else
+            {
+                errorHandling.ErrorMessage = "Unauthorized";
+                errorHandling.StatusCode = 401;
+                return StatusCode(401, errorHandling);
+            }
         }
         [HttpPost("Token")]
         public IActionResult Token(Token lm)

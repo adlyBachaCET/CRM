@@ -25,7 +25,7 @@ namespace CRM.Core.Models
         public string Gender { get; set; }
         public string Photo { get; set; }
         public virtual ICollection<BuUser> BuUser { get; set; }
-        public virtual ICollection<Target> CycleSectorWeekDoctors { get; set; }
+        public virtual ICollection<Target> Target { get; set; }
         public virtual User Delegates { get; set; }
        // public string FirstNameLastName { get; set; }
 

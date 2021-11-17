@@ -8,7 +8,7 @@ namespace CRM.Core.Models
         public Cycle()
         {
             CycleBu = new HashSet<CycleBu>();
-            CycleSectorWeekDoctors = new HashSet<Target>();
+            Target = new HashSet<Target>();
             PotentielCycle = new HashSet<PotentielCycle>();
             WeekSectorCycle = new HashSet<SectorCycle>();
             WeekSectorCycleInYear = new HashSet<SectorCycleInYear>();
@@ -27,7 +27,7 @@ namespace CRM.Core.Models
         public int? CreatedBy { get; set; }
         public int? UpdatedBy { get; set; }
         public virtual ICollection<CycleBu> CycleBu { get; set; }
-        public virtual ICollection<Target> CycleSectorWeekDoctors { get; set; }
+        public virtual ICollection<Target> Target { get; set; }
         public virtual ICollection<PotentielCycle> PotentielCycle { get; set; }
         public virtual ICollection<SectorCycle> WeekSectorCycle { get; set; }
         public virtual ICollection<SectorCycleInYear> WeekSectorCycleInYear { get; set; }

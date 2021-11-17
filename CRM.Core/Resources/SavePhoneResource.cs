@@ -13,8 +13,7 @@ namespace CRM.Core.Models
         public string PhoneInfo { get; set; }
         public int PhoneNumber { get; set; }
 
-        public int? CreatedBy { get; set; }
-        public int? UpdatedBy { get; set; }
+
     }
 
 }

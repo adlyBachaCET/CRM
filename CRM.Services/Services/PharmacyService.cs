@@ -30,6 +30,22 @@ namespace CRM.Services.Services
             await _unitOfWork.CommitAsync();
             return newPharmacy;
         }
+        public async Task<IEnumerable<Pharmacy>> GetPharmacysAssigned()
+        {
+            List<Pharmacy> list = new List<Pharmacy>();
+           /* var Bu = await _unitOfWork.BuPharmacys.Find(i => i.IdBu == Id);
+            foreach (var item in Bu)
+            {
+                list.Add(await _unitOfWork.Pharmacys.SingleOrDefault(i => i.IdPharmacy == item.IdPharmacy));
+            }
+            List<Pharmacy> Pharmacys = new List<Pharmacy>();
+            //var a = await _unitOfWork.CycleSectorWeekPharmacys.Find(i => i.IdPharmacyNavigation.Active == 0 && i.IdPharmacyNavigation.LinkedId == null);
+            foreach (var item in list)
+            {
+                Pharmacys.Add(item);
+            */
+            return null;
+        }
         public async Task<IEnumerable<Pharmacy>> GetAll()
         {
             return
@@ -185,6 +201,11 @@ namespace CRM.Services.Services
         {
             return
                        await _unitOfWork.Pharmacys.GetByNearByActif( Locality1,  Locality2,  CodePostal);
+        }
+
+        public Task<IEnumerable<Pharmacy>> GetPharmacysNotAssignedByBu(int Id)
+        {
+            throw new NotImplementedException();
         }
         //public Task<Pharmacy> CreatePharmacy(Pharmacy newPharmacy)
         //{

@@ -8,8 +8,7 @@ namespace CRM.Core.Models
         public string Name { get; set; }
         public string Role { get; set; }//Pharmacy ou grossicte
         public int IdLocality1 { get; set; }
-        public int? CreatedBy { get; set; }
-        public int? UpdatedBy { get; set; }
+
         public string NameLocality1 { get; set; }
         public int IdLocality2 { get; set; }
 

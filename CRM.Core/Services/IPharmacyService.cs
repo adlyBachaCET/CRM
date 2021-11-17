@@ -23,6 +23,8 @@ namespace CRM.Core.Services
         Task<PharmacyExiste> Verify(SaveAddPharmacyResource SaveAddPharmacyResource);
         Task<IEnumerable<Pharmacy>> GetByExistantPhoneNumberActif(int PhoneNumber);
         Task<IEnumerable<Pharmacy>> GetByNearByActif(string Locality1, string Locality2, int CodePostal);
+        Task<IEnumerable<Pharmacy>> GetPharmacysAssigned();
+        Task<IEnumerable<Pharmacy>> GetPharmacysNotAssignedByBu(int Id);
 
     }
 }

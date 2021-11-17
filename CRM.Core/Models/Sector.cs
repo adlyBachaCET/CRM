@@ -7,7 +7,7 @@ namespace CRM.Core.Models
     {
         public Sector()
         {
-            CycleSectorWeekDoctors = new HashSet<Target>();
+            Target = new HashSet<Target>();
             SectorLocality = new HashSet<SectorLocality>();
             WeekSectorCycle = new HashSet<SectorCycle>();
             WeekSectorCycleInYear = new HashSet<SectorCycleInYear>();
@@ -22,7 +22,7 @@ namespace CRM.Core.Models
         public DateTime? UpdatedOn { get; set; }
         public string Description { get; set; }
         public Status Status { get; set; }
-        public virtual ICollection<Target> CycleSectorWeekDoctors { get; set; }
+        public virtual ICollection<Target> Target { get; set; }
         public virtual ICollection<SectorLocality> SectorLocality { get; set; }
         public virtual ICollection<SectorCycle> WeekSectorCycle { get; set; }
         public virtual ICollection<SectorCycleInYear> WeekSectorCycleInYear { get; set; }

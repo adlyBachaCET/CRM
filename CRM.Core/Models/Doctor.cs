@@ -8,7 +8,7 @@ namespace CRM.Core.Models
         public Doctor()
         {
             BuDoctor = new HashSet<BuDoctor>();
-            CycleSectorWeekDoctors = new HashSet<Target>();
+            Target = new HashSet<Target>();
             Info = new HashSet<Info>();
             InverseLinked = new HashSet<Doctor>();
             Phone = new HashSet<Phone>();
@@ -38,7 +38,7 @@ namespace CRM.Core.Models
 
      
         public virtual ICollection<BuDoctor> BuDoctor { get; set; }
-        public virtual ICollection<Target> CycleSectorWeekDoctors { get; set; }
+        public virtual ICollection<Target> Target { get; set; }
         public virtual ICollection<Info> Info { get; set; }
         public virtual ICollection<Doctor> InverseLinked { get; set; }
         public virtual ICollection<Phone> Phone { get; set; }

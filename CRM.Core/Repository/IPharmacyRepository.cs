@@ -15,6 +15,7 @@ namespace CRM.Core.Repository
         Task<Pharmacy> GetByIdActif(int id);
         Task<Pharmacy> GetByExistantEmailActif(string Email);
         Task<Pharmacy> GetByExistantLastNameActif( string LastName);
+        Task<IEnumerable<Pharmacy>> GetPharmacysAssigned();
 
         Task<Pharmacy> GetByExistantNameActif(string Name);
 

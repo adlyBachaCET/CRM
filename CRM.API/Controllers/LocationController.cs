@@ -20,13 +20,15 @@ namespace CRM_API.Controllers
     {
         public IList<Location> Locations;
         private readonly IUserService _UserService;
+        private readonly IServiceService _ServiceService;
 
         private readonly ILocationService _LocationService;
         private readonly ILocationTypeService _LocationTypeService;
 
         private readonly IMapper _mapperService;
-        public LocationController(ILocationService LocationService, IUserService UserService, ILocationTypeService LocationTypeService, IMapper mapper)
+        public LocationController(IServiceService ServiceService,ILocationService LocationService, IUserService UserService, ILocationTypeService LocationTypeService, IMapper mapper)
         {
+            _ServiceService = ServiceService;
             _UserService = UserService;
             _LocationTypeService = LocationTypeService;
             _LocationService = LocationService;
@@ -36,28 +38,55 @@ namespace CRM_API.Controllers
         [HttpPut("Approuve/{Id}")]
         public async Task<ActionResult<Location>> ApprouveLocation(int Id)
         {
+            StringValues token = "";
+            ErrorHandling ErrorMessag = new ErrorHandling();
+            Request.Headers.TryGetValue("token", out token);
+            if (token != "")
+            {
+                var claims = _UserService.getPrincipal(token);
+                var Role = claims.FindFirst("Role").Value;
+                var IdUser = int.Parse(claims.FindFirst("Id").Value);
+                var LocationToBeModified = await _LocationService.GetById(Id);
+                if (LocationToBeModified == null) return BadRequest("Le Location n'existe pas"); //NotFound();
+                                                                                                 //var newLocation = await _LocationService.Create(Locations);
+                                                                                                 // Locations.CreatedOn = SaveLocationResource.;
+                LocationToBeModified.UpdatedOn = DateTime.UtcNow;
+                LocationToBeModified.UpdatedBy = IdUser;
 
-            var LocationToBeModified = await _LocationService.GetById(Id);
-            if (LocationToBeModified == null) return BadRequest("Le Location n'existe pas"); //NotFound();
-            //var newLocation = await _LocationService.Create(Locations);
-            // Locations.CreatedOn = SaveLocationResource.;
-            await _LocationService.Approuve(LocationToBeModified, LocationToBeModified);
+                await _LocationService.Approuve(LocationToBeModified, LocationToBeModified);
 
-            var LocationUpdated = await _LocationService.GetById(Id);
+                var LocationUpdated = await _LocationService.GetById(Id);
 
-            var LocationResourceUpdated = _mapperService.Map<Location, LocationResource>(LocationUpdated);
+                var LocationResourceUpdated = _mapperService.Map<Location, LocationResource>(LocationUpdated);
 
-            return Ok(LocationResourceUpdated);
+                return Ok(LocationResourceUpdated);
+            }
+            else
+            {
+                ErrorMessag.ErrorMessage = "Empty Token";
+                ErrorMessag.StatusCode = 400;
+                return Ok(ErrorMessag);
+
+            }
         }
         [HttpPut("Reject/{Id}")]
         public async Task<ActionResult<Location>> RejectLocation(int Id)
         {
-
+            StringValues token = "";
+            ErrorHandling ErrorMessag = new ErrorHandling();
+            Request.Headers.TryGetValue("token", out token);
+            if (token != "")
+            {
+            var claims = _UserService.getPrincipal(token);
+            var Role = claims.FindFirst("Role").Value;
+            var IdUser = int.Parse(claims.FindFirst("Id").Value);
             var LocationToBeModified = await _LocationService.GetById(Id);
             if (LocationToBeModified == null) return BadRequest("Le Location n'existe pas"); //NotFound();
             //var newLocation = await _LocationService.Create(Locations);
             // Locations.CreatedOn = SaveLocationResource.;
             LocationToBeModified.UpdatedOn = DateTime.UtcNow;
+            LocationToBeModified.UpdatedBy = IdUser;
+
             await _LocationService.Reject(LocationToBeModified, LocationToBeModified);
 
             var LocationUpdated = await _LocationService.GetById(Id);
@@ -65,6 +94,14 @@ namespace CRM_API.Controllers
             var LocationResourceUpdated = _mapperService.Map<Location, LocationResource>(LocationUpdated);
 
             return Ok(LocationResourceUpdated);
+            }
+            else
+            {
+                ErrorMessag.ErrorMessage = "Empty Token";
+                ErrorMessag.StatusCode = 400;
+                return Ok(ErrorMessag);
+
+            }
         }
         [HttpPost]
         public async Task<ActionResult<Location>> CreateLocation(SaveLocationResource SaveLocationResource)
@@ -76,6 +113,7 @@ namespace CRM_API.Controllers
             {
                 var claims = _UserService.getPrincipal(token);
                 var Role = claims.FindFirst("Role").Value;
+                var Id = int.Parse(claims.FindFirst("Id").Value);
 
                 var LocationExiste = await _LocationService.GetByExistantActif(SaveLocationResource.Name, SaveLocationResource.IdLocationType);
                 LocationResource LocationResourceOld = new LocationResource();
@@ -101,11 +139,26 @@ namespace CRM_API.Controllers
                     Location.StatusLocationType = NewLocationType.Status;
                     Location.VersionLocationType = NewLocationType.Version;
                     Location.TypeLocationType = NewLocationType.Type;
-                    foreach(var item in SaveLocationResource.SaveServiceResource)
+                    Location.CreatedBy = Id;
+                    Location.UpdatedBy = Id;
+                    foreach (var item in SaveLocationResource.SaveServiceResource)
                     {
-                        //var Service = await _Service.GetById(SaveLocationResource.IdLocationType);
+                        var Service = _mapperService.Map<SaveServiceResource, Service>(item);
+                        Service.UpdatedOn = DateTime.UtcNow;
+                        Service.CreatedOn = DateTime.UtcNow;
+                        Service.Version = 0;
+                        Service.Active = 0;
+                        Service.CreatedBy = Id;
+                        Service.UpdatedBy = Id;
 
-
+                        if (Role == "Manager")
+                        {
+                            Service.Status = Status.Approuved;
+                        }
+                        else if (Role == "Delegue")
+                        {
+                            Service.Status = Status.Pending;
+                        }
                     }
                     //*** Creation dans la base de données ***
                     var NewLocation = await _LocationService.Create(Location);
@@ -193,6 +246,14 @@ namespace CRM_API.Controllers
         [HttpPut("{Id}")]
         public async Task<ActionResult<Location>> UpdateLocation(int Id, SaveLocationResource SaveLocationResource)
         {
+            StringValues token = "";
+            ErrorHandling ErrorMessag = new ErrorHandling();
+            Request.Headers.TryGetValue("token", out token);
+            if (token != "")
+            {
+             var claims = _UserService.getPrincipal(token);
+             var Role = claims.FindFirst("Role").Value;
+             var IdUser = int.Parse(claims.FindFirst("Id").Value);
 
             var LocationToBeModified = await _LocationService.GetById(Id);
             if (LocationToBeModified == null) return BadRequest("Le Location n'existe pas"); //NotFound();
@@ -200,10 +261,20 @@ namespace CRM_API.Controllers
             //var newLocation = await _LocationService.Create(Locations);
             Location.UpdatedOn = DateTime.UtcNow;
             Location.CreatedOn = LocationToBeModified.CreatedOn;
+          
+            Location.CreatedBy = Location.CreatedBy;
+            Location.UpdatedBy = IdUser;
             var NewLocationType = await _LocationTypeService.GetById(SaveLocationResource.IdLocationType);
             Location.NameLocationType = NewLocationType.Name;
-            Location.StatusLocationType = NewLocationType.Status;
-            Location.VersionLocationType = NewLocationType.Version;
+                if (Role == "Manager")
+                {
+                    Location.Status = Status.Approuved;
+                }
+                else if (Role == "Delegue")
+                {
+                    Location.Status = Status.Pending;
+                }
+                Location.VersionLocationType = NewLocationType.Version+1;
             Location.TypeLocationType = NewLocationType.Type;
             await _LocationService.Update(LocationToBeModified, Location);
 
@@ -212,6 +283,14 @@ namespace CRM_API.Controllers
             var LocationResourceUpdated = _mapperService.Map<Location, LocationResource>(LocationUpdated);
 
             return Ok();
+            }
+            else
+            {
+                ErrorMessag.ErrorMessage = "Empty Token";
+                ErrorMessag.StatusCode = 400;
+                return Ok(ErrorMessag);
+
+            }
         }
 
 

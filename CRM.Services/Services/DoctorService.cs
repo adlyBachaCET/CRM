@@ -82,17 +82,7 @@ namespace CRM.Services.Services
                            list;
         }
 
-        /* public async Task Delete(Doctor Doctor)
-         {
-             _unitOfWork.Doctors.Remove(Doctor);
-             await _unitOfWork.CommitAsync();
-         }*/
 
-        //public async Task<IEnumerable<Doctor>> GetAllWithArtiste()
-        //{
-        //    return await _unitOfWork.Doctors
-        //          .GetAllWithArtisteAsync();
-        //}
 
         public async Task<Doctor> GetById(int id)
         {

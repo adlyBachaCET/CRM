@@ -510,27 +510,32 @@ namespace CRM.Data
                     e.VersionDoctor });
 
                 entity.HasOne(d => d.IdCycleNavigation)
-                    .WithMany(p => p.CycleSectorWeekDoctors)
+                    .WithMany(p => p.Target)
                     .HasForeignKey(d => new { d.IdCycle, d.StatusCycle, d.VersionCycle })
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_CycleSectorWeekDoctors_Cycle");
+                    .HasConstraintName("FK_Target_Cycle");
 
                 entity.HasOne(d => d.IdDoctorNavigation)
-                    .WithMany(p => p.CycleSectorWeekDoctors)
+                    .WithMany(p => p.Target)
                     .HasForeignKey(d => new { d.IdDoctor, d.StatusDoctor, d.VersionDoctor })
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_CycleSectorWeekDoctors_Doctor");
-
+                    .HasConstraintName("FK_Target_Doctor");
+               
+                entity.HasOne(d => d.IdPharmacyNavigation)
+          .WithMany(p => p.Target)
+          .HasForeignKey(d => new { d.IdPharmacy, d.StatusPharmacy, d.VersionPharmacy })
+          .OnDelete(DeleteBehavior.ClientSetNull)
+          .HasConstraintName("FK_Target_Pharmacy");
                 entity.HasOne(d => d.IdSectorNavigation)
-                    .WithMany(p => p.CycleSectorWeekDoctors)
+                    .WithMany(p => p.Target)
                     .HasForeignKey(d => new { d.IdSector, d.StatusSector, d.VersionSector })
-                    .HasConstraintName("FK_CycleSectorWeekDoctors_Sector");
+                    .HasConstraintName("FK_Target_Sector");
 
                 entity.HasOne(d => d.IdUserNavigation)
-                    .WithMany(p => p.CycleSectorWeekDoctors)
+                    .WithMany(p => p.Target)
                     .HasForeignKey(d => new { d.IdUser, d.StatusUser, d.VersionUser })
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_CycleSectorWeekDoctors_User");
+                    .HasConstraintName("FK_Target_User");
 
 
             });

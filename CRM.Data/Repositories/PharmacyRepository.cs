@@ -101,6 +101,12 @@ namespace CRM.Data.Repositories
             a.PostalCode == CodePostal).ToListAsync();
             return Pharmacy;
         }
+
+        public async Task<IEnumerable<Pharmacy>> GetPharmacysAssigned()
+        {
+            var Target = await MyDbContext.Target.Where(a => a.Active == 0 && a.IdPharmacy !=null).Select(a=>a.IdPharmacy).ToListAsync();
+            return null;
+        }
         //public async Task<IEnumerable<Pharmacy>> GetAllWithArtisteAsync()
         //{
         //    return await MyPharmacyDbContext.Pharmacys
