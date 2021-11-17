@@ -33,9 +33,10 @@ namespace CRM.Core.Models
         public int? LinkedId { get; set; }
         public int VersionLink { get; set; }
         public Status StatusLink { get; set; }
+        public virtual Doctor Linked { get; set; }
         public int? ManagerApprouved { get; set; }
 
-        public virtual Doctor Linked { get; set; }
+     
         public virtual ICollection<BuDoctor> BuDoctor { get; set; }
         public virtual ICollection<Target> CycleSectorWeekDoctors { get; set; }
         public virtual ICollection<Info> Info { get; set; }

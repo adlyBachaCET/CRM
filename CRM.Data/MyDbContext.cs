@@ -640,7 +640,10 @@ namespace CRM.Data
                     .HasForeignKey(d => new { d.IdLocationType, d.StatusLocationType, d.VersionLocationType })
                     .HasConstraintName("FK_Location_LocationType").IsRequired(false);
 
-   
+                entity.HasOne(d => d.Linked)
+    .WithMany(p => p.InverseLinked)
+    .HasForeignKey(d => new { d.LinkedId, d.StatusLink, d.VersionLink })
+    .HasConstraintName("FK_Location_Location").IsRequired(false);
             });
 
             modelBuilder.Entity<LocationDoctor>(entity =>
@@ -907,6 +910,10 @@ namespace CRM.Data
 
                
                 entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
+                entity.HasOne(d => d.Linked)
+     .WithMany(p => p.InverseLinked)
+     .HasForeignKey(d => new { d.LinkedId, d.StatusLink, d.VersionLink })
+     .HasConstraintName("FK_Pharmacy_Pharmacy").IsRequired(false);
             });
 
     

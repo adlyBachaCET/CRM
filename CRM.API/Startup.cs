@@ -92,12 +92,18 @@ namespace CRM_API
                 c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             });
             //***** Swagger ****
-            services.AddSwaggerGen(c => {
-                c.SwaggerDoc("v1",
-                new OpenApiInfo { Title = "Phalcon", Description = "Galderma" });
+
+            services.AddSwaggerGen(swagger =>
+            {
+                //This is to generate the Default UI of Swagger Documentation  
+                swagger.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Version = "v1",
+                    Title = "Phalcon Api",
+                    Description = ""
+                });
             });
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
         {
@@ -139,6 +145,7 @@ namespace CRM_API
 
             //***** Swagger middleware****
             app.UseSwagger();
+
             app.UseSwaggerUI(c =>
             {
                 c.RoutePrefix = "";

@@ -1,9 +1,11 @@
 using AutoMapper;
 using CRM.Core.Models;
 using CRM.Core.Services;
+using CRM_API.Helper;
 using CRM_API.Resources;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -17,15 +19,17 @@ namespace CRM_API.Controllers
     public class LocationController : ControllerBase
     {
         public IList<Location> Locations;
+        private readonly IUserService _UserService;
 
         private readonly ILocationService _LocationService;
         private readonly ILocationTypeService _LocationTypeService;
 
         private readonly IMapper _mapperService;
-        public LocationController(ILocationService LocationService,ILocationTypeService LocationTypeService, IMapper mapper)
+        public LocationController(ILocationService LocationService, IUserService UserService, ILocationTypeService LocationTypeService, IMapper mapper)
         {
+            _UserService = UserService;
             _LocationTypeService = LocationTypeService;
-               _LocationService = LocationService;
+            _LocationService = LocationService;
             _mapperService = mapper;
         }
 
@@ -65,33 +69,60 @@ namespace CRM_API.Controllers
         [HttpPost]
         public async Task<ActionResult<Location>> CreateLocation(SaveLocationResource SaveLocationResource)
         {
-            var LocationExiste = await _LocationService.GetByExistantActif(SaveLocationResource.Name, SaveLocationResource.IdLocationType);
-            LocationResource LocationResourceOld = new LocationResource();
-            if (LocationExiste == null)
-            { //*** Mappage ***
-                var Location = _mapperService.Map<SaveLocationResource, Location>(SaveLocationResource);
-                Location.UpdatedOn = DateTime.UtcNow;
-                Location.CreatedOn = DateTime.UtcNow;
-                var NewLocationType = await _LocationTypeService.GetById(SaveLocationResource.IdLocationType);
-                Location.NameLocationType = NewLocationType.Name;
-                Location.StatusLocationType = NewLocationType.Status;
-                Location.VersionLocationType = NewLocationType.Version;
-                Location.TypeLocationType = NewLocationType.Type;
+            StringValues token = "";
+            ErrorHandling ErrorMessag = new ErrorHandling();
+            Request.Headers.TryGetValue("token", out token);
+            if (token != "")
+            {
+                var claims = _UserService.getPrincipal(token);
+                var Role = claims.FindFirst("Role").Value;
 
-                //*** Creation dans la base de données ***
-                var NewLocation = await _LocationService.Create(Location);
-                //*** Mappage ***
-                var LocationResource = _mapperService.Map<Location, LocationResource>(NewLocation);
+                var LocationExiste = await _LocationService.GetByExistantActif(SaveLocationResource.Name, SaveLocationResource.IdLocationType);
+                LocationResource LocationResourceOld = new LocationResource();
+                if (LocationExiste == null)
+                { //*** Mappage ***
+                    var Location = _mapperService.Map<SaveLocationResource, Location>(SaveLocationResource);
+                    Location.UpdatedOn = DateTime.UtcNow;
+                    Location.CreatedOn = DateTime.UtcNow;
+                    Location.Version = 0;
+                    Location.Active = 0;
 
-                return Ok(LocationResource);
+                    if (Role == "Manager")
+                    {
+                        Location.Status = Status.Approuved;
+                    }
+                    else if (Role == "Delegue")
+                    {
+                        Location.Status = Status.Pending;
+                    }
+                    var NewLocationType = await _LocationTypeService.GetById(SaveLocationResource.IdLocationType);
+                    Location.NameLocationType = NewLocationType.Name;
+                    Location.StatusLocationType = NewLocationType.Status;
+                    Location.VersionLocationType = NewLocationType.Version;
+                    Location.TypeLocationType = NewLocationType.Type;
+
+                    //*** Creation dans la base de données ***
+                    var NewLocation = await _LocationService.Create(Location);
+                    //*** Mappage ***
+                    var LocationResource = _mapperService.Map<Location, LocationResource>(NewLocation);
+
+                    return Ok(LocationResource);
+                }
+                else
+                {
+                    var genericResult = new { Exist = "Already exists", Location = LocationExiste };
+
+                    return Ok(genericResult);
+                }
             }
             else
             {
-                var genericResult = new { Exist = "Already exists", Location = LocationExiste };
+                ErrorMessag.ErrorMessage = "Empty Token";
+                ErrorMessag.StatusCode = 400;
+                return Ok(ErrorMessag);
 
-                return Ok(genericResult);
             }
-        }
+            }
         [HttpGet]
         public async Task<ActionResult<LocationResource>> GetAllLocations()
         {

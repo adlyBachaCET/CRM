@@ -50,21 +50,29 @@ namespace CRM.Services.Services
         public string GenerateJSONWebToken(User userInfo)
         {
             ///var details = JObject.Parse(userInfo.ToString());
-            string json = JsonConvert.SerializeObject(userInfo);
-
+           // string json = JsonConvert.SerializeObject(userInfo);
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
             var claims = new[] {
-                new Claim("Login", userInfo.Login),
-                    new Claim(JwtRegisteredClaimNames.Email, userInfo.Email),
+                          new Claim("Login", userInfo.Login),
+                          new Claim("Email", userInfo.Email),
+                          new Claim("Photo", userInfo.Photo.ToString()),
+                          new Claim("Id", userInfo.IdUser.ToString()),
+                          new Claim("FirstName", userInfo.FirstName)
+                        , new Claim("BirthDate", userInfo.BirthDate.ToString())
+                        , new Claim("tel1", userInfo.tel1.ToString())
+                        , new Claim("tel2", userInfo.tel2.ToString())
+                        , new Claim("Role", userInfo.UserType.ToString())
+                        , new Claim("PostalCode", userInfo.PostalCode.ToString())
+                        , new Claim("Note", userInfo.Note.ToString())
+                        , new Claim("NameLocality1", userInfo.NameLocality1.ToString())
+                        , new Claim("NameLocality2", userInfo.NameLocality2.ToString())
+                        , new Claim("IdLocality1", userInfo.IdLocality1.ToString())
+                        , new Claim("IdLocality2", userInfo.IdLocality2.ToString())
+                        , new Claim("Gender", userInfo.Gender.ToString())
+                        , new Claim("HireDate", userInfo.HireDate.ToString())
+                        ,new Claim("LastName", userInfo.LastName.ToString())
 
-                      new Claim("Photo", userInfo.Photo.ToString()),
-                    new Claim("Id", userInfo.IdUser.ToString())
-                //,   new Claim("User", json)
-                    ,
-                    new Claim("FirstName", userInfo.FirstName)
-                        ,
-                    new Claim("LastName", userInfo.LastName.ToString())
                                   };
             var token = new JwtSecurityToken(_config["Jwt:Issuer"],
               _config["Jwt:Issuer"],
@@ -74,7 +82,40 @@ namespace CRM.Services.Services
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+        public  ClaimsPrincipal getPrincipal(string token)
+        {
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
 
+            try
+            {
+                var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+                JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
+                JwtSecurityToken jwtToken = (JwtSecurityToken)tokenHandler.ReadToken(token);
+                if (jwtToken == null)
+                    return null;
+                byte[] key = Encoding.ASCII.GetBytes(_config["Jwt:Key"]);
+                TokenValidationParameters parameters = new TokenValidationParameters()
+                {
+                    ValidIssuer = _config["Jwt:Issuer"],
+                    ValidAudience = _config["Jwt:Issuer"],
+                    ValidateLifetime = true,
+                    RequireExpirationTime = true,
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ClockSkew = TimeSpan.Zero
+                };
+                SecurityToken securityToken;
+                ClaimsPrincipal principal = tokenHandler.ValidateToken(token,
+                      parameters, out securityToken);
+                return principal;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+        
         public async Task<User> AuthenticateManager(LoginModel lm)
         {
             return
@@ -214,6 +255,7 @@ namespace CRM.Services.Services
             await _unitOfWork.Users.Add(User);
             await _unitOfWork.CommitAsync();
         }
+
         //public Task<User> CreateUser(User newUser)
         //{
         //    throw new NotImplementedException();

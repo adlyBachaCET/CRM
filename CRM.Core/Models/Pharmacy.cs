@@ -39,6 +39,11 @@ namespace CRM.Core.Models
         public string FirstNameOwner { get; set; }
         public string LastNameOwner { get; set; }
         public string Email { get; set; }
+        public int? LinkedId { get; set; }
+        public int VersionLink { get; set; }
+        public Status StatusLink { get; set; }
+        public virtual Pharmacy Linked { get; set; }
+        public virtual ICollection<Pharmacy> InverseLinked { get; set; }
 
 
 

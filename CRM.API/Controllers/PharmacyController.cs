@@ -2,9 +2,11 @@ using AutoMapper;
 using CRM.Core.Models;
 using CRM.Core.Resources;
 using CRM.Core.Services;
+using CRM_API.Helper;
 using CRM_API.Resources;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Text.Json;
@@ -37,6 +39,14 @@ namespace CRM_API.Controllers
         [HttpPost]
         public async Task<ActionResult<Pharmacy>> CreatePharmacy(SaveAddPharmacyResource SaveAddPharmacyResource)
         {
+            StringValues token = "";
+            ErrorHandling ErrorMessag = new ErrorHandling();
+            Request.Headers.TryGetValue("token", out token);
+            if (token!="")
+            {               
+            var claims = _UserService.getPrincipal(token);
+            var Role = claims.FindFirst("Role").Value;
+
             var Exist = await _PharmacyService.Verify(SaveAddPharmacyResource);
 
             if (Exist.ExistPharmacyEmail==false&& Exist.ExistPharmacyFirstName == false
@@ -50,8 +60,15 @@ namespace CRM_API.Controllers
             Pharmacy.UpdatedOn = DateTime.UtcNow;
             Pharmacy.Active = 0;
             Pharmacy.Version = 0;
-                            //*** Creation dans la base de données ***
-                            var NewPharmacy = await _PharmacyService.Create(Pharmacy);
+                    if (Role == "Manager") { 
+            Pharmacy.Status = Status.Approuved;
+                    }
+            else if (Role == "Delegue")
+                    {
+                        Pharmacy.Status = Status.Pending;
+                    }
+                    //*** Creation dans la base de données ***
+                    var NewPharmacy = await _PharmacyService.Create(Pharmacy);
             //*** Mappage ***
             var PharmacyResource = _mapperService.Map<Pharmacy, PharmacyResource>(NewPharmacy);
                 PhoneResource PhoneResourceOld = new PhoneResource();
@@ -76,6 +93,15 @@ namespace CRM_API.Controllers
                 var genericResult = new { Exist = "Already exists", Location = Exist };
 
                 return Ok(genericResult);
+                }
+
+            }
+            else
+            {
+                ErrorMessag.ErrorMessage = "Empty Token";
+                ErrorMessag.StatusCode = 400;
+                return Ok(ErrorMessag);
+
             }
 
         }
@@ -177,20 +203,43 @@ namespace CRM_API.Controllers
         [HttpPut("{Id}")]
         public async Task<ActionResult<Pharmacy>> UpdatePharmacy(int Id, SavePharmacyResource SavePharmacyResource)
         {
+            StringValues token = "";
+            ErrorHandling ErrorMessag = new ErrorHandling();
+            Request.Headers.TryGetValue("token", out token);
+            if (token != "")
+            {
+                var claims = _UserService.getPrincipal(token);
+                var Role = claims.FindFirst("Role").Value;
 
-            var PharmacyToBeModified = await _PharmacyService.GetById(Id);
+                var PharmacyToBeModified = await _PharmacyService.GetById(Id);
             if (PharmacyToBeModified == null) return BadRequest("Le Pharmacy n'existe pas"); //NotFound();
             var Pharmacys = _mapperService.Map<SavePharmacyResource, Pharmacy>(SavePharmacyResource);
             //var newPharmacy = await _PharmacyService.Create(Pharmacys);
            // Pharmacys.CreatedOn = SavePharmacyResource.;
             Pharmacys.UpdatedOn = DateTime.UtcNow;
-            await _PharmacyService.Update(PharmacyToBeModified, Pharmacys);
+                if (Role == "Manager")
+                {
+                    Pharmacys.Status = Status.Approuved;
+                }
+                else if (Role == "Delegue")
+                {
+                    Pharmacys.Status = Status.Pending;
+                }
+                await _PharmacyService.Update(PharmacyToBeModified, Pharmacys);
 
             var PharmacyUpdated = await _PharmacyService.GetById(Id);
 
             var PharmacyResourceUpdated = _mapperService.Map<Pharmacy, PharmacyResource>(PharmacyUpdated);
 
             return Ok();
+            }
+            else
+            {
+                ErrorMessag.ErrorMessage = "Empty Token";
+                ErrorMessag.StatusCode = 400;
+                return Ok(ErrorMessag);
+
+            }
         }
         [HttpPut("Approuve/{Id}")]
         public async Task<ActionResult<Pharmacy>> ApprouvePharmacy(int Id)

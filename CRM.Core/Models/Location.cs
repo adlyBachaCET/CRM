@@ -44,7 +44,11 @@ namespace CRM.Core.Models
         public int? IdBrick { get; set; }
     
         public string NameBrick { get; set; }
-
+        public int? LinkedId { get; set; }
+        public int VersionLink { get; set; }
+        public Status StatusLink { get; set; }
+        public virtual Location Linked { get; set; }
+        public virtual ICollection<Location> InverseLinked { get; set; }
 
     }
 }

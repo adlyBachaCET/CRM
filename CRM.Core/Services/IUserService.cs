@@ -2,6 +2,7 @@
 using CRM_API.Resources;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Security.Claims;
 
 namespace CRM.Core.Services
 {
@@ -24,6 +25,6 @@ namespace CRM.Core.Services
         Task<IEnumerable<User>> GetAllInActif();
         Task<IEnumerable<User>> GetAllDelegateByIdBu(int IdBu);
         Task<IEnumerable<User>> GetAllDelegateByIdBu(List<int> Bu);
-
+        ClaimsPrincipal getPrincipal(string token);
     }
 }

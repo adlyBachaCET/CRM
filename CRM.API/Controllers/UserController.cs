@@ -2,14 +2,19 @@ using AutoMapper;
 using CRM.Core.Models;
 using CRM.Core.Resources;
 using CRM.Core.Services;
+using CRM_API.Helper;
 using CRM_API.Resources;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace CRM_API.Controllers
@@ -62,10 +67,10 @@ namespace CRM_API.Controllers
         /// <param name="lm">Login And Password of the user .</param>
         /// <returns>returns the token with all infos on the authenticated manager if found</returns>
         [HttpPost("Login/Manager")]
-        public async Task<HttpResponseMessage> LoginManager(LoginModel lm)
+        public async Task<IActionResult> LoginManager(LoginModel lm)
         {
             IActionResult response = Unauthorized();
-            HttpResponseMessage res = new HttpResponseMessage();
+
             var user = await _UserService.AuthenticateManager(lm);
         
             if (user != null)
@@ -78,14 +83,21 @@ namespace CRM_API.Controllers
                     HttpOnly = true,
                     Expires = DateTime.UtcNow.AddDays(7)
                 };
-                Response.Cookies.Append("refreshToken", tokenString, cookieOptions);
-                res.Headers.Add("token", tokenString);
-               
-            }
-            
+                Response.Cookies.Append("token", tokenString, cookieOptions);
+                Response.Headers.Append("token", tokenString);
 
-            return res;   
-        }
+                return StatusCode(200, "Authenticated"); 
+
+                //  res.Headers.Add("token", tokenString);
+            }
+            else
+            {
+
+                return StatusCode(404, "Password/login incorrect");
+            }
+
+
+        } 
 
         /// <summary>This method authenticates a delegate .</summary>
         /// <param name="lm">Login And Password of the user .</param>
@@ -114,18 +126,31 @@ namespace CRM_API.Controllers
             }
             return response;
         }
-  
+        [HttpPost("Token")]
+        public IActionResult Token(Token lm)
+        {
+            IEnumerable<Claim> claimList = Enumerable.Empty<Claim>();
+
+            var claims = _UserService.getPrincipal(lm.TokenString);
+            foreach (var item in claims.Claims)
+            { 
+               // var claims2 = item.Subject.Claims.;
+                claimList.Append(item);
+            }
+
+            return Ok(claims.Claims);
+        }
         /// <summary>This method returns the list of All the details of the selected user (Profil) .</summary>
         /// <param name="Id">Id of the user .</param>
         [HttpGet("Profil/{Id}")]
         public async Task<ActionResult<UserProfile>> GetAllProfilById(int Id)
         {
-                UserProfile Profile = new UserProfile();
+            UserProfile Profile = new UserProfile();
  
 
                 //get the details of the user
-                var User = await _UserService.GetById(Id);
-                var UserResource = _mapperService.Map<User, SaveUserResource>(User);
+            var User = await _UserService.GetById(Id);
+            var UserResource = _mapperService.Map<User, SaveUserResource>(User);
             var UserResourceWhitoutPassword = _mapperService.Map<SaveUserResource, SaveUserResourceWithoutPassword>(UserResource);
             UserResourceWhitoutPassword.IdUser = Id;
             Profile.User = UserResourceWhitoutPassword;
