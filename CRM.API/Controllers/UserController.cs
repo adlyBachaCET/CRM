@@ -70,7 +70,7 @@ namespace CRM_API.Controllers
         public async Task<IActionResult> LoginManager(LoginModel lm)
         {
             IActionResult response = Unauthorized();
-
+            ErrorHandling errorHandling = new ErrorHandling();
             var user = await _UserService.AuthenticateManager(lm);
         
             if (user != null)
@@ -85,15 +85,17 @@ namespace CRM_API.Controllers
                 };
                 Response.Cookies.Append("token", tokenString, cookieOptions);
                 Response.Headers.Append("token", tokenString);
-
-                return StatusCode(200, "Authenticated"); 
+                errorHandling.ErrorMessage = "Authentification effectué";
+                errorHandling.StatusCode = 200;
+                return StatusCode(200, errorHandling); 
 
                 //  res.Headers.Add("token", tokenString);
             }
             else
             {
-
-                return StatusCode(404, "Password/login incorrect");
+                errorHandling.ErrorMessage = "Login/Password incorrect";
+                errorHandling.StatusCode = 200;
+                return StatusCode(404, errorHandling);
             }
 
 
