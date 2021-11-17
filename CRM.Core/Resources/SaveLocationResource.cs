@@ -36,6 +36,6 @@ namespace CRM.Core.Models
 
         public int? CreatedBy { get; set; }
         public int? UpdatedBy { get; set; }
-        public SaveServiceResource SaveServiceResource { get; set; }
+        public List<SaveServiceResource> SaveServiceResource { get; set; }
     }
 }

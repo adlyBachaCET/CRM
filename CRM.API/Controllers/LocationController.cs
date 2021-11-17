@@ -95,12 +95,18 @@ namespace CRM_API.Controllers
                     {
                         Location.Status = Status.Pending;
                     }
+
                     var NewLocationType = await _LocationTypeService.GetById(SaveLocationResource.IdLocationType);
                     Location.NameLocationType = NewLocationType.Name;
                     Location.StatusLocationType = NewLocationType.Status;
                     Location.VersionLocationType = NewLocationType.Version;
                     Location.TypeLocationType = NewLocationType.Type;
+                    foreach(var item in SaveLocationResource.SaveServiceResource)
+                    {
+                        //var Service = await _Service.GetById(SaveLocationResource.IdLocationType);
 
+
+                    }
                     //*** Creation dans la base de données ***
                     var NewLocation = await _LocationService.Create(Location);
                     //*** Mappage ***
