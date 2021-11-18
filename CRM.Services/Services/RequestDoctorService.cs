@@ -107,6 +107,11 @@ namespace CRM.Services.Services
             return
                   await _unitOfWork.RequestDoctors.GetByIdActifDoctor(Id);
         }
+        public async Task<IEnumerable<RequestDoctor>> GetByIdActifUser(int Id)
+        {
+            return
+                  await _unitOfWork.RequestDoctors.GetByIdActifUser(Id);
+        }
         //public Task<RequestDoctor> CreateRequestDoctor(RequestDoctor newRequestDoctor)
         //{
         //    throw new NotImplementedException();

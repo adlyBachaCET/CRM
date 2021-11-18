@@ -19,10 +19,14 @@ namespace CRM_API.Controllers
         public IList<BuUser> BuUsers;
 
         private readonly IBuUserService _BuUserService;
+        private readonly IBusinessUnitService _BuService;
+        private readonly IUserService _UserService;
 
         private readonly IMapper _mapperService;
-        public BuUserController(IBuUserService BuUserService, IMapper mapper)
+        public BuUserController(IBusinessUnitService BuService, IUserService UserService, IBuUserService BuUserService, IMapper mapper)
         {
+            _BuService = BuService;
+            _UserService = UserService;
             _BuUserService = BuUserService;
             _mapperService = mapper;
         }
@@ -33,130 +37,30 @@ namespace CRM_API.Controllers
         {
             //*** Mappage ***
             var BuUser = _mapperService.Map<SaveBuUserResource, BuUser>(SaveBuUserResource);
+            var User = await _UserService.GetById(SaveBuUserResource.IdUser);
+            BuUser.IdUser = User.IdUser;
+            BuUser.StatusUser = User.Status;
+            BuUser.VersionUser = User.Version;
+            BuUser.IdUserNavigation = User;
+            BuUser.UpdatedOn = User.UpdatedOn;
+            BuUser.CreatedOn = User.CreatedOn;
+            BuUser.UpdatedBy = User.UpdatedBy;
+            var BusinessUnit = await _BuService.GetById(SaveBuUserResource.IdBu);
+            BuUser.IdUser = BusinessUnit.IdBu;
+            BuUser.StatusUser = BusinessUnit.Status;
+            BuUser.VersionUser = BusinessUnit.Version;
+            BuUser.IdBuNavigation = BusinessUnit;
+            BuUser.UpdatedOn = BusinessUnit.UpdatedOn;
+            BuUser.CreatedOn = BusinessUnit.CreatedOn;
+            BuUser.UpdatedBy = BusinessUnit.UpdatedBy;
             //*** Creation dans la base de données ***
+            BuUser.CreatedBy = 0;
+            BuUser.UpdatedBy = 0;
             var NewBuUser = await _BuUserService.Create(BuUser);
             //*** Mappage ***
             var BuUserResource = _mapperService.Map<BuUser, BuUserResource>(NewBuUser);
             return Ok(BuUserResource);
         }
-        [HttpGet]
-        public async Task<ActionResult<BuUserResource>> GetAllBuUsers()
-        {
-            try
-            {
-                var Employe = await _BuUserService.GetAll();
-                if (Employe == null) return NotFound();
-                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
-                return Ok(Employe);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-        [HttpGet("Actif")]
-        public async Task<ActionResult<BuUserResource>> GetAllActifBuUsers()
-        {
-            try
-            {
-                var Employe = await _BuUserService.GetAllActif();
-                if (Employe == null) return NotFound();
-                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
-                return Ok(Employe);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-        [HttpGet("InActif")]
-        public async Task<ActionResult<BuUserResource>> GetAllInactifBuUsers()
-        {
-            try
-            {
-                var Employe = await _BuUserService.GetAllInActif();
-                if (Employe == null) return NotFound();
-                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
-                return Ok(Employe);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        [HttpGet("{Id}")]
-        public async Task<ActionResult<BuUserResource>> GetBuUserById(int Id)
-        {
-            try
-            {
-                var BuUsers = await _BuUserService.GetById(Id);
-                if (BuUsers == null) return NotFound();
-                var BuUserRessource = _mapperService.Map<BuUser, BuUserResource>(BuUsers);
-                return Ok(BuUserRessource);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-        /*[HttpPut("{Id}")]
-        public async Task<ActionResult<BuUser>> UpdateBuUser(int Id, SaveBuUserResource SaveBuUserResource)
-        {
-
-            var BuUserToBeModified = await _BuUserService.GetById(Id);
-            if (BuUserToBeModified == null) return BadRequest("Le BuUser n'existe pas"); //NotFound();
-            var BuUsers = _mapperService.Map<SaveBuUserResource, BuUser>(SaveBuUserResource);
-            //var newBuUser = await _BuUserService.Create(BuUsers);
-
-            await _BuUserService.Update(BuUserToBeModified, BuUsers);
-
-            var BuUserUpdated = await _BuUserService.GetById(Id);
-
-            var BuUserResourceUpdated = _mapperService.Map<BuUser, BuUserResource>(BuUserUpdated);
-
-            return Ok();
-        }*/
-
-
-        [HttpDelete("{Id}")]
-        public async Task<ActionResult> DeleteBuUser(int Id)
-        {
-            try
-            {
-
-                var sub = await _BuUserService.GetById(Id);
-                if (sub == null) return BadRequest("Le BuUser  n'existe pas"); //NotFound();
-                await _BuUserService.Delete(sub);
-                ;
-                return NoContent();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-        [HttpPost("DeleteRange")]
-        public async Task<ActionResult> DeleteRange(List<int> Ids)
-        {
-            try
-            {
-                List<BuUser> empty = new List<BuUser>();
-                foreach (var item in Ids)
-                {
-                    var sub = await _BuUserService.GetById(item);
-                    empty.Add(sub);
-                    if (sub == null) return BadRequest("Le BuUser  n'existe pas"); //NotFound();
-
-                }
-                await _BuUserService.DeleteRange(empty);
-                ;
-                return NoContent();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
+        
     }
 }

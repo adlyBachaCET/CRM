@@ -107,6 +107,11 @@ namespace CRM.Services.Services
             return
                   await _unitOfWork.Objections.GetByIdActifDoctor(Id);
         }
+        public async Task<IEnumerable<Objection>> GetByIdActifUser(int Id)
+        {
+            return
+                  await _unitOfWork.Objections.GetByIdActifUser(Id);
+        }
         //public Task<Objection> CreateObjection(Objection newObjection)
         //{
         //    throw new NotImplementedException();

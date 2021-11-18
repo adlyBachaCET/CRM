@@ -1,9 +1,11 @@
 using AutoMapper;
 using CRM.Core.Models;
 using CRM.Core.Services;
+using CRM_API.Helper;
 using CRM_API.Resources;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -20,14 +22,17 @@ namespace CRM_API.Controllers
 
         private readonly ICycleService _CycleService;
         private readonly ICycleUserService _CycleUserService;
+        private readonly IUserService _UserService;
 
         private readonly ISectorService _SectorService;
         private readonly ISectorCycleService _SectorCycleService;
 
         private readonly IMapper _mapperService;
-        public CycleController(ICycleUserService CycleUserService,ISectorCycleService SectorCycleService,ISectorService SectorService,ICycleService CycleService, IMapper mapper)
+        public CycleController(IUserService UserService, ICycleUserService CycleUserService,ISectorCycleService SectorCycleService,ISectorService SectorService,ICycleService CycleService, IMapper mapper)
         {
-            _CycleUserService=CycleUserService;
+            _UserService = UserService;
+
+            _CycleUserService = CycleUserService;
                _SectorCycleService = SectorCycleService;
             _SectorService = SectorService;
             _CycleService = CycleService;
@@ -38,8 +43,17 @@ namespace CRM_API.Controllers
         [HttpPost]
         public async Task<ActionResult<Cycle>> CreateCycle(AffectationCycleUser AffectationCycleUser)
         {
-            //*** Mappage ***
-            var Cycle = _mapperService.Map<SaveCycleResource, Cycle>(AffectationCycleUser.SaveCycleResource);
+            StringValues token = "";
+            ErrorHandling ErrorMessag = new ErrorHandling();
+            Request.Headers.TryGetValue("token", out token);
+            if (token != "")
+            {
+                var claims = _UserService.getPrincipal(token);
+                var Role = claims.FindFirst("Role").Value;
+                var Id = int.Parse(claims.FindFirst("Id").Value);
+
+                //*** Mappage ***
+                var Cycle = _mapperService.Map<SaveCycleResource, Cycle>(AffectationCycleUser.SaveCycleResource);
             //*** Creation dans la base de données ***
             var NewCycle = await _CycleService.Create(Cycle);
             //*** Mappage ***
@@ -55,6 +69,8 @@ namespace CRM_API.Controllers
                 var NewSector = _mapperService.Map<SaveSectorResource, Sector>(sectorResource);
                 NewSector.UpdatedOn = DateTime.UtcNow;
                 NewSector.CreatedOn = DateTime.UtcNow;
+                NewSector.CreatedBy = Id;
+                NewSector.UpdatedBy = Id;
                 await _SectorService.Create(NewSector);
                 SaveSectorCycleResource Affectation = new SaveSectorCycleResource();
                 Affectation.IdCycle = CycleResource.IdCycle;
@@ -75,73 +91,118 @@ namespace CRM_API.Controllers
             }
             }
             return Ok(CycleResource);
+            }
+            else
+            {
+                ErrorMessag.ErrorMessage = "Empty Token";
+                ErrorMessag.StatusCode = 400;
+                return Ok(ErrorMessag);
+
+            }
         }
         [HttpGet]
         public async Task<ActionResult<CycleResource>> GetAllCycles()
         {
-            try
+            StringValues token = "";
+            ErrorHandling ErrorMessag = new ErrorHandling();
+            Request.Headers.TryGetValue("token", out token);
+            if (token != "")
             {
+                var claims = _UserService.getPrincipal(token);
+                var Role = claims.FindFirst("Role").Value;
+                var Id = int.Parse(claims.FindFirst("Id").Value);
+
+
                 var Employe = await _CycleService.GetAll();
                 if (Employe == null) return NotFound();
                 // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
                 return Ok(Employe);
             }
-            catch (Exception ex)
+            else
             {
-                return BadRequest(ex.Message);
+                ErrorMessag.ErrorMessage = "Empty Token";
+                ErrorMessag.StatusCode = 400;
+                return Ok(ErrorMessag);
+
             }
-        }
+            }
         [HttpGet("Actif")]
         public async Task<ActionResult<CycleResource>> GetAllActifCycles()
         {
-            try
+            StringValues token = "";
+            ErrorHandling ErrorMessag = new ErrorHandling();
+            Request.Headers.TryGetValue("token", out token);
+            if (token != "")
             {
+                var claims = _UserService.getPrincipal(token);
+                var Role = claims.FindFirst("Role").Value;
+                var Id = int.Parse(claims.FindFirst("Id").Value);
+
                 var Employe = await _CycleService.GetAllActif();
                 if (Employe == null) return NotFound();
                 // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
                 return Ok(Employe);
             }
-            catch (Exception ex)
+            else
             {
-                return BadRequest(ex.Message);
+                ErrorMessag.ErrorMessage = "Empty Token";
+                ErrorMessag.StatusCode = 400;
+                return Ok(ErrorMessag);
+
             }
         }
         [HttpGet("InActif")]
         public async Task<ActionResult<CycleResource>> GetAllInactifCycles()
         {
-            try
+            StringValues token = "";
+            ErrorHandling ErrorMessag = new ErrorHandling();
+            Request.Headers.TryGetValue("token", out token);
+            if (token != "")
             {
                 var Employe = await _CycleService.GetAllInActif();
                 if (Employe == null) return NotFound();
                 // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
                 return Ok(Employe);
             }
-            catch (Exception ex)
+            else
             {
-                return BadRequest(ex.Message);
+                ErrorMessag.ErrorMessage = "Empty Token";
+                ErrorMessag.StatusCode = 400;
+                return Ok(ErrorMessag);
+
             }
         }
 
         [HttpGet("{Id}")]
         public async Task<ActionResult<CycleResource>> GetCycleById(int Id)
         {
-            try
+            StringValues token = "";
+            ErrorHandling ErrorMessag = new ErrorHandling();
+            Request.Headers.TryGetValue("token", out token);
+            if (token != "")
             {
                 var Cycles = await _CycleService.GetById(Id);
                 if (Cycles == null) return NotFound();
                 var CycleRessource = _mapperService.Map<Cycle, CycleResource>(Cycles);
                 return Ok(CycleRessource);
             }
-            catch (Exception ex)
+            else
             {
-                return BadRequest(ex.Message);
+                ErrorMessag.ErrorMessage = "Empty Token";
+                ErrorMessag.StatusCode = 400;
+                return Ok(ErrorMessag);
+
             }
         }
         [HttpPut("{Id}")]
         public async Task<ActionResult<Cycle>> UpdateCycle(int Id, SaveCycleResource SaveCycleResource)
         {
-
-            var CycleToBeModified = await _CycleService.GetById(Id);
+            StringValues token = "";
+            ErrorHandling ErrorMessag = new ErrorHandling();
+            Request.Headers.TryGetValue("token", out token);
+            if (token != "")
+            {
+                var CycleToBeModified = await _CycleService.GetById(Id);
             if (CycleToBeModified == null) return BadRequest("Le Cycle n'existe pas"); //NotFound();
             var Cycles = _mapperService.Map<SaveCycleResource, Cycle>(SaveCycleResource);
             //var newCycle = await _CycleService.Create(Cycles);
@@ -154,12 +215,23 @@ namespace CRM_API.Controllers
 
             return Ok();
         }
+            else
+            {
+                ErrorMessag.ErrorMessage = "Empty Token";
+                ErrorMessag.StatusCode = 400;
+                return Ok(ErrorMessag);
+
+    }
+}
 
 
         [HttpDelete("{Id}")]
         public async Task<ActionResult> DeleteCycle(int Id)
         {
-            try
+            StringValues token = "";
+            ErrorHandling ErrorMessag = new ErrorHandling();
+            Request.Headers.TryGetValue("token", out token);
+            if (token != "")
             {
 
                 var sub = await _CycleService.GetById(Id);
@@ -168,16 +240,26 @@ namespace CRM_API.Controllers
                 ;
                 return NoContent();
             }
-            catch (Exception ex)
+            else
             {
-                return BadRequest(ex.Message);
+                ErrorMessag.ErrorMessage = "Empty Token";
+                ErrorMessag.StatusCode = 400;
+                return Ok(ErrorMessag);
+
             }
         }
         [HttpPost("DeleteRange")]
         public async Task<ActionResult> DeleteRange(List<int> Ids)
         {
-            try
+            StringValues token = "";
+            ErrorHandling ErrorMessag = new ErrorHandling();
+            Request.Headers.TryGetValue("token", out token);
+            if (token != "")
             {
+                var claims = _UserService.getPrincipal(token);
+                var Role = claims.FindFirst("Role").Value;
+                var Id = int.Parse(claims.FindFirst("Id").Value);
+
                 List<Cycle> empty = new List<Cycle>();
                 foreach (var item in Ids)
                 {
@@ -190,9 +272,12 @@ namespace CRM_API.Controllers
                 ;
                 return NoContent();
             }
-            catch (Exception ex)
+            else
             {
-                return BadRequest(ex.Message);
+                ErrorMessag.ErrorMessage = "Empty Token";
+                ErrorMessag.StatusCode = 400;
+                return Ok(ErrorMessag);
+
             }
         }
     }

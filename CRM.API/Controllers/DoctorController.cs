@@ -1,5 +1,6 @@
 using AutoMapper;
 using CRM.Core.Models;
+using CRM.Core.Resources;
 using CRM.Core.Services;
 using CRM_API.Helper;
 using CRM_API.Resources;
@@ -24,9 +25,12 @@ namespace CRM_API.Controllers
         private readonly IVisitReportService _VisitReportService;
 
         private readonly IBusinessUnitService _BusinessUnitService;
+        private readonly IRequestRpService _RequestRpService;
+        private readonly ICommandeService _CommandeService;
 
         private readonly IBuDoctorService _BuDoctorService;
         private readonly IServiceService _ServiceService;
+        private readonly IParticipantService _ParticipantService;
 
         private readonly ILocationDoctorService _LocationDoctorService;
         private readonly ILocationService _LocationService;
@@ -52,6 +56,9 @@ namespace CRM_API.Controllers
             IPotentielService PotentielService, IObjectionService ObjectionService,
             ISpecialtyService SpecialtyService,
             IBusinessUnitService BusinessUnitService,
+                        IParticipantService ParticipantService,
+                                    IRequestRpService RequestRpService,
+  ICommandeService CommandeService,
             IInfoService InfoService,
             ITagsService TagsService,
             ITagsDoctorService TagsDoctorService,
@@ -73,6 +80,9 @@ namespace CRM_API.Controllers
             _SpecialtyService=SpecialtyService;
             _PhoneService = PhoneService;
             _UserService = UserService;
+            _ParticipantService = ParticipantService;
+            _RequestRpService = RequestRpService;
+            _CommandeService = CommandeService;
 
             _BusinessUnitService = BusinessUnitService;
            _InfoService = InfoService;
@@ -496,7 +506,21 @@ namespace CRM_API.Controllers
                 var Objections = await _ObjectionService.GetByIdActifDoctor(Id);
                 DoctorProfile.Objection = (List<Objection>)Objections;
                 var RequestDoctors = await _RequestDoctorService.GetByIdActifDoctor(Id);
-                DoctorProfile.RequestDoctor = (List<RequestDoctor>)RequestDoctors;
+                DoctorProfile.RequestDoctors = (List<RequestDoctor>)RequestDoctors;
+                var Participant = await _ParticipantService.GetAllById(Id);
+                List<RequestRp> RequestRpList = new List<RequestRp>();
+                foreach (var item in Participant)
+                {
+                    var RequestRp = await _RequestRpService.GetById(item.IdRequestRp);
+                    RequestRpList.Add(RequestRp);
+                }
+                DoctorProfile.RequestRp = RequestRpList;
+                
+             
+                var Commande = await _CommandeService.GetByIdActifDoctor(Id);
+               
+                DoctorProfile.Commande = (List<Commande>)Commande;
+
                 return Ok(DoctorProfile);
             }
             catch (Exception ex)
@@ -590,7 +614,46 @@ namespace CRM_API.Controllers
             return Ok();
         }
 
+       /* [HttpPut("Link")]
+        public async Task<ActionResult<Doctor>> Link(Link Link)
+        {
+            
+            StringValues token = "";
+            ErrorHandling ErrorMessag = new ErrorHandling();
+            Request.Headers.TryGetValue("token", out token);
+            if (token != "")
+            {
+              
+                var claims = _UserService.getPrincipal(token);
+                var Role = claims.FindFirst("Role").Value;
+                var IdUser = int.Parse(claims.FindFirst("Id").Value);
+                var Parent = await _DoctorService.GetById(Link.Parent);
 
+                foreach (var item in Link.Childs)
+                {
+                    var DoctorToBeModified = await _DoctorService.GetById(item);
+                    if (DoctorToBeModified == null) return BadRequest("Le Doctor n'existe pas"); //NotFound();
+                                                                                                 //var newDoctor = await _DoctorService.Create(Doctors);
+                                                                                                 // Doctors.CreatedOn = SaveDoctorResource.;
+                    DoctorToBeModified.UpdatedOn = DateTime.UtcNow;
+                    DoctorToBeModified.UpdatedBy = IdUser;
+
+                    await _DoctorService.Update(DoctorToBeModified, DoctorToBeModified);
+
+                    var DoctorUpdated = await _DoctorService.GetById(item);
+
+                    var DoctorResourceUpdated = _mapperService.Map<Doctor, DoctorResource>(DoctorUpdated);
+                }
+                return Ok();
+            }
+            else
+            {
+                ErrorMessag.ErrorMessage = "Empty Token";
+                ErrorMessag.StatusCode = 400;
+                return Ok(ErrorMessag);
+
+            }
+        }*/
         [HttpDelete("{Id}")]
         public async Task<ActionResult> DeleteDoctor(int Id)
         {

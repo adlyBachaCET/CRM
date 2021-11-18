@@ -6,7 +6,11 @@ namespace CRM.Core
 {
     public interface IUnitOfWork : IDisposable
     {
-    
+        IVisitUserRepository VisitUsers { get; }
+        IParticipantRepository Participants { get; }
+        IRequestRpRepository RequestRps { get; }
+        ICommandeRepository Commandes { get; }
+
         IBrickRepository Bricks { get; }
         IObjectionRepository Objections { get; }
         IRequestDoctorRepository RequestDoctors { get; }

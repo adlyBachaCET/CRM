@@ -32,19 +32,8 @@ namespace CRM.Services.Services
         }
         public async Task<IEnumerable<Pharmacy>> GetPharmacysAssigned()
         {
-            List<Pharmacy> list = new List<Pharmacy>();
-           /* var Bu = await _unitOfWork.BuPharmacys.Find(i => i.IdBu == Id);
-            foreach (var item in Bu)
-            {
-                list.Add(await _unitOfWork.Pharmacys.SingleOrDefault(i => i.IdPharmacy == item.IdPharmacy));
-            }
-            List<Pharmacy> Pharmacys = new List<Pharmacy>();
-            //var a = await _unitOfWork.CycleSectorWeekPharmacys.Find(i => i.IdPharmacyNavigation.Active == 0 && i.IdPharmacyNavigation.LinkedId == null);
-            foreach (var item in list)
-            {
-                Pharmacys.Add(item);
-            */
-            return null;
+        
+            return await _unitOfWork.Pharmacys.GetPharmacysAssigned();
         }
         public async Task<IEnumerable<Pharmacy>> GetAll()
         {

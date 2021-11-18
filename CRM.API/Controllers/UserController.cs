@@ -28,18 +28,38 @@ namespace CRM_API.Controllers
 
         private readonly IUserService _UserService;
         private readonly IPhoneService _PhoneService;
+        private readonly ICommandeService _CommandeService;
+
         private readonly IBuUserService _BuUserService;
         private readonly IBusinessUnitService _BusinessUnitService;
+        private readonly IRequestDoctorService _RequestDoctorService;
+        private readonly IObjectionService _ObjectionService;
+
+        private readonly IVisitUserService _VisitUserService;
+        private readonly IVisitService _VisitService;
+        private readonly IParticipantService _ParticipantService;
+        private readonly IRequestRpService _RequestRpService;
 
         private readonly ILocalityService _LocalityService;
 
 
         private readonly IMapper _mapperService;
-        public UserController(IBusinessUnitService BusinessUnitService, ILocalityService LocalityService, IBuUserService BuUserService, IUserService UserService, IPhoneService PhoneService, IMapper mapper)
+        public UserController(IParticipantService ParticipantService, IRequestRpService RequestRpService, IObjectionService ObjectionService, IVisitService VisitService, IVisitUserService VisitUserService, IRequestDoctorService RequestDoctorService, IBusinessUnitService BusinessUnitService, ILocalityService LocalityService, 
+            IBuUserService BuUserService, IUserService UserService, IPhoneService PhoneService, ICommandeService CommandeService,
+            IMapper mapper)
         {
+            _RequestDoctorService = RequestDoctorService;
+            _VisitUserService = VisitUserService;
+            _VisitService = VisitService;
+            _ParticipantService = ParticipantService;
+            _RequestRpService = RequestRpService;
+
+            _ObjectionService = ObjectionService;
             _BusinessUnitService = BusinessUnitService;
             _LocalityService = LocalityService;
             _PhoneService = PhoneService;
+            _CommandeService = CommandeService;
+
             _UserService = UserService;
             _BuUserService = BuUserService;
 
@@ -183,9 +203,38 @@ namespace CRM_API.Controllers
                 //Get Immediate Manager
                 var ImmediateManage = await _UserService.GetById(Id);
                 if (ImmediateManage == null) return NotFound();
-                
 
-                return Ok(Profile);
+            var Objection = await _ObjectionService.GetByIdActifUser(Id);
+            //var Users = _mapperService.Map< IEnumerable < User >, IEnumerable<SaveUserResource>>(Delegates);
+
+            Profile.Objection = Objection;
+            var RequestDoctor = await _RequestDoctorService.GetByIdActifUser(Id);
+            //var Users = _mapperService.Map< IEnumerable < User >, IEnumerable<SaveUserResource>>(Delegates);
+
+            Profile.RequestDoctor = RequestDoctor;
+
+            var Visits = await _VisitUserService.GetAllById(Id);
+            List<Visit> VisitList = new List<Visit>();
+            foreach(var item in Visits)
+            {
+                var Visit = await _VisitService.GetById(item.IdVisit);
+                VisitList.Add(Visit);
+            }
+            Profile.Visit = VisitList;
+
+            var Participant = await _ParticipantService.GetAllById(Id);
+            List<RequestRp> RequestRpList = new List<RequestRp>();
+            foreach (var item in Participant)
+            {
+                var RequestRp = await _RequestRpService.GetById(item.IdRequestRp);
+                RequestRpList.Add(RequestRp);
+            }
+            Profile.RequestRp = RequestRpList;
+            var Commande = await _CommandeService.GetByIdActifDoctor(Id);
+
+            Profile.Commande = (List<Commande>)Commande;
+
+            return Ok(Profile);
             
         }
         /// <summary>This method returns the list of All the delegate of the same BusinessUnit .</summary>

@@ -20,11 +20,14 @@ namespace CRM_API.Controllers
 
         private readonly IRequestDoctorService _RequestDoctorService;
         private readonly IDoctorService _DoctorService;
+        private readonly IUserService _UserService;
 
 
         private readonly IMapper _mapperService;
-        public RequestDoctorController(IDoctorService DoctorService,IRequestDoctorService RequestDoctorService, IMapper mapper)
+        public RequestDoctorController(IUserService UserService, IDoctorService DoctorService,IRequestDoctorService RequestDoctorService, IMapper mapper)
         {
+            _UserService = UserService;
+
             _DoctorService = DoctorService;
            _RequestDoctorService = RequestDoctorService;
             _mapperService = mapper;
@@ -45,6 +48,10 @@ namespace CRM_API.Controllers
             RequestDoctor.VersionDoctor = Doctor.Version;
             RequestDoctor.StatusDoctor = Doctor.Status;
 
+            var User = await _UserService.GetById(SaveRequestDoctorResource.IdUser);
+            RequestDoctor.User = User;
+            RequestDoctor.VersionUser = User.Version;
+            RequestDoctor.StatusUser = User.Status;
             //*** Creation dans la base de données ***
             var NewRequestDoctor = await _RequestDoctorService.Create(RequestDoctor);
             //*** Mappage ***

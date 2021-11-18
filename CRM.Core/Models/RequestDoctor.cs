@@ -21,6 +21,11 @@ namespace CRM.Core.Models
         public string Name { get; set; }
         public string Description { get; set; }
 
+        public int IdUser{ get; set; }
+        public int VersionUser { get; set; }
+        public Status StatusUser { get; set; }
+        public virtual User User { get; set; }
+
 
 
     }

@@ -19,14 +19,17 @@ namespace CRM_API.Controllers
         public IList<Objection> Objections;
 
         private readonly IObjectionService _ObjectionService;
-        private readonly IDoctorService _DoctorService;
+        private readonly IDoctorService _DoctorService; 
+        private readonly IUserService _UserService;
 
 
         private readonly IMapper _mapperService;
-        public ObjectionController(IDoctorService DoctorService,IObjectionService ObjectionService, IMapper mapper)
+        public ObjectionController(IUserService UserService, IDoctorService DoctorService,IObjectionService ObjectionService, IMapper mapper)
         {
+            _UserService = UserService;
             _DoctorService = DoctorService;
-           _ObjectionService = ObjectionService;
+
+            _ObjectionService = ObjectionService;
             _mapperService = mapper;
         }
 
@@ -44,7 +47,10 @@ namespace CRM_API.Controllers
             Objection.Doctor = Doctor;
             Objection.VersionDoctor = Doctor.Version;
             Objection.StatusDoctor = Doctor.Status;
-
+            var User = await _UserService.GetById(SaveObjectionResource.IdUser);
+            Objection.User = User;
+            Objection.VersionUser = User.Version;
+            Objection.StatusUser = User.Status;
             //*** Creation dans la base de données ***
             var NewObjection = await _ObjectionService.Create(Objection);
             //*** Mappage ***

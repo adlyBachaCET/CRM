@@ -104,8 +104,14 @@ namespace CRM.Data.Repositories
 
         public async Task<IEnumerable<Pharmacy>> GetPharmacysAssigned()
         {
-            var Target = await MyDbContext.Target.Where(a => a.Active == 0 && a.IdPharmacy !=null).Select(a=>a.IdPharmacy).ToListAsync();
-            return null;
+            var Target = await MyDbContext.Target.Where(a => a.Active == 0 && a.IdPharmacy !=0).Distinct().ToListAsync();
+            List<Pharmacy> Pharmacies = new List<Pharmacy>();
+            foreach (var item in Target)
+            {
+                var Pharmacy = await MyDbContext.Pharmacy.Where(a => a.Active == 0 && a.IdPharmacy == item.IdPharmacy).FirstOrDefaultAsync();
+                Pharmacies.Add(Pharmacy);
+            }
+            return Pharmacies;
         }
         //public async Task<IEnumerable<Pharmacy>> GetAllWithArtisteAsync()
         //{

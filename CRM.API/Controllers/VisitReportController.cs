@@ -42,6 +42,8 @@ namespace CRM_API.Controllers
             VisitReport.Visit = Visit;
             VisitReport.UpdatedOn = DateTime.UtcNow;
             VisitReport.CreatedOn = DateTime.UtcNow;
+            VisitReport.UpdatedBy = Visit.UpdatedBy;
+            VisitReport.CreatedBy = Visit.CreatedBy;
             //*** Creation dans la base de données ***
             var NewVisitReport = await _VisitReportService.Create(VisitReport);
             //*** Mappage ***

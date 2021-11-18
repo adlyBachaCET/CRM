@@ -70,6 +70,11 @@ namespace CRM.Data.Repositories
             var result = await MyDbContext.RequestDoctors.Where(a => a.Active == 0 &&  a.IdDoctor==id).ToListAsync();
             return result;
         }
+        public async Task<IEnumerable<RequestDoctor>> GetByIdActifUser(int id)
+        {
+            var result = await MyDbContext.RequestDoctors.Where(a => a.Active == 0 && a.IdUser == id).ToListAsync();
+            return result;
+        }
         //public async Task<IEnumerable<RequestDoctor>> GetAllWithArtisteAsync()
         //{
         //    return await MyRequestDoctorDbContext.RequestDoctors

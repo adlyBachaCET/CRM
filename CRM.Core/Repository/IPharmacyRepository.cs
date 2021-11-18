@@ -22,5 +22,6 @@ namespace CRM.Core.Repository
         Task<Pharmacy> GetByExistantFirstNameActif(string FirstName);
         Task<IEnumerable<Pharmacy>> GetByExistantPhoneNumberActif(int PhoneNumber);
         Task<IEnumerable<Pharmacy>> GetByNearByActif(string Locality1, string Locality2, int CodePostal);
+     
     }
 }

@@ -33,6 +33,12 @@ namespace CRM_API.Controllers
         {
             //*** Mappage ***
             var BusinessUnit = _mapperService.Map<SaveBusinessUnitResource, BusinessUnit>(SaveBusinessUnitResource);
+            BusinessUnit.UpdatedOn = DateTime.UtcNow;
+            BusinessUnit.CreatedOn = DateTime.UtcNow;
+            BusinessUnit.Active = 0;
+            BusinessUnit.Status = Status.Approuved;
+            BusinessUnit.UpdatedBy = 0;
+            BusinessUnit.CreatedBy = 0;
             //*** Creation dans la base de données ***
             var NewBusinessUnit = await _BusinessUnitService.Create(BusinessUnit);
             //*** Mappage ***

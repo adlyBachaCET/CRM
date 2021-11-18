@@ -4,20 +4,21 @@ using System.Threading.Tasks;
 
 namespace CRM.Core.Services
 {
-    public interface IRequestDoctorService
+    public interface IObjectionService
     {
-        Task<RequestDoctor> GetById(int id);
-        Task<RequestDoctor> Create(RequestDoctor newRequestDoctor);
-        Task<List<RequestDoctor>> CreateRange(List<RequestDoctor> newRequestDoctor);
-        Task Update(RequestDoctor RequestDoctorToBeUpdated, RequestDoctor RequestDoctor);
-        Task Delete(RequestDoctor RequestDoctorToBeDeleted);
-        Task DeleteRange(List<RequestDoctor> RequestDoctor);
+        Task<Objection> GetById(int id);
+        Task<Objection> Create(Objection newObjection);
+        Task<List<Objection>> CreateRange(List<Objection> newObjection);
+        Task Update(Objection ObjectionToBeUpdated, Objection Objection);
+        Task Delete(Objection ObjectionToBeDeleted);
+        Task DeleteRange(List<Objection> Objection);
 
-        Task<IEnumerable<RequestDoctor>> GetAll();
-        Task<IEnumerable<RequestDoctor>> GetAllActif();
-        Task<IEnumerable<RequestDoctor>> GetAllInActif();
-        Task<IEnumerable<RequestDoctor>> GetByIdDoctor(int id);
-        Task<IEnumerable<RequestDoctor>> GetByIdActifDoctor(int Id);
+        Task<IEnumerable<Objection>> GetAll();
+        Task<IEnumerable<Objection>> GetAllActif();
+        Task<IEnumerable<Objection>> GetAllInActif();
+        Task<IEnumerable<Objection>> GetByIdDoctor(int id);
+        Task<IEnumerable<Objection>> GetByIdActifDoctor(int Id);
+        Task<IEnumerable<Objection>> GetByIdActifUser(int Id);
 
     }
 }

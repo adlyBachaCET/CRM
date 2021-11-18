@@ -155,9 +155,24 @@ namespace CRM_API.Controllers
             }
         }
 
-      
- 
-   
+
+        [HttpGet("Assigned")]
+        public async Task<ActionResult<PharmacyResource>> GetPharmacysAssigned()
+        {
+            try
+            {
+                var Employe = await _PharmacyService.GetPharmacysAssigned();
+                if (Employe == null) return NotFound();
+                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
+                return Ok(Employe);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
         [HttpGet("Actif")]
         public async Task<ActionResult<PharmacyResource>> GetAllActifPharmacys()
         {
