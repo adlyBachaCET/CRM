@@ -23,15 +23,19 @@ namespace CRM_API.Controllers
         private readonly IServiceService _ServiceService;
 
         private readonly ILocationService _LocationService;
+        private readonly ILocationDoctorService _LocationDoctorService;
+
         private readonly ILocationTypeService _LocationTypeService;
 
         private readonly IMapper _mapperService;
-        public LocationController(IServiceService ServiceService,ILocationService LocationService, IUserService UserService, ILocationTypeService LocationTypeService, IMapper mapper)
+        public LocationController(IServiceService ServiceService, ILocationService LocationService,
+            ILocationDoctorService LocationDoctorService, IUserService UserService, ILocationTypeService LocationTypeService, IMapper mapper)
         {
             _ServiceService = ServiceService;
             _UserService = UserService;
             _LocationTypeService = LocationTypeService;
-            _LocationService = LocationService;
+            _LocationDoctorService = LocationDoctorService;
+
             _mapperService = mapper;
         }
 
@@ -115,11 +119,11 @@ namespace CRM_API.Controllers
                 var Role = claims.FindFirst("Role").Value;
                 var Id = int.Parse(claims.FindFirst("Id").Value);
 
-                var LocationExiste = await _LocationService.GetByExistantActif(SaveLocationResource.Name, SaveLocationResource.IdLocationType);
+                var LocationExiste = await _LocationService.GetByExistantActif(SaveLocationResource.LocationAdd.Name, SaveLocationResource.LocationAdd.IdLocationType);
                 LocationResource LocationResourceOld = new LocationResource();
                 if (LocationExiste == null)
                 { //*** Mappage ***
-                    var Location = _mapperService.Map<SaveLocationResource, Location>(SaveLocationResource);
+                    var Location = _mapperService.Map<LocationAdd, Location>(SaveLocationResource.LocationAdd);
                     Location.UpdatedOn = DateTime.UtcNow;
                     Location.CreatedOn = DateTime.UtcNow;
                     Location.Version = 0;
@@ -134,13 +138,15 @@ namespace CRM_API.Controllers
                         Location.Status = Status.Pending;
                     }
 
-                    var NewLocationType = await _LocationTypeService.GetById(SaveLocationResource.IdLocationType);
+                    var NewLocationType = await _LocationTypeService.GetById(SaveLocationResource.LocationAdd.IdLocationType);
                     Location.NameLocationType = NewLocationType.Name;
                     Location.StatusLocationType = NewLocationType.Status;
                     Location.VersionLocationType = NewLocationType.Version;
                     Location.TypeLocationType = NewLocationType.Type;
                     Location.CreatedBy = Id;
                     Location.UpdatedBy = Id;
+                    List<Service> Services = new List<Service>();
+                    List<int> Order = new List<int>();
                     foreach (var item in SaveLocationResource.SaveServiceResource)
                     {
                         var Service = _mapperService.Map<SaveServiceResource, Service>(item);
@@ -150,7 +156,7 @@ namespace CRM_API.Controllers
                         Service.Active = 0;
                         Service.CreatedBy = Id;
                         Service.UpdatedBy = Id;
-
+                        //Order.Add(item.)
                         if (Role == "Manager")
                         {
                             Service.Status = Status.Approuved;
@@ -159,11 +165,25 @@ namespace CRM_API.Controllers
                         {
                             Service.Status = Status.Pending;
                         }
+                        var NewService = await _ServiceService.Create(Service);
+                        Services.Add(NewService);
                     }
                     //*** Creation dans la base de données ***
                     var NewLocation = await _LocationService.Create(Location);
                     //*** Mappage ***
                     var LocationResource = _mapperService.Map<Location, LocationResource>(NewLocation);
+                    foreach (var item in Services)
+                    {
+                       SaveLocationDoctorResource LD = new SaveLocationDoctorResource();
+                        LD.IdLocation = LocationResource.IdLocation;
+                        LD.IdDoctor = 0;
+                        LD.IdService = item.IdService;
+                        LD.Order = SaveLocationResource.OrderLocation.Order;
+                        LD.Primary = SaveLocationResource.OrderLocation.Primary;
+                        ///LD.ChiefService = SaveLocationResource.Chief.Chief;
+
+                    }
+
 
                     return Ok(LocationResource);
                 }
@@ -264,7 +284,7 @@ namespace CRM_API.Controllers
           
             Location.CreatedBy = Location.CreatedBy;
             Location.UpdatedBy = IdUser;
-            var NewLocationType = await _LocationTypeService.GetById(SaveLocationResource.IdLocationType);
+            var NewLocationType = await _LocationTypeService.GetById(SaveLocationResource.LocationAdd.IdLocationType);
             Location.NameLocationType = NewLocationType.Name;
                 if (Role == "Manager")
                 {

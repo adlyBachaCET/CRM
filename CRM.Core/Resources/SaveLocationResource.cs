@@ -5,15 +5,26 @@ namespace CRM.Core.Models
 {
     public partial class SaveLocationResource 
     {
+        public LocationAdd LocationAdd { get; set; }
+
+        public OrderLocation OrderLocation { get; set; }
+        public Chief Chief { get; set; }
+
+
+        public List<SaveServiceResource> SaveServiceResource { get; set; }
+    }
+
+    public class LocationAdd
+    {
 
 
         public int? IdLocationType { get; set; }
 
-  
+
         public string Name { get; set; }
         public int? Primary { get; set; }
 
-     
+
         public int IdLocality1 { get; set; }
         public string NameLocality1 { get; set; }
         public int? tel { get; set; }
@@ -31,10 +42,13 @@ namespace CRM.Core.Models
         public int PostalCode { get; set; }
 
         public int IdBrick { get; set; }
-   
-        public string NameBrick { get; set; }
 
-   
-        public List<SaveServiceResource> SaveServiceResource { get; set; }
+        public string NameBrick { get; set; }
     }
+    public class OrderLocation
+    {
+        public int Order { get; set; }
+        public int Primary { get; set; }
+    }
+
 }

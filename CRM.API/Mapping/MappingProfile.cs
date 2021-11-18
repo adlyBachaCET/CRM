@@ -112,7 +112,12 @@ namespace CRM_API.Mapping
             CreateMap<BusinessUnit, IEnumerable<BusinessUnitResource>>();
             CreateMap<List<SaveBusinessUnitResource>, List<BusinessUnit>>();
             CreateMap< List < BusinessUnit > , List<SaveBusinessUnitResource>>();
-
+            //LocationDoctor
+            CreateMap<LocationDoctor, LocationDoctorResource>();
+            CreateMap<LocationDoctor, SaveLocationDoctorResource>();
+            CreateMap<SaveLocationDoctorResource, LocationDoctor>();
+            CreateMap<List<SaveLocationDoctorResource>, List<LocationDoctor>>();
+            CreateMap<LocationDoctor, IEnumerable<LocationDoctorResource>>();
 
             //Location
             CreateMap<Location, LocationResource>();
