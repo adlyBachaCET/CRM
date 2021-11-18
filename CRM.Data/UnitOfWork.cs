@@ -10,6 +10,7 @@ namespace CRM.Data
         private readonly MyDbContext _context;
         private IParticipantRepository _ParticipantRepository;
         private IRequestRpRepository _RequestRpRepository;
+        private ICommandeRepository _CommandeRepository;
 
         private IObjectionRepository _ObjectionRepository;
         private IVisitUserRepository _VisitUserRepository;
@@ -68,6 +69,7 @@ namespace CRM.Data
         public IVisitUserRepository VisitUsers => _VisitUserRepository = _VisitUserRepository ?? new VisitUserRepository(_context);
         public IParticipantRepository Participants => _ParticipantRepository = _ParticipantRepository ?? new ParticipantRepository(_context);
         public IRequestRpRepository RequestRps => _RequestRpRepository = _RequestRpRepository ?? new RequestRpRepository(_context);
+        public ICommandeRepository Commandes => _CommandeRepository = _CommandeRepository ?? new CommandeRepository(_context);
 
         public ISectorCycleInYearRepository WeekSectorCycleInYears => _WeekSectorCycleInYearRepository = _WeekSectorCycleInYearRepository ?? new SectorCycleInYearRepository(_context);
         public ISectorCycleRepository WeekSectorCycles => _WeekSectorCycleRepository = _WeekSectorCycleRepository ?? new SectorCycleRepository(_context);
