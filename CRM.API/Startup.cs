@@ -51,6 +51,8 @@ namespace CRM_API
 
             //Services 
             services.AddScoped<ICommandeService, CommandeService>();
+            services.AddScoped<IVisitService, VisitService>();
+            services.AddScoped<IVisitUserService, VisitUserService>();
 
             services.AddScoped<IRequestRpService, RequestRpService>();
             services.AddScoped<IParticipantService, ParticipantService>();
@@ -91,7 +93,6 @@ namespace CRM_API
             services.AddScoped<IPotentielCycleService, PotentielCycleService>();
             services.AddScoped<ISectorCycleService, SectorCycleService>();
             services.AddScoped<ISpecialtyService, SpecialtyService>();
-            services.AddMvc();
 
 services.AddCors(c =>
             {
