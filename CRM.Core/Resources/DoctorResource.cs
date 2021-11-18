@@ -5,16 +5,7 @@ namespace CRM.Core.Models
 {
     public partial class DoctorResource
     {
-        public DoctorResource()
-        {
-            BuDoctor = new HashSet<BuDoctor>();
-            CycleSectorWeekDoctors = new HashSet<CycleSectorWeekDoctorsResource>();
-            EstablishmentDoctor = new HashSet<LocationDoctor>();
-            Info = new HashSet<Info>();
-            InverseLinked = new HashSet<Doctor>();
-            Phone = new HashSet<Phone>();
-            SpecialityDoctor = new HashSet<SpecialityDoctor>();
-        }
+   
         public int IdDoctor { get; set; }
         public int Version { get; set; }
         public Status Status { get; set; }
@@ -40,14 +31,7 @@ namespace CRM.Core.Models
 
         public int IdPotentiel { get; set; }
         public string NamePotentiel { get; set; }
-        public virtual Potentiel IdDoctorNavigation { get; set; }
-        public virtual Doctor Linked { get; set; }
-        public virtual ICollection<BuDoctor> BuDoctor { get; set; }
-        public virtual ICollection<CycleSectorWeekDoctorsResource> CycleSectorWeekDoctors { get; set; }
-        public virtual ICollection<LocationDoctor> EstablishmentDoctor { get; set; }
-        public virtual ICollection<Info> Info { get; set; }
-        public virtual ICollection<Doctor> InverseLinked { get; set; }
-        public virtual ICollection<Phone> Phone { get; set; }
-        public virtual ICollection<SpecialityDoctor> SpecialityDoctor { get; set; }
+
+
     }
 }

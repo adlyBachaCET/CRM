@@ -91,8 +91,9 @@ namespace CRM_API
             services.AddScoped<IPotentielCycleService, PotentielCycleService>();
             services.AddScoped<ISectorCycleService, SectorCycleService>();
             services.AddScoped<ISpecialtyService, SpecialtyService>();
+            services.AddMvc();
 
-            services.AddCors(c =>
+services.AddCors(c =>
             {
                 c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().WithExposedHeaders("token"));
             });

@@ -91,7 +91,7 @@ namespace CRM_API.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult<Doctor>> CreateDoctor(SaveDoctorResource SaveDoctorResource)
+        public async Task<ActionResult<DoctorResource>> CreateDoctor(SaveDoctorResource SaveDoctorResource)
         {
             StringValues token = "";
             ErrorHandling ErrorMessag = new ErrorHandling();
@@ -156,7 +156,7 @@ namespace CRM_API.Controllers
                         LocationDoctor.UpdatedOn = DateTime.UtcNow;
                        LocationDoctor.CreatedBy = Id;
                        LocationDoctor.UpdatedBy = Id;
-                            await _LocationDoctorService.Create(LocationDoctor);
+                     await _LocationDoctorService.Create(LocationDoctor);
                     }
                 }
             }
@@ -453,7 +453,7 @@ namespace CRM_API.Controllers
             }
         }
         [HttpGet("{Id}")]
-        public async Task<ActionResult<DoctorResource>> GetDoctorById(int Id)
+        public async Task<ActionResult<DoctorProfile>> GetDoctorById(int Id)
         {
             DoctorProfile DoctorProfile = new DoctorProfile();
             try
@@ -482,7 +482,10 @@ namespace CRM_API.Controllers
 
                 DoctorProfile.BusinessUnit = BusinessUnits;
                 var Doctors = await _DoctorService.GetById(Id);
-                DoctorProfile.Doctor = Doctors;
+
+                var DoctorResource = _mapperService.Map<Doctor,DoctorResource> (Doctors);
+
+                DoctorProfile.Doctor = DoctorResource;
                 var TagsDoctor = (List<TagsDoctor>)await _TagsDoctorService.GetByIdActif(Id);
                 List<Tags> Tags = new List<Tags>();
 
