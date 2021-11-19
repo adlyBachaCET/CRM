@@ -51,7 +51,7 @@ namespace CRM_API.Controllers
         {
     
             //*** Creation dans la base de données ***
-             await _SupportService.Send(SendMail.Name,SendMail.IdUser);
+             await _SupportService.Send(SendMail.Name,SendMail.EmailLogin);
             //*** Mappage ***
             ///var SupportResource = _mapperService.Map<Support, SupportResource>(NewSupport);
             return Ok();
@@ -101,12 +101,12 @@ namespace CRM_API.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpGet("VerifyToken")]
-        public async Task<ActionResult> VerifyToken()
+        [HttpGet("VerifyToken/{token}")]
+        public async Task<ActionResult> VerifyToken(string token)
         {
-            StringValues token = "";
+           // StringValues token = "";
             ErrorHandling ErrorMessag = new ErrorHandling();
-            Request.Headers.TryGetValue("token", out token);
+          //  Request.Headers.TryGetValue("token", out token);
 
             try
             {

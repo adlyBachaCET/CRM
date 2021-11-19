@@ -345,8 +345,8 @@ namespace CRM_API.Controllers
 
 
         }
-        [HttpPut("UpdateForgottenPassword/{LoginEmail}")]
-        public async Task<ActionResult> UpdateForgottenPassword(string LoginEmail, TokenPassword TokenPassword)
+        [HttpPut("UpdateForgottenPassword")]
+        public async Task<ActionResult> UpdateForgottenPassword(TokenPassword TokenPassword)
         {
             StringValues token = "";
             ErrorHandling ErrorMessag = new ErrorHandling();
@@ -360,8 +360,9 @@ namespace CRM_API.Controllers
                     return NotFound();
                 }
                 else {
-                  
-                        await _UserService.UpdatePassword(LoginEmail, TokenPassword.NewPassword);
+                    var Id = int.Parse(Claims.FindFirst("Id").Value);
+
+                    await _UserService.UpdateGeneratedPassword(Id, TokenPassword.NewPassword);
 
                         ErrorMessag.ErrorMessage = "Token Found";
                 ErrorMessag.StatusCode = 200;

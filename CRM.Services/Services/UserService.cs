@@ -176,10 +176,10 @@ namespace CRM.Services.Services
             await _unitOfWork.Users.Add(User);
             await _unitOfWork.CommitAsync();
         }
-        public async Task UpdateGeneratedPassword(string LoginEmail, string Password)
+        public async Task UpdateGeneratedPassword(int LoginEmail, string Password)
         {
 
-            var UserInDB = await _unitOfWork.Users.SingleOrDefault(i => (i.Email == LoginEmail || i.Login == LoginEmail) && i.Active == 0);
+            var UserInDB = await _unitOfWork.Users.SingleOrDefault(i => i.IdUser == LoginEmail  && i.Active == 0);
             UserInDB.Active = 1;
             await _unitOfWork.CommitAsync();
 

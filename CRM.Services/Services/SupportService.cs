@@ -88,12 +88,13 @@ namespace CRM.Services.Services
         public async Task Send(string Name, string EmailLogin)
         {
           
-            //Generate Token 
-            var token = GenerateJSONWebToken();
           
             //Get the user
-            var UserInDB = await _unitOfWork.Users.SingleOrDefault(a => a.IdUser == IdUser);
-           //Update the user's password with th newly created token
+            var UserInDB = await _unitOfWork.Users.SingleOrDefault(i => (i.Email == EmailLogin || i.Login == EmailLogin) && i.Active == 0);
+            //Generate Token 
+            var token = GenerateJSONWebToken(UserInDB.IdUser);
+
+            //Update the user's password with th newly created token
             UserInDB.Active = 1;
             await _unitOfWork.CommitAsync();
 
@@ -162,15 +163,17 @@ namespace CRM.Services.Services
 
 
 
-        public string GenerateJSONWebToken()
+        public string GenerateJSONWebToken(int Id)
         {
+            var claims = new[] {
+                           new Claim("Id", Id.ToString())};
             ///var details = JObject.Parse(userInfo.ToString());
            // string json = JsonConvert.SerializeObject(userInfo);
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
             var token = new JwtSecurityToken(_config["Jwt:Issuer"],
               _config["Jwt:Issuer"],
-              null,
+              claims,
               expires: DateTime.Now.AddMinutes(60),
               signingCredentials: credentials);
 

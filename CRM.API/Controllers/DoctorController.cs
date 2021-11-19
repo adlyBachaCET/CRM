@@ -99,8 +99,9 @@ namespace CRM_API.Controllers
             if (token != "")
             {
             var claims = _UserService.getPrincipal(token);
-            var Role = claims.FindFirst("Role").Value;
-            var Id = int.Parse(claims.FindFirst("Id").Value);
+                var Id = int.Parse(claims.FindFirst("Id").Value);
+                var Role = claims.FindFirst("Role").Value;
+        
                 //*** Mappage ***
             var Doctor = _mapperService.Map<SaveDoctorResource, Doctor>(SaveDoctorResource);
                 if (Role == "Manager")

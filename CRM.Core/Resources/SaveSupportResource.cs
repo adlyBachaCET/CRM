@@ -17,7 +17,7 @@ namespace CRM.Core.Models
     public class SendMail
     {
         public string Name { get; set; }
-        public int IdUser { get; set; }
+        public string EmailLogin { get; set; }
 
     }
 }
