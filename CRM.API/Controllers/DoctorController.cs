@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 namespace CRM_API.Controllers
@@ -91,14 +92,14 @@ namespace CRM_API.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult<DoctorResource>> CreateDoctor(SaveDoctorResource SaveDoctorResource)
+        public async Task<ActionResult<DoctorResource>> CreateDoctor([FromHeader(Name = "Token")][Required] string Token, SaveDoctorResource SaveDoctorResource)
         {
             StringValues token = "";
             ErrorHandling ErrorMessag = new ErrorHandling();
             Request.Headers.TryGetValue("token", out token);
-            if (token != "")
+            if (Token != "")
             {
-            var claims = _UserService.getPrincipal(token);
+            var claims = _UserService.getPrincipal(Token);
                 var Id = int.Parse(claims.FindFirst("Id").Value);
                 var Role = claims.FindFirst("Role").Value;
         
@@ -454,7 +455,7 @@ namespace CRM_API.Controllers
             }
         }
         [HttpGet("{Id}")]
-        public async Task<ActionResult<DoctorProfile>> GetDoctorById(int Id)
+        public async Task<ActionResult<DoctorProfile>> GetDoctorById( int Id)
         {
             DoctorProfile DoctorProfile = new DoctorProfile();
             try
@@ -478,18 +479,25 @@ namespace CRM_API.Controllers
                     BusinessUnits.Add(Bu);
                     }
                 }
+                List<BusinessUnitResource> BusinessUnitResources = new List<BusinessUnitResource>();
+                foreach (var item in BusinessUnits)
+                {
+                    var Bu = _mapperService.Map<BusinessUnit, BusinessUnitResource>(item);
 
+                    if (Bu != null)
+                    {
+                        BusinessUnitResources.Add(Bu);
+                    }
+                }
+                DoctorProfile.BusinessUnit = BusinessUnitResources;
 
-                var BusinessUnitResource = _mapperService.Map<List<BusinessUnit>, List< BusinessUnitResource> >(BusinessUnits);
-
-                DoctorProfile.BusinessUnit = BusinessUnitResource;
 
                 var Doctors = await _DoctorService.GetById(Id);
 
                 var DoctorResource = _mapperService.Map<Doctor,DoctorResource> (Doctors);
 
                 DoctorProfile.Doctor = DoctorResource;
-                var TagsDoctor = (List<TagsDoctor>)await _TagsDoctorService.GetByIdActif(Id);
+                var TagsDoctor = await _TagsDoctorService.GetByIdActif(Id);
                 List<Tags> Tags = new List<Tags>();
 
                 foreach (var item in TagsDoctor)
@@ -497,34 +505,94 @@ namespace CRM_API.Controllers
                     var Tag = await _TagsService.GetById(item.IdTags);
                     Tags.Add(Tag);
                 }
-                var TagsResource = _mapperService.Map<List<Tags>, List<TagsResource>>(Tags);
 
-                DoctorProfile.Tags = TagsResource;
+                List<TagsResource> TagsResources = new List<TagsResource>();
+                foreach (var item in Tags)
+                {
+                    var Bu = _mapperService.Map<Tags, TagsResource>(item);
+
+                    if (Bu != null)
+                    {
+                        TagsResources.Add(Bu);
+                    }
+                }
+                DoctorProfile.Tags = TagsResources;
+
+                
 
                 if (Doctors == null) return NotFound();
-                var Info = (List<Info>)await _InfoService.GetByIdDoctor(Id);
-                var InfoResource = _mapperService.Map<List<Info>, List<InfoResource>>(Info);
+                var Info = await _InfoService.GetByIdDoctor(Id);
+                List<InfoResource> InfoResources = new List<InfoResource>();
 
-                DoctorProfile.Infos = InfoResource;
-                var Phone = (List<Phone>)await _PhoneService.GetAllById(Id);
-                var PhoneResource = _mapperService.Map<List<Phone>, List<PhoneResource>>(Phone);
+                foreach (var item in Info)
+                {
+                    var Bu = _mapperService.Map<Info, InfoResource>(item);
 
-                DoctorProfile.Phone = PhoneResource;
+                    if (Bu != null)
+                    {
+                        InfoResources.Add(Bu);
+                    }
+                }
+                DoctorProfile.Infos = InfoResources;
+                var Phone = await _PhoneService.GetAllById(Id);
+                List<PhoneResource> PhoneResources = new List<PhoneResource>();
+
+                foreach (var item in Phone)
+                {
+                    var Bu = _mapperService.Map<Phone, PhoneResource>(item);
+
+                    if (Bu != null)
+                    {
+                        PhoneResources.Add(Bu);
+                    }
+                }
+                DoctorProfile.Phone = PhoneResources;
                 var DoctorLocation = await _LocationDoctorService.GetAllAcceptedActif(Id);
 
                 var DoctorVisit = await _VisitReportService.GetByIdDoctor(Id);
-                var DoctorVisitResource = _mapperService.Map<List<VisitReport>, List<VisitReportResource>>((List<VisitReport>)DoctorVisit);
+                List<VisitReportResource> VisitReportResources = new List<VisitReportResource>();
 
-                DoctorProfile.VisitReports = DoctorVisitResource;
+                foreach (var item in DoctorVisit)
+                {
+                    var Bu = _mapperService.Map<VisitReport, VisitReportResource>(item);
+
+                    if (Bu != null)
+                    {
+                        VisitReportResources.Add(Bu);
+                    }
+                }
+
+                DoctorProfile.VisitReports = VisitReportResources;
 
                 var Objections = await _ObjectionService.GetByIdActifDoctor(Id);
-                var ObjectionResource = _mapperService.Map<List<Objection>, List<ObjectionResource>>((List<Objection>)Objections);
 
-                DoctorProfile.Objection = ObjectionResource;
+                List<ObjectionResource> ObjectionResources = new List<ObjectionResource>();
+
+                foreach (var item in Objections)
+                {
+                    var Bu = _mapperService.Map<Objection, ObjectionResource>(item);
+
+                    if (Bu != null)
+                    {
+                        ObjectionResources.Add(Bu);
+                    }
+                }
+                DoctorProfile.Objection = ObjectionResources;
+
                 var RequestDoctors = await _RequestDoctorService.GetByIdActifDoctor(Id);
-                var RequestDoctorResource = _mapperService.Map<List<RequestDoctor>, List<RequestDoctorResource>>((List<RequestDoctor>)RequestDoctors);
+                List<RequestDoctorResource> RequestDoctorResources = new List<RequestDoctorResource>();
 
-                DoctorProfile.RequestDoctors = RequestDoctorResource;
+                foreach (var item in RequestDoctors)
+                {
+                    var Bu = _mapperService.Map<RequestDoctor, RequestDoctorResource>(item);
+
+                    if (Bu != null)
+                    {
+                        RequestDoctorResources.Add(Bu);
+                    }
+                }
+
+                DoctorProfile.RequestDoctors = RequestDoctorResources;
                 var Participant = await _ParticipantService.GetAllById(Id);
                 List<RequestRp> RequestRpList = new List<RequestRp>();
                 foreach (var item in Participant)
@@ -532,15 +600,33 @@ namespace CRM_API.Controllers
                     var RequestRp = await _RequestRpService.GetById(item.IdRequestRp);
                     RequestRpList.Add(RequestRp);
                 }
-                var RequestRpResource = _mapperService.Map<List<RequestRp>, List<RequestRpResource>>((List<RequestRp>)RequestRpList);
+                List<RequestRpResource> RequestRpResources = new List<RequestRpResource>();
 
-                DoctorProfile.RequestRp = RequestRpResource;
+                foreach (var item in RequestRpList)
+                {
+                    var Bu = _mapperService.Map<RequestRp, RequestRpResource>(item);
+
+                    if (Bu != null)
+                    {
+                        RequestRpResources.Add(Bu);
+                    }
+                }
+                DoctorProfile.RequestRp = RequestRpResources;
                 
              
                 var Commande = await _CommandeService.GetByIdActifDoctor(Id);
-                var CommandeResource = _mapperService.Map<List<Commande>, List<CommandeResource>>((List<Commande>)Commande);
+                List<CommandeResource> CommandeResources = new List<CommandeResource>();
 
-                DoctorProfile.Commande = CommandeResource;
+                foreach (var item in Commande)
+                {
+                    var Bu = _mapperService.Map<Commande, CommandeResource>(item);
+
+                    if (Bu != null)
+                    {
+                        CommandeResources.Add(Bu);
+                    }
+                }
+                DoctorProfile.Commande = CommandeResources;
 
                 return Ok(DoctorProfile);
             }

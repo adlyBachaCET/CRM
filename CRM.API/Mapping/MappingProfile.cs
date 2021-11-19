@@ -108,6 +108,8 @@ namespace CRM_API.Mapping
             CreateMap<BusinessUnit, IEnumerable<BusinessUnitResource>>();
             CreateMap<List<SaveBusinessUnitResource>, List<BusinessUnit>>();
             CreateMap< List < BusinessUnit > , List<SaveBusinessUnitResource>>();
+            CreateMap<List<BusinessUnit>, BusinessUnitResource>();
+
             //LocationDoctor
             CreateMap<LocationDoctor, LocationDoctorResource>();
             CreateMap<LocationDoctor, SaveLocationDoctorResource>();
@@ -149,20 +151,34 @@ namespace CRM_API.Mapping
             CreateMap<Tags, SaveTagsResource>();
             CreateMap<SaveTagsResource, Tags>();
             CreateMap<List<SaveTagsResource>, List<Tags>>();
-            CreateMap<List<Tags>, List<TagsResource>>();
-            CreateMap<List<Info>, List<InfoResource>>();
-            CreateMap<List<Visit>, List<VisitResource>>();
-            CreateMap<List<RequestRp>, List<RequestRpResource>>();
-            CreateMap<List<Commande>, List<CommandeResource>>();
-            CreateMap<List<Objection>, List<ObjectionResource>>();
-            CreateMap<List<RequestDoctor>, List<RequestDoctorResource>>();
-            CreateMap<List<BusinessUnit>, List<BusinessUnitResource>>();
-            CreateMap<List<LocationDoctor>, List<LocationDoctorResource>>();
-            CreateMap<List<Phone>, List<PhoneResource>>();
-            CreateMap<List<VisitReport>, List<VisitReportResource>>();
-            CreateMap<List<Visit>, List<VisitReport>>();
-            CreateMap<List<User>, List<UserResource>>();
+            CreateMap<IEnumerable<Tags>, IEnumerable<TagsResource>>();
+            CreateMap<IEnumerable<Info>, IEnumerable<InfoResource>>();
+            CreateMap<IEnumerable<Visit>, IEnumerable<VisitResource>>();
+            CreateMap<IEnumerable<RequestRp>, IEnumerable<RequestRpResource>>();
+            CreateMap<IEnumerable<Commande>, IEnumerable<CommandeResource>>();
+            CreateMap<IEnumerable<Objection>, IEnumerable<ObjectionResource>>();
+            CreateMap<IEnumerable<RequestDoctor>, IEnumerable<RequestDoctorResource>>();
+            CreateMap<IEnumerable<BusinessUnit>, IEnumerable<BusinessUnitResource>>();
+            CreateMap<IEnumerable<LocationDoctor>, IEnumerable<LocationDoctorResource>>();
+            CreateMap<IEnumerable<Phone>, IEnumerable<PhoneResource>>();
+            CreateMap<IEnumerable<VisitReport>, IEnumerable<VisitReportResource>>();
+            CreateMap<IEnumerable<Visit>, IEnumerable<VisitReport>>();
 
+            CreateMap<IEnumerable<User>, IEnumerable<UserResource>>();
+
+            CreateMap< IEnumerable < TagsResource > , IEnumerable<Tags>>();
+            CreateMap< IEnumerable < InfoResource > , IEnumerable<Info>>();
+            CreateMap< IEnumerable < VisitResource > ,IEnumerable<Visit> >();
+            CreateMap< IEnumerable<RequestRpResource> ,IEnumerable<RequestRp>>();
+            CreateMap<IEnumerable<CommandeResource> ,IEnumerable<Commande>>();
+            CreateMap < IEnumerable < ObjectionResource > ,IEnumerable<Objection>>();
+            CreateMap<IEnumerable<RequestDoctorResource> ,IEnumerable<RequestDoctor>>();
+            CreateMap < IEnumerable < BusinessUnitResource > ,IEnumerable <BusinessUnit>>();
+            CreateMap< IEnumerable < LocationDoctorResource > ,IEnumerable <LocationDoctor>>();
+            CreateMap < IEnumerable < PhoneResource > ,IEnumerable <Phone>>();
+            CreateMap<IEnumerable<VisitReportResource>, IEnumerable<VisitReport>>();
+            CreateMap < IEnumerable < VisitReport > ,IEnumerable <Visit>>();
+            CreateMap < IEnumerable < UserResource >, IEnumerable <User>>();
             CreateMap<Tags, IEnumerable<TagsResource>>();
             CreateMap<TagsResource, Tags>();
 
