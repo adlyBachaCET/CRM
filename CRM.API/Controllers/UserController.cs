@@ -208,9 +208,17 @@ namespace CRM_API.Controllers
             Profile.BusinessUnit = BuResource;
             var Delegates = await _UserService.GetAllDelegateByIdBu(MyBusinessUnit.IdBu);
             //var Users = _mapperService.Map< IEnumerable < User >, IEnumerable<SaveUserResource>>(Delegates);
-            var UserResourceList = _mapperService.Map<List<User>, List<UserResource>>((List<User>)Delegates);
+            List<UserResource> UserResources = new List<UserResource>();
+            foreach (var item in Delegates)
+            {
+                var NewUser = _mapperService.Map<User, UserResource>(item);
 
-            Profile.UserOfBu = UserResourceList;
+                if (NewUser != null)
+                {
+                    UserResources.Add(NewUser);
+                }
+            }
+            Profile.UserOfBu = UserResources;
                 
 
                 //Get Immediate Manager
@@ -224,9 +232,17 @@ namespace CRM_API.Controllers
             Profile.Objection = ObjectionResourceList;
             var RequestDoctor = await _RequestDoctorService.GetByIdActifUser(Id);
             //var Users = _mapperService.Map< IEnumerable < User >, IEnumerable<SaveUserResource>>(Delegates);
-            var RequestDoctorResourceList = _mapperService.Map<List<RequestDoctor>, List<RequestDoctorResource>>((List<RequestDoctor>)RequestDoctor);
+            List<RequestDoctorResource> RequestDoctorResources = new List<RequestDoctorResource>();
+            foreach (var item in RequestDoctor)
+            {
+                var NewRequestDoctor = _mapperService.Map<RequestDoctor, RequestDoctorResource>(item);
 
-            Profile.RequestDoctor = RequestDoctorResourceList;
+                if (NewRequestDoctor != null)
+                {
+                    RequestDoctorResources.Add(NewRequestDoctor);
+                }
+            }
+            Profile.RequestDoctor = RequestDoctorResources;
 
             var Visits = await _VisitUserService.GetAllById(Id);
             List<Visit> VisitList = new List<Visit>();
@@ -236,9 +252,17 @@ namespace CRM_API.Controllers
                 VisitList.Add(Visit);
             }
 
-            var VisitResourceList = _mapperService.Map<List<Visit>, List<VisitResource>>((List<Visit>)VisitList);
+            List<VisitResource> VisitResources = new List<VisitResource>();
+            foreach (var item in VisitList)
+            {
+                var NewVisit = _mapperService.Map<Visit, VisitResource>(item);
 
-            Profile.Visit = VisitResourceList;
+                if (NewVisit != null)
+                {
+                    VisitResources.Add(NewVisit);
+                }
+            }
+            Profile.Visit = VisitResources;
 
             var Participant = await _ParticipantService.GetAllById(Id);
             List<RequestRp> RequestRpList = new List<RequestRp>();
@@ -247,13 +271,30 @@ namespace CRM_API.Controllers
                 var RequestRp = await _RequestRpService.GetById(item.IdRequestRp);
                 RequestRpList.Add(RequestRp);
             }
-            var RequestRpResourceList = _mapperService.Map<List<RequestRp>, List<RequestRpResource>>((List<RequestRp>)RequestRpList);
+            List<RequestRpResource> RequestRpResources = new List<RequestRpResource>();
+            foreach (var item in RequestRpList)
+            {
+                var NewRequestRp = _mapperService.Map<RequestRp, RequestRpResource>(item);
 
-            Profile.RequestRp = RequestRpResourceList;
+                if (NewRequestRp != null)
+                {
+                    RequestRpResources.Add(NewRequestRp);
+                }
+            }
+            Profile.RequestRp = RequestRpResources;
+
             var Commande = await _CommandeService.GetByIdActifUser(Id);
-            var CommandeResource = _mapperService.Map<List<Commande>, List<CommandeResource>>((List<Commande>)Commande);
+            List<CommandeResource> CommandeResources = new List<CommandeResource>();
+            foreach (var item in Commande)
+            {
+                var NewRequestRp = _mapperService.Map<Commande, CommandeResource>(item);
 
-            Profile.Commande = CommandeResource;
+                if (NewRequestRp != null)
+                {
+                    CommandeResources.Add(NewRequestRp);
+                }
+            }
+            Profile.Commande = CommandeResources;
 
             return Ok(Profile);
             
