@@ -19,10 +19,17 @@ namespace CRM_API.Controllers
         public IList<Visit> Visits;
 
         private readonly IVisitService _VisitService;
+        private readonly ILocalityService _LocalityService;
+        private readonly IDoctorService _DoctorService;
+        private readonly IPharmacyService _PharmacyService;
 
         private readonly IMapper _mapperService;
-        public VisitController(IVisitService VisitService, IMapper mapper)
+        public VisitController(ILocalityService LocalityService, IVisitService VisitService, IPharmacyService PharmacyService, IDoctorService DoctorService, IMapper mapper)
         {
+            _LocalityService = LocalityService;
+            _DoctorService = DoctorService;
+            _PharmacyService = PharmacyService;
+
             _VisitService = VisitService;
             _mapperService = mapper;
         }
@@ -33,6 +40,34 @@ namespace CRM_API.Controllers
   {     
             //*** Mappage ***
             var Visit = _mapperService.Map<SaveVisitResource, Visit>(SaveVisitResource);
+            var Locality1 = await _LocalityService.GetById(SaveVisitResource.IdLocality1);
+            Visit.NameLocality1 = Locality1.Name;
+            Visit.VersionLocality1 = Locality1.Version;
+            Visit.StatusLocality1 = Locality1.Status;
+            Visit.IdLocality1 = Locality1.IdLocality;
+            var Locality2 = await _LocalityService.GetById(SaveVisitResource.IdLocality2);
+            Visit.NameLocality2 = Locality1.Name;
+            Visit.VersionLocality2 = Locality1.Version;
+            Visit.StatusLocality2 = Locality1.Status;
+            Visit.IdLocality2 = Locality1.IdLocality;
+            var Doctor = await _DoctorService.GetById(SaveVisitResource.IdDoctor);
+            Visit.VersionDoctor = Doctor.Version;
+            Visit.StatusDoctor = Doctor.Status;
+            Visit.IdDoctor = Doctor.IdDoctor;
+            var Pharmacy = await _PharmacyService.GetById(SaveVisitResource.IdPharmacy);
+            Visit.VersionPharmacy = Pharmacy.Version;
+            Visit.StatusPharmacy = Pharmacy.Status;
+            Visit.IdPharmacy = Pharmacy.IdPharmacy;
+            if (Pharmacy != null)
+            {
+                Visit.Name = Pharmacy.Name;
+            }
+            if (Doctor != null)
+            {
+                Visit.Name = Doctor.Title + " " + Doctor.FirstName + " " + Doctor.LastName;
+
+
+            }
             Visit.CreatedOn = DateTime.UtcNow;
             Visit.UpdatedOn = DateTime.UtcNow;
             Visit.Active = 0;

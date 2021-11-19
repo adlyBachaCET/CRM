@@ -12,7 +12,9 @@ namespace CRM.Core.Services
         Task Update(Objection ObjectionToBeUpdated, Objection Objection);
         Task Delete(Objection ObjectionToBeDeleted);
         Task DeleteRange(List<Objection> Objection);
-
+        Task<IEnumerable<Objection>> GetByIdPharmacy(int id);
+        
+    
         Task<IEnumerable<Objection>> GetAll();
         Task<IEnumerable<Objection>> GetAllActif();
         Task<IEnumerable<Objection>> GetAllInActif();

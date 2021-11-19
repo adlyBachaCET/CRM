@@ -22,11 +22,13 @@ namespace CRM_API.Controllers
         private readonly IDoctorService _DoctorService;
         private readonly IUserService _UserService;
 
+        private readonly IPharmacyService _PharmacyService;
 
         private readonly IMapper _mapperService;
-        public RequestDoctorController(IUserService UserService, IDoctorService DoctorService,IRequestDoctorService RequestDoctorService, IMapper mapper)
+        public RequestDoctorController(IUserService UserService, IDoctorService DoctorService, IPharmacyService PharmacyService,IRequestDoctorService RequestDoctorService, IMapper mapper)
         {
             _UserService = UserService;
+            _PharmacyService = PharmacyService;
 
             _DoctorService = DoctorService;
            _RequestDoctorService = RequestDoctorService;
@@ -47,7 +49,20 @@ namespace CRM_API.Controllers
             RequestDoctor.Doctor = Doctor;
             RequestDoctor.VersionDoctor = Doctor.Version;
             RequestDoctor.StatusDoctor = Doctor.Status;
+            var Pharmacy = await _PharmacyService.GetById(SaveRequestDoctorResource.IdPharmacy);
+            RequestDoctor.Pharmacy = Pharmacy;
+            RequestDoctor.VersionPharmacy = Pharmacy.Version;
+            RequestDoctor.StatusPharmacy = Pharmacy.Status;
+            if (Pharmacy != null)
+            {
+                RequestDoctor.Name = Pharmacy.Name;
+            }
+            if(Doctor!=null)
+            {
+                RequestDoctor.Name = Doctor.Title + " " + Doctor.FirstName + " " + Doctor.LastName;
 
+
+            }
             var User = await _UserService.GetById(SaveRequestDoctorResource.IdUser);
             RequestDoctor.User = User;
             RequestDoctor.VersionUser = User.Version;

@@ -8,10 +8,10 @@ namespace CRM.Core.Models
     {
  
 
-        public int IdDoctor { get; set; }
+        public int? IdDoctor { get; set; }
         public int IdUser { get; set; }
+        public int? IdPharmacy { get; set; }
 
-        public string Name { get; set; }
         public string Description { get; set; }
 
 

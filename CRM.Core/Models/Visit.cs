@@ -38,12 +38,12 @@ namespace CRM.Core.Models
         public string NameLocality2 { get; set; }
 
         public int? IdBrick1 { get; set; }
-        public int VersionBrick1 { get; set; }
-        public Status StatusBrick1 { get; set; }
+        public int? VersionBrick1 { get; set; }
+        public Status? StatusBrick1 { get; set; }
         public virtual Brick Brick1 { get; set; }
         public int? IdBrick2 { get; set; }
-        public int VersionBrick2 { get; set; }
-        public Status StatusBrick2 { get; set; }
+        public int? VersionBrick2 { get; set; }
+        public Status? StatusBrick2 { get; set; }
         public virtual Brick Brick2 { get; set; }
 
         public double? Longitude { get; set; }
@@ -53,9 +53,14 @@ namespace CRM.Core.Models
 
 
         public int? IdDoctor { get; set; }
-        public int VersionDoctor { get; set; }
-        public Status StatusDoctor { get; set; }
+        public int? VersionDoctor { get; set; }
+        public Status? StatusDoctor { get; set; }
         public virtual Doctor Doctor { get; set; }
+
+        public int? IdPharmacy { get; set; }
+        public int? VersionPharmacy { get; set; }
+        public Status? StatusPharmacy { get; set; }
+        public virtual Pharmacy Pharmacy { get; set; }
         public virtual ICollection<VisitFileTracking> VisitFileTracking { get; set; }
 
 

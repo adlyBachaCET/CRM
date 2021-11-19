@@ -13,7 +13,7 @@ namespace CRM.Core.Services
         Task Update(VisitReport VisitReportToBeUpdated, VisitReport VisitReport);
         Task Delete(VisitReport VisitReportToBeDeleted);
         Task DeleteRange(List<VisitReport> VisitReport);
-
+        Task<IEnumerable<VisitReport>> GetByIdPharmacy(int id);
         Task<IEnumerable<VisitReport>> GetAll();
         Task<IEnumerable<VisitReport>> GetAllActif();
         Task<IEnumerable<VisitReport>> GetAllInActif();

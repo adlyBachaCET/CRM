@@ -101,7 +101,7 @@ namespace CRM.Services.Services
         //          .GetAllWithArtisteAsync();
         //}
 
-        public async Task<Pharmacy> GetById(int id)
+        public async Task<Pharmacy> GetById(int? id)
         {
             return
                       await _unitOfWork.Pharmacys.SingleOrDefault(i => i.IdPharmacy == id && i.Active == 0);

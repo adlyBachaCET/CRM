@@ -21,12 +21,14 @@ namespace CRM_API.Controllers
         private readonly IObjectionService _ObjectionService;
         private readonly IDoctorService _DoctorService; 
         private readonly IUserService _UserService;
+        private readonly IPharmacyService _PharmacyService;
 
 
         private readonly IMapper _mapperService;
-        public ObjectionController(IUserService UserService, IDoctorService DoctorService,IObjectionService ObjectionService, IMapper mapper)
+        public ObjectionController(IUserService UserService, IPharmacyService PharmacyService, IDoctorService DoctorService,IObjectionService ObjectionService, IMapper mapper)
         {
             _UserService = UserService;
+            _PharmacyService = PharmacyService;
             _DoctorService = DoctorService;
 
             _ObjectionService = ObjectionService;
@@ -47,6 +49,11 @@ namespace CRM_API.Controllers
             Objection.Doctor = Doctor;
             Objection.VersionDoctor = Doctor.Version;
             Objection.StatusDoctor = Doctor.Status;
+            var Pharmacy = await _PharmacyService.GetById(SaveObjectionResource.IdPharmacy);
+            Objection.Pharmacy = Pharmacy;
+            Objection.VersionPharmacy = Pharmacy.Version;
+            Objection.StatusPharmacy = Pharmacy.Status;
+
             var User = await _UserService.GetById(SaveObjectionResource.IdUser);
             Objection.User = User;
             Objection.VersionUser = User.Version;

@@ -84,7 +84,7 @@ namespace CRM.Services.Services
 
 
 
-        public async Task<Doctor> GetById(int id)
+        public async Task<Doctor> GetById(int? id)
         {
             return
                  await _unitOfWork.Doctors.SingleOrDefault(i => i.IdDoctor == id && i.Active==0);

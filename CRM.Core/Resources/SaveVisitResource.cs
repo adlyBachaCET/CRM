@@ -17,11 +17,9 @@ namespace CRM.Core.Models
 
         public int IdLocality1 { get; set; }
 
-        public string NameLocality1 { get; set; }
 
         public int IdLocality2 { get; set; }
 
-        public string NameLocality2 { get; set; }
 
 
         public double? Longitude { get; set; }
@@ -30,8 +28,9 @@ namespace CRM.Core.Models
         public int PostalCode { get; set; }
 
 
-        public int IdDoctor { get; set; }
- 
+        public int? IdDoctor { get; set; }
+
+        public int? IdPharmacy { get; set; }
 
 
 

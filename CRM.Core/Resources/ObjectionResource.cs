@@ -18,10 +18,12 @@ namespace CRM.Core.Models
         public int? CreatedBy { get; set; }
         public int? UpdatedBy { get; set; }
         public int? IdDoctor { get; set; }
-        public int VersionDoctor { get; set; }
-        public Status StatusDoctor { get; set; }
+        public int? VersionDoctor { get; set; }
+        public Status? StatusDoctor { get; set; }
 
-   
+        public int? IdPharmacy { get; set; }
+        public int? VersionPharmacy { get; set; }
+        public Status? StatusPharmacy { get; set; }
         public Status Status { get; set; }
      
 

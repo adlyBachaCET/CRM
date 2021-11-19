@@ -1021,7 +1021,10 @@ namespace CRM.Data
 
 
                 entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
-
+                entity.HasOne(d => d.Pharmacy)
+                 .WithMany()
+                 .HasForeignKey(d => new { d.IdPharmacy, d.StatusPharmacy, d.VersionPharmacy })
+                 .HasConstraintName("FK_Objection_Pharmacy").IsRequired(false);
                 entity.HasOne(d => d.Doctor)
                     .WithMany()
                     .HasForeignKey(d => new { d.IdDoctor, d.StatusDoctor, d.VersionDoctor })
@@ -1436,6 +1439,10 @@ namespace CRM.Data
                                    .WithOne()
                                    .HasForeignKey<Visit>(d => new { d.IdDoctor, d.StatusDoctor, d.VersionDoctor })
                                    .HasConstraintName("FK_V_doctor").IsRequired(false);
+                          entity.HasOne(d => d.Pharmacy)
+                                 .WithOne()
+                                 .HasForeignKey<Visit>(d => new { d.IdPharmacy, d.StatusPharmacy, d.VersionPharmacy })
+                                 .HasConstraintName("FK_V_Pharmacy").IsRequired(false);
 
                       });
 

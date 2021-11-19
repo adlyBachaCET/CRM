@@ -21,6 +21,7 @@ namespace CRM_API.Controllers
         public IList<Location> Locations;
         private readonly IUserService _UserService;
         private readonly IServiceService _ServiceService;
+        private readonly ILocalityService _LocalityService;
 
         private readonly ILocationService _LocationService;
         private readonly ILocationDoctorService _LocationDoctorService;
@@ -28,9 +29,11 @@ namespace CRM_API.Controllers
         private readonly ILocationTypeService _LocationTypeService;
 
         private readonly IMapper _mapperService;
-        public LocationController(IServiceService ServiceService, ILocationService LocationService,
+        public LocationController(ILocalityService LocalityService, IServiceService ServiceService, ILocationService LocationService,
             ILocationDoctorService LocationDoctorService, IUserService UserService, ILocationTypeService LocationTypeService, IMapper mapper)
         {
+            _LocalityService = LocalityService;
+
             _ServiceService = ServiceService;
             _UserService = UserService;
             _LocationTypeService = LocationTypeService;
@@ -137,7 +140,16 @@ namespace CRM_API.Controllers
                     {
                         Location.Status = Status.Pending;
                     }
-
+                    var Locality1 = await _LocalityService.GetById(SaveLocationResource.LocationAdd.IdLocality1);
+                    Location.NameLocality1 = Locality1.Name;
+                    Location.VersionLocality1 = Locality1.Version;
+                    Location.StatusLocality1 = Locality1.Status;
+                    Location.IdLocality1 = Locality1.IdLocality;
+                    var Locality2 = await _LocalityService.GetById(SaveLocationResource.LocationAdd.IdLocality2);
+                    Location.NameLocality2 = Locality2.Name;
+                    Location.VersionLocality2 = Locality2.Version;
+                    Location.StatusLocality2 = Locality2.Status;
+                    Location.IdLocality2 = Locality1.IdLocality;
                     var NewLocationType = await _LocationTypeService.GetById(SaveLocationResource.LocationAdd.IdLocationType);
                     Location.NameLocationType = NewLocationType.Name;
                     Location.StatusLocationType = NewLocationType.Status;

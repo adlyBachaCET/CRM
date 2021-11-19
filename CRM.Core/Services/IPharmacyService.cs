@@ -7,7 +7,7 @@ namespace CRM.Core.Services
 {
     public interface IPharmacyService
     {
-        Task<Pharmacy> GetById(int id);
+        Task<Pharmacy> GetById(int? id);
         Task<Pharmacy> Create(Pharmacy newPharmacy);
         Task<List<Pharmacy>> CreateRange(List<Pharmacy> newPharmacy);
         Task Update(Pharmacy PharmacyToBeUpdated, Pharmacy Pharmacy);

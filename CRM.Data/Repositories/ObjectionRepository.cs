@@ -70,6 +70,12 @@ namespace CRM.Data.Repositories
             var result = await MyDbContext.Objection.Where(a => a.Active == 0 &&  a.IdDoctor==id).ToListAsync();
             return result;
         }
+
+        public async Task<IEnumerable<Objection>> GetByIdPharmacy(int id)
+        {
+            var result = await MyDbContext.Objection.Where(a => a.Active == 0 && a.IdPharmacy == id).ToListAsync();
+            return result;
+        }
         public async Task<IEnumerable<Objection>> GetByIdActifUser(int id)
         {
             var result = await MyDbContext.Objection.Where(a => a.Active == 0 && a.IdUser == id).ToListAsync();

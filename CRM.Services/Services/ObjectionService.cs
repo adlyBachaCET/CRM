@@ -101,7 +101,11 @@ namespace CRM.Services.Services
             return
                             await _unitOfWork.Objections.GetByIdDoctor(id);
         }
-
+        public async Task<IEnumerable<Objection>> GetByIdPharmacy(int id)
+        {
+            return
+                            await _unitOfWork.Objections.GetByIdPharmacy(id);
+        }
         public async Task<IEnumerable<Objection>> GetByIdActifDoctor(int Id)
         {
             return
