@@ -19,7 +19,7 @@ namespace CRM.Core.Services
         Task<User> AuthenticateDelegate(LoginModel lm);
         Task<IEnumerable<User>> GetAll();
         Task UpdatePassword(int Id, string Password);
-        Task UpdateGeneratedPassword(int Id, string Password);
+        Task UpdateGeneratedPassword(string LoginEmail, string Password);
 
         Task UpdatePhoto(int Id, string FileName);
 

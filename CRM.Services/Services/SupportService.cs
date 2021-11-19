@@ -85,7 +85,7 @@ namespace CRM.Services.Services
             builder.Append(RandomString(2, false));
             return builder.ToString();
         }
-        public async Task Send(string Name, int IdUser)
+        public async Task Send(string Name, string EmailLogin)
         {
           
             //Generate Token 
