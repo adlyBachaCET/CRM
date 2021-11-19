@@ -19,7 +19,7 @@ namespace CRM.Core.Models
         public int IdVisit { get; set; }
         public int VersionVisit { get; set; }
         public Status StatusVisit { get; set; }
-        public virtual Visit Visit { get; set; }
+        public virtual VisitResource Visit { get; set; }
         public string VisiteType { get; set; }
 
         public string Accompaniement { get; set; }

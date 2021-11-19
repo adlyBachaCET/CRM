@@ -160,6 +160,8 @@ namespace CRM_API.Mapping
             CreateMap<List<LocationDoctor>, List<LocationDoctorResource>>();
             CreateMap<List<Phone>, List<PhoneResource>>();
             CreateMap<List<VisitReport>, List<VisitReportResource>>();
+            CreateMap<List<Visit>, List<VisitReport>>();
+            CreateMap<List<User>, List<UserResource>>();
 
             CreateMap<Tags, IEnumerable<TagsResource>>();
             CreateMap<TagsResource, Tags>();

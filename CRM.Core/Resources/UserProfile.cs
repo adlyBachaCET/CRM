@@ -10,13 +10,13 @@ namespace CRM.Core.Models
         public SaveUserResourceWithoutPassword User {get;set;}
 
         public SaveBusinessUnitResource BusinessUnit { get; set; }
-        public IEnumerable<User> UserOfBu { get; set; }
-        public IEnumerable<RequestDoctor> RequestDoctor { get; set; }
+        public IEnumerable<UserResource> UserOfBu { get; set; }
+        public IEnumerable<RequestDoctorResource> RequestDoctor { get; set; }
 
-        public IEnumerable<Objection> Objection { get; set; }
-        public IEnumerable<Visit> Visit { get; set; }
-        public IEnumerable<RequestRp> RequestRp { get; set; }
-        public IEnumerable<Commande> Commande { get; set; }
+        public IEnumerable<ObjectionResource> Objection { get; set; }
+        public IEnumerable<VisitResource> Visit { get; set; }
+        public IEnumerable<RequestRpResource> RequestRp { get; set; }
+        public IEnumerable<CommandeResource> Commande { get; set; }
 
 
 

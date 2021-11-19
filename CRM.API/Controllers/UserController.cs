@@ -208,8 +208,9 @@ namespace CRM_API.Controllers
             Profile.BusinessUnit = BuResource;
             var Delegates = await _UserService.GetAllDelegateByIdBu(MyBusinessUnit.IdBu);
             //var Users = _mapperService.Map< IEnumerable < User >, IEnumerable<SaveUserResource>>(Delegates);
+            var UserResourceList = _mapperService.Map<List<User>, List<UserResource>>((List<User>)Delegates);
 
-            Profile.UserOfBu = Delegates;
+            Profile.UserOfBu = UserResourceList;
                 
 
                 //Get Immediate Manager
@@ -218,12 +219,14 @@ namespace CRM_API.Controllers
 
             var Objection = await _ObjectionService.GetByIdActifUser(Id);
             //var Users = _mapperService.Map< IEnumerable < User >, IEnumerable<SaveUserResource>>(Delegates);
+            var ObjectionResourceList = _mapperService.Map<List<Objection>, List<ObjectionResource>>((List<Objection>)Objection);
 
-            Profile.Objection = Objection;
+            Profile.Objection = ObjectionResourceList;
             var RequestDoctor = await _RequestDoctorService.GetByIdActifUser(Id);
             //var Users = _mapperService.Map< IEnumerable < User >, IEnumerable<SaveUserResource>>(Delegates);
+            var RequestDoctorResourceList = _mapperService.Map<List<RequestDoctor>, List<RequestDoctorResource>>((List<RequestDoctor>)RequestDoctor);
 
-            Profile.RequestDoctor = RequestDoctor;
+            Profile.RequestDoctor = RequestDoctorResourceList;
 
             var Visits = await _VisitUserService.GetAllById(Id);
             List<Visit> VisitList = new List<Visit>();
@@ -232,7 +235,10 @@ namespace CRM_API.Controllers
                 var Visit = await _VisitService.GetById(item.IdVisit);
                 VisitList.Add(Visit);
             }
-            Profile.Visit = VisitList;
+
+            var VisitResourceList = _mapperService.Map<List<Visit>, List<VisitResource>>((List<Visit>)VisitList);
+
+            Profile.Visit = VisitResourceList;
 
             var Participant = await _ParticipantService.GetAllById(Id);
             List<RequestRp> RequestRpList = new List<RequestRp>();
@@ -241,10 +247,13 @@ namespace CRM_API.Controllers
                 var RequestRp = await _RequestRpService.GetById(item.IdRequestRp);
                 RequestRpList.Add(RequestRp);
             }
-            Profile.RequestRp = RequestRpList;
-            var Commande = await _CommandeService.GetByIdActifUser(Id);
+            var RequestRpResourceList = _mapperService.Map<List<RequestRp>, List<RequestRpResource>>((List<RequestRp>)RequestRpList);
 
-            Profile.Commande = (List<Commande>)Commande;
+            Profile.RequestRp = RequestRpResourceList;
+            var Commande = await _CommandeService.GetByIdActifUser(Id);
+            var CommandeResource = _mapperService.Map<List<Commande>, List<CommandeResource>>((List<Commande>)Commande);
+
+            Profile.Commande = CommandeResource;
 
             return Ok(Profile);
             
