@@ -69,7 +69,7 @@ namespace CRM.Services.Services
         public async Task Delete(Commande Commande)
         {
             //Commande musi =  _unitOfWork.Commandes.SingleOrDefaultAsync(x=>x.Id == CommandeToBeUpdated.Id);
-            Commande.Active = 1;
+             _unitOfWork.Commandes.Remove(Commande);
 
             await _unitOfWork.CommitAsync();
         }

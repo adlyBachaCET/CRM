@@ -46,22 +46,29 @@ namespace CRM_API.Controllers
             RequestDoctor.Active = 0;
             RequestDoctor.Status = 0;
             var Doctor = await _DoctorService.GetById(SaveRequestDoctorResource.IdDoctor);
-            RequestDoctor.Doctor = Doctor;
-            RequestDoctor.VersionDoctor = Doctor.Version;
-            RequestDoctor.StatusDoctor = Doctor.Status;
+    
             var Pharmacy = await _PharmacyService.GetById(SaveRequestDoctorResource.IdPharmacy);
-            RequestDoctor.Pharmacy = Pharmacy;
-            RequestDoctor.VersionPharmacy = Pharmacy.Version;
-            RequestDoctor.StatusPharmacy = Pharmacy.Status;
+     
             if (Pharmacy != null)
             {
                 RequestDoctor.Name = Pharmacy.Name;
+                RequestDoctor.Pharmacy = Pharmacy;
+                RequestDoctor.VersionPharmacy = Pharmacy.Version;
+                RequestDoctor.StatusPharmacy = Pharmacy.Status;
+                RequestDoctor.Doctor = null;
+                RequestDoctor.VersionDoctor = null;
+                RequestDoctor.StatusDoctor = null;
             }
             if(Doctor!=null)
             {
                 RequestDoctor.Name = Doctor.Title + " " + Doctor.FirstName + " " + Doctor.LastName;
+                RequestDoctor.Doctor = Doctor;
+                RequestDoctor.VersionDoctor = Doctor.Version;
+                RequestDoctor.StatusDoctor = Doctor.Status;
 
-
+                RequestDoctor.Pharmacy = null;
+                RequestDoctor.VersionPharmacy = null;
+                RequestDoctor.StatusPharmacy = null;
             }
             var User = await _UserService.GetById(SaveRequestDoctorResource.IdUser);
             RequestDoctor.User = User;

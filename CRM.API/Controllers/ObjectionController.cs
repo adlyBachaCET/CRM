@@ -46,14 +46,30 @@ namespace CRM_API.Controllers
             Objection.Active = 0;
             Objection.Status = 0;
             var Doctor = await _DoctorService.GetById(SaveObjectionResource.IdDoctor);
-            Objection.Doctor = Doctor;
-            Objection.VersionDoctor = Doctor.Version;
-            Objection.StatusDoctor = Doctor.Status;
+        
             var Pharmacy = await _PharmacyService.GetById(SaveObjectionResource.IdPharmacy);
-            Objection.Pharmacy = Pharmacy;
-            Objection.VersionPharmacy = Pharmacy.Version;
-            Objection.StatusPharmacy = Pharmacy.Status;
 
+            if (Pharmacy != null)
+            {
+                Objection.Name = Pharmacy.Name;
+                Objection.Pharmacy = Pharmacy;
+                Objection.VersionPharmacy = Pharmacy.Version;
+                Objection.StatusPharmacy = Pharmacy.Status;
+                Objection.Doctor = null;
+                Objection.VersionDoctor = null;
+                Objection.StatusDoctor = null;
+            }
+            if (Doctor != null)
+            {
+                Objection.Name = Doctor.Title + " " + Doctor.FirstName + " " + Doctor.LastName;
+                Objection.Doctor = Doctor;
+                Objection.VersionDoctor = Doctor.Version;
+                Objection.StatusDoctor = Doctor.Status;
+
+                Objection.Pharmacy = null;
+                Objection.VersionPharmacy = null;
+                Objection.StatusPharmacy = null;
+            }
             var User = await _UserService.GetById(SaveObjectionResource.IdUser);
             Objection.User = User;
             Objection.VersionUser = User.Version;

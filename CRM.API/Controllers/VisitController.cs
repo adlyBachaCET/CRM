@@ -61,12 +61,23 @@ namespace CRM_API.Controllers
             if (Pharmacy != null)
             {
                 Visit.Name = Pharmacy.Name;
+                Visit.Pharmacy = Pharmacy;
+                Visit.VersionPharmacy = Pharmacy.Version;
+                Visit.StatusPharmacy = Pharmacy.Status;
+                Visit.Doctor = null;
+                Visit.VersionDoctor = null;
+                Visit.StatusDoctor = null;
             }
             if (Doctor != null)
             {
                 Visit.Name = Doctor.Title + " " + Doctor.FirstName + " " + Doctor.LastName;
+                Visit.Doctor = Doctor;
+                Visit.VersionDoctor = Doctor.Version;
+                Visit.StatusDoctor = Doctor.Status;
 
-
+                Visit.Pharmacy = null;
+                Visit.VersionPharmacy = null;
+                Visit.StatusPharmacy = null;
             }
             Visit.CreatedOn = DateTime.UtcNow;
             Visit.UpdatedOn = DateTime.UtcNow;

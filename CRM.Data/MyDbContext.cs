@@ -585,9 +585,22 @@ namespace CRM.Data
                 entity.Property(x => x.IdCommande).UseIdentityColumn();
                 entity.HasIndex(e => new { e.Active, e.IdCommande, e.Status, e.Version }).IsUnique();
                 entity.HasIndex(e => e.IdCommande).IsUnique(false);
-         
+                entity.HasOne(d => d.Pharmacy)
+                      .WithOne()
+                      .HasForeignKey<Commande>(d => new { d.IdPharmacy, d.StatusPharmacy, d.VersionPharmacy })
+                      .OnDelete(DeleteBehavior.ClientSetNull)
+                      .HasConstraintName("FK_Commande_Pharmacy").IsRequired(false);
+                entity.HasOne(d => d.Doctor)
+                     .WithOne()
+                     .HasForeignKey<Commande>(d => new { d.IdDoctor, d.StatusDoctor, d.VersionDoctor })
+                     .OnDelete(DeleteBehavior.ClientSetNull)
+                     .HasConstraintName("FK_Commande_Doctor").IsRequired(false);
 
-    
+                entity.HasOne(d => d.User)
+     .WithOne()
+     .HasForeignKey<Commande>(d => new { d.IdUser, d.StatusUser, d.VersionUser })
+     .OnDelete(DeleteBehavior.ClientSetNull)
+     .HasConstraintName("FK_Commande_User").IsRequired(false);
             });
             modelBuilder.Entity<CommandeProduct>(entity =>
             {
