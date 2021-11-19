@@ -20,6 +20,5 @@ namespace CRM.Core.Models
 
         public string Data { get; set; }
         public Status Status { get; set; }
-        public virtual Doctor IdDoctorNavigation { get; set; }
     }
 }

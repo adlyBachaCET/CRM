@@ -35,7 +35,7 @@ namespace CRM_API.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult<RequestDoctor>> CreateRequestDoctor(SaveRequestDoctorResource SaveRequestDoctorResource)
+        public async Task<ActionResult<RequestDoctorResource>> CreateRequestDoctor(SaveRequestDoctorResource SaveRequestDoctorResource)
   {     
             //*** Mappage ***
             var RequestDoctor = _mapperService.Map<SaveRequestDoctorResource, RequestDoctor>(SaveRequestDoctorResource);
@@ -121,7 +121,7 @@ namespace CRM_API.Controllers
             }
         }
         [HttpPut("{Id}")]
-        public async Task<ActionResult<RequestDoctor>> UpdateRequestDoctor(int Id, SaveRequestDoctorResource SaveRequestDoctorResource)
+        public async Task<ActionResult<RequestDoctorResource>> UpdateRequestDoctor(int Id, SaveRequestDoctorResource SaveRequestDoctorResource)
         {
 
             var RequestDoctorToBeModified = await _RequestDoctorService.GetById(Id);

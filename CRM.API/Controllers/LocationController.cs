@@ -174,13 +174,20 @@ namespace CRM_API.Controllers
                     var LocationResource = _mapperService.Map<Location, LocationResource>(NewLocation);
                     foreach (var item in Services)
                     {
-                       SaveLocationDoctorResource LD = new SaveLocationDoctorResource();
+                       LocationDoctor LD = new LocationDoctor();
                         LD.IdLocation = LocationResource.IdLocation;
                         LD.IdDoctor = 0;
                         LD.IdService = item.IdService;
+                        LD.UpdatedOn = DateTime.UtcNow;
+                        LD.CreatedOn = DateTime.UtcNow;
+                        LD.Version = 0;
+                        LD.Active = 0;
+                        LD.CreatedBy = Id;
+                        LD.UpdatedBy = Id;
                         LD.Order = SaveLocationResource.OrderLocation.Order;
                         LD.Primary = SaveLocationResource.OrderLocation.Primary;
-                        ///LD.ChiefService = SaveLocationResource.Chief.Chief;
+                        LD.ChefService = SaveLocationResource.Chief.ChiefService;
+                        var NewLocationDoctor = await _LocationDoctorService.Create(LD);
 
                     }
 
@@ -294,7 +301,7 @@ namespace CRM_API.Controllers
                 {
                     Location.Status = Status.Pending;
                 }
-                Location.VersionLocationType = NewLocationType.Version+1;
+            Location.VersionLocationType = NewLocationType.Version+1;
             Location.TypeLocationType = NewLocationType.Type;
             await _LocationService.Update(LocationToBeModified, Location);
 

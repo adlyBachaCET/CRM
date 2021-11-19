@@ -16,6 +16,7 @@ namespace CRM.Data
         {
         }
         public virtual DbSet<RequestDoctor> RequestDoctors { get; set; }
+        public virtual DbSet<Support> Support { get; set; }
 
         public virtual DbSet<Brick> Brick { get; set; }
         public virtual DbSet<BrickLocality> BrickLocality { get; set; }
@@ -121,7 +122,25 @@ namespace CRM.Data
                         .HasMaxLength(50)
                         .IsUnicode(false);
             });
+            modelBuilder.Entity<Support>(entity =>
+            {
+                entity.HasKey(e => new { e.IdSupport, e.Status, e.Version });
 
+                entity.Property(x => x.IdSupport).UseIdentityColumn();
+                entity.HasIndex(e => new { e.Active, e.IdSupport, e.Status, e.Version }).IsUnique();
+                entity.HasIndex(e => e.IdSupport).IsUnique(false);
+
+
+                entity.Property(e => e.Email)
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+                entity.Property(e => e.Password)
+                       .HasMaxLength(50)
+                       .IsUnicode(false);
+                entity.Property(e => e.Name)
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+            });
             modelBuilder.Entity<Tracking>(entity =>
             {
                 entity.HasKey(e => new { e.IdTracking, e.Status, e.Version });
@@ -1416,7 +1435,9 @@ namespace CRM.Data
                 entity.Property(e => e.BirthDate).HasColumnType("date");
 
                 entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
-
+                entity.Property(e => e.GeneratedPassword)
+                         .HasMaxLength(300)
+                          .IsRequired(false);
                 entity.Property(e => e.Gender)
                     .HasMaxLength(50)
                     .IsUnicode(false);

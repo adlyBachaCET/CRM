@@ -20,7 +20,6 @@ namespace CRM.Core.Models
         public string Name { get; set; }
         public string Description { get; set; }
 
-        public virtual ICollection<VisitUser> VisitUser { get; set; }
 
 
 
@@ -41,7 +40,6 @@ namespace CRM.Core.Models
 
         public int IdDoctor { get; set; }
  
-        public virtual ICollection<VisitFileTracking> VisitFileTracking { get; set; }
 
 
 

@@ -29,6 +29,8 @@ namespace CRM.Services.Services
 
         public async Task<User> Create(User newUser)
         {
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
             await _unitOfWork.Users.Add(newUser);
             await _unitOfWork.CommitAsync();
@@ -171,6 +173,23 @@ namespace CRM.Services.Services
             User.Status = Status.Approuved;
             User.Active = 0;
             User.Password = Password ;
+            await _unitOfWork.Users.Add(User);
+            await _unitOfWork.CommitAsync();
+        }
+        public async Task UpdateGeneratedPassword(int Id, string Password)
+        {
+            var UserInDB = await _unitOfWork.Users.SingleOrDefault(i => i.IdUser == Id && i.Active == 0);
+            UserInDB.Active = 1;
+            await _unitOfWork.CommitAsync();
+
+            await _unitOfWork.CommitAsync();
+            User User = new User();
+            User = UserInDB;
+            User.Version = UserInDB.Version + 1;
+            User.IdUser = UserInDB.IdUser;
+            User.Status = Status.Approuved;
+            User.Active = 0;
+            User.GeneratedPassword = Password;
             await _unitOfWork.Users.Add(User);
             await _unitOfWork.CommitAsync();
         }

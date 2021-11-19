@@ -50,6 +50,8 @@ namespace CRM_API
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             //Services 
+            services.AddScoped<ISupportService, SupportService>();
+
             services.AddScoped<ICommandeService, CommandeService>();
             services.AddScoped<IVisitService, VisitService>();
             services.AddScoped<IVisitUserService, VisitUserService>();

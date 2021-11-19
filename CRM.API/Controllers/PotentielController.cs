@@ -29,10 +29,16 @@ namespace CRM_API.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult<Potentiel>> CreatePotentiel(SavePotentielResource SavePotentielResource)
+        public async Task<ActionResult<PotentielResource>> CreatePotentiel(SavePotentielResource SavePotentielResource)
   {     
             //*** Mappage ***
             var Potentiel = _mapperService.Map<SavePotentielResource, Potentiel>(SavePotentielResource);
+            Potentiel.CreatedOn = DateTime.UtcNow;
+            Potentiel.UpdatedOn = DateTime.UtcNow;
+            Potentiel.Active = 0;
+            Potentiel.Version = 0;
+            Potentiel.CreatedBy = 0;
+            Potentiel.UpdatedBy = 0;
             //*** Creation dans la base de données ***
             var NewPotentiel = await _PotentielService.Create(Potentiel);
             //*** Mappage ***
@@ -102,7 +108,7 @@ namespace CRM_API.Controllers
             }
         }
         [HttpPut("{Id}")]
-        public async Task<ActionResult<Potentiel>> UpdatePotentiel(int Id, SavePotentielResource SavePotentielResource)
+        public async Task<ActionResult<PotentielResource>> UpdatePotentiel(int Id, SavePotentielResource SavePotentielResource)
         {
 
             var PotentielToBeModified = await _PotentielService.GetById(Id);

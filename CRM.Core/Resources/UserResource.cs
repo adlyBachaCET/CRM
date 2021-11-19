@@ -28,17 +28,8 @@ namespace CRM.Core.Models
         public int? RegistrantionNumber { get; set; }
         public string Gender { get; set; }
         public string Photo { get; set; }
-        public virtual ICollection<BuUser> BuUser { get; set; }
-        public virtual ICollection<Target> CycleSectorWeekDoctors { get; set; }
-        public virtual User Delegates { get; set; }
 
-        public virtual User DelegatesDotlineManager1 { get; set; }
-        public virtual User DelegatesDotlineManager2 { get; set; }
 
-        public virtual User DirectManager { get; set; }
-
-        public virtual User DotlineManager1 { get; set; }
-        public virtual User DotlineManager2 { get; set; }
 
         public int? IdUserDirectManager { get; set; }
         public Status? StatusDirectManager { get; set; }
@@ -62,23 +53,13 @@ namespace CRM.Core.Models
         public Status StatusLocality1 { get; set; }
         public int VersionLocality1 { get; set; }
         public string NameLocality1 { get; set; }
-        public virtual Locality Locality1 { get; set; }
         public int IdLocality2 { get; set; }
         public Status StatusLocality2 { get; set; }
         public int VersionLocality2 { get; set; }
         public string NameLocality2 { get; set; }
 
-        public virtual Locality Locality2 { get; set; }
 
-        public virtual ICollection<MessageUser> MessageUser1 { get; set; }
-        public virtual ICollection<MessageUser> MessageUser2 { get; set; }
-        public virtual ICollection<SharedFiles> SharedFiles { get; set; }
-        public virtual ICollection<ActivityUser> ActivityUser { get; set; }
-        public virtual ICollection<FavouriteFiles> FavouriteFiles { get; set; }
-        public virtual ICollection<VisitUser> VisitUser { get; set; }
-        public virtual ICollection<SellingObjectives> SellingObjectives { get; set; }
 
-        public virtual ICollection<Participant> Participant { get; set; }
 
 
     }

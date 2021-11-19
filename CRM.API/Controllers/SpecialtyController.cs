@@ -29,10 +29,16 @@ namespace CRM_API.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult<Specialty>> CreateSpecialty(SaveSpecialtyResource SaveSpecialtyResource)
+        public async Task<ActionResult<SpecialtyResource>> CreateSpecialty(SaveSpecialtyResource SaveSpecialtyResource)
         {
             //*** Mappage ***
             var Specialty = _mapperService.Map<SaveSpecialtyResource, Specialty>(SaveSpecialtyResource);
+            Specialty.CreatedOn = DateTime.UtcNow;
+            Specialty.UpdatedOn = DateTime.UtcNow;
+            Specialty.Active = 0;
+            Specialty.Version = 0;
+            Specialty.CreatedBy = 0;
+            Specialty.UpdatedBy = 0;
             //*** Creation dans la base de données ***
             var NewSpecialty = await _SpecialtyService.Create(Specialty);
             //*** Mappage ***
@@ -101,7 +107,7 @@ namespace CRM_API.Controllers
             }
         }
         [HttpPut("{Id}")]
-        public async Task<ActionResult<Specialty>> UpdateSpecialty(int Id, SaveSpecialtyResource SaveSpecialtyResource)
+        public async Task<ActionResult<SpecialtyResource>> UpdateSpecialty(int Id, SaveSpecialtyResource SaveSpecialtyResource)
         {
 
             var SpecialtyToBeModified = await _SpecialtyService.GetById(Id);

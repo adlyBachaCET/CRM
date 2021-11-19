@@ -37,7 +37,7 @@ namespace CRM_API.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult<Pharmacy>> CreatePharmacy(SaveAddPharmacyResource SaveAddPharmacyResource)
+        public async Task<ActionResult<PharmacyResource>> CreatePharmacy(SaveAddPharmacyResource SaveAddPharmacyResource)
         {
             StringValues token = "";
             ErrorHandling ErrorMessag = new ErrorHandling();
@@ -220,7 +220,7 @@ namespace CRM_API.Controllers
             }
         }
         [HttpPut("{Id}")]
-        public async Task<ActionResult<Pharmacy>> UpdatePharmacy(int Id, SavePharmacyResource SavePharmacyResource)
+        public async Task<ActionResult<PharmacyResource>> UpdatePharmacy(int Id, SavePharmacyResource SavePharmacyResource)
         {
             StringValues token = "";
             ErrorHandling ErrorMessag = new ErrorHandling();
@@ -264,7 +264,7 @@ namespace CRM_API.Controllers
             }
         }
         [HttpPut("Approuve/{Id}")]
-        public async Task<ActionResult<Pharmacy>> ApprouvePharmacy(int Id)
+        public async Task<ActionResult<PharmacyResource>> ApprouvePharmacy(int Id)
         {
             StringValues token = "";
             ErrorHandling ErrorMessag = new ErrorHandling();
@@ -298,7 +298,7 @@ namespace CRM_API.Controllers
             }
         }
         [HttpPut("Reject/{Id}")]
-        public async Task<ActionResult<Pharmacy>> RejectPharmacy(int Id)
+        public async Task<ActionResult<PharmacyResource>> RejectPharmacy(int Id)
         {
             StringValues token = "";
             ErrorHandling ErrorMessag = new ErrorHandling();

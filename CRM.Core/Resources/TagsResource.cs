@@ -16,6 +16,5 @@ namespace CRM.Core.Models
         public string Name { get; set; }
         public string Description { get; set; }
         public Status Status { get; set; }
-        public virtual ICollection<TagsDoctor> TagsDoctor { get; set; }
     }
 }

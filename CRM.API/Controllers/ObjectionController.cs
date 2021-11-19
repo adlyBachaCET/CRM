@@ -35,7 +35,7 @@ namespace CRM_API.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult<Objection>> CreateObjection(SaveObjectionResource SaveObjectionResource)
+        public async Task<ActionResult<ObjectionResource>> CreateObjection(SaveObjectionResource SaveObjectionResource)
   {     
             //*** Mappage ***
             var Objection = _mapperService.Map<SaveObjectionResource, Objection>(SaveObjectionResource);
@@ -120,7 +120,7 @@ namespace CRM_API.Controllers
             }
         }
         [HttpPut("{Id}")]
-        public async Task<ActionResult<Objection>> UpdateObjection(int Id, SaveObjectionResource SaveObjectionResource)
+        public async Task<ActionResult<ObjectionResource>> UpdateObjection(int Id, SaveObjectionResource SaveObjectionResource)
         {
 
             var ObjectionToBeModified = await _ObjectionService.GetById(Id);

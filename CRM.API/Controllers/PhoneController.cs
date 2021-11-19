@@ -31,11 +31,16 @@ namespace CRM_API.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult<Phone>> CreatePhone(SavePhoneResource SavePhoneResource)
+        public async Task<ActionResult<PhoneResource>> CreatePhone(SavePhoneResource SavePhoneResource)
         {
             //*** Mappage ***
             var Phone = _mapperService.Map<SavePhoneResource, Phone>(SavePhoneResource);
-
+            Phone.CreatedOn = DateTime.UtcNow;
+            Phone.UpdatedOn = DateTime.UtcNow;
+            Phone.Active = 0;
+            Phone.Version = 0;
+            Phone.CreatedBy = 0;
+            Phone.UpdatedBy = 0;
             //*** Creation dans la base de données ***
             var NewPhone = await _PhoneService.Create(Phone);
             //*** Mappage ***
@@ -150,7 +155,7 @@ namespace CRM_API.Controllers
             }
         }
         [HttpPut("{Id}")]
-        public async Task<ActionResult<Phone>> UpdatePhone(int Id, SavePhoneResource SavePhoneResource)
+        public async Task<ActionResult<PhoneResource>> UpdatePhone(int Id, SavePhoneResource SavePhoneResource)
         {
 
             var PhoneToBeModified = await _PhoneService.GetById(Id);

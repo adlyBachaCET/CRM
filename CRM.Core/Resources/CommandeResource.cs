@@ -4,7 +4,7 @@ using System.Text;
 
 namespace CRM.Core.Models
 {
-    public class Commande
+    public class CommandeResource
     {
         public int IdCommande { get; set; }
         public int Version { get; set; }

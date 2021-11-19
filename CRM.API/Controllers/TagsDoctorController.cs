@@ -29,10 +29,16 @@ namespace CRM_API.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult<TagsDoctor>> CreateTagsDoctor(SaveTagsDoctorResource SaveTagsDoctorResource)
+        public async Task<ActionResult<TagsDoctorResource>> CreateTagsDoctor(SaveTagsDoctorResource SaveTagsDoctorResource)
         {
             //*** Mappage ***
             var TagsDoctor = _mapperService.Map<SaveTagsDoctorResource, TagsDoctor>(SaveTagsDoctorResource);
+            TagsDoctor.CreatedOn = DateTime.UtcNow;
+            TagsDoctor.UpdatedOn = DateTime.UtcNow;
+            TagsDoctor.Active = 0;
+            TagsDoctor.Version = 0;
+            TagsDoctor.CreatedBy = 0;
+            TagsDoctor.UpdatedBy = 0;
             //*** Creation dans la base de données ***
             var NewTagsDoctor = await _TagsDoctorService.Create(TagsDoctor);
             //*** Mappage ***
@@ -40,7 +46,7 @@ namespace CRM_API.Controllers
             return Ok(TagsDoctorResource);
         }
         [HttpPost("Range")]
-        public async Task<ActionResult<TagsDoctor>> CreateTagsDoctor(List<SaveTagsDoctorResource> SaveTagsDoctorResource)
+        public async Task<ActionResult<TagsDoctorResource>> CreateTagsDoctor(List<SaveTagsDoctorResource> SaveTagsDoctorResource)
         {
             //*** Mappage ***
             var TagsDoctor = _mapperService.Map<List<SaveTagsDoctorResource>, TagsDoctor>(SaveTagsDoctorResource);

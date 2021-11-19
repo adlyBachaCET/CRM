@@ -15,6 +15,12 @@ namespace CRM_API.Helper
     {
         public string TokenString { get; set; }
     }
-    
+    public class TokenPassword
+    {
+        public string ConfirmPassword { get; set; }
+
+        public string NewPassword { get; set; }
     }
+
+}
 

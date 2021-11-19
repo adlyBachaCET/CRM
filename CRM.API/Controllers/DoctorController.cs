@@ -532,7 +532,7 @@ namespace CRM_API.Controllers
             }
         }
         [HttpPut("Approuve/{Id}")]
-        public async Task<ActionResult<Doctor>> ApprouveDoctor(int Id)
+        public async Task<ActionResult<DoctorResource>> ApprouveDoctor(int Id)
         {
             StringValues token = "";
             ErrorHandling ErrorMessag = new ErrorHandling();
@@ -566,7 +566,7 @@ namespace CRM_API.Controllers
             }
         }
         [HttpPut("Reject/{Id}")]
-        public async Task<ActionResult<Doctor>> RejectDoctor(int Id)
+        public async Task<ActionResult<DoctorResource>> RejectDoctor(int Id)
         {
             StringValues token = "";
             ErrorHandling ErrorMessag = new ErrorHandling();
@@ -600,7 +600,7 @@ namespace CRM_API.Controllers
             }
         }
         [HttpPut("{Id}")]
-        public async Task<ActionResult<Doctor>> UpdateDoctor(int Id, SaveDoctorResource SaveDoctorResource)
+        public async Task<ActionResult<DoctorResource>> UpdateDoctor(int Id, SaveDoctorResource SaveDoctorResource)
         {
 
             var DoctorToBeModified = await _DoctorService.GetById(Id);
@@ -617,46 +617,46 @@ namespace CRM_API.Controllers
             return Ok();
         }
 
-       /* [HttpPut("Link")]
-        public async Task<ActionResult<Doctor>> Link(Link Link)
-        {
-            
-            StringValues token = "";
-            ErrorHandling ErrorMessag = new ErrorHandling();
-            Request.Headers.TryGetValue("token", out token);
-            if (token != "")
-            {
-              
-                var claims = _UserService.getPrincipal(token);
-                var Role = claims.FindFirst("Role").Value;
-                var IdUser = int.Parse(claims.FindFirst("Id").Value);
-                var Parent = await _DoctorService.GetById(Link.Parent);
+        /* [HttpPut("Link")]
+         public async Task<ActionResult<DoctorResource>> Link(Link Link)
+         {
 
-                foreach (var item in Link.Childs)
-                {
-                    var DoctorToBeModified = await _DoctorService.GetById(item);
-                    if (DoctorToBeModified == null) return BadRequest("Le Doctor n'existe pas"); //NotFound();
-                                                                                                 //var newDoctor = await _DoctorService.Create(Doctors);
-                                                                                                 // Doctors.CreatedOn = SaveDoctorResource.;
-                    DoctorToBeModified.UpdatedOn = DateTime.UtcNow;
-                    DoctorToBeModified.UpdatedBy = IdUser;
+             StringValues token = "";
+             ErrorHandling ErrorMessag = new ErrorHandling();
+             Request.Headers.TryGetValue("token", out token);
+             if (token != "")
+             {
 
-                    await _DoctorService.Update(DoctorToBeModified, DoctorToBeModified);
+                 var claims = _UserService.getPrincipal(token);
+                 var Role = claims.FindFirst("Role").Value;
+                 var IdUser = int.Parse(claims.FindFirst("Id").Value);
+                 var Parent = await _DoctorService.GetById(Link.Parent);
 
-                    var DoctorUpdated = await _DoctorService.GetById(item);
+                 foreach (var item in Link.Childs)
+                 {
+                     var DoctorToBeModified = await _DoctorService.GetById(item);
+                     if (DoctorToBeModified == null) return BadRequest("Le Doctor n'existe pas"); //NotFound();
+                                                                                                  //var newDoctor = await _DoctorService.Create(Doctors);
+                                                                                                  // Doctors.CreatedOn = SaveDoctorResource.;
+                     DoctorToBeModified.UpdatedOn = DateTime.UtcNow;
+                     DoctorToBeModified.UpdatedBy = IdUser;
 
-                    var DoctorResourceUpdated = _mapperService.Map<Doctor, DoctorResource>(DoctorUpdated);
-                }
-                return Ok();
-            }
-            else
-            {
-                ErrorMessag.ErrorMessage = "Empty Token";
-                ErrorMessag.StatusCode = 400;
-                return Ok(ErrorMessag);
+                     await _DoctorService.Update(DoctorToBeModified, DoctorToBeModified);
 
-            }
-        }*/
+                     var DoctorUpdated = await _DoctorService.GetById(item);
+
+                     var DoctorResourceUpdated = _mapperService.Map<Doctor, DoctorResource>(DoctorUpdated);
+                 }
+                 return Ok();
+             }
+             else
+             {
+                 ErrorMessag.ErrorMessage = "Empty Token";
+                 ErrorMessag.StatusCode = 400;
+                 return Ok(ErrorMessag);
+
+             }
+         }*/
         [HttpDelete("{Id}")]
         public async Task<ActionResult> DeleteDoctor(int Id)
         {

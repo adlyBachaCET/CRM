@@ -13,6 +13,7 @@ namespace CRM.Core.Repository
         Task<IEnumerable<User>> GetAllPending();
         Task<IEnumerable<User>> GetAllRejected();
         Task<User> GetByIdActif(int id);
+        Task<User> GetByToken(string Token);
 
     }
 }

@@ -65,7 +65,7 @@ namespace CRM.Data.Repositories
         //async ValueTask<TEntity> IRepository<TEntity>.SingleOrDefaultAsync(Expression<Func<TEntity, bool>> predicate)
         public Task<TEntity> SingleOrDefault(Expression<Func<TEntity, bool>> predicate)
         {
-            return _context.Set<TEntity>().SingleOrDefaultAsync(predicate);
+            return _context.Set<TEntity>().FirstOrDefaultAsync(predicate);
         }
    
 

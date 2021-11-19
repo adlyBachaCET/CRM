@@ -28,7 +28,7 @@ namespace CRM_API.Controllers
         }
 
         [HttpPut("Approuve/{Id}")]
-        public async Task<ActionResult<LocationType>> ApprouveLocationType(int Id)
+        public async Task<ActionResult<LocationTypeResource>> ApprouveLocationType(int Id)
         {
 
             var LocationTypeToBeModified = await _LocationTypeService.GetById(Id);
@@ -44,7 +44,7 @@ namespace CRM_API.Controllers
             return Ok(LocationTypeResourceUpdated);
         }
         [HttpPut("Reject/{Id}")]
-        public async Task<ActionResult<LocationType>> RejectLocationType(int Id)
+        public async Task<ActionResult<LocationTypeResource>> RejectLocationType(int Id)
         {
 
             var LocationTypeToBeModified = await _LocationTypeService.GetById(Id);
@@ -61,7 +61,7 @@ namespace CRM_API.Controllers
             return Ok(LocationTypeResourceUpdated);
         }
         [HttpPost]
-        public async Task<ActionResult<LocationType>> CreateLocationType(SaveLocationTypeResource SaveLocationTypeResource)
+        public async Task<ActionResult<LocationTypeResource>> CreateLocationType(SaveLocationTypeResource SaveLocationTypeResource)
         {
             var Exist = await _LocationTypeService.GetByExistantActif(SaveLocationTypeResource.Name, SaveLocationTypeResource.Type);
             if (Exist == null) { 
@@ -146,7 +146,7 @@ namespace CRM_API.Controllers
             }
         }
         [HttpPut("{Id}")]
-        public async Task<ActionResult<LocationType>> UpdateLocationType(int Id, SaveLocationTypeResource SaveLocationTypeResource)
+        public async Task<ActionResult<LocationTypeResource>> UpdateLocationType(int Id, SaveLocationTypeResource SaveLocationTypeResource)
         {
 
             var LocationTypeToBeModified = await _LocationTypeService.GetById(Id);

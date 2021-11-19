@@ -31,7 +31,7 @@ namespace CRM_API.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult<VisitReport>> CreateVisitReport(SaveVisitReportResource SaveVisitReportResource)
+        public async Task<ActionResult<VisitReportResource>> CreateVisitReport(SaveVisitReportResource SaveVisitReportResource)
         {
             //*** Mappage ***
             var VisitReport = _mapperService.Map<SaveVisitReportResource, VisitReport>(SaveVisitReportResource);
@@ -51,7 +51,7 @@ namespace CRM_API.Controllers
             return Ok(VisitReportResource);
         }
         [HttpPost("Range")]
-        public async Task<ActionResult<VisitReport>> CreateVisitReport(List<SaveVisitReportResource> SaveVisitReportResource)
+        public async Task<ActionResult<VisitReportResource>> CreateVisitReport(List<SaveVisitReportResource> SaveVisitReportResource)
         {
             //*** Mappage ***
             var VisitReport = _mapperService.Map<List<SaveVisitReportResource>, VisitReport>(SaveVisitReportResource);
@@ -109,7 +109,7 @@ namespace CRM_API.Controllers
             }
         }
         [HttpPut("{Id}")]
-        public async Task<ActionResult<VisitReport>> UpdateVisitReport(int Id, SaveVisitReportResource SaveVisitReportResource)
+        public async Task<ActionResult<VisitReportResource>> UpdateVisitReport(int Id, SaveVisitReportResource SaveVisitReportResource)
         {
 
             var VisitReportToBeModified = await _VisitReportService.GetById(Id);

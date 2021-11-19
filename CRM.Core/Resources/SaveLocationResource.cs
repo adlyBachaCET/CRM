@@ -50,5 +50,8 @@ namespace CRM.Core.Models
         public int Order { get; set; }
         public int Primary { get; set; }
     }
-
+    public class Chief
+    {
+        public bool ChiefService { get; set; }
+    }
 }

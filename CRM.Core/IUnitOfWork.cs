@@ -10,6 +10,7 @@ namespace CRM.Core
         IParticipantRepository Participants { get; }
         IRequestRpRepository RequestRps { get; }
         ICommandeRepository Commandes { get; }
+        ISupportRepository Support { get; }
 
         IBrickRepository Bricks { get; }
         IObjectionRepository Objections { get; }

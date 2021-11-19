@@ -29,12 +29,16 @@ namespace CRM_API.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult<Visit>> CreateVisit(SaveVisitResource SaveVisitResource)
+        public async Task<ActionResult<VisitResource>> CreateVisit(SaveVisitResource SaveVisitResource)
   {     
             //*** Mappage ***
             var Visit = _mapperService.Map<SaveVisitResource, Visit>(SaveVisitResource);
-            Visit.UpdatedOn = DateTime.UtcNow;
             Visit.CreatedOn = DateTime.UtcNow;
+            Visit.UpdatedOn = DateTime.UtcNow;
+            Visit.Active = 0;
+            Visit.Version = 0;
+            Visit.CreatedBy = 0;
+            Visit.UpdatedBy = 0;
             //*** Creation dans la base de données ***
             var NewVisit = await _VisitService.Create(Visit);
             //*** Mappage ***
@@ -104,7 +108,7 @@ namespace CRM_API.Controllers
             }
         }
         [HttpPut("{Id}")]
-        public async Task<ActionResult<Visit>> UpdateVisit(int Id, SaveVisitResource SaveVisitResource)
+        public async Task<ActionResult<VisitResource>> UpdateVisit(int Id, SaveVisitResource SaveVisitResource)
         {
 
             var VisitToBeModified = await _VisitService.GetById(Id);

@@ -3,6 +3,7 @@ using CRM.Core.Models;
 using CRM.Core.Services;
 using CRM_API.Helper;
 using CRM_API.Resources;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
@@ -14,6 +15,7 @@ namespace CRM_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    //[Authorize]
     [EnableCors("AllowOrigin")]
 
     public class CycleController : ControllerBase
@@ -41,7 +43,7 @@ namespace CRM_API.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult<Cycle>> CreateCycle(AffectationCycleUser AffectationCycleUser)
+        public async Task<ActionResult<CycleResource>> CreateCycle(AffectationCycleUser AffectationCycleUser)
         {
             StringValues token = "";
             ErrorHandling ErrorMessag = new ErrorHandling();
@@ -195,7 +197,7 @@ namespace CRM_API.Controllers
             }
         }
         [HttpPut("{Id}")]
-        public async Task<ActionResult<Cycle>> UpdateCycle(int Id, SaveCycleResource SaveCycleResource)
+        public async Task<ActionResult<CycleResource>> UpdateCycle(int Id, SaveCycleResource SaveCycleResource)
         {
             StringValues token = "";
             ErrorHandling ErrorMessag = new ErrorHandling();

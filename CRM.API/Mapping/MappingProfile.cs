@@ -118,13 +118,24 @@ namespace CRM_API.Mapping
             CreateMap<SaveLocationDoctorResource, LocationDoctor>();
             CreateMap<List<SaveLocationDoctorResource>, List<LocationDoctor>>();
             CreateMap<LocationDoctor, IEnumerable<LocationDoctorResource>>();
-
+            //Commande
+            CreateMap<Commande, CommandeResource>();
+            CreateMap<Commande, SaveCommandeResource>();
+            CreateMap<SaveCommandeResource, Commande>();
+            CreateMap<List<SaveCommandeResource>, List<Commande>>();
+            CreateMap<Commande, IEnumerable<CommandeResource>>();
             //Location
             CreateMap<Location, LocationResource>();
             CreateMap<Location, SaveLocationResource>();
             CreateMap<SaveLocationResource, Location>();
             CreateMap < List<SaveLocationResource>, List<Location>>();
             CreateMap<Location, IEnumerable<LocationResource>>();
+            //Support
+            CreateMap<Support, SupportResource>();
+            CreateMap<Support, SaveSupportResource>();
+            CreateMap<SaveSupportResource, Support>();
+            CreateMap<List<SaveSupportResource>, List<Support>>();
+            CreateMap<Support, IEnumerable<SupportResource>>();
             //LocationType
             CreateMap<LocationType, LocationTypeResource>();
             CreateMap<LocationType, SaveLocationTypeResource>();

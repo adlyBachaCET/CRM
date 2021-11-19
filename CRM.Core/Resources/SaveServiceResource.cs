@@ -13,8 +13,5 @@ namespace CRM.Core.Models
 
     }
 
-    public class Chief
-    {
-        public int ChiefService { get; set; }
-    }
+
 }

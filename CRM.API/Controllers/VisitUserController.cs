@@ -35,7 +35,7 @@ namespace CRM_API.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult<VisitUser>> CreateVisitUser(SaveVisitUserResource SaveVisitUserResource)
+        public async Task<ActionResult<VisitUserResource>> CreateVisitUser(SaveVisitUserResource SaveVisitUserResource)
   {     
             //*** Mappage ***
             var VisitUser = _mapperService.Map<SaveVisitUserResource, VisitUser>(SaveVisitUserResource);
@@ -126,7 +126,7 @@ namespace CRM_API.Controllers
             }
         }
         [HttpPut("{Id}")]
-        public async Task<ActionResult<VisitUser>> UpdateVisitUser(int Id, SaveVisitUserResource SaveVisitUserResource)
+        public async Task<ActionResult<VisitUserResource>> UpdateVisitUser(int Id, SaveVisitUserResource SaveVisitUserResource)
         {
 
             var VisitUserToBeModified = await _VisitUserService.GetById(Id);

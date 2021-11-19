@@ -28,6 +28,8 @@ namespace CRM_API.Controllers
 
         private readonly IUserService _UserService;
         private readonly IPhoneService _PhoneService;
+        private readonly ISupportService _SupportService;
+
         private readonly ICommandeService _CommandeService;
 
         private readonly IBuUserService _BuUserService;
@@ -44,8 +46,12 @@ namespace CRM_API.Controllers
 
 
         private readonly IMapper _mapperService;
-        public UserController(IParticipantService ParticipantService, IRequestRpService RequestRpService, IObjectionService ObjectionService, IVisitService VisitService, IVisitUserService VisitUserService, IRequestDoctorService RequestDoctorService, IBusinessUnitService BusinessUnitService, ILocalityService LocalityService, 
-            IBuUserService BuUserService, IUserService UserService, IPhoneService PhoneService, ICommandeService CommandeService,
+        public UserController(IParticipantService ParticipantService, IRequestRpService RequestRpService, 
+            IObjectionService ObjectionService, IVisitService VisitService, IVisitUserService VisitUserService,
+            IRequestDoctorService RequestDoctorService, IBusinessUnitService BusinessUnitService,
+            ILocalityService LocalityService, 
+            IBuUserService BuUserService, IUserService UserService, ISupportService SupportService,
+            IPhoneService PhoneService, ICommandeService CommandeService,
             IMapper mapper)
         {
             _RequestDoctorService = RequestDoctorService;
@@ -57,7 +63,9 @@ namespace CRM_API.Controllers
             _ObjectionService = ObjectionService;
             _BusinessUnitService = BusinessUnitService;
             _LocalityService = LocalityService;
+            _SupportService = SupportService;
             _PhoneService = PhoneService;
+
             _CommandeService = CommandeService;
 
             _UserService = UserService;
@@ -66,10 +74,11 @@ namespace CRM_API.Controllers
             _mapperService = mapper;
         }
 
+   
         /// <summary>This method returns the new User .</summary>
         /// <param name="SaveUserResource"> Parameters for the new user .</param>
         [HttpPost]
-        public async Task<ActionResult<User>> CreateUser(SaveUserResource SaveUserResource)
+        public async Task<ActionResult<UserResource>> CreateUser(SaveUserResource SaveUserResource)
         {
             //*** Mappage ***
             var User = _mapperService.Map<SaveUserResource, User>(SaveUserResource);
@@ -230,7 +239,7 @@ namespace CRM_API.Controllers
                 RequestRpList.Add(RequestRp);
             }
             Profile.RequestRp = RequestRpList;
-            var Commande = await _CommandeService.GetByIdActifDoctor(Id);
+            var Commande = await _CommandeService.GetByIdActifUser(Id);
 
             Profile.Commande = (List<Commande>)Commande;
 
@@ -336,9 +345,39 @@ namespace CRM_API.Controllers
 
 
         }
+        [HttpPut("UpdateForgottenPassword/{Id}")]
+        public async Task<ActionResult> UpdateForgottenPassword(int Id,TokenPassword TokenPassword)
+        {
+            StringValues token = "";
+            ErrorHandling ErrorMessag = new ErrorHandling();
+            Request.Headers.TryGetValue("token", out token);
 
+            try
+            {
+                var Claims = await _SupportService.getPrincipal(token);
+
+                if (Claims == null) { 
+                    return NotFound();
+                }
+                else {
+                  
+                        await _UserService.UpdatePassword(Id, TokenPassword.NewPassword);
+
+                        ErrorMessag.ErrorMessage = "Token Found";
+                ErrorMessag.StatusCode = 200;
+                return Ok(new { ErrorHandling = ErrorMessag, Supports = Claims.Claims });
+                   
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorMessag.ErrorMessage = ex.Message;
+                ErrorMessag.StatusCode = 400;
+                return BadRequest(ErrorMessag);
+            }
+        }
         [HttpPut("{Id}")]
-        public async Task<ActionResult<User>> UpdateUser(int Id, UpdateUserResource UpdateUserResource)
+        public async Task<ActionResult<UserResource>> UpdateUser(int Id, UpdateUserResource UpdateUserResource)
         {
 
             var UserInDataBase = await _UserService.GetById(Id);

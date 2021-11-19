@@ -33,7 +33,7 @@ namespace CRM_API.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult<BuUser>> CreateBuUser(SaveBuUserResource SaveBuUserResource)
+        public async Task<ActionResult<BuUserResource>> CreateBuUser(SaveBuUserResource SaveBuUserResource)
         {
             //*** Mappage ***
             var BuUser = _mapperService.Map<SaveBuUserResource, BuUser>(SaveBuUserResource);

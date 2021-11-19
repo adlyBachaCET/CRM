@@ -17,8 +17,7 @@ namespace CRM.Core.Models
 
         public int Version { get; set; }
 
-        public virtual Doctor IdDoctorNavigation { get; set; }
-        public virtual Tags IdTagsNavigation { get; set; }
+   
         public Status Status { get; set; }
         public DateTime? CreatedOn { get; set; }
         public DateTime? UpdatedOn { get; set; }

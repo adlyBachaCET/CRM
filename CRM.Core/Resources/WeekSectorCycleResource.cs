@@ -22,8 +22,6 @@ namespace CRM.Core.Models
 
         public int VersionSector { get; set; }
 
-        public virtual Cycle IdCycleNavigation { get; set; }
-        public virtual Sector IdSectorNavigation { get; set; }
         public DateTime? CreatedOn { get; set; }
         public DateTime? UpdatedOn { get; set; }
         public int Active { get; set; }

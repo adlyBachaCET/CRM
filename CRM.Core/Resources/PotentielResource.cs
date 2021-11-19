@@ -5,10 +5,7 @@ namespace CRM.Core.Models
 {
     public partial class PotentielResource
     {
-        public PotentielResource()
-        {
-            PotentielCycle = new HashSet<PotentielCycle>();
-        }
+ 
         public Status Status { get; set; }
         public int Version { get; set; }
         public int? CreatedBy { get; set; }
@@ -19,7 +16,6 @@ namespace CRM.Core.Models
         public int Active { get; set; }
         public string Name { get; set; }
 
-        public virtual Doctor Doctor { get; set; }
-        public virtual ICollection<PotentielCycle> PotentielCycle { get; set; }
+
     }
 }

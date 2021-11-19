@@ -29,14 +29,20 @@ namespace CRM_API.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult<Tags>> CreateTags(SaveTagsResource SaveTagsResource)
+        public async Task<ActionResult<TagsResource>> CreateTags(SaveTagsResource SaveTagsResource)
         {
             var Exist = await _TagsService.GetByExistantActif(SaveTagsResource.Name);
             if(Exist == null){ 
             //*** Mappage ***
             var Tags = _mapperService.Map<SaveTagsResource, Tags>(SaveTagsResource);
-            //*** Creation dans la base de données ***
-            var NewTags = await _TagsService.Create(Tags);
+                Tags.CreatedOn = DateTime.UtcNow;
+                Tags.UpdatedOn = DateTime.UtcNow;
+                Tags.Active = 0;
+                Tags.Version = 0;
+                Tags.CreatedBy = 0;
+                Tags.UpdatedBy = 0;
+                //*** Creation dans la base de données ***
+                var NewTags = await _TagsService.Create(Tags);
             //*** Mappage ***
             var TagsResource = _mapperService.Map<Tags, TagsResource>(NewTags);
             return Ok(TagsResource);
@@ -109,7 +115,7 @@ namespace CRM_API.Controllers
             }
         }
         [HttpPut("{Id}")]
-        public async Task<ActionResult<Tags>> UpdateTags(int Id, SaveTagsResource SaveTagsResource)
+        public async Task<ActionResult<TagsResource>> UpdateTags(int Id, SaveTagsResource SaveTagsResource)
         {
 
             var TagsToBeModified = await _TagsService.GetById(Id);

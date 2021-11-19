@@ -28,10 +28,7 @@ namespace CRM.Core.Models
         public int VersionWholeSaler { get; set; }
         public Status StatusWholeSaler { get; set; }
         public Status Status { get; set; }
-        public virtual Doctor IdDoctorNavigation { get; set; }
-        public virtual Pharmacy IdPharmacyNavigation { get; set; }
-        public virtual User IdUserNavigation { get; set; }
-        public virtual WholeSaler IdWholeSalerNavigation { get; set; }
+     
 
     }
  

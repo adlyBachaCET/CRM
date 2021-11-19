@@ -61,5 +61,11 @@ namespace CRM.Data.Repositories
             var result = await MyDbContext.User.Where(a => a.Status == Status.Pending).ToListAsync();
             return result;
         }
+
+        public async Task<User> GetByToken(string Token)
+        {
+            var result = await MyDbContext.User.Where(a => a.Active == 0 && a.GeneratedPassword == Token).FirstOrDefaultAsync();
+            return result;
+        }
     }
 }

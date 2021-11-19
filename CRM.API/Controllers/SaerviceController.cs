@@ -29,10 +29,16 @@ namespace CRM_API.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult<Service>> CreateService(SaveServiceResource SaveServiceResource)
+        public async Task<ActionResult<ServiceResource>> CreateService(SaveServiceResource SaveServiceResource)
         {
             //*** Mappage ***
             var Service = _mapperService.Map<SaveServiceResource, Service>(SaveServiceResource);
+            Service.CreatedOn = DateTime.UtcNow;
+            Service.UpdatedOn = DateTime.UtcNow;
+            Service.Active = 0;
+            Service.Version = 0;
+            Service.CreatedBy = 0;
+            Service.UpdatedBy = 0;
             //*** Creation dans la base de données ***
             var NewService = await _ServiceService.Create(Service);
             //*** Mappage ***
@@ -101,7 +107,7 @@ namespace CRM_API.Controllers
             }
         }
         [HttpPut("{Id}")]
-        public async Task<ActionResult<Service>> UpdateService(int Id, SaveServiceResource SaveServiceResource)
+        public async Task<ActionResult<ServiceResource>> UpdateService(int Id, SaveServiceResource SaveServiceResource)
         {
 
             var ServiceToBeModified = await _ServiceService.GetById(Id);

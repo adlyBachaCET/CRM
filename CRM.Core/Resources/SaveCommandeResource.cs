@@ -4,16 +4,11 @@ using System.Text;
 
 namespace CRM.Core.Models
 {
-    public class Commande
+    public class SaveCommandeResource
     {
-        public int IdCommande { get; set; }
-        public int Version { get; set; }
-        public Status Status { get; set; }
-        public DateTime? CreatedOn { get; set; }
-        public int Active { get; set; }
-        public int? CreatedBy { get; set; }
-        public int? UpdatedBy { get; set; }
-        public DateTime? UpdatedOn { get; set; }
+
+ 
+
        
         public string Designation { get; set; }
         public DateTime? DateLivraison { get; set; }

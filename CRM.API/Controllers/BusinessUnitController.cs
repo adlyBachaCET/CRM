@@ -29,7 +29,7 @@ namespace CRM_API.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult<BusinessUnit>> CreateBusinessUnit(SaveBusinessUnitResource SaveBusinessUnitResource)
+        public async Task<ActionResult<BusinessUnitResource>> CreateBusinessUnit(SaveBusinessUnitResource SaveBusinessUnitResource)
         {
             //*** Mappage ***
             var BusinessUnit = _mapperService.Map<SaveBusinessUnitResource, BusinessUnit>(SaveBusinessUnitResource);
@@ -107,7 +107,7 @@ namespace CRM_API.Controllers
             }
         }
         [HttpPut("{Id}")]
-        public async Task<ActionResult<BusinessUnit>> UpdateBusinessUnit(int Id, SaveBusinessUnitResource SaveBusinessUnitResource)
+        public async Task<ActionResult<BusinessUnitResource>> UpdateBusinessUnit(int Id, SaveBusinessUnitResource SaveBusinessUnitResource)
         {
 
             var BusinessUnitToBeModified = await _BusinessUnitService.GetById(Id);

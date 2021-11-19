@@ -35,7 +35,7 @@ namespace CRM_API.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult<RequestRp>> CreateRequestRp(SaveRequestRpResource SaveRequestRpResource)
+        public async Task<ActionResult<RequestRpResource>> CreateRequestRp(SaveRequestRpResource SaveRequestRpResource)
   {     
             //*** Mappage ***
             var RequestRp = _mapperService.Map<SaveRequestRpResource, RequestRp>(SaveRequestRpResource);
@@ -114,7 +114,7 @@ namespace CRM_API.Controllers
             }
         }
         [HttpPut("{Id}")]
-        public async Task<ActionResult<RequestRp>> UpdateRequestRp(int Id, SaveRequestRpResource SaveRequestRpResource)
+        public async Task<ActionResult<RequestRpResource>> UpdateRequestRp(int Id, SaveRequestRpResource SaveRequestRpResource)
         {
 
             var RequestRpToBeModified = await _RequestRpService.GetById(Id);

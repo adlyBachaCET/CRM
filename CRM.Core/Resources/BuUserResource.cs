@@ -19,7 +19,6 @@ namespace CRM.Core.Models
         public DateTime? UpdatedOn { get; set; }
         public int Active { get; set; }
         public Status Status { get; set; }
-        public virtual BusinessUnit IdBuNavigation { get; set; }
-        public virtual User IdUserNavigation { get; set; }
+   
     }
 }

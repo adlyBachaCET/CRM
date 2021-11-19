@@ -22,12 +22,7 @@ namespace CRM.Core.Models
         public Status Status { get; set; }
         public int? CreatedBy { get; set; }
         public int? UpdatedBy { get; set; }
-        public virtual Locality IdParentNavigation { get; set; }
-        public virtual ICollection<BrickLocality> BrickLocality { get; set; }
-        public virtual ICollection<Locality> InverseIdParentNavigation { get; set; }
-        public virtual ICollection<SectorLocality> SectorLocality { get; set; }
-        public virtual ICollection<WholeSalerLocality> WholeSalerLocality { get; set; }
-        public virtual ICollection<AdresseLocality> AdresseLocality { get; set; }
+ 
 
     }
 }

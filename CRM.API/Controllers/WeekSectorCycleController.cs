@@ -29,10 +29,16 @@ namespace CRM_API.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult<SectorCycle>> CreateWeekSectorCycle(SaveWeekSectorCycleResource SaveWeekSectorCycleResource)
+        public async Task<ActionResult<WeekSectorCycleResource>> CreateWeekSectorCycle(SaveWeekSectorCycleResource SaveWeekSectorCycleResource)
         {
             //*** Mappage ***
             var WeekSectorCycle = _mapperService.Map<SaveWeekSectorCycleResource, SectorCycle>(SaveWeekSectorCycleResource);
+            WeekSectorCycle.CreatedOn = DateTime.UtcNow;
+            WeekSectorCycle.UpdatedOn = DateTime.UtcNow;
+            WeekSectorCycle.Active = 0;
+            WeekSectorCycle.Version = 0;
+            WeekSectorCycle.CreatedBy = 0;
+            WeekSectorCycle.UpdatedBy = 0;
             //*** Creation dans la base de données ***
             var NewWeekSectorCycle = await _WeekSectorCycleService.Create(WeekSectorCycle);
             //*** Mappage ***

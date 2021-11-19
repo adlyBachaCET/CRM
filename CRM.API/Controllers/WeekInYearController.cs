@@ -31,10 +31,16 @@ namespace CRM_API.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult<WeekInYear>> CreateWeekInYear(SaveWeekInYearResource SaveWeekInYearResource)
+        public async Task<ActionResult<WeekInYearResource>> CreateWeekInYear(SaveWeekInYearResource SaveWeekInYearResource)
         {
             //*** Mappage ***
             var WeekInYear = _mapperService.Map<SaveWeekInYearResource, WeekInYear>(SaveWeekInYearResource);
+            WeekInYear.CreatedOn = DateTime.UtcNow;
+            WeekInYear.UpdatedOn = DateTime.UtcNow;
+            WeekInYear.Active = 0;
+            WeekInYear.Version = 0;
+            WeekInYear.CreatedBy = 0;
+            WeekInYear.UpdatedBy = 0;
             //*** Creation dans la base de données ***
             var NewWeekInYear = await _WeekInYearService.Create(WeekInYear);
             //*** Mappage ***
@@ -103,7 +109,7 @@ namespace CRM_API.Controllers
             }
         }
         [HttpPut("{Order}/{Year}")]
-        public async Task<ActionResult<WeekInYear>> UpdateWeekInYear(int Order, int Year, SaveWeekInYearResource SaveWeekInYearResource)
+        public async Task<ActionResult<WeekInYearResource>> UpdateWeekInYear(int Order, int Year, SaveWeekInYearResource SaveWeekInYearResource)
         {
 
             var WeekInYearToBeModified = await _WeekInYearService.GetById(Order, Year);

@@ -29,7 +29,7 @@ namespace CRM_API.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult<Locality>> CreateLocality(SaveLocalityResource SaveLocalityResource)
+        public async Task<ActionResult<LocalityResource>> CreateLocality(SaveLocalityResource SaveLocalityResource)
         {
             //*** Mappage ***
             var Locality = _mapperService.Map<SaveLocalityResource, Locality>(SaveLocalityResource);
@@ -156,7 +156,7 @@ namespace CRM_API.Controllers
             }
         }
         [HttpPut("{Id}")]
-        public async Task<ActionResult<Locality>> UpdateLocality(int Id, SaveLocalityResource SaveLocalityResource)
+        public async Task<ActionResult<LocalityResource>> UpdateLocality(int Id, SaveLocalityResource SaveLocalityResource)
         {
 
             var LocalityToBeModified = await _LocalityService.GetById(Id);

@@ -29,7 +29,7 @@ namespace CRM_API.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult<Info>> CreateInfo(SaveInfoResource SaveInfoResource)
+        public async Task<ActionResult<InfoResource>> CreateInfo(SaveInfoResource SaveInfoResource)
         {
             //*** Mappage ***
             var Info = _mapperService.Map<SaveInfoResource, Info>(SaveInfoResource);
@@ -101,7 +101,7 @@ namespace CRM_API.Controllers
             }
         }
         [HttpPut("{Id}")]
-        public async Task<ActionResult<Info>> UpdateInfo(int Id, SaveInfoResource SaveInfoResource)
+        public async Task<ActionResult<InfoResource>> UpdateInfo(int Id, SaveInfoResource SaveInfoResource)
         {
 
             var InfoToBeModified = await _InfoService.GetById(Id);
