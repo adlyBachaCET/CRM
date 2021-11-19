@@ -40,7 +40,7 @@ namespace CRM_API.Controllers
         }
 
         [HttpPut("Approuve/{Id}")]
-        public async Task<ActionResult<Location>> ApprouveLocation(int Id)
+        public async Task<ActionResult<LocationResource>> ApprouveLocation(int Id)
         {
             StringValues token = "";
             ErrorHandling ErrorMessag = new ErrorHandling();
@@ -74,7 +74,7 @@ namespace CRM_API.Controllers
             }
         }
         [HttpPut("Reject/{Id}")]
-        public async Task<ActionResult<Location>> RejectLocation(int Id)
+        public async Task<ActionResult<LocationResource>> RejectLocation(int Id)
         {
             StringValues token = "";
             ErrorHandling ErrorMessag = new ErrorHandling();
@@ -108,7 +108,7 @@ namespace CRM_API.Controllers
             }
         }
         [HttpPost]
-        public async Task<ActionResult<Location>> CreateLocation(SaveLocationResource SaveLocationResource)
+        public async Task<ActionResult<LocationResource>> CreateLocation(SaveLocationResource SaveLocationResource)
         {
             StringValues token = "";
             ErrorHandling ErrorMessag = new ErrorHandling();
@@ -271,7 +271,7 @@ namespace CRM_API.Controllers
             }
         }
         [HttpPut("{Id}")]
-        public async Task<ActionResult<Location>> UpdateLocation(int Id, SaveLocationResource SaveLocationResource)
+        public async Task<ActionResult<LocationResource>> UpdateLocation(int Id, SaveLocationResource SaveLocationResource)
         {
             StringValues token = "";
             ErrorHandling ErrorMessag = new ErrorHandling();

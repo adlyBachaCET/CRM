@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Linq;
@@ -78,7 +79,9 @@ namespace CRM_API.Controllers
         /// <summary>This method returns the new User .</summary>
         /// <param name="SaveUserResource"> Parameters for the new user .</param>
         [HttpPost]
-        public async Task<ActionResult<UserResource>> CreateUser(SaveUserResource SaveUserResource)
+        public async Task<ActionResult<UserResource>> CreateUser(
+            [FromHeader(Name = "Token")][Required] string Token,
+            SaveUserResource SaveUserResource)
         {
             //*** Mappage ***
             var User = _mapperService.Map<SaveUserResource, User>(SaveUserResource);

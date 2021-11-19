@@ -68,11 +68,7 @@ namespace CRM_API.Mapping
             CreateMap<Locality, SaveLocalityResource>();
             CreateMap<SaveLocalityResource, Locality>();
             CreateMap<Locality, IEnumerable<LocalityResource>>();
-            //BrickLocality
-            CreateMap<BrickLocality, BrickLocalityResource>();
-            CreateMap<BrickLocality, SaveBrickLocalityResource>();
-            CreateMap<SaveBrickLocalityResource, BrickLocality>();
-            CreateMap<BrickLocality, IEnumerable<BrickLocalityResource>>();
+ 
             //BuUser
             CreateMap<BuUser, BuUserResource>();
             CreateMap<BuUser, SaveBuUserResource>();
@@ -153,6 +149,18 @@ namespace CRM_API.Mapping
             CreateMap<Tags, SaveTagsResource>();
             CreateMap<SaveTagsResource, Tags>();
             CreateMap<List<SaveTagsResource>, List<Tags>>();
+            CreateMap<List<Tags>, List<TagsResource>>();
+            CreateMap<List<Info>, List<InfoResource>>();
+            CreateMap<List<Visit>, List<VisitResource>>();
+            CreateMap<List<RequestRp>, List<RequestRpResource>>();
+            CreateMap<List<Commande>, List<CommandeResource>>();
+            CreateMap<List<Objection>, List<ObjectionResource>>();
+            CreateMap<List<RequestDoctor>, List<RequestDoctorResource>>();
+            CreateMap<List<BusinessUnit>, List<BusinessUnitResource>>();
+            CreateMap<List<LocationDoctor>, List<LocationDoctorResource>>();
+            CreateMap<List<Phone>, List<PhoneResource>>();
+            CreateMap<List<VisitReport>, List<VisitReportResource>>();
+
             CreateMap<Tags, IEnumerable<TagsResource>>();
             CreateMap<TagsResource, Tags>();
 

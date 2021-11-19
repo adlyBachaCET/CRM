@@ -7,7 +7,6 @@ namespace CRM.Core.Models
     {
         public Locality()
         {
-            BrickLocality = new HashSet<BrickLocality>();
             InverseIdParentNavigation = new HashSet<Locality>();
             SectorLocality = new HashSet<SectorLocality>();
             WholeSalerLocality = new HashSet<WholeSalerLocality>();
@@ -29,7 +28,6 @@ namespace CRM.Core.Models
         public Status Status { get; set; }
 
         public virtual Locality IdParentNavigation { get; set; }
-        public virtual ICollection<BrickLocality> BrickLocality { get; set; }
         public virtual ICollection<Locality> InverseIdParentNavigation { get; set; }
         public virtual ICollection<SectorLocality> SectorLocality { get; set; }
         public virtual ICollection<WholeSalerLocality> WholeSalerLocality { get; set; }

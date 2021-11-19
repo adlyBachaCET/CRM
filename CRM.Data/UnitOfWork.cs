@@ -21,7 +21,6 @@ namespace CRM.Data
         private IVisitRepository _VisitRepository;
         private IRequestDoctorRepository _RequestDoctorRepository;
 
-        private IBrickLocalityRepository _BrickLocalityRepository;
         private IBuDoctorRepository _BuDoctorRepository;
         private IBusinessUnitRepository _BusinessUnitRepository;
         private IBuUserRepository _BuUserRepository;
@@ -76,7 +75,6 @@ namespace CRM.Data
         public ISectorCycleInYearRepository WeekSectorCycleInYears => _WeekSectorCycleInYearRepository = _WeekSectorCycleInYearRepository ?? new SectorCycleInYearRepository(_context);
         public ISectorCycleRepository WeekSectorCycles => _WeekSectorCycleRepository = _WeekSectorCycleRepository ?? new SectorCycleRepository(_context);
 
-        public IBrickLocalityRepository BrickLocalitys =>_BrickLocalityRepository = _BrickLocalityRepository ?? new BrickLocalityRepository(_context);
 
         public IBuDoctorRepository BuDoctors =>_BuDoctorRepository = _BuDoctorRepository ?? new BuDoctorRepository(_context);
 

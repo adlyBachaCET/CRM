@@ -19,7 +19,6 @@ namespace CRM.Core
         IVisitReportRepository VisitReports { get; }
         IVisitRepository Visits { get; }
 
-        IBrickLocalityRepository BrickLocalitys { get; }
         IBuDoctorRepository BuDoctors { get; }
         IBusinessUnitRepository BusinessUnits { get; }
         IBuUserRepository BuUsers { get; }

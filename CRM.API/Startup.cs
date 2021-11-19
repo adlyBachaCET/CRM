@@ -68,7 +68,6 @@ namespace CRM_API
             services.AddScoped<IPhoneService, PhoneService>();
             services.AddScoped<IAdresseLocalityService, AdresseLocalityService>();
 
-            services.AddScoped<IBrickLocalityService, BrickLocalityService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IBuUserService, BuUserService>();
             services.AddScoped<ICycleUserService, CycleUserService>();

@@ -19,7 +19,6 @@ namespace CRM.Data
         public virtual DbSet<Support> Support { get; set; }
 
         public virtual DbSet<Brick> Brick { get; set; }
-        public virtual DbSet<BrickLocality> BrickLocality { get; set; }
         public virtual DbSet<BuDoctor> BuDoctor { get; set; }
         public virtual DbSet<BuUser> BuUser { get; set; }
         public virtual DbSet<CycleUser> CycleUser { get; set; }
@@ -212,22 +211,6 @@ namespace CRM.Data
 
             });
 
-            modelBuilder.Entity<BrickLocality>(entity =>
-            {
-                entity.HasKey(e => new { e.IdLocality, e.StatusBrick, e.VersionBrick, e.IdBrick, e.StatusLocality, e.VersionLocality });
-
-                entity.HasOne(d => d.IdBrickNavigation)
-                    .WithMany(p => p.BrickLocality)
-                    .HasForeignKey(d => new { d.IdBrick, d.StatusBrick,d.VersionBrick })
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_BrickLocality_Brick");
-
-                entity.HasOne(d => d.IdLocalityNavigation)
-                    .WithMany(p => p.BrickLocality)
-                    .HasForeignKey(d => new { d.IdLocality, d.StatusLocality, d.VersionLocality })
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_BrickLocality_Locality");
-            });
 
             modelBuilder.Entity<BuDoctor>(entity =>
             {
@@ -668,6 +651,22 @@ namespace CRM.Data
     .WithMany(p => p.InverseLinked)
     .HasForeignKey(d => new { d.LinkedId, d.StatusLink, d.VersionLink })
     .HasConstraintName("FK_Location_Location").IsRequired(false);
+                entity.HasOne(d => d.Locality1)
+           .WithOne()
+           .HasForeignKey<Location>(d => new { d.IdLocality1, d.StatusLocality1, d.VersionLocality1 })
+           .HasConstraintName("FK_location_locality1").IsRequired(false);
+                entity.HasOne(d => d.Locality2).WithOne()
+           .HasForeignKey<Location>(d => new { d.IdLocality2, d.StatusLocality2, d.VersionLocality2 })
+           .HasConstraintName("FK_location_locality2").IsRequired(false);
+                entity.HasOne(d => d.Brick2)
+                                  .WithOne()
+                                    .HasForeignKey<Location>(d => new { d.IdBrick2, d.StatusBrick2, d.VersionBrick2 })
+                                    .HasConstraintName("FK_V_Brick").IsRequired(false);
+                entity.HasOne(d => d.Brick1)
+             .WithOne()
+               .HasForeignKey<Location>(d => new { d.IdBrick1, d.StatusBrick1, d.VersionBrick1 })
+               .HasConstraintName("FK_V_Brick2").IsRequired(false);
+
             });
 
             modelBuilder.Entity<LocationDoctor>(entity =>
@@ -984,7 +983,8 @@ namespace CRM.Data
                 entity.HasOne(d => d.WholeSaler)
                 .WithMany(p => p.Phone)
                 .HasForeignKey(d => new { d.IdWholeSaler, d.StatusWholeSaler, d.VersionWholeSaler })
-                .HasConstraintName("FK_WholeSaler_Doctor").IsRequired(false);
+                                      
+.HasConstraintName("FK_WholeSaler_Doctor").IsRequired(false);
              
 
        
@@ -1003,10 +1003,7 @@ namespace CRM.Data
 
                 entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
 
-                entity.HasOne(d => d.Visit)
-                    .WithOne()
-                    .HasForeignKey<VisitChannel>(d => new { d.IdVisit, d.StatusVisit, d.VersionVisit })
-                    .HasConstraintName("FK_Phone_Doctor").IsRequired(false);
+       
         
 
 
@@ -1420,9 +1417,25 @@ namespace CRM.Data
 
                           entity.Property(e => e.UpdatedOn).HasColumnType("timestamp");
 
-
-
-
+                          entity.HasOne(d => d.Locality1)
+                                .WithOne()
+                                    .HasForeignKey<Visit>(d => new { d.IdLocality1, d.StatusLocality1, d.VersionLocality1 })
+                                    .HasConstraintName("FK_V_locality1").IsRequired(false);
+                          entity.HasOne(d => d.Locality2).WithOne()
+                     .HasForeignKey<Visit>(d => new { d.IdLocality2, d.StatusLocality2, d.VersionLocality2 })
+                     .HasConstraintName("FK_V_locality2").IsRequired(false);
+                          entity.HasOne(d => d.Brick2)
+                             .WithOne()
+                               .HasForeignKey<Visit>(d => new { d.IdBrick2, d.StatusBrick2, d.VersionBrick2 })
+                               .HasConstraintName("FK_V_Brick").IsRequired(false);
+                          entity.HasOne(d => d.Brick1)
+                       .WithOne()
+                         .HasForeignKey<Visit>(d => new { d.IdBrick1, d.StatusBrick1, d.VersionBrick1 })
+                         .HasConstraintName("FK_V_Brick2").IsRequired(false);
+                          entity.HasOne(d => d.Doctor)
+                                   .WithOne()
+                                   .HasForeignKey<Visit>(d => new { d.IdDoctor, d.StatusDoctor, d.VersionDoctor })
+                                   .HasConstraintName("FK_V_doctor").IsRequired(false);
 
                       });
 

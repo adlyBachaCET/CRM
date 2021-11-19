@@ -27,22 +27,36 @@ namespace CRM.Core.Models
         public virtual LocationType IdLocationTypeNavigation { get; set; }
 
         public int IdLocality1 { get; set; }
+        public int VersionLocality1 { get; set; }
+        public Status StatusLocality1 { get; set; }
+        public virtual Locality Locality1 { get; set; }
         public string NameLocality1 { get; set; }
 
-        
-        public int IdLocality2 { get; set; }
 
+        public int IdLocality2 { get; set; }
+        public int VersionLocality2 { get; set; }
+        public Status StatusLocality2 { get; set; }
+        public virtual Locality Locality2 { get; set; }
         public string NameLocality2 { get; set; }
 
- 
+        public int? IdBrick { get; set; }
+        public int VersionBrick { get; set; }
+        public Status StatusBrick { get; set; }
+        public virtual Brick Brick { get; set; }
 
         public double? Longitude { get; set; }
         public double? Altitude { get; set; }
         public string StreetName { get; set; }
         public int PostalCode { get; set; }
 
-        public int? IdBrick { get; set; }
-    
+        public int? IdBrick1 { get; set; }
+        public int VersionBrick1 { get; set; }
+        public Status StatusBrick1 { get; set; }
+        public virtual Brick Brick1 { get; set; }
+        public int? IdBrick2 { get; set; }
+        public int VersionBrick2 { get; set; }
+        public Status StatusBrick2 { get; set; }
+        public virtual Brick Brick2 { get; set; }
         public string NameBrick { get; set; }
         public int? LinkedId { get; set; }
         public int VersionLink { get; set; }

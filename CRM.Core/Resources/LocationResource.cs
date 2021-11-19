@@ -24,8 +24,7 @@ namespace CRM.Core.Models
         public string Name { get; set; }
         public int? Primary { get; set; }
 
-        public virtual LocationType IdLocationTypeNavigation { get; set; }
-        public virtual ICollection<LocationDoctor> LocationDoctor { get; set; }
+
 
         public int IdLocality1 { get; set; }
         public string NameLocality1 { get; set; }
@@ -47,6 +46,5 @@ namespace CRM.Core.Models
         public int VersionBrick { get; set; }
         public string NameBrick { get; set; }
 
-        public virtual Brick Brick { get; set; }
     }
 }

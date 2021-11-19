@@ -39,7 +39,8 @@ namespace CRM.Core.Models
 
         public Status Status { get; set; }
         public int Version { get; set; }
-
+        public string Note { get; set; }
+        public int NumSystemBrick { get; set; }
         public DateTime? CreatedOn { get; set; }
         public DateTime? UpdatedOn { get; set; }
         public int Active { get; set; }
