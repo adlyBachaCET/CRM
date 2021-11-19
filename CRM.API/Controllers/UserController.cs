@@ -226,10 +226,19 @@ namespace CRM_API.Controllers
                 if (ImmediateManage == null) return NotFound();
 
             var Objection = await _ObjectionService.GetByIdActifUser(Id);
-            //var Users = _mapperService.Map< IEnumerable < User >, IEnumerable<SaveUserResource>>(Delegates);
-            var ObjectionResourceList = _mapperService.Map<List<Objection>, List<ObjectionResource>>((List<Objection>)Objection);
 
-            Profile.Objection = ObjectionResourceList;
+            List<ObjectionResource> ObjectionResources = new List<ObjectionResource>();
+            //var Users = _mapperService.Map< IEnumerable < User >, IEnumerable<SaveUserResource>>(Delegates);
+            foreach (var item in Objection)
+            {
+                var NewRequestDoctor = _mapperService.Map<Objection, ObjectionResource>(item);
+
+                if (NewRequestDoctor != null)
+                {
+                    ObjectionResources.Add(NewRequestDoctor);
+                }
+            }
+            Profile.Objection = ObjectionResources;
             var RequestDoctor = await _RequestDoctorService.GetByIdActifUser(Id);
             //var Users = _mapperService.Map< IEnumerable < User >, IEnumerable<SaveUserResource>>(Delegates);
             List<RequestDoctorResource> RequestDoctorResources = new List<RequestDoctorResource>();
