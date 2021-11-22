@@ -97,6 +97,9 @@ namespace CRM_API
             services.AddScoped<ICycleBuService, CycleBuService>();
             services.AddScoped<IPotentielCycleService, PotentielCycleService>();
             services.AddScoped<ISectorCycleService, SectorCycleService>();
+            services.AddScoped<ISectorService, SectorService>();
+            services.AddScoped<ISectorCycleInYearService, SectorCycleInYearService>();
+
             services.AddScoped<ISpecialtyService, SpecialtyService>();
 
 services.AddCors(c =>

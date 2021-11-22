@@ -94,8 +94,49 @@ namespace CRM_API.Controllers
             _mapperService = mapper;
         }
 
+        [HttpPost("Verify")]
+        public async Task<ActionResult<DoctorResource>> Verify([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token,VerifyDoctor VerifyDoctor)
+        {
+            DoctorExiste DoctorExiste = new DoctorExiste();
+            var CheckDoctor = await _DoctorService.GetExist(VerifyDoctor.FirstName, VerifyDoctor.LastName, VerifyDoctor.Email);
+            var FirstLast = _mapperService.Map<Doctor, DoctorResource>(CheckDoctor.FirstLast);
+            var LastFirst = _mapperService.Map<Doctor, DoctorResource>(CheckDoctor.LastFirst);
+            var DoctorEmail = _mapperService.Map<Doctor, DoctorResource>(CheckDoctor.DoctorEmail);
 
-        [HttpPost]
+            DoctorExisteResource DoctorExisteResource = new DoctorExisteResource();
+            DoctorExisteResource.DoctorEmail = DoctorEmail;
+            DoctorExisteResource.LastFirst = LastFirst;
+            DoctorExisteResource.FirstLast = FirstLast;
+            if (FirstLast != null)
+            {
+                DoctorExisteResource.FirstLastExist = true;
+            }
+            else
+            {
+                DoctorExisteResource.FirstLastExist = false;
+            }
+            if (DoctorEmail != null)
+            {
+                DoctorExisteResource.ExistDoctorEmail = true;
+            }
+            else
+            {
+                DoctorExisteResource.ExistDoctorEmail = false;
+
+            }
+            if (LastFirst != null)
+            {
+                DoctorExisteResource.LastFirstExist = true;
+            }
+            else
+            {
+                DoctorExisteResource.LastFirstExist = false;
+
+            }
+            return Ok(DoctorExisteResource);
+
+        }
+  [HttpPost]
         public async Task<ActionResult<DoctorResource>> CreateDoctor([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token,
             SaveDoctorResource SaveDoctorResource)
         {
@@ -104,212 +145,215 @@ namespace CRM_API.Controllers
             Request.Headers.TryGetValue("token", out token);
             if (Token != "")
             {
+
             var claims = _UserService.getPrincipal(Token);
                 var Id = int.Parse(claims.FindFirst("Id").Value);
                 var Role = claims.FindFirst("Role").Value;
-        
-                //*** Mappage ***
-            var Doctor = _mapperService.Map<SaveDoctorResource, Doctor>(SaveDoctorResource);
-                if (Role == "Manager")
-                {
-                    Doctor.Status = Status.Approuved;
-                }
-                else if (Role == "Delegue")
-                {
-                    Doctor.Status = Status.Pending;
-                }
-            Doctor.Version = 0;
-            Doctor.Active = 0;
-            Doctor.CreatedOn = DateTime.UtcNow;
-            Doctor.UpdatedOn = DateTime.UtcNow;
-            Doctor.CreatedBy = Id;
-            Doctor.UpdatedBy = Id;
-                var NewDoctor = await _DoctorService.Create(Doctor);
-            var DoctorResource = _mapperService.Map<Doctor, DoctorResource>(NewDoctor);
-
-            if (SaveDoctorResource.Location!=null)
-            {
-                foreach(var item in SaveDoctorResource.Location)
-                { 
-                var location = await _LocationService.GetById(item.IdLocation);
-                    if(location==null)
-                    {
-                       
-                    }
-                    else
-                    {
-                        LocationDoctor LocationDoctor = new LocationDoctor();
-                        LocationDoctor.IdLocation = location.IdLocation;
           
-
-                        LocationDoctor.IdDoctor = NewDoctor.IdDoctor;
-    
-
-                        if (item.IdService != 0) { 
-                        var NewService = await _ServiceService.GetById(item.IdService);
-                        LocationDoctor.IdService = NewService.IdService;
-         
-                        }
-                        else
-                        {
-                            LocationDoctor.IdService =0;
-              
-                        }
-
-                        LocationDoctor.Status = Status.Approuved;
-                        LocationDoctor.Version = 0;
-                        LocationDoctor.Active = 0;
-                        LocationDoctor.CreatedOn = DateTime.UtcNow;
-                        LocationDoctor.UpdatedOn = DateTime.UtcNow;
-                       LocationDoctor.CreatedBy = Id;
-                       LocationDoctor.UpdatedBy = Id;
-                     await _LocationDoctorService.Create(LocationDoctor);
-                    }
-                }
-            }
-
-            //Assign business units  The new Doctor
-
-            if (SaveDoctorResource.BusinessUnits != null)
-            {
-
-
-                foreach (var item in SaveDoctorResource.BusinessUnits)
-                {
-                    var Bu = await _BusinessUnitService.GetById(item);
-
-                    BuDoctor BuDoctor = new BuDoctor();
-                    BuDoctor.IdBu = Bu.IdBu;
-                    BuDoctor.Version = Bu.Version;
-                    BuDoctor.Status = Bu.Status;
-                    BuDoctor.NameBu = Bu.Name;
-                    BuDoctor.IdBuNavigation= Bu;
-                    BuDoctor.CreatedBy = Id;
-                    BuDoctor.UpdatedBy = Id;
-                    BuDoctor.IdDoctorNavigation = NewDoctor;
-                    BuDoctor.IdDoctor = NewDoctor.IdDoctor;
-                    BuDoctor.VersionDoctor = NewDoctor.Version;
-                    BuDoctor.StatusDoctor = NewDoctor.Status;
-
-                    BuDoctor.Status = Status.Approuved;
-                    BuDoctor.Version = 0;
-                    BuDoctor.Active = 0;
-                    BuDoctor.CreatedOn = DateTime.UtcNow;
-                    BuDoctor.UpdatedOn = DateTime.UtcNow;
-                    await _BuDoctorService.Create(BuDoctor);
-
-                }
-            }
-            //Add Tags to database and assign them to The new Doctor
-            List<Tags> Tags = new List<Tags>();
-            List<TagsDoctor> TagsDoctors = new List<TagsDoctor>();
-            Tags newTag = new Tags(); 
-            Tags TagExist = new Tags();
-
-            if (SaveDoctorResource.Tags != null)
-            {
-                foreach(var item in SaveDoctorResource.Tags) 
-                {
-                    TagExist = await _TagsService.GetByExistantActif(item.Name);
-                    if(TagExist == null)
-                    {
-                   var NewTag = _mapperService.Map<SaveTagsResource, Tags>(item);
-                   NewTag.Status = Status.Approuved;
-                   NewTag.Version = 0;
-                   NewTag.Active = 0;
-                   NewTag.CreatedOn = DateTime.UtcNow;
-                   NewTag.UpdatedOn = DateTime.UtcNow;
-                            NewTag.CreatedBy = Id;
-                            NewTag.UpdatedBy = Id;
-                            newTag = await _TagsService.Create(NewTag);
-
-                var TagResource = _mapperService.Map<Tags, TagsResource>(newTag);
-                        Tags.Add(newTag);
-
-
-                    }
-                    else
-                    {
-                        Tags.Add(TagExist);
             
+                    //*** Mappage ***
+                    var Doctor = _mapperService.Map<SaveDoctorResource, Doctor>(SaveDoctorResource);
+                    if (Role == "Manager")
+                    {
+                        Doctor.Status = Status.Approuved;
+                    }
+                    else if (Role == "Delegue")
+                    {
+                        Doctor.Status = Status.Pending;
+                    }
+                    Doctor.Version = 0;
+                    Doctor.Active = 0;
+                    Doctor.CreatedOn = DateTime.UtcNow;
+                    Doctor.UpdatedOn = DateTime.UtcNow;
+                    Doctor.CreatedBy = Id;
+                    Doctor.UpdatedBy = Id;
+                    var NewDoctor = await _DoctorService.Create(Doctor);
+                    var DoctorResource = _mapperService.Map<Doctor, DoctorResource>(NewDoctor);
+
+                    if (SaveDoctorResource.Location != null)
+                    {
+                        foreach (var item in SaveDoctorResource.Location)
+                        {
+                            var location = await _LocationService.GetById(item.IdLocation);
+                            if (location == null)
+                            {
+
+                            }
+                            else
+                            {
+                                LocationDoctor LocationDoctor = new LocationDoctor();
+                                LocationDoctor.IdLocation = location.IdLocation;
+
+
+                                LocationDoctor.IdDoctor = NewDoctor.IdDoctor;
+
+
+                                if (item.IdService != 0) {
+                                    var NewService = await _ServiceService.GetById(item.IdService);
+                                    LocationDoctor.IdService = NewService.IdService;
+
+                                }
+                                else
+                                {
+                                    LocationDoctor.IdService = 0;
+
+                                }
+
+                                LocationDoctor.Status = Status.Approuved;
+                                LocationDoctor.Version = 0;
+                                LocationDoctor.Active = 0;
+                                LocationDoctor.CreatedOn = DateTime.UtcNow;
+                                LocationDoctor.UpdatedOn = DateTime.UtcNow;
+                                LocationDoctor.CreatedBy = Id;
+                                LocationDoctor.UpdatedBy = Id;
+                                await _LocationDoctorService.Create(LocationDoctor);
+                            }
+                        }
                     }
 
-                   
+                    //Assign business units  The new Doctor
 
-                }
-                foreach(var item in Tags) { 
-                TagsDoctor TagsDoctor = new TagsDoctor();
-                TagsDoctor.Status = Status.Approuved;
-                TagsDoctor.Version = 0;
-                TagsDoctor.Active = 0;
-                TagsDoctor.CreatedOn = DateTime.UtcNow;
-                TagsDoctor.UpdatedOn = DateTime.UtcNow;
-                TagsDoctor.VersionDoctor = NewDoctor.Version;
-                TagsDoctor.StatusDoctor = NewDoctor.Status;
-                TagsDoctor.IdDoctor = NewDoctor.IdDoctor;
-                TagsDoctor.CreatedBy = Id;
-                TagsDoctor.UpdatedBy = Id;
-                TagsDoctor.IdDoctorNavigation = NewDoctor;
-
-                TagsDoctor.IdTags = item.IdTags;
-                TagsDoctor.StatusTags = item.Status;
-                TagsDoctor.VersionTags = item.Version;
-                TagsDoctor.IdTagsNavigation = item;
-
-                await _TagsDoctorService.Create(TagsDoctor);
-                }
-
-            }
+                    if (SaveDoctorResource.BusinessUnits != null)
+                    {
 
 
-            //Add Infos to database with the Id The new Doctor
+                        foreach (var item in SaveDoctorResource.BusinessUnits)
+                        {
+                            var Bu = await _BusinessUnitService.GetById(item);
 
-            if (SaveDoctorResource.Infos != null)
-            {
-                var Infos = _mapperService.Map<List<SaveInfoResource>, List<Info>>(SaveDoctorResource.Infos);
-                foreach (var item in SaveDoctorResource.Infos)
-                { 
-                    var Info = _mapperService.Map<SaveInfoResource,Info>(item);
-                    Info.IdDoctor = NewDoctor.IdDoctor;
-                    Info.IdDoctorNavigation = NewDoctor;
-                    Info.CreatedOn = DateTime.UtcNow;
-                    Info.UpdatedOn = DateTime.UtcNow;
-                    Info.Active = 0;
-                    Info.Version = 0;
-                    Info.Status = Status.Approuved;
-                    Info.CreatedBy = Id;
-                    Info.UpdatedBy = Id;
-                        var InfoCreated = await _InfoService.Create(Info);
-                }
-      
-            }
+                            BuDoctor BuDoctor = new BuDoctor();
+                            BuDoctor.IdBu = Bu.IdBu;
+                            BuDoctor.Version = Bu.Version;
+                            BuDoctor.Status = Bu.Status;
+                            BuDoctor.NameBu = Bu.Name;
+                            BuDoctor.IdBuNavigation = Bu;
+                            BuDoctor.CreatedBy = Id;
+                            BuDoctor.UpdatedBy = Id;
+                            BuDoctor.IdDoctorNavigation = NewDoctor;
+                            BuDoctor.IdDoctor = NewDoctor.IdDoctor;
+                            BuDoctor.VersionDoctor = NewDoctor.Version;
+                            BuDoctor.StatusDoctor = NewDoctor.Status;
 
-            //Add Phones to database with the Id The new Doctor
-            if (SaveDoctorResource.Phones != null)
-            {
-             var Phones = _mapperService.Map<List<SavePhoneResource>, List<Phone>>(SaveDoctorResource.Phones);
-             foreach(var item in SaveDoctorResource.Phones)
-                {
-                    var Phone = _mapperService.Map<SavePhoneResource, Phone>(item);
+                            BuDoctor.Status = Status.Approuved;
+                            BuDoctor.Version = 0;
+                            BuDoctor.Active = 0;
+                            BuDoctor.CreatedOn = DateTime.UtcNow;
+                            BuDoctor.UpdatedOn = DateTime.UtcNow;
+                            await _BuDoctorService.Create(BuDoctor);
 
-                    Phone.IdDoctor = NewDoctor.IdDoctor;
-                    Phone.IdPharmacy = null;
-                    Phone.CreatedOn = DateTime.UtcNow;
-                    Phone.UpdatedOn = DateTime.UtcNow;
-                    Phone.Active = 0;
-                    Phone.Version = 0;
-                    Phone.CreatedBy = Id;
-                    Phone.UpdatedBy = Id;
-                    Phone.Status = Status.Approuved;
-                    Phones.Add(Phone);
-                }
-                if (Phones.Count > 0)
-                {
-                    await _PhoneService.CreateRange(Phones);
-                }
-            }
-        
-            return Ok(DoctorResource);
+                        }
+                    }
+                    //Add Tags to database and assign them to The new Doctor
+                    List<Tags> Tags = new List<Tags>();
+                    List<TagsDoctor> TagsDoctors = new List<TagsDoctor>();
+                    Tags newTag = new Tags();
+                    Tags TagExist = new Tags();
+
+                    if (SaveDoctorResource.Tags != null)
+                    {
+                        foreach (var item in SaveDoctorResource.Tags)
+                        {
+                            TagExist = await _TagsService.GetByExistantActif(item.Name);
+                            if (TagExist == null)
+                            {
+                                var NewTag = _mapperService.Map<SaveTagsResource, Tags>(item);
+                                NewTag.Status = Status.Approuved;
+                                NewTag.Version = 0;
+                                NewTag.Active = 0;
+                                NewTag.CreatedOn = DateTime.UtcNow;
+                                NewTag.UpdatedOn = DateTime.UtcNow;
+                                NewTag.CreatedBy = Id;
+                                NewTag.UpdatedBy = Id;
+                                newTag = await _TagsService.Create(NewTag);
+
+                                var TagResource = _mapperService.Map<Tags, TagsResource>(newTag);
+                                Tags.Add(newTag);
+
+
+                            }
+                            else
+                            {
+                                Tags.Add(TagExist);
+
+                            }
+
+
+
+                        }
+                        foreach (var item in Tags) {
+                            TagsDoctor TagsDoctor = new TagsDoctor();
+                            TagsDoctor.Status = Status.Approuved;
+                            TagsDoctor.Version = 0;
+                            TagsDoctor.Active = 0;
+                            TagsDoctor.CreatedOn = DateTime.UtcNow;
+                            TagsDoctor.UpdatedOn = DateTime.UtcNow;
+                            TagsDoctor.VersionDoctor = NewDoctor.Version;
+                            TagsDoctor.StatusDoctor = NewDoctor.Status;
+                            TagsDoctor.IdDoctor = NewDoctor.IdDoctor;
+                            TagsDoctor.CreatedBy = Id;
+                            TagsDoctor.UpdatedBy = Id;
+                            TagsDoctor.IdDoctorNavigation = NewDoctor;
+
+                            TagsDoctor.IdTags = item.IdTags;
+                            TagsDoctor.StatusTags = item.Status;
+                            TagsDoctor.VersionTags = item.Version;
+                            TagsDoctor.IdTagsNavigation = item;
+
+                            await _TagsDoctorService.Create(TagsDoctor);
+                        }
+
+                    }
+
+
+                    //Add Infos to database with the Id The new Doctor
+
+                    if (SaveDoctorResource.Infos != null)
+                    {
+                        var Infos = _mapperService.Map<List<SaveInfoResource>, List<Info>>(SaveDoctorResource.Infos);
+                        foreach (var item in SaveDoctorResource.Infos)
+                        {
+                            var Info = _mapperService.Map<SaveInfoResource, Info>(item);
+                            Info.IdDoctor = NewDoctor.IdDoctor;
+                            Info.IdDoctorNavigation = NewDoctor;
+                            Info.CreatedOn = DateTime.UtcNow;
+                            Info.UpdatedOn = DateTime.UtcNow;
+                            Info.Active = 0;
+                            Info.Version = 0;
+                            Info.Status = Status.Approuved;
+                            Info.CreatedBy = Id;
+                            Info.UpdatedBy = Id;
+                            var InfoCreated = await _InfoService.Create(Info);
+                        }
+
+                    }
+
+                    //Add Phones to database with the Id The new Doctor
+                    if (SaveDoctorResource.Phones != null)
+                    {
+                        var Phones = _mapperService.Map<List<SavePhoneResource>, List<Phone>>(SaveDoctorResource.Phones);
+                        foreach (var item in SaveDoctorResource.Phones)
+                        {
+                            var Phone = _mapperService.Map<SavePhoneResource, Phone>(item);
+
+                            Phone.IdDoctor = NewDoctor.IdDoctor;
+                            Phone.IdPharmacy = null;
+                            Phone.CreatedOn = DateTime.UtcNow;
+                            Phone.UpdatedOn = DateTime.UtcNow;
+                            Phone.Active = 0;
+                            Phone.Version = 0;
+                            Phone.CreatedBy = Id;
+                            Phone.UpdatedBy = Id;
+                            Phone.Status = Status.Approuved;
+                            Phones.Add(Phone);
+                        }
+                        if (Phones.Count > 0)
+                        {
+                            await _PhoneService.CreateRange(Phones);
+                        }
+                    }
+
+                    return Ok(DoctorResource); 
+            
             }
             else
             {
@@ -318,6 +362,7 @@ namespace CRM_API.Controllers
                 return Ok(ErrorMessag);
 
             }
+
         }
         [HttpGet("Phone/{Number}")]
         public async Task<ActionResult<DoctorResource>> GetDoctorsNumber([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token,int Number)

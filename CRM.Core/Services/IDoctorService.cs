@@ -8,7 +8,7 @@ namespace CRM.Core.Services
     {
         Task<Doctor> GetById(int id);
         Task<Doctor> GetById(int? id);
-
+        Task<DoctorExiste> GetExist(string FirstName, string LastName, string Email);
         Task<Doctor> Create(Doctor newDoctor);
         Task<List<Doctor>> CreateRange(List<Doctor> newDoctor);
         Task Update(Doctor DoctorToBeUpdated, Doctor Doctor);

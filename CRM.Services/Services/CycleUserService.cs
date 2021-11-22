@@ -51,10 +51,17 @@ namespace CRM.Services.Services
             return
                 await _unitOfWork.CycleUsers.GetById(id);
         }
-        public async Task<CycleUser> GetByIdUser(int id)
+        public async Task<List<Cycle>> GetByIdUser(int id)
         {
+            List<Cycle> List = new List<Cycle>();
+            var CycleUser = await _unitOfWork.CycleUsers.Find(i => i.IdUser == id && i.Active == 0);
+            foreach(var item in CycleUser)
+            {
+                var Cycle = await _unitOfWork.Cycles.SingleOrDefault(i => i.IdCycle == item.IdCycle && i.Active == 0);
+                List.Add(Cycle);
+            }
             return
-                await _unitOfWork.CycleUsers.SingleOrDefault(i=>i.IdUser==id);
+                List;
         }
 
         public async Task Update(CycleUser CycleUserToBeUpdated, CycleUser CycleUser)

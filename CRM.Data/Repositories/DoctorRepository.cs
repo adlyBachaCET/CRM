@@ -83,17 +83,7 @@ namespace CRM.Data.Repositories
             }
             return list;
         }
-        public async Task<IEnumerable<Doctor>> GetExiste(string FirstName,string LastName,string Email)
-        {
-            List<Service> list = new List<Service>();
-            var result = await MyDbContext.Doctor.Where(a => a.Active == 0 && a.FirstName.ToUpper() == FirstName.ToUpper()).ToListAsync();
-            foreach (var item in result)
-            {
-           //     var Service = await MyDbContext.Service.Where(a => a.Active == 0 && a.IdService == item.IdService).FirstOrDefaultAsync();
-             //   list.Add(Service);
-            }
-            return null;
-        }
+     
         //public async Task<IEnumerable<Doctor>> GetAllWithArtisteAsync()
         //{
         //    return await MyDoctorDbContext.Doctors

@@ -82,7 +82,26 @@ namespace CRM.Services.Services
                            list;
         }
 
+        public async Task<DoctorExiste> GetExist(string FirstName,string LastName,string Email)
+        {
+            DoctorExiste DoctorExiste = new DoctorExiste();
+            List<Doctor> list = new List<Doctor>();
+            DoctorExiste.ExistDoctorEmail = false;
+            DoctorExiste.FirstLastExist = false;
+            DoctorExiste.LastFirstExist = false;
+            var FisrtLast = await _unitOfWork.Doctors.SingleOrDefault(i => i.FirstName.ToUpper() +" " +i.LastName.ToUpper() == FirstName.ToUpper() + " " + LastName.ToUpper() && i.Active==0);
+            var LastFisrt = await _unitOfWork.Doctors.SingleOrDefault(i => i.LastName.ToUpper() + " " + i.FirstName.ToUpper() == LastName.ToUpper() + " " + FirstName.ToUpper() && i.Active == 0);
+            var EmailD = await _unitOfWork.Doctors.SingleOrDefault(i => i.Email== Email && i.Active == 0);
+            DoctorExiste.DoctorEmail = EmailD;
+            DoctorExiste.FirstLast = FisrtLast;
+            DoctorExiste.LastFirst = LastFisrt;
+            if (EmailD != null) DoctorExiste.ExistDoctorEmail = true;
+            if (FisrtLast != null) DoctorExiste.FirstLastExist = true;
+            if (LastFisrt != null) DoctorExiste.LastFirstExist = true;
 
+            return
+                           DoctorExiste;
+        }
 
         public async Task<Doctor> GetById(int? id)
         {

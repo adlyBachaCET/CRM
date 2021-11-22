@@ -38,15 +38,17 @@ namespace CRM_API.Controllers
 
         [HttpPost]
         public async Task<ActionResult<CommandeResource>> CreateCommande(SaveCommandeResource SaveCommandeResource)
-        {     
-            //*** Mappage ***
-            var Commande = _mapperService.Map<SaveCommandeResource, Commande>(SaveCommandeResource);
+        {
+       
+          //*** Mappage ***
+          var Commande = _mapperService.Map<SaveCommandeResource, Commande>(SaveCommandeResource);
             Commande.UpdatedOn = DateTime.UtcNow;
             Commande.CreatedOn = DateTime.UtcNow;
             Commande.Active = 0;
             Commande.Status = 0;
             Commande.CreatedBy = 0;
             Commande.UpdatedBy = 0;
+
             var Doctor = await _DoctorService.GetById(SaveCommandeResource.IdDoctor);
 
             var Pharmacy = await _PharmacyService.GetById(SaveCommandeResource.IdPharmacy);
