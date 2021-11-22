@@ -95,6 +95,12 @@ namespace CRM.Services.Services
             return
                              await _unitOfWork.TagsDoctors.GetAllInActif();
         }
+
+        public async Task<TagsDoctor> GetByIdActif(int idDoctor, int IdTag)
+        {
+            return
+                  await _unitOfWork.TagsDoctors.GetByIdActif(idDoctor, IdTag);
+        }
         //public Task<TagsDoctor> CreateTagsDoctor(TagsDoctor newTagsDoctor)
         //{
         //    throw new NotImplementedException();

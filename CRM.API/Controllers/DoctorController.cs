@@ -880,6 +880,7 @@ namespace CRM_API.Controllers
                     }
                     else
                     {
+                      
                         Tags.Add(TagExist);
 
                     }
@@ -906,8 +907,10 @@ namespace CRM_API.Controllers
                     TagsDoctor.StatusTags = item.Status;
                     TagsDoctor.VersionTags = item.Version;
                     TagsDoctor.IdTagsNavigation = item;
-
-                    await _TagsDoctorService.Create(TagsDoctor);
+                    var TagsDoctorExist = await _TagsDoctorService.GetByIdActif(TagsDoctor.IdDoctor, TagsDoctor.IdTags);
+                    if (TagsDoctorExist == null) { 
+                        await _TagsDoctorService.Create(TagsDoctor);
+                }
                 }
 
             }

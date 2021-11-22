@@ -7,6 +7,7 @@ namespace CRM.Core.Repository
     public interface ITagsDoctorRepository : IRepository<TagsDoctor>
     {
         Task<IEnumerable<TagsDoctor>> GetAllActif();
+        Task<TagsDoctor> GetByIdActif(int idDoctor, int IdTag);
         Task<IEnumerable<TagsDoctor>> GetAllInActif();
         Task<IEnumerable<TagsDoctor>> GetAllAcceptedActif();
         Task<IEnumerable<TagsDoctor>> GetAllAcceptedInactifActif();

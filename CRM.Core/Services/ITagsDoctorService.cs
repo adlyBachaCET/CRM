@@ -12,6 +12,7 @@ namespace CRM.Core.Services
         Task Update(TagsDoctor TagsDoctorToBeUpdated, TagsDoctor TagsDoctor);
         Task Delete(TagsDoctor TagsDoctorToBeDeleted);
         Task DeleteRange(List<TagsDoctor> TagsDoctor);
+        Task<TagsDoctor> GetByIdActif(int idDoctor, int IdTag);
 
         Task<IEnumerable<TagsDoctor>> GetAll();
         Task<IEnumerable<TagsDoctor>> GetAllActif();

@@ -38,7 +38,11 @@ namespace CRM.Data.Repositories
             var result = await MyDbContext.TagsDoctor.Where(a => a.Active == 0 && a.IdDoctor == id).ToListAsync();
             return result;
         }
-
+        public async Task<TagsDoctor> GetByIdActif(int idDoctor,int IdTag)
+        {
+            var result = await MyDbContext.TagsDoctor.Where(a => a.Active == 0 && a.IdDoctor == idDoctor&& a.IdTags==IdTag).FirstOrDefaultAsync();
+            return result;
+        }
         public async Task<IEnumerable<TagsDoctor>> GetAllAcceptedActif()
         {
             var result = await MyDbContext.TagsDoctor.Where(a => a.Active == 0 && a.Status == Status.Approuved).ToListAsync();
