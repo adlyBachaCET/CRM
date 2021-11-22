@@ -148,13 +148,9 @@ namespace CRM.Services.Services
         }
         public async Task Update(Doctor DoctorToBeUpdated, Doctor Doctor)
         {
-            DoctorToBeUpdated.Active = 0;
+            DoctorToBeUpdated.Active = 1;
             await _unitOfWork.CommitAsync();
 
-            Doctor.Version = DoctorToBeUpdated.Version + 1;
-            Doctor.IdDoctor = DoctorToBeUpdated.IdDoctor;
-            Doctor.Status = Status.Pending;
-            Doctor.Active = 1;
 
             await _unitOfWork.Doctors.Add(Doctor);
             await _unitOfWork.CommitAsync();

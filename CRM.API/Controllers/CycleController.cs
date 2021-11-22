@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 namespace CRM_API.Controllers
@@ -43,7 +44,8 @@ namespace CRM_API.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult<CycleResource>> CreateCycle(AffectationCycleUser AffectationCycleUser)
+        public async Task<ActionResult<CycleResource>> CreateCycle([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
+        string Token, AffectationCycleUser AffectationCycleUser)
         {
             StringValues token = "";
             ErrorHandling ErrorMessag = new ErrorHandling();
@@ -103,7 +105,8 @@ namespace CRM_API.Controllers
             }
         }
         [HttpGet]
-        public async Task<ActionResult<CycleResource>> GetAllCycles()
+        public async Task<ActionResult<CycleResource>> GetAllCycles([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
+        string Token)
         {
             StringValues token = "";
             ErrorHandling ErrorMessag = new ErrorHandling();
@@ -129,7 +132,8 @@ namespace CRM_API.Controllers
             }
             }
         [HttpGet("Actif")]
-        public async Task<ActionResult<CycleResource>> GetAllActifCycles()
+        public async Task<ActionResult<CycleResource>> GetAllActifCycles([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
+        string Token)
         {
             StringValues token = "";
             ErrorHandling ErrorMessag = new ErrorHandling();
@@ -154,7 +158,8 @@ namespace CRM_API.Controllers
             }
         }
         [HttpGet("InActif")]
-        public async Task<ActionResult<CycleResource>> GetAllInactifCycles()
+        public async Task<ActionResult<CycleResource>> GetAllInactifCycles([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
+        string Token)
         {
             StringValues token = "";
             ErrorHandling ErrorMessag = new ErrorHandling();
@@ -176,7 +181,8 @@ namespace CRM_API.Controllers
         }
 
         [HttpGet("{Id}")]
-        public async Task<ActionResult<CycleResource>> GetCycleById(int Id)
+        public async Task<ActionResult<CycleResource>> GetCycleById([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
+        string Token, int Id)
         {
             StringValues token = "";
             ErrorHandling ErrorMessag = new ErrorHandling();
@@ -197,7 +203,8 @@ namespace CRM_API.Controllers
             }
         }
         [HttpPut("{Id}")]
-        public async Task<ActionResult<CycleResource>> UpdateCycle(int Id, SaveCycleResource SaveCycleResource)
+        public async Task<ActionResult<CycleResource>> UpdateCycle([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
+        string Token, int Id, SaveCycleResource SaveCycleResource)
         {
             StringValues token = "";
             ErrorHandling ErrorMessag = new ErrorHandling();
@@ -228,7 +235,8 @@ namespace CRM_API.Controllers
 
 
         [HttpDelete("{Id}")]
-        public async Task<ActionResult> DeleteCycle(int Id)
+        public async Task<ActionResult> DeleteCycle([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
+        string Token, int Id)
         {
             StringValues token = "";
             ErrorHandling ErrorMessag = new ErrorHandling();
@@ -251,7 +259,8 @@ namespace CRM_API.Controllers
             }
         }
         [HttpPost("DeleteRange")]
-        public async Task<ActionResult> DeleteRange(List<int> Ids)
+        public async Task<ActionResult> DeleteRange([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
+        string Token, List<int> Ids)
         {
             StringValues token = "";
             ErrorHandling ErrorMessag = new ErrorHandling();

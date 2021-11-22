@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 namespace CRM_API.Controllers
@@ -127,15 +128,13 @@ namespace CRM_API.Controllers
             }
         }
         [HttpPut("UpdateForgottenPassword")]
-        public async Task<ActionResult> UpdateForgottenPassword(TokenPassword TokenPassword)
+        public async Task<ActionResult> UpdateForgottenPassword([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token,
+           TokenPassword TokenPassword)
         {
-            StringValues token = "";
             ErrorHandling ErrorMessag = new ErrorHandling();
-            Request.Headers.TryGetValue("token", out token);
 
-            try
-            {
-                var Claims = await _SupportService.getPrincipal(token);
+           
+                var Claims = await _SupportService.getPrincipal(Token);
 
                 if (Claims == null)
                 {
@@ -152,13 +151,7 @@ namespace CRM_API.Controllers
                     return Ok(new { ErrorHandling = ErrorMessag, Supports = Claims.Claims });
 
                 }
-            }
-            catch (Exception ex)
-            {
-                ErrorMessag.ErrorMessage = ex.Message;
-                ErrorMessag.StatusCode = 400;
-                return BadRequest(ErrorMessag);
-            }
+   
         }
 
         [HttpGet("{Id}")]

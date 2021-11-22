@@ -767,12 +767,16 @@ namespace CRM_API.Controllers
             {
                 Doctor.Status = Status.Pending;
             }
- 
+
             Doctor.CreatedBy = IdUser;
             Doctor.UpdatedBy = DoctorToBeModified.UpdatedBy;
-            var NewDoctor = await _DoctorService.Create(Doctor);
-            var DoctorResource = _mapperService.Map<Doctor, DoctorResource>(NewDoctor);
-
+            Doctor.CreatedOn = DoctorToBeModified.CreatedOn;
+            Doctor.UpdatedOn = DateTime.UtcNow;
+            Doctor.Version = DoctorToBeModified.Version+1;
+            Doctor.Active = 0;
+            Doctor.IdDoctor = Id;
+            await _DoctorService.Update(DoctorToBeModified, Doctor);
+            var DoctorUpdated = await _DoctorService.GetById(Id);
             if (SaveDoctorResource.Location != null)
             {
                 foreach (var item in SaveDoctorResource.Location)
@@ -785,14 +789,14 @@ namespace CRM_API.Controllers
                     }
                     else
                     {
-                        var LocationDoctorExist = await _LocationDoctorService.GetById(NewDoctor.IdDoctor, location.IdLocation);
+                        var LocationDoctorExist = await _LocationDoctorService.GetById(DoctorUpdated.IdDoctor, location.IdLocation);
                         if (LocationDoctorExist != null) {
                         
                         }
                         else {
                         LocationDoctor LocationDoctor = new LocationDoctor();
                         LocationDoctor.IdLocation = location.IdLocation;
-                        LocationDoctor.IdDoctor = NewDoctor.IdDoctor;
+                        LocationDoctor.IdDoctor = DoctorUpdated.IdDoctor;
                         if (item.IdService != 0)
                         {
                             var NewService = await _ServiceService.GetById(item.IdService);
@@ -807,8 +811,8 @@ namespace CRM_API.Controllers
                         LocationDoctor.Active = 0;
                         LocationDoctor.CreatedOn = DateTime.UtcNow;
                         LocationDoctor.UpdatedOn = DateTime.UtcNow;
-                        LocationDoctor.CreatedBy = Id;
-                        LocationDoctor.UpdatedBy = Id;
+                        LocationDoctor.CreatedBy = IdUser;
+                        LocationDoctor.UpdatedBy = IdUser;
                         await _LocationDoctorService.Create(LocationDoctor);
                         }
                     }
@@ -823,7 +827,7 @@ namespace CRM_API.Controllers
                 {
                     var Bu = await _BusinessUnitService.GetById(item);
                     if (Bu != null) { 
-                    var BuDoctorExist = await _BuDoctorService.GetById(Bu.IdBu,NewDoctor.IdDoctor);
+                    var BuDoctorExist = await _BuDoctorService.GetById(Bu.IdBu,DoctorUpdated.IdDoctor);
                         if (BuDoctorExist != null) { 
                     BuDoctor BuDoctor = new BuDoctor();
                     BuDoctor.IdBu = Bu.IdBu;
@@ -831,12 +835,12 @@ namespace CRM_API.Controllers
                     BuDoctor.Status = Bu.Status;
                     BuDoctor.NameBu = Bu.Name;
                     BuDoctor.IdBuNavigation = Bu;
-                    BuDoctor.CreatedBy = Id;
-                    BuDoctor.UpdatedBy = Id;
-                    BuDoctor.IdDoctorNavigation = NewDoctor;
-                    BuDoctor.IdDoctor = NewDoctor.IdDoctor;
-                    BuDoctor.VersionDoctor = NewDoctor.Version;
-                    BuDoctor.StatusDoctor = NewDoctor.Status;
+                    BuDoctor.CreatedBy = IdUser;
+                    BuDoctor.UpdatedBy = IdUser;
+                    BuDoctor.IdDoctorNavigation = DoctorUpdated;
+                    BuDoctor.IdDoctor = DoctorUpdated.IdDoctor;
+                    BuDoctor.VersionDoctor = DoctorUpdated.Version;
+                    BuDoctor.StatusDoctor = DoctorUpdated.Status;
 
                     BuDoctor.Status = Status.Approuved;
                     BuDoctor.Version = 0;
@@ -867,23 +871,20 @@ namespace CRM_API.Controllers
                         NewTag.Active = 0;
                         NewTag.CreatedOn = DateTime.UtcNow;
                         NewTag.UpdatedOn = DateTime.UtcNow;
-                        NewTag.CreatedBy = Id;
-                        NewTag.UpdatedBy = Id;
+                        NewTag.CreatedBy = IdUser;
+                        NewTag.UpdatedBy = IdUser;
+                        var Tag = await _TagsService.GetBy(item.Name);
+                        if (Tag == null)
+                        {
                         newTag = await _TagsService.Create(NewTag);
 
                         var TagResource = _mapperService.Map<Tags, TagsResource>(newTag);
-                        var Tag = await _TagsService.GetBy(item.Name);
-                        if (Tag == null) { 
+                    
                         Tags.Add(newTag);
                         }
 
                     }
-                    else
-                    {
-                      
-                        Tags.Add(TagExist);
-
-                    }
+                  
 
 
 
@@ -896,12 +897,12 @@ namespace CRM_API.Controllers
                     TagsDoctor.Active = 0;
                     TagsDoctor.CreatedOn = DateTime.UtcNow;
                     TagsDoctor.UpdatedOn = DateTime.UtcNow;
-                    TagsDoctor.VersionDoctor = NewDoctor.Version;
-                    TagsDoctor.StatusDoctor = NewDoctor.Status;
-                    TagsDoctor.IdDoctor = NewDoctor.IdDoctor;
-                    TagsDoctor.CreatedBy = Id;
-                    TagsDoctor.UpdatedBy = Id;
-                    TagsDoctor.IdDoctorNavigation = NewDoctor;
+                    TagsDoctor.VersionDoctor = DoctorUpdated.Version;
+                    TagsDoctor.StatusDoctor = DoctorUpdated.Status;
+                    TagsDoctor.IdDoctor = DoctorUpdated.IdDoctor;
+                    TagsDoctor.CreatedBy = IdUser;
+                    TagsDoctor.UpdatedBy = IdUser;
+                    TagsDoctor.IdDoctorNavigation = DoctorUpdated;
 
                     TagsDoctor.IdTags = item.IdTags;
                     TagsDoctor.StatusTags = item.Status;
@@ -926,15 +927,15 @@ namespace CRM_API.Controllers
                     var Oldinfo = await _InfoService.GetBy(item.Datatype, item.Data);
                     if (Oldinfo == null) { 
                     var Info = _mapperService.Map<SaveInfoResource, Info>(item);
-                    Info.IdDoctor = NewDoctor.IdDoctor;
-                    Info.IdDoctorNavigation = NewDoctor;
+                    Info.IdDoctor = DoctorUpdated.IdDoctor;
+                    Info.IdDoctorNavigation = DoctorUpdated;
                     Info.CreatedOn = DateTime.UtcNow;
                     Info.UpdatedOn = DateTime.UtcNow;
                     Info.Active = 0;
                     Info.Version = 0;
                     Info.Status = Status.Approuved;
-                    Info.CreatedBy = Id;
-                    Info.UpdatedBy = Id;
+                    Info.CreatedBy = IdUser;
+                    Info.UpdatedBy = IdUser;
                     var InfoCreated = await _InfoService.Create(Info);
                     }
                 }
@@ -949,16 +950,16 @@ namespace CRM_API.Controllers
                 {
                     var Phone = _mapperService.Map<SavePhoneResource, Phone>(item);
                     
-                    Phone.IdDoctor = NewDoctor.IdDoctor;
+                    Phone.IdDoctor = DoctorUpdated.IdDoctor;
                     Phone.IdPharmacy = null;
                     Phone.CreatedOn = DateTime.UtcNow;
                     Phone.UpdatedOn = DateTime.UtcNow;
                     Phone.Active = 0;
                     Phone.Version = 0;
-                    Phone.CreatedBy = Id;
-                    Phone.UpdatedBy = Id;
+                    Phone.CreatedBy = IdUser;
+                    Phone.UpdatedBy = IdUser;
                     Phone.Status = Status.Approuved;
-                    var oldPhone = await _PhoneService.GetByIdDoctor(item.PhoneNumber,NewDoctor.IdDoctor);
+                    var oldPhone = await _PhoneService.GetByIdDoctor(item.PhoneNumber,DoctorUpdated.IdDoctor);
                     if (oldPhone ==null) { 
                     Phones.Add(Phone);
                     }
@@ -970,9 +971,8 @@ namespace CRM_API.Controllers
                 }
             }
 
-            await _DoctorService.Update(DoctorToBeModified, Doctor);
+       
 
-            var DoctorUpdated = await _DoctorService.GetById(Id);
 
             var DoctorResourceUpdated = _mapperService.Map<Doctor, DoctorResource>(DoctorUpdated);
 
