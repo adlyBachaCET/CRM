@@ -12,14 +12,15 @@ namespace CRM.Core.Models
         public Status StatusRequestRp{ get; set; }
         public int VersionRequestRp{ get; set; }
 
-        public int IdDoctor { get; set; }
-        public Status StatusDoctor { get; set; }
-        public int VersionDoctor { get; set; }
+        public int? IdDoctor { get; set; }
+        public Status? StatusDoctor { get; set; }
+        public int? VersionDoctor { get; set; }
+        public virtual Doctor IdDoctorNavigation { get; set; }
+
         public int Version { get; set; }
         public int? CreatedBy { get; set; }
         public int? UpdatedBy { get; set; }
         public Status Status { get; set; }
-        public virtual Doctor IdDoctorNavigation { get; set; }
         public virtual RequestRp IdRequestRpNavigation { get; set; }
         public int IdUser { get; set; }
         public Status StatusUser { get; set; }
@@ -27,6 +28,9 @@ namespace CRM.Core.Models
         public int VersionUser { get; set; }
         public virtual User IdUserNavigation { get; set; }
         public string Organisme { get; set; }
-
+        public int? IdPharmacy { get; set; }
+        public Status? StatusPharmacy { get; set; }
+        public int? VersionPharmacy { get; set; }
+        public virtual Pharmacy IdPharmacyNavigation { get; set; }
     }
 }

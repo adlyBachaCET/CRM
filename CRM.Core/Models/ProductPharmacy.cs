@@ -13,7 +13,7 @@ namespace CRM.Core.Models
         public int Version { get; set; }
         public int VersionPharmacy{ get; set; }
         public int VersionProduct { get; set; }
-        public int NamePharmacy{ get; set; }
+        public string Name{ get; set; }
         public int? CreatedBy { get; set; }
         public int? UpdatedBy { get; set; }
         public virtual Pharmacy IdPharmacyNavigation { get; set; }
@@ -25,11 +25,7 @@ namespace CRM.Core.Models
         public int Quantity { get; set; }
        
         
-        public int? IdDoctor { get; set; }
-   
-        public int VersionDoctor { get; set; }
-        public Status StatusDoctor { get; set; }
-        public virtual Doctor Doctor { get; set; }
+
 
 
     }

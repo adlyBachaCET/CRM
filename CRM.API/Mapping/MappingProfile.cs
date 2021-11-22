@@ -16,6 +16,24 @@ namespace CRM_API.Mapping
             CreateMap<Brick, SaveBrickResource>();
             CreateMap<SaveBrickResource, Brick>();
             CreateMap<Brick, IEnumerable<BrickResource>>();
+            //ProductSample
+            CreateMap<ProductSample, ProductSampleResource>();
+            CreateMap<ProductSample, SaveProductSampleResource>();
+            CreateMap<ProductSample, SaveProductSampleResource>();
+            CreateMap<SaveProductSampleResource, ProductSample>();
+            CreateMap<ProductSample, IEnumerable<ProductSampleResource>>();
+            //ProductPharmacy
+            CreateMap<ProductPharmacy, ProductPharmacyResource>();
+            CreateMap<ProductPharmacy, SaveProductPharmacyResource>();
+            CreateMap<ProductPharmacy, SaveProductPharmacyResource>();
+            CreateMap<SaveProductPharmacyResource, ProductPharmacy>();
+            CreateMap<ProductPharmacy, IEnumerable<ProductPharmacyResource>>();
+            //Product
+            CreateMap<Product, ProductResource>();
+            CreateMap<Product, SaveProductResource>();
+            CreateMap<Product, SaveProductResource>();
+            CreateMap<SaveProductResource, Product>();
+            CreateMap<Product, IEnumerable<ProductResource>>();
             //RequestRp
             CreateMap<RequestRp, RequestRpResource>();
             CreateMap<RequestRp, SaveRequestRpResource>();

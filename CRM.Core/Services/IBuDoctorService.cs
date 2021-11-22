@@ -7,6 +7,8 @@ namespace CRM.Core.Services
     public interface IBuDoctorService
     {
         Task<BuDoctor> GetById(int id);
+        Task<BuDoctor> GetById(int idDoctor, int idBu);
+
         Task<BuDoctor> Create(BuDoctor newBuDoctor);
         Task<List<BuDoctor>> CreateRange(List<BuDoctor> newBuDoctor);
         Task Delete(BuDoctor BuDoctorToBeDeleted);

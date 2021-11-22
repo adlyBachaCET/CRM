@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 namespace CRM_API.Controllers
@@ -22,6 +23,7 @@ namespace CRM_API.Controllers
         private readonly IUserService _UserService;
         private readonly IServiceService _ServiceService;
         private readonly ILocalityService _LocalityService;
+        private readonly IBrickService _BrickService;
 
         private readonly ILocationService _LocationService;
         private readonly ILocationDoctorService _LocationDoctorService;
@@ -30,9 +32,10 @@ namespace CRM_API.Controllers
 
         private readonly IMapper _mapperService;
         public LocationController(ILocalityService LocalityService, IServiceService ServiceService, ILocationService LocationService,
-            ILocationDoctorService LocationDoctorService, IUserService UserService, ILocationTypeService LocationTypeService, IMapper mapper)
+            ILocationDoctorService LocationDoctorService, IUserService UserService, IBrickService BrickService, ILocationTypeService LocationTypeService, IMapper mapper)
         {
             _LocalityService = LocalityService;
+            _BrickService = BrickService;
 
             _ServiceService = ServiceService;
             _UserService = UserService;
@@ -111,14 +114,11 @@ namespace CRM_API.Controllers
             }
         }
         [HttpPost]
-        public async Task<ActionResult<LocationResource>> CreateLocation(SaveLocationResource SaveLocationResource)
+        public async Task<ActionResult<LocationResource>> CreateLocation([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
+        string Token,SaveLocationResource SaveLocationResource)
         {
-            StringValues token = "";
-            ErrorHandling ErrorMessag = new ErrorHandling();
-            Request.Headers.TryGetValue("token", out token);
-            if (token != "")
-            {
-                var claims = _UserService.getPrincipal(token);
+
+                var claims = _UserService.getPrincipal(Token);
                 var Role = claims.FindFirst("Role").Value;
                 var Id = int.Parse(claims.FindFirst("Id").Value);
 
@@ -157,6 +157,42 @@ namespace CRM_API.Controllers
                     Location.TypeLocationType = NewLocationType.Type;
                     Location.CreatedBy = Id;
                     Location.UpdatedBy = Id;
+                    var Brick1 = await _BrickService.GetByIdActif(SaveLocationResource.LocationAdd.IdBrick1);
+                    var Brick2 = await _BrickService.GetByIdActif(SaveLocationResource.LocationAdd.IdBrick2);
+                    if (Brick1 != null)
+                    {
+                        Location.IdBrick1 = Brick1.IdBrick;
+                        Location.VersionBrick1 = Brick1.Version;
+                        Location.StatusBrick1 = Brick1.Status;
+                        Location.NameBrick1 = Brick1.Name;
+                        Location.NumBrick1 = Brick1.NumSystemBrick;
+                        // Pharmacy.Brick1 = Brick1;
+                    }
+                    else
+                    {
+                        Location.IdBrick1 = null;
+                        Location.VersionBrick1 = null;
+                        Location.StatusBrick1 = null;
+                        Location.NameBrick1 = "";
+                        Location.NumBrick1 = 0;
+                    }
+                    if (Brick2 != null)
+                    {
+                        Location.IdBrick2 = Brick2.IdBrick;
+                        Location.VersionBrick2 = Brick2.Version;
+                        Location.StatusBrick2 = Brick2.Status;
+                        Location.NameBrick2 = Brick2.Name;
+                        Location.NumBrick2 = Brick2.NumSystemBrick;
+                        // Pharmacy.Brick2 = Brick2;
+                    }
+                    else
+                    {
+                        Location.IdBrick2 = null;
+                        Location.VersionBrick2 = null;
+                        Location.StatusBrick2 = null;
+                        Location.NameBrick2 = "";
+                        Location.NumBrick2 = 0;
+                    }
                     List<Service> Services = new List<Service>();
                     List<int> Order = new List<int>();
                     foreach (var item in SaveLocationResource.SaveServiceResource)
@@ -213,16 +249,10 @@ namespace CRM_API.Controllers
                     return Ok(genericResult);
                 }
             }
-            else
-            {
-                ErrorMessag.ErrorMessage = "Empty Token";
-                ErrorMessag.StatusCode = 400;
-                return Ok(ErrorMessag);
-
-            }
-            }
+    
+    
         [HttpGet]
-        public async Task<ActionResult<LocationResource>> GetAllLocations()
+        public async Task<ActionResult<LocationResource>> GetAllLocations([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token)
         {
             try
             {
@@ -237,7 +267,7 @@ namespace CRM_API.Controllers
             }
         }
         [HttpGet("Actif")]
-        public async Task<ActionResult<LocationResource>> GetAllActifLocations()
+        public async Task<ActionResult<LocationResource>> GetAllActifLocations([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token)
         {
             try
             {
@@ -252,7 +282,7 @@ namespace CRM_API.Controllers
             }
         }
         [HttpGet("InActif")]
-        public async Task<ActionResult<LocationResource>> GetAllInactifLocations()
+        public async Task<ActionResult<LocationResource>> GetAllInactifLocations([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token)
         {
             try
             {
@@ -268,7 +298,7 @@ namespace CRM_API.Controllers
         }
 
         [HttpGet("{Id}")]
-        public async Task<ActionResult<LocationResource>> GetLocationById(int Id)
+        public async Task<ActionResult<LocationResource>> GetLocationById([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token,int Id)
         {
             try
             {
@@ -283,14 +313,10 @@ namespace CRM_API.Controllers
             }
         }
         [HttpPut("{Id}")]
-        public async Task<ActionResult<LocationResource>> UpdateLocation(int Id, SaveLocationResource SaveLocationResource)
+        public async Task<ActionResult<LocationResource>> UpdateLocation([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token,int Id, SaveLocationResource SaveLocationResource)
         {
-            StringValues token = "";
-            ErrorHandling ErrorMessag = new ErrorHandling();
-            Request.Headers.TryGetValue("token", out token);
-            if (token != "")
-            {
-             var claims = _UserService.getPrincipal(token);
+          
+             var claims = _UserService.getPrincipal(Token);
              var Role = claims.FindFirst("Role").Value;
              var IdUser = int.Parse(claims.FindFirst("Id").Value);
 
@@ -323,18 +349,12 @@ namespace CRM_API.Controllers
 
             return Ok();
             }
-            else
-            {
-                ErrorMessag.ErrorMessage = "Empty Token";
-                ErrorMessag.StatusCode = 400;
-                return Ok(ErrorMessag);
-
-            }
-        }
+      
+        
 
 
         [HttpDelete("{Id}")]
-        public async Task<ActionResult> DeleteLocation(int Id)
+        public async Task<ActionResult> DeleteLocation([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token,int Id)
         {
             try
             {
@@ -351,7 +371,7 @@ namespace CRM_API.Controllers
             }
         }
         [HttpPost("DeleteRange")]
-        public async Task<ActionResult> DeleteRange(List<int> Ids)
+        public async Task<ActionResult> DeleteRange([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token, List<int> Ids)
         {
             try
             {

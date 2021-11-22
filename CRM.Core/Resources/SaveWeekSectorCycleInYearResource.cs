@@ -7,7 +7,6 @@ namespace CRM.Core.Models
     {
         public int IdCycle { get; set; }
    
-        public int IdWeekCycle { get; set; }
 
         public int IdSector { get; set; }
 

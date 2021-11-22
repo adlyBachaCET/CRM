@@ -33,7 +33,7 @@ namespace CRM.Data.Repositories
             return result;
         }
 
-        public async Task<Brick> GetByIdActif(int id)
+        public async Task<Brick> GetByIdActif(int? id)
         {
             var result = await MyDbContext.Brick.Where(a => a.Active == 0 && a.IdBrick== id && a.Status==Status.Approuved).FirstOrDefaultAsync();
             return result;

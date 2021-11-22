@@ -124,6 +124,11 @@ namespace CRM.Services.Services
             return
                                                   await _unitOfWork.Participants.GetAllByIdDoctor(Id);
         }
+        public async Task<IEnumerable<Participant>> GetAllByIdPharmacy(int Id)
+        {
+            return
+                                                  await _unitOfWork.Participants.GetAllByIdPharmacy(Id);
+        }
 
 
         //public Task<Participant> CreateParticipant(Participant newParticipant)

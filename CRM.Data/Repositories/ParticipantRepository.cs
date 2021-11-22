@@ -71,6 +71,11 @@ namespace CRM.Data.Repositories
             var result = await MyDbContext.Participant.Where(a => a.Active == 0 && a.IdDoctor == Id).ToListAsync();
             return result;
         }
+        public async Task<IEnumerable<Participant>> GetAllByIdPharmacy(int Id)
+        {
+            var result = await MyDbContext.Participant.Where(a => a.Active == 0 && a.IdPharmacy == Id).ToListAsync();
+            return result;
+        }
         public async Task<IEnumerable<Participant>> GetAllByIdRequest(int Id)
         {
             var result = await MyDbContext.Participant.Where(a => a.Active == 0 && a.IdRequestRp == Id).ToListAsync();

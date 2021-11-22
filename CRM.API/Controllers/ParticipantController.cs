@@ -21,14 +21,18 @@ namespace CRM_API.Controllers
         private readonly IParticipantService _ParticipantService;
         private readonly IDoctorService _DoctorService;
         private readonly IUserService _UserService;
+        private readonly IPharmacyService _PharmacyService;
 
         private readonly IRequestRpService _RequestRpService;
 
         private readonly IMapper _mapperService;
-        public ParticipantController(IRequestRpService RequestRpService, IUserService UserService, IDoctorService DoctorService,IParticipantService ParticipantService, IMapper mapper)
+        public ParticipantController(IRequestRpService RequestRpService,
+            IUserService UserService, IPharmacyService PharmacyService,
+            IDoctorService DoctorService,IParticipantService ParticipantService, IMapper mapper)
         {
             _RequestRpService = RequestRpService;
             _UserService = UserService;
+            _PharmacyService = PharmacyService;
 
             _DoctorService = DoctorService;
            _ParticipantService = ParticipantService;
@@ -48,9 +52,28 @@ namespace CRM_API.Controllers
             Participant.UpdatedBy = 0;
             Participant.CreatedBy = 0;
             var Doctor = await _DoctorService.GetById(SaveParticipantResource.IdDoctor);
-            Participant.IdDoctorNavigation = Doctor;
-            Participant.VersionDoctor = Doctor.Version;
-            Participant.StatusDoctor = Doctor.Status;
+
+            var Pharmacy = await _PharmacyService.GetById(SaveParticipantResource.IdPharmacy);
+
+            if (Pharmacy != null)
+            {
+                Participant.IdPharmacyNavigation = Pharmacy;
+                Participant.VersionPharmacy = Pharmacy.Version;
+                Participant.StatusPharmacy = Pharmacy.Status;
+                Participant.IdDoctorNavigation = null;
+                Participant.VersionDoctor = null;
+                Participant.StatusDoctor = null;
+            }
+            if (Doctor != null)
+            {
+                Participant.IdDoctorNavigation = Doctor;
+                Participant.VersionDoctor = Doctor.Version;
+                Participant.StatusDoctor = Doctor.Status;
+
+                Participant.IdPharmacyNavigation = null;
+                Participant.VersionPharmacy = null;
+                Participant.StatusPharmacy = null;
+            }
 
             var RequestRp = await _RequestRpService.GetById(SaveParticipantResource.IdRequestRp);
             Participant.IdRequestRpNavigation = RequestRp;

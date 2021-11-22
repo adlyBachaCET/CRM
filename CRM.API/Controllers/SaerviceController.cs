@@ -112,16 +112,21 @@ namespace CRM_API.Controllers
 
             var ServiceToBeModified = await _ServiceService.GetById(Id);
             if (ServiceToBeModified == null) return BadRequest("Le Service n'existe pas"); //NotFound();
-            var Services = _mapperService.Map<SaveServiceResource, Service>(SaveServiceResource);
+            var Service = _mapperService.Map<SaveServiceResource, Service>(SaveServiceResource);
             //var newService = await _ServiceService.Create(Services);
-
-            await _ServiceService.Update(ServiceToBeModified, Services);
+            Service.UpdatedOn = DateTime.UtcNow;
+            Service.CreatedOn = ServiceToBeModified.CreatedOn;
+            Service.Active = 0;
+            Service.Status = 0;
+            Service.UpdatedBy = 0;
+            Service.CreatedBy = ServiceToBeModified.CreatedBy;
+            await _ServiceService.Update(ServiceToBeModified, Service);
 
             var ServiceUpdated = await _ServiceService.GetById(Id);
 
             var ServiceResourceUpdated = _mapperService.Map<Service, ServiceResource>(ServiceUpdated);
 
-            return Ok();
+            return Ok(ServiceResourceUpdated);
         }
 
 

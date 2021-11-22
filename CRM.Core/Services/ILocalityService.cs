@@ -7,6 +7,7 @@ namespace CRM.Core.Services
     public interface ILocalityService
     {
         Task<Locality> GetById(int id);
+
         Task<Locality> GetByIdAndName(int? id,string Name);
 
         Task<Locality> Create(Locality newLocality);

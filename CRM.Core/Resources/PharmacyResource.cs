@@ -13,7 +13,12 @@ namespace CRM.Core.Models
         public DateTime? CreatedOn { get; set; }
         public DateTime? UpdatedOn { get; set; }
         public int Active { get; set; }
-      
+        public int IdBrick1 { get; set; }
+        public int IdBrick2 { get; set; }
+        public string NameBrick1 { get; set; }
+        public string NameBrick2 { get; set; }
+        public int NumBrick1 { get; set; }
+        public int NumBrick2 { get; set; }
 
         public string Role { get; set; }//Pharmacy ou grossicte
         public Status Status { get; set; }

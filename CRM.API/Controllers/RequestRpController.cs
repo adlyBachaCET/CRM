@@ -45,6 +45,7 @@ namespace CRM_API.Controllers
             RequestRp.Status = 0;
             RequestRp.CreatedBy = 0;
             RequestRp.UpdatedBy = 0;
+
             //*** Creation dans la base de données ***
             var NewRequestRp = await _RequestRpService.Create(RequestRp);
             //*** Mappage ***
@@ -119,10 +120,15 @@ namespace CRM_API.Controllers
 
             var RequestRpToBeModified = await _RequestRpService.GetById(Id);
             if (RequestRpToBeModified == null) return BadRequest("Le RequestRp n'existe pas"); //NotFound();
-            var RequestRps = _mapperService.Map<SaveRequestRpResource, RequestRp>(SaveRequestRpResource);
+            var RequestRp = _mapperService.Map<SaveRequestRpResource, RequestRp>(SaveRequestRpResource);
             //var newRequestRp = await _RequestRpService.Create(RequestRps);
-
-            await _RequestRpService.Update(RequestRpToBeModified, RequestRps);
+            RequestRp.UpdatedOn = DateTime.UtcNow;
+            RequestRp.CreatedOn = RequestRpToBeModified.CreatedOn;
+            RequestRp.Active = 0;
+            RequestRp.Status = 0;
+            RequestRp.UpdatedBy = 0;
+            RequestRp.CreatedBy = RequestRpToBeModified.CreatedBy;
+            await _RequestRpService.Update(RequestRpToBeModified, RequestRp);
 
             var RequestRpUpdated = await _RequestRpService.GetById(Id);
 

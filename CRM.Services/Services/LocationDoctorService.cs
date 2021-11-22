@@ -17,21 +17,21 @@ namespace CRM.Services.Services
         public async Task<LocationDoctor> Create(LocationDoctor newEstablishmentDoctor)
         {
 
-            await _unitOfWork.EstablishmentDoctors.Add(newEstablishmentDoctor);
+            await _unitOfWork.LocationDoctors.Add(newEstablishmentDoctor);
             await _unitOfWork.CommitAsync();
             return newEstablishmentDoctor;
         }
         public async Task<List<LocationDoctor>> CreateRange(List<LocationDoctor> newEstablishmentDoctor)
         {
 
-            await _unitOfWork.EstablishmentDoctors.AddRange(newEstablishmentDoctor);
+            await _unitOfWork.LocationDoctors.AddRange(newEstablishmentDoctor);
             await _unitOfWork.CommitAsync();
             return newEstablishmentDoctor;
         }
         public async Task<IEnumerable<LocationDoctor>> GetAll()
         {
             return
-                           await _unitOfWork.EstablishmentDoctors.GetAll();
+                           await _unitOfWork.LocationDoctors.GetAll();
         }
 
        /* public async Task Delete(EstablishmentDoctor EstablishmentDoctor)
@@ -49,7 +49,7 @@ namespace CRM.Services.Services
         public async Task<LocationDoctor> GetByIdActif(int id,int IdLocation)
         {
             return
-                await _unitOfWork.EstablishmentDoctors.GetByIdActif(id, IdLocation);
+                await _unitOfWork.LocationDoctors.GetByIdActif(id, IdLocation);
         }
    
         public async Task Update(LocationDoctor EstablishmentDoctorToBeUpdated, LocationDoctor EstablishmentDoctor)
@@ -79,19 +79,25 @@ namespace CRM.Services.Services
         public async Task<IEnumerable<LocationDoctor>> GetAllActif()
         {
             return
-                             await _unitOfWork.EstablishmentDoctors.GetAllActif();
+                             await _unitOfWork.LocationDoctors.GetAllActif();
         }
 
         public async Task<IEnumerable<LocationDoctor>> GetAllInActif()
         {
             return
-                             await _unitOfWork.EstablishmentDoctors.GetAllInActif();
+                             await _unitOfWork.LocationDoctors.GetAllInActif();
         }
 
         public async  Task<IEnumerable<LocationDoctor>> GetAllAcceptedActif(int Id)
         {
             return
-                         await _unitOfWork.EstablishmentDoctors.GetAllAcceptedActif(Id);
+                         await _unitOfWork.LocationDoctors.GetAllAcceptedActif(Id);
+        }
+
+        public async Task<LocationDoctor> GetById(int id1, int Id2)
+        {
+            return
+                                    await _unitOfWork.LocationDoctors.SingleOrDefault(i=>i.IdDoctor==id1&&i.IdLocation==Id2);
         }
         //public Task<EstablishmentDoctor> CreateEstablishmentDoctor(EstablishmentDoctor newEstablishmentDoctor)
         //{

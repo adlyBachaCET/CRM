@@ -19,15 +19,17 @@ namespace CRM_API.Controllers
         public IList<Commande> Commandes;
 
         private readonly ICommandeService _CommandeService;
-        private readonly IDoctorService _DoctorService; 
+        private readonly IDoctorService _DoctorService;
+        private readonly IPharmacyService _PharmacyService;
+
         private readonly IUserService _UserService;
 
 
         private readonly IMapper _mapperService;
-        public CommandeController(IUserService UserService, IDoctorService DoctorService,ICommandeService CommandeService, IMapper mapper)
+        public CommandeController(IUserService UserService, IPharmacyService PharmacyService, IDoctorService DoctorService,ICommandeService CommandeService, IMapper mapper)
         {
             _UserService = UserService;
-            _DoctorService = DoctorService;
+            _PharmacyService = PharmacyService;
 
             _CommandeService = CommandeService;
             _mapperService = mapper;
@@ -36,7 +38,7 @@ namespace CRM_API.Controllers
 
         [HttpPost]
         public async Task<ActionResult<CommandeResource>> CreateCommande(SaveCommandeResource SaveCommandeResource)
-  {     
+        {     
             //*** Mappage ***
             var Commande = _mapperService.Map<SaveCommandeResource, Commande>(SaveCommandeResource);
             Commande.UpdatedOn = DateTime.UtcNow;
@@ -45,6 +47,31 @@ namespace CRM_API.Controllers
             Commande.Status = 0;
             Commande.CreatedBy = 0;
             Commande.UpdatedBy = 0;
+            var Doctor = await _DoctorService.GetById(SaveCommandeResource.IdDoctor);
+
+            var Pharmacy = await _PharmacyService.GetById(SaveCommandeResource.IdPharmacy);
+
+            if (Pharmacy != null)
+            {
+                Commande.Name = Pharmacy.Name;
+                Commande.Pharmacy = Pharmacy;
+                Commande.VersionPharmacy = Pharmacy.Version;
+                Commande.StatusPharmacy = Pharmacy.Status;
+                Commande.Doctor = null;
+                Commande.VersionDoctor = null;
+                Commande.StatusDoctor = null;
+            }
+            if (Doctor != null)
+            {
+                Commande.Name = Doctor.Title + " " + Doctor.FirstName + " " + Doctor.LastName;
+                Commande.Doctor = Doctor;
+                Commande.VersionDoctor = Doctor.Version;
+                Commande.StatusDoctor = Doctor.Status;
+
+                Commande.Pharmacy = null;
+                Commande.VersionPharmacy = null;
+                Commande.StatusPharmacy = null;
+            }
             //*** Creation dans la base de données ***
             var NewCommande = await _CommandeService.Create(Commande);
             //*** Mappage ***

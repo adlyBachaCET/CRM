@@ -6,6 +6,8 @@ namespace CRM.Core.Services
 {
     public interface ILocationDoctorService
     {
+        Task<LocationDoctor> GetById(int id1, int Id2);
+
         Task<LocationDoctor> GetByIdActif(int id, int IdLocation);
         Task<LocationDoctor> Create(LocationDoctor newEstablishmentDoctor);
         Task<List<LocationDoctor>> CreateRange(List<LocationDoctor> newEstablishmentDoctor);

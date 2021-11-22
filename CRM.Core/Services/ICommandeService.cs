@@ -12,6 +12,7 @@ namespace CRM.Core.Services
         Task Update(Commande CommandeToBeUpdated, Commande Commande);
         Task Delete(Commande CommandeToBeDeleted);
         Task DeleteRange(List<Commande> Commande);
+        Task<IEnumerable<Commande>> GetByIdActifPharmacy(int Id);
 
         Task<IEnumerable<Commande>> GetAll();
         Task<IEnumerable<Commande>> GetAllActif();

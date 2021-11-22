@@ -20,17 +20,36 @@ namespace CRM.Core.Models
 
         public string Role { get; set; }//Pharmacy ou grossicte
         public Status Status { get; set; }
-        public int IdLocality1 { get; set; }
-        public string NameLocality1 { get; set; }
+
         public virtual ICollection<Target> Target { get; set; }
 
-        public int IdLocality2 { get; set; }
 
+        public int IdLocality1 { get; set; }
+        public int VersionLocality1 { get; set; }
+        public Status StatusLocality1 { get; set; }
+        public virtual Locality Locality1 { get; set; }
+        public string NameLocality1 { get; set; }
+
+
+        public int IdLocality2 { get; set; }
+        public int VersionLocality2 { get; set; }
+        public Status StatusLocality2 { get; set; }
+        public virtual Locality Locality2 { get; set; }
         public string NameLocality2 { get; set; }
 
-      
 
-
+        public int? IdBrick1 { get; set; }
+        public int? VersionBrick1 { get; set; }
+        public Status? StatusBrick1 { get; set; }
+        public virtual Brick Brick1 { get; set; }
+        public int? IdBrick2 { get; set; }
+        public int? VersionBrick2 { get; set; }
+        public Status? StatusBrick2 { get; set; }
+        public virtual Brick Brick2 { get; set; }
+        public string NameBrick1 { get; set; }
+        public string NameBrick2 { get; set; }
+        public int NumBrick1 { get; set; }
+        public int NumBrick2 { get; set; }
         public string StreetName { get; set; }
         public int PostalCode { get; set; }
         public int IdPotentiel { get; set; }

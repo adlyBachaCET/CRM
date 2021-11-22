@@ -9,6 +9,11 @@ namespace CRM.Data
     {
         private readonly MyDbContext _context;
         private IParticipantRepository _ParticipantRepository;
+        private IProductRepository _ProductRepository;
+        private IProductSampleRepository _ProductSampleRepository;
+        private IProductPharmacyRepository _ProductPharmacyRepository;
+
+
         private IRequestRpRepository _RequestRpRepository;
         private ICommandeRepository _CommandeRepository;
         private ISupportRepository _SupportRepository;
@@ -64,9 +69,13 @@ namespace CRM.Data
         public IVisitReportRepository VisitReports => _VisitReportRepository = _VisitReportRepository ?? new VisitReportRepository(_context);
         public IVisitRepository Visits => _VisitRepository = _VisitRepository ?? new VisitRepository(_context);
         public IRequestDoctorRepository RequestDoctors => _RequestDoctorRepository = _RequestDoctorRepository ?? new RequestDoctorRepository(_context);
+        public IProductSampleRepository ProductSamples => _ProductSampleRepository = _ProductSampleRepository ?? new ProductSampleRepository(_context);
 
         public IObjectionRepository Objections => _ObjectionRepository = _ObjectionRepository ?? new ObjectionRepository(_context);
         public IVisitUserRepository VisitUsers => _VisitUserRepository = _VisitUserRepository ?? new VisitUserRepository(_context);
+        public IProductRepository Products => _ProductRepository = _ProductRepository ?? new ProductRepository(_context);
+        public IProductPharmacyRepository ProductPharmacys => _ProductPharmacyRepository = _ProductPharmacyRepository ?? new ProductPharmacyRepository(_context);
+
         public IParticipantRepository Participants => _ParticipantRepository = _ParticipantRepository ?? new ParticipantRepository(_context);
         public IRequestRpRepository RequestRps => _RequestRpRepository = _RequestRpRepository ?? new RequestRpRepository(_context);
         public ICommandeRepository Commandes => _CommandeRepository = _CommandeRepository ?? new CommandeRepository(_context);
@@ -92,7 +101,7 @@ namespace CRM.Data
 
         public IDoctorRepository Doctors =>_DoctorRepository = _DoctorRepository ?? new DoctorRepository(_context);
 
-        public ILocationDoctorRepository EstablishmentDoctors =>_EstablishmentDoctorRepository = _EstablishmentDoctorRepository ?? new LocationDoctorRepository(_context);
+        public ILocationDoctorRepository LocationDoctors =>_EstablishmentDoctorRepository = _EstablishmentDoctorRepository ?? new LocationDoctorRepository(_context);
 
         public IAdresseRepository Adresses => _AdresseRepository = _AdresseRepository ?? new AdresseRepository(_context);
 

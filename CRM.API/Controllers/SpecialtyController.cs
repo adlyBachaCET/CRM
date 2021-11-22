@@ -112,16 +112,21 @@ namespace CRM_API.Controllers
 
             var SpecialtyToBeModified = await _SpecialtyService.GetById(Id);
             if (SpecialtyToBeModified == null) return BadRequest("Le Specialty n'existe pas"); //NotFound();
-            var Specialtys = _mapperService.Map<SaveSpecialtyResource, Specialty>(SaveSpecialtyResource);
+            var Specialty = _mapperService.Map<SaveSpecialtyResource, Specialty>(SaveSpecialtyResource);
             //var newSpecialty = await _SpecialtyService.Create(Specialtys);
-
-            await _SpecialtyService.Update(SpecialtyToBeModified, Specialtys);
+            Specialty.UpdatedOn = DateTime.UtcNow;
+            Specialty.CreatedOn = SpecialtyToBeModified.CreatedOn;
+            Specialty.Active = 0;
+            Specialty.Status = 0;
+            Specialty.UpdatedBy = 0;
+            Specialty.CreatedBy = SpecialtyToBeModified.CreatedBy;
+            await _SpecialtyService.Update(SpecialtyToBeModified, Specialty);
 
             var SpecialtyUpdated = await _SpecialtyService.GetById(Id);
 
             var SpecialtyResourceUpdated = _mapperService.Map<Specialty, SpecialtyResource>(SpecialtyUpdated);
 
-            return Ok();
+            return Ok(SpecialtyResourceUpdated);
         }
 
 

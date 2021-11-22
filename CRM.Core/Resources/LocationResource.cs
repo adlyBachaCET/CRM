@@ -27,14 +27,20 @@ namespace CRM.Core.Models
 
 
         public int IdLocality1 { get; set; }
+        public int IdLocality2 { get; set; }
         public string NameLocality1 { get; set; }
 
 
-        public int IdLocality2 { get; set; }
+        
 
         public string NameLocality2 { get; set; }
+        public int IdBrick1 { get; set; }
+        public int IdBrick2 { get; set; }
+        public string NameBrick1 { get; set; }
+        public string NameBrick2 { get; set; }
+        public int NumBrick1 { get; set; }
+        public int NumBrick2 { get; set; }
 
- 
 
         public double? Longitude { get; set; }
         public double? Altitude { get; set; }

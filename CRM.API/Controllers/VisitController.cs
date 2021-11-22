@@ -17,15 +17,18 @@ namespace CRM_API.Controllers
     public class VisitController : ControllerBase
     {
         public IList<Visit> Visits;
+        private readonly IBrickService _BrickService;
+        private readonly ILocalityService _LocalityService;
 
         private readonly IVisitService _VisitService;
-        private readonly ILocalityService _LocalityService;
         private readonly IDoctorService _DoctorService;
         private readonly IPharmacyService _PharmacyService;
 
         private readonly IMapper _mapperService;
-        public VisitController(ILocalityService LocalityService, IVisitService VisitService, IPharmacyService PharmacyService, IDoctorService DoctorService, IMapper mapper)
+        public VisitController(ILocalityService LocalityService, IBrickService BrickService, IVisitService VisitService, IPharmacyService PharmacyService, IDoctorService DoctorService, IMapper mapper)
         {
+            _BrickService = BrickService;
+
             _LocalityService = LocalityService;
             _DoctorService = DoctorService;
             _PharmacyService = PharmacyService;
@@ -37,27 +40,58 @@ namespace CRM_API.Controllers
 
         [HttpPost]
         public async Task<ActionResult<VisitResource>> CreateVisit(SaveVisitResource SaveVisitResource)
-  {     
+            {     
             //*** Mappage ***
             var Visit = _mapperService.Map<SaveVisitResource, Visit>(SaveVisitResource);
+            
+            var Doctor = await _DoctorService.GetById(SaveVisitResource.IdDoctor);
+            var Pharmacy = await _PharmacyService.GetById(SaveVisitResource.IdPharmacy);
             var Locality1 = await _LocalityService.GetById(SaveVisitResource.IdLocality1);
             Visit.NameLocality1 = Locality1.Name;
             Visit.VersionLocality1 = Locality1.Version;
             Visit.StatusLocality1 = Locality1.Status;
             Visit.IdLocality1 = Locality1.IdLocality;
             var Locality2 = await _LocalityService.GetById(SaveVisitResource.IdLocality2);
-            Visit.NameLocality2 = Locality1.Name;
-            Visit.VersionLocality2 = Locality1.Version;
-            Visit.StatusLocality2 = Locality1.Status;
-            Visit.IdLocality2 = Locality1.IdLocality;
-            var Doctor = await _DoctorService.GetById(SaveVisitResource.IdDoctor);
-            Visit.VersionDoctor = Doctor.Version;
-            Visit.StatusDoctor = Doctor.Status;
-            Visit.IdDoctor = Doctor.IdDoctor;
-            var Pharmacy = await _PharmacyService.GetById(SaveVisitResource.IdPharmacy);
-            Visit.VersionPharmacy = Pharmacy.Version;
-            Visit.StatusPharmacy = Pharmacy.Status;
-            Visit.IdPharmacy = Pharmacy.IdPharmacy;
+            Visit.NameLocality2 = Locality2.Name;
+            Visit.VersionLocality2 = Locality2.Version;
+            Visit.StatusLocality2 = Locality2.Status;
+            Visit.IdLocality2 = Locality2.IdLocality;
+            var Brick1 = await _BrickService.GetByIdActif(SaveVisitResource.IdBrick1);
+            var Brick2 = await _BrickService.GetByIdActif(SaveVisitResource.IdBrick2);
+            if (Brick1 != null)
+            {
+                Visit.IdBrick1 = Brick1.IdBrick;
+                Visit.VersionBrick1 = Brick1.Version;
+                Visit.StatusBrick1 = Brick1.Status;
+                Visit.NameBrick1 = Brick1.Name;
+                Visit.NumBrick1 = Brick1.NumSystemBrick;
+                // Pharmacy.Brick1 = Brick1;
+            }
+            else
+            {
+                Visit.IdBrick1 = null;
+                Visit.VersionBrick1 = null;
+                Visit.StatusBrick1 = null;
+                Visit.NameBrick1 = "";
+                Visit.NumBrick1 = 0;
+            }
+            if (Brick2 != null)
+            {
+                Visit.IdBrick2 = Brick2.IdBrick;
+                Visit.VersionBrick2 = Brick2.Version;
+                Visit.StatusBrick2 = Brick2.Status;
+                Visit.NameBrick2 = Brick2.Name;
+                Visit.NumBrick2 = Brick2.NumSystemBrick;
+                // Pharmacy.Brick2 = Brick2;
+            }
+            else
+            {
+                Visit.IdBrick2 = null;
+                Visit.VersionBrick2 = null;
+                Visit.StatusBrick2 = null;
+                Visit.NameBrick2 = "";
+                Visit.NumBrick2 = 0;
+            }
             if (Pharmacy != null)
             {
                 Visit.Name = Pharmacy.Name;
@@ -159,16 +193,46 @@ namespace CRM_API.Controllers
 
             var VisitToBeModified = await _VisitService.GetById(Id);
             if (VisitToBeModified == null) return BadRequest("Le Visit n'existe pas"); //NotFound();
-            var Visits = _mapperService.Map<SaveVisitResource, Visit>(SaveVisitResource);
+            var Visit = _mapperService.Map<SaveVisitResource, Visit>(SaveVisitResource);
             //var newVisit = await _VisitService.Create(Visits);
+            var Doctor = await _DoctorService.GetById(SaveVisitResource.IdDoctor);
+            var Pharmacy = await _PharmacyService.GetById(SaveVisitResource.IdPharmacy);
+            Visit.UpdatedOn = DateTime.UtcNow;
+            Visit.CreatedOn = VisitToBeModified.CreatedOn;
+            Visit.Active = 0;
+            Visit.Status = 0;
+            Visit.UpdatedBy = 0;
+            Visit.CreatedBy = VisitToBeModified.CreatedBy;
+            if (Pharmacy.IdPharmacy != VisitToBeModified.IdPharmacy)
+            {
+                Visit.Name = Pharmacy.Name;
+                Visit.Pharmacy = Pharmacy;
+                Visit.VersionPharmacy = Pharmacy.Version;
+                Visit.StatusPharmacy = Pharmacy.Status;
+                Visit.Doctor = null;
+                Visit.VersionDoctor = null;
+                Visit.StatusDoctor = null;
+            }
+        
+            if (Doctor.IdDoctor != VisitToBeModified.IdDoctor)
+            {
+                Visit.Name = Doctor.Title + " " + Doctor.FirstName + " " + Doctor.LastName;
+                Visit.Doctor = Doctor;
+                Visit.VersionDoctor = Doctor.Version;
+                Visit.StatusDoctor = Doctor.Status;
 
-            await _VisitService.Update(VisitToBeModified, Visits);
+                Visit.Pharmacy = null;
+                Visit.VersionPharmacy = null;
+                Visit.StatusPharmacy = null;
+            }
+
+            await _VisitService.Update(VisitToBeModified, Visit);
 
             var VisitUpdated = await _VisitService.GetById(Id);
 
             var VisitResourceUpdated = _mapperService.Map<Visit, VisitResource>(VisitUpdated);
 
-            return Ok();
+            return Ok(VisitResourceUpdated);
         }
 
 

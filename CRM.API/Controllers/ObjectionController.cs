@@ -45,6 +45,8 @@ namespace CRM_API.Controllers
             Objection.CreatedOn = DateTime.UtcNow;
             Objection.Active = 0;
             Objection.Status = 0;
+            Objection.CreatedBy = 0;
+            Objection.UpdatedBy = 0;
             var Doctor = await _DoctorService.GetById(SaveObjectionResource.IdDoctor);
         
             var Pharmacy = await _PharmacyService.GetById(SaveObjectionResource.IdPharmacy);
@@ -148,10 +150,63 @@ namespace CRM_API.Controllers
 
             var ObjectionToBeModified = await _ObjectionService.GetById(Id);
             if (ObjectionToBeModified == null) return BadRequest("Le Objection n'existe pas"); //NotFound();
-            var Objections = _mapperService.Map<SaveObjectionResource, Objection>(SaveObjectionResource);
+            var Objection = _mapperService.Map<SaveObjectionResource, Objection>(SaveObjectionResource);
             //var newObjection = await _ObjectionService.Create(Objections);
+            Objection.UpdatedOn = DateTime.UtcNow;
+            Objection.CreatedOn = ObjectionToBeModified.CreatedOn;
+            Objection.Active = 0;
+            Objection.Status = 0;
+            Objection.UpdatedBy = 0;
+            Objection.CreatedBy = ObjectionToBeModified.CreatedBy;
+            var Doctor = await _DoctorService.GetById(SaveObjectionResource.IdDoctor);
 
-            await _ObjectionService.Update(ObjectionToBeModified, Objections);
+            var Pharmacy = await _PharmacyService.GetById(SaveObjectionResource.IdPharmacy);
+
+            if (Pharmacy.IdPharmacy != Objection.IdPharmacy)
+            {
+                Objection.Name = Pharmacy.Name;
+                Objection.Pharmacy = Pharmacy;
+                Objection.VersionPharmacy = Pharmacy.Version;
+                Objection.StatusPharmacy = Pharmacy.Status;
+                Objection.Doctor = null;
+                Objection.VersionDoctor = null;
+                Objection.StatusDoctor = null;
+            }
+            else
+            {
+                Objection.Name = Objection.Name;
+                Objection.Pharmacy = Objection.Pharmacy;
+                Objection.VersionPharmacy = Objection.VersionPharmacy;
+                Objection.StatusPharmacy = Objection.StatusPharmacy;
+                Objection.Doctor = null;
+                Objection.VersionDoctor = null;
+                Objection.StatusDoctor = null;
+            }
+            if (Doctor.IdDoctor != Objection.IdDoctor)
+            {
+                Objection.Name = Doctor.Title + " " + Doctor.FirstName + " " + Doctor.LastName;
+                Objection.Doctor = Doctor;
+                Objection.VersionDoctor = Doctor.Version;
+                Objection.StatusDoctor = Doctor.Status;
+
+                Objection.Pharmacy = null;
+                Objection.VersionPharmacy = null;
+                Objection.StatusPharmacy = null;
+            }
+            else
+            {
+                {
+                    Objection.Name = Objection.Name;
+                    Objection.Doctor = Objection.Doctor;
+                    Objection.VersionDoctor = Objection.VersionDoctor;
+                    Objection.StatusDoctor = Objection.StatusDoctor;
+
+                    Objection.Pharmacy = null;
+                    Objection.VersionPharmacy = null;
+                    Objection.StatusPharmacy = null;
+                }
+            }
+            await _ObjectionService.Update(ObjectionToBeModified, Objection);
 
             var ObjectionUpdated = await _ObjectionService.GetById(Id);
 

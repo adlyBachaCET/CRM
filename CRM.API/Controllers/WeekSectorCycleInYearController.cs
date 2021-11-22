@@ -19,10 +19,19 @@ namespace CRM_API.Controllers
         public IList<SectorCycleInYear> WeekSectorCycleInYears;
 
         private readonly ISectorCycleInYearService _WeekSectorCycleInYearService;
+        private readonly ISectorService _SectorService;
+        private readonly ICycleService _CycleService;
+                private readonly IWeekInYearService _WeekInYearService;
 
         private readonly IMapper _mapperService;
-        public WeekSectorCycleInYearController(ISectorCycleInYearService WeekSectorCycleInYearService, IMapper mapper)
+        public WeekSectorCycleInYearController(IWeekInYearService WeekInYearService,
+            ICycleService CycleService,ISectorService SectorService,
+            ISectorCycleInYearService WeekSectorCycleInYearService, IMapper mapper)
         {
+            _SectorService = SectorService;
+            _CycleService = CycleService;
+            _WeekInYearService = WeekInYearService;
+
             _WeekSectorCycleInYearService = WeekSectorCycleInYearService;
             _mapperService = mapper;
         }
@@ -39,6 +48,25 @@ namespace CRM_API.Controllers
             WeekSectorCycleInYear.Version = 0;
             WeekSectorCycleInYear.CreatedBy = 0;
             WeekSectorCycleInYear.UpdatedBy = 0;
+            var Cycle = await _CycleService.GetById(SaveWeekSectorCycleInYearResource.IdCycle);
+            var Sector = await _SectorService.GetById(SaveWeekSectorCycleInYearResource.IdSector);
+            var WeekInYear = await _WeekInYearService.GetById(SaveWeekSectorCycleInYearResource.Order, SaveWeekSectorCycleInYearResource.Year);
+            WeekSectorCycleInYear.IdCycle = Cycle.IdCycle;
+            WeekSectorCycleInYear.VersionCycle = Cycle.Version;
+            WeekSectorCycleInYear.StatusCycle = Cycle.Status;
+            WeekSectorCycleInYear.IdCycleNavigation = Cycle;
+
+            WeekSectorCycleInYear.IdSector = Sector.IdSector;
+            WeekSectorCycleInYear.VersionSector = Sector.Version;
+            WeekSectorCycleInYear.StatusSector = Sector.Status;
+            WeekSectorCycleInYear.IdSectorNavigation = Sector;
+
+            WeekSectorCycleInYear.Order = WeekInYear.Order;
+            WeekSectorCycleInYear.Year = WeekInYear.Year;
+            WeekSectorCycleInYear.VersionWeekInYear = WeekInYear.Version;
+            WeekSectorCycleInYear.StatusWeekInYear = WeekInYear.Status;
+            WeekSectorCycleInYear.OrderNavigation = WeekInYear;
+
             //*** Creation dans la base de données ***
             var NewWeekSectorCycleInYear = await _WeekSectorCycleInYearService.Create(WeekSectorCycleInYear);
             //*** Mappage ***

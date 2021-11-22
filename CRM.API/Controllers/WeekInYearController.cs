@@ -114,16 +114,21 @@ namespace CRM_API.Controllers
 
             var WeekInYearToBeModified = await _WeekInYearService.GetById(Order, Year);
             if (WeekInYearToBeModified == null) return BadRequest("Le WeekInYear n'existe pas"); //NotFound();
-            var WeekInYears = _mapperService.Map<SaveWeekInYearResource, WeekInYear>(SaveWeekInYearResource);
+            var WeekInYear = _mapperService.Map<SaveWeekInYearResource, WeekInYear>(SaveWeekInYearResource);
             //var newWeekInYear = await _WeekInYearService.Create(WeekInYears);
-
-            await _WeekInYearService.Update(WeekInYearToBeModified, WeekInYears);
+            WeekInYear.CreatedOn = DateTime.UtcNow;
+            WeekInYear.UpdatedOn = DateTime.UtcNow;
+            WeekInYear.Active = 0;
+            WeekInYear.Version = 0;
+            WeekInYear.CreatedBy = 0;
+            WeekInYear.UpdatedBy = 0;
+            await _WeekInYearService.Update(WeekInYearToBeModified, WeekInYear);
 
             var WeekInYearUpdated = await _WeekInYearService.GetById(Order, Year);
 
             var WeekInYearResourceUpdated = _mapperService.Map<WeekInYear, WeekInYearResource>(WeekInYearUpdated);
 
-            return Ok();
+            return Ok(WeekInYearResourceUpdated);
         }
 
 

@@ -112,6 +112,12 @@ namespace CRM.Services.Services
             return
                   await _unitOfWork.Commandes.GetByIdActifUser(Id);
         }
+
+        public async Task<IEnumerable<Commande>> GetByIdActifPharmacy(int Id)
+        {
+            return
+         await _unitOfWork.Commandes.GetByIdActifPharmacy(Id);
+        }
         //public Task<Commande> CreateCommande(Commande newCommande)
         //{
         //    throw new NotImplementedException();

@@ -12,7 +12,7 @@ namespace CRM.Core.Services
         Task Update(Tags TagsToBeUpdated, Tags Tags);
         Task Delete(Tags TagsToBeDeleted);
         Task DeleteRange(List<Tags> Tags);
-
+        Task<Tags> GetBy(string name);
         Task<IEnumerable<Tags>> GetAll();
         Task<IEnumerable<Tags>> GetAllActif();
         Task<IEnumerable<Tags>> GetAllInActif();

@@ -8,7 +8,7 @@ namespace CRM.Core.Repository
     {
         Task<IEnumerable<Brick>> GetAllActif();
         Task<IEnumerable<Brick>> GetAllInActif();
-        Task<Brick> GetByIdActif(int id);
+        Task<Brick> GetByIdActif(int? id);
         Task<IEnumerable<Brick>> GetAllAcceptedActif();
         Task<IEnumerable<Brick>> GetAllAcceptedInactifActif();
         Task<IEnumerable<Brick>> GetAllPending();

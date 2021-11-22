@@ -51,7 +51,11 @@ namespace CRM.Services.Services
             return
                  await _unitOfWork.Tagss.SingleOrDefault(i => i.IdTags == id && i.Active == 0);
         }
-   
+        public async Task<Tags> GetBy(string name)
+        {
+            return
+                 await _unitOfWork.Tagss.SingleOrDefault(i => i.Name == name && i.Active == 0);
+        }
         public async Task Update(Tags TagsToBeUpdated, Tags Tags)
         {
             TagsToBeUpdated.Active = 1;

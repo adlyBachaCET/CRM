@@ -101,6 +101,13 @@ namespace CRM.Services.Services
             return
                             await _unitOfWork.Infos.GetByIdDoctor(id);
         }
+
+        public async Task<Info> GetBy(string Type, string Data)
+        {
+            //Info musi =  _unitOfWork.Infos.SingleOrDefaultAsync(x=>x.Id == InfoToBeUpdated.Id);
+
+return await _unitOfWork.Infos.SingleOrDefault(x => x.Data == Data&& x.Datatype==Type);
+        }
         //public Task<Info> CreateInfo(Info newInfo)
         //{
         //    throw new NotImplementedException();

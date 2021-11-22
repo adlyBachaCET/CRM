@@ -12,6 +12,7 @@ namespace CRM.Core.Services
         Task Update(RequestDoctor RequestDoctorToBeUpdated, RequestDoctor RequestDoctor);
         Task Delete(RequestDoctor RequestDoctorToBeDeleted);
         Task DeleteRange(List<RequestDoctor> RequestDoctor);
+        Task<IEnumerable<RequestDoctor>> GetByIdActifPharmacy(int Id);
 
         Task<IEnumerable<RequestDoctor>> GetAll();
         Task<IEnumerable<RequestDoctor>> GetAllActif();

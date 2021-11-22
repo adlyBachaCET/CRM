@@ -33,6 +33,12 @@ namespace CRM_API.Controllers
         {
             //*** Mappage ***
             var Info = _mapperService.Map<SaveInfoResource, Info>(SaveInfoResource);
+            Info.Version = 0;
+            Info.Active = 0;
+            Info.CreatedOn = DateTime.UtcNow;
+            Info.UpdatedOn = DateTime.UtcNow;
+            Info.CreatedBy = 0;
+            Info.UpdatedBy = 0;
             //*** Creation dans la base de données ***
             var NewInfo = await _InfoService.Create(Info);
             //*** Mappage ***
@@ -106,16 +112,21 @@ namespace CRM_API.Controllers
 
             var InfoToBeModified = await _InfoService.GetById(Id);
             if (InfoToBeModified == null) return BadRequest("Le Info n'existe pas"); //NotFound();
-            var Infos = _mapperService.Map<SaveInfoResource, Info>(SaveInfoResource);
+            var Info = _mapperService.Map<SaveInfoResource, Info>(SaveInfoResource);
             //var newInfo = await _InfoService.Create(Infos);
-
-            await _InfoService.Update(InfoToBeModified, Infos);
+            Info.Version = InfoToBeModified.Version+1;
+            Info.Active = 0;
+            Info.CreatedOn = InfoToBeModified.CreatedOn;
+            Info.UpdatedOn = DateTime.UtcNow;
+            Info.CreatedBy = InfoToBeModified.CreatedBy;
+            Info.UpdatedBy = 0;
+            await _InfoService.Update(InfoToBeModified, Info);
 
             var InfoUpdated = await _InfoService.GetById(Id);
 
             var InfoResourceUpdated = _mapperService.Map<Info, InfoResource>(InfoUpdated);
 
-            return Ok();
+            return Ok(InfoResourceUpdated);
         }
 
 

@@ -96,7 +96,7 @@ namespace CRM.Services.Services
                              await _unitOfWork.Bricks.GetAllInActif();
         }
 
-        public async  Task<Brick> GetByIdActif(int id)
+        public async  Task<Brick> GetByIdActif(int? id)
         {
             return
                           await _unitOfWork.Bricks.GetByIdActif(id);

@@ -21,10 +21,13 @@ namespace CRM_API.Controllers
         public IList<Support> Supports;
 
         private readonly ISupportService _SupportService;
+        private readonly IUserService _UserService;
 
         private readonly IMapper _mapperService;
-        public SupportController(ISupportService SupportService, IMapper mapper)
+        public SupportController(IUserService UserService, ISupportService SupportService, IMapper mapper)
         {
+            _UserService = UserService;
+
             _SupportService = SupportService;
             _mapperService = mapper;
         }
@@ -123,7 +126,41 @@ namespace CRM_API.Controllers
                 return BadRequest(ErrorMessag);
             }
         }
-       
+        [HttpPut("UpdateForgottenPassword")]
+        public async Task<ActionResult> UpdateForgottenPassword(TokenPassword TokenPassword)
+        {
+            StringValues token = "";
+            ErrorHandling ErrorMessag = new ErrorHandling();
+            Request.Headers.TryGetValue("token", out token);
+
+            try
+            {
+                var Claims = await _SupportService.getPrincipal(token);
+
+                if (Claims == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    var Id = int.Parse(Claims.FindFirst("Id").Value);
+
+                    await _UserService.UpdateGeneratedPassword(Id, TokenPassword.NewPassword);
+
+                    ErrorMessag.ErrorMessage = "Token Found";
+                    ErrorMessag.StatusCode = 200;
+                    return Ok(new { ErrorHandling = ErrorMessag, Supports = Claims.Claims });
+
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorMessag.ErrorMessage = ex.Message;
+                ErrorMessag.StatusCode = 400;
+                return BadRequest(ErrorMessag);
+            }
+        }
+
         [HttpGet("{Id}")]
         public async Task<ActionResult<SupportResource>> GetSupportById(int Id)
         {
@@ -145,10 +182,15 @@ namespace CRM_API.Controllers
 
             var SupportToBeModified = await _SupportService.GetById(Id);
             if (SupportToBeModified == null) return BadRequest("Le Support n'existe pas"); //NotFound();
-            var Supports = _mapperService.Map<SaveSupportResource, Support>(SaveSupportResource);
+            var Support = _mapperService.Map<SaveSupportResource, Support>(SaveSupportResource);
             //var newSupport = await _SupportService.Create(Supports);
-
-            await _SupportService.Update(SupportToBeModified, Supports);
+            Support.UpdatedOn = DateTime.UtcNow;
+            Support.CreatedOn = SupportToBeModified.CreatedOn;
+            Support.Active = 0;
+            Support.Status = 0;
+            Support.UpdatedBy = 0;
+            Support.CreatedBy = SupportToBeModified.CreatedBy;
+            await _SupportService.Update(SupportToBeModified, Support);
 
             var SupportUpdated = await _SupportService.GetById(Id);
 

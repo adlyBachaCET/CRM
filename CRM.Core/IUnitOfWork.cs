@@ -6,6 +6,10 @@ namespace CRM.Core
 {
     public interface IUnitOfWork : IDisposable
     {
+        IProductPharmacyRepository ProductPharmacys { get; }
+        IProductRepository Products { get; }
+        IProductSampleRepository ProductSamples { get; }
+
         IVisitUserRepository VisitUsers { get; }
         IParticipantRepository Participants { get; }
         IRequestRpRepository RequestRps { get; }
@@ -28,7 +32,7 @@ namespace CRM.Core
         ICycleRepository Cycles { get; }
         ITargetRepository CycleSectorWeekDoctors { get; }
         IDoctorRepository Doctors{ get; }
-        ILocationDoctorRepository EstablishmentDoctors { get; }
+        ILocationDoctorRepository LocationDoctors { get; }
         IAdresseRepository Adresses { get; }
         IAdresseLocalityRepository AdresseLocalitys { get; }
 

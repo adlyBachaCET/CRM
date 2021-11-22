@@ -44,13 +44,13 @@ namespace CRM_API.Controllers
         private readonly IRequestRpService _RequestRpService;
 
         private readonly ILocalityService _LocalityService;
-
+        private readonly IBrickService _BrickService;
 
         private readonly IMapper _mapperService;
         public UserController(IParticipantService ParticipantService, IRequestRpService RequestRpService, 
             IObjectionService ObjectionService, IVisitService VisitService, IVisitUserService VisitUserService,
             IRequestDoctorService RequestDoctorService, IBusinessUnitService BusinessUnitService,
-            ILocalityService LocalityService, 
+           ILocalityService LocalityService, IBrickService BrickService,
             IBuUserService BuUserService, IUserService UserService, ISupportService SupportService,
             IPhoneService PhoneService, ICommandeService CommandeService,
             IMapper mapper)
@@ -60,6 +60,7 @@ namespace CRM_API.Controllers
             _VisitService = VisitService;
             _ParticipantService = ParticipantService;
             _RequestRpService = RequestRpService;
+            _BrickService = BrickService;
 
             _ObjectionService = ObjectionService;
             _BusinessUnitService = BusinessUnitService;
@@ -79,15 +80,19 @@ namespace CRM_API.Controllers
         /// <summary>This method returns the new User .</summary>
         /// <param name="SaveUserResource"> Parameters for the new user .</param>
         [HttpPost]
-        public async Task<ActionResult<UserResource>> CreateUser(
-            [FromHeader(Name = "Token")][Required] string Token,
-            SaveUserResource SaveUserResource)
+        public async Task<ActionResult<UserResource>> CreateUser(SaveUserResource SaveUserResource)
         {
             //*** Mappage ***
             var User = _mapperService.Map<SaveUserResource, User>(SaveUserResource);
             User.UpdatedOn = DateTime.UtcNow;
             User.CreatedOn = DateTime.UtcNow;
-
+            var Locality1 = await _LocalityService.GetById(SaveUserResource.IdLocality1);
+            User.NameLocality1 = Locality1.Name;
+       
+            User.IdLocality1 = Locality1.IdLocality;
+            var Locality2 = await _LocalityService.GetById(SaveUserResource.IdLocality2);
+            User.NameLocality2 = Locality2.Name;
+           User.IdLocality2 = Locality2.IdLocality;
             //*** Creation dans la base de données ***
             var NewUser = await _UserService.Create(User);
             //*** Mappage ***
@@ -390,10 +395,7 @@ namespace CRM_API.Controllers
                 {
                     await File.FormFile.CopyToAsync(stream);
                 }
-                
-
-
-
+           
                 await _UserService.UpdatePhoto(Id, File.FormFile.FileName);
 
                 return StatusCode(StatusCodes.Status201Created);
@@ -406,38 +408,6 @@ namespace CRM_API.Controllers
             //*** Mappage ***
 
 
-        }
-        [HttpPut("UpdateForgottenPassword")]
-        public async Task<ActionResult> UpdateForgottenPassword(TokenPassword TokenPassword)
-        {
-            StringValues token = "";
-            ErrorHandling ErrorMessag = new ErrorHandling();
-            Request.Headers.TryGetValue("token", out token);
-
-            try
-            {
-                var Claims = await _SupportService.getPrincipal(token);
-
-                if (Claims == null) { 
-                    return NotFound();
-                }
-                else {
-                    var Id = int.Parse(Claims.FindFirst("Id").Value);
-
-                    await _UserService.UpdateGeneratedPassword(Id, TokenPassword.NewPassword);
-
-                        ErrorMessag.ErrorMessage = "Token Found";
-                ErrorMessag.StatusCode = 200;
-                return Ok(new { ErrorHandling = ErrorMessag, Supports = Claims.Claims });
-                   
-                }
-            }
-            catch (Exception ex)
-            {
-                ErrorMessag.ErrorMessage = ex.Message;
-                ErrorMessag.StatusCode = 400;
-                return BadRequest(ErrorMessag);
-            }
         }
         [HttpPut("{Id}")]
         public async Task<ActionResult<UserResource>> UpdateUser(int Id, UpdateUserResource UpdateUserResource)

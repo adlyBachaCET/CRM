@@ -30,10 +30,8 @@ namespace CRM.Core.Models
         public string Note { get; set; }
         public string StreetName { get; set; }
         public int PostalCode { get; set; }
-        public int? IdLocality1 { get; set; }
-        public string NameLocality1 { get; set; }
-        public int? IdLocality2 { get; set; }
-        public string NameLocality2 { get; set; }
+        public int IdLocality1 { get; set; }
+        public int IdLocality2 { get; set; }
 
 
 

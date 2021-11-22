@@ -215,8 +215,8 @@ namespace CRM_API.Controllers
 
             var CycleResourceUpdated = _mapperService.Map<Cycle, CycleResource>(CycleUpdated);
 
-            return Ok();
-        }
+            return Ok(CycleResourceUpdated);
+            }
             else
             {
                 ErrorMessag.ErrorMessage = "Empty Token";

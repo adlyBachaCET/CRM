@@ -45,7 +45,10 @@ namespace CRM.Core.Models
         public int? VersionBrick2 { get; set; }
         public Status? StatusBrick2 { get; set; }
         public virtual Brick Brick2 { get; set; }
-
+        public string NameBrick1 { get; set; }
+        public string NameBrick2 { get; set; }
+        public int NumBrick1 { get; set; }
+        public int NumBrick2 { get; set; }
         public double? Longitude { get; set; }
         public double? Altitude { get; set; }
         public string StreetName { get; set; }

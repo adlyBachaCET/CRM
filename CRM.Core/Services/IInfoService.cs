@@ -7,6 +7,8 @@ namespace CRM.Core.Services
     public interface IInfoService
     {
         Task<Info> GetById(int id);
+        Task<Info> GetBy(string Type,string Data);
+
         Task<Info> Create(Info newInfo);
         Task<List<Info>> CreateRange(List<Info> newInfo);
         Task Update(Info InfoToBeUpdated, Info Info);

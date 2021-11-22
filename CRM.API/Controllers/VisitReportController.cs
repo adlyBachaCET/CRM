@@ -114,10 +114,18 @@ namespace CRM_API.Controllers
 
             var VisitReportToBeModified = await _VisitReportService.GetById(Id);
             if (VisitReportToBeModified == null) return BadRequest("Le VisitReport n'existe pas"); //NotFound();
-            var VisitReports = _mapperService.Map<SaveVisitReportResource, VisitReport>(SaveVisitReportResource);
+            var VisitReport = _mapperService.Map<SaveVisitReportResource, VisitReport>(SaveVisitReportResource);
             //var newVisitReport = await _VisitReportService.Create(VisitReports);
-
-            await _VisitReportService.Update(VisitReportToBeModified, VisitReports);
+            var Visit = await _VisitService.GetById(SaveVisitReportResource.IdVisit);
+            VisitReport.IdVisit = Visit.IdVisit;
+            VisitReport.StatusVisit = Visit.Status;
+            VisitReport.VersionVisit = Visit.Version;
+            VisitReport.Visit = Visit;
+            VisitReport.UpdatedOn = DateTime.UtcNow;
+            VisitReport.CreatedOn = VisitReportToBeModified.CreatedOn;
+            VisitReport.UpdatedBy = Visit.UpdatedBy;
+            VisitReport.CreatedBy = Visit.CreatedBy;
+            await _VisitReportService.Update(VisitReportToBeModified, VisitReport);
 
             var VisitReportUpdated = await _VisitReportService.GetById(Id);
 

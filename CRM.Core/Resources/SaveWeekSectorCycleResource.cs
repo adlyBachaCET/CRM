@@ -15,6 +15,5 @@ namespace CRM.Core.Models
 
 
         public int nbvisite { get; set; }
-        public Status Status { get; set; }
     }
 }

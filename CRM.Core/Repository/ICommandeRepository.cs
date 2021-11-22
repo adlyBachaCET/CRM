@@ -17,6 +17,7 @@ namespace CRM.Core.Repository
         Task<IEnumerable<Commande>> GetByIdActifDoctor(int Id);
 
         Task<IEnumerable<Commande>> GetByIdActifUser(int Id);
+        Task<IEnumerable<Commande>> GetByIdActifPharmacy(int Id);
 
     }
 }

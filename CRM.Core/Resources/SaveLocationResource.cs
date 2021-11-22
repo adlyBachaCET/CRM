@@ -38,10 +38,8 @@ namespace CRM.Core.Models
         public double? Altitude { get; set; }
         public string StreetName { get; set; }
         public int PostalCode { get; set; }
-
-        public int IdBrick { get; set; }
-
-        public string NameBrick { get; set; }
+        public int? IdBrick1 { get; set; }
+        public int? IdBrick2 { get; set; }
     }
     public class OrderLocation
     {

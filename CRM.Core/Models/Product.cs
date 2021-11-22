@@ -24,9 +24,9 @@ namespace CRM.Core.Models
         public int PriceTTC { get; set; }
         public int TVA { get; set; }
         public string Description { get; set; }
-        public int IdProductSample { get; set; }
-        public int VersionProductSample { get; set; }
-        public Status StatusProductSample { get; set; }
+        public int? IdProductSample { get; set; }
+        public int? VersionProductSample { get; set; }
+        public Status? StatusProductSample { get; set; }
         public ProductSample ProductSample { get; set; }
         public virtual ICollection<ProductBu> ProductBu { get; set; }
         public virtual ICollection<ProductFile> ProductFile { get; set; }

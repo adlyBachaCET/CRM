@@ -120,10 +120,15 @@ namespace CRM_API.Controllers
 
             var TagsToBeModified = await _TagsService.GetById(Id);
             if (TagsToBeModified == null) return BadRequest("Le Tags n'existe pas"); //NotFound();
-            var Tagss = _mapperService.Map<SaveTagsResource, Tags>(SaveTagsResource);
+            var Tags = _mapperService.Map<SaveTagsResource, Tags>(SaveTagsResource);
             //var newTags = await _TagsService.Create(Tagss);
-
-            await _TagsService.Update(TagsToBeModified, Tagss);
+            Tags.UpdatedOn = DateTime.UtcNow;
+            Tags.CreatedOn = TagsToBeModified.CreatedOn;
+            Tags.Active = 0;
+            Tags.Status = 0;
+            Tags.UpdatedBy = 0;
+            Tags.CreatedBy = TagsToBeModified.CreatedBy;
+            await _TagsService.Update(TagsToBeModified, Tags);
 
             var TagsUpdated = await _TagsService.GetById(Id);
 

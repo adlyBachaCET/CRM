@@ -15,11 +15,10 @@ namespace CRM.Core.Models
 
         public int TotalHT {get; set; }
         public int TotalTTC { get; set; }
-        public int IdDoctor { get; set; }
-        public string NameDoctor { get; set; }
+        public int? IdDoctor { get; set; }
 
         public int IdUser{ get; set; }
-        public string NomPrenom{ get; set; }
+        public int? IdPharmacy { get; set; }
 
 
     }

@@ -16,7 +16,7 @@ namespace CRM.Core.Services
         Task<IEnumerable<Brick>> GetAll();
         Task<IEnumerable<Brick>> GetAllActif();
         Task<IEnumerable<Brick>> GetAllInActif();
-        Task<Brick> GetByIdActif(int id);
+        Task<Brick> GetByIdActif(int? id);
 
     }
 }

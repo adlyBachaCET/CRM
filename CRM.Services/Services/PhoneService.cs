@@ -52,6 +52,11 @@ namespace CRM.Services.Services
             return
                await _unitOfWork.Phones.SingleOrDefault(i => i.IdPhone == id && i.Active == 0);
         }
+        public async Task<Phone> GetByIdDoctor(int Phone,int IdDoctor)
+        {
+            return
+               await _unitOfWork.Phones.SingleOrDefault(i => i.PhoneNumber == Phone && i.IdDoctor==IdDoctor && i.Active == 0);
+        }
         public async Task<Phone> GetByNumber(int Num)
         {
             return
