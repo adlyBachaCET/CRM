@@ -112,10 +112,10 @@ namespace CRM.Services.Services
             await _unitOfWork.CommitAsync();
 
             Support Support = new Support();
-       
-                    Existe = true;
-            
-                
+      
+                Support = await _unitOfWork.Support.SingleOrDefault(a => a.Name == Name);
+              
+             
                 if (Support != null)
                 {
                     string from = Support.Email, to = User.Email, subject = "", html = "https://localhost:3000/verify-token/"+token;
