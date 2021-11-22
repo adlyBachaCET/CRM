@@ -34,6 +34,8 @@ namespace CRM_API.Controllers
         public LocationController(ILocalityService LocalityService, IServiceService ServiceService, ILocationService LocationService,
             ILocationDoctorService LocationDoctorService, IUserService UserService, IBrickService BrickService, ILocationTypeService LocationTypeService, IMapper mapper)
         {
+            _LocationService = LocationService;
+
             _LocalityService = LocalityService;
             _BrickService = BrickService;
 

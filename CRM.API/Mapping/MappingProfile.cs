@@ -142,6 +142,8 @@ namespace CRM_API.Mapping
             CreateMap<Commande, IEnumerable<CommandeResource>>();
             //Location
             CreateMap<Location, LocationResource>();
+            CreateMap<LocationAdd, Location>();
+
             CreateMap<Location, SaveLocationResource>();
             CreateMap<SaveLocationResource, Location>();
             CreateMap < List<SaveLocationResource>, List<Location>>();

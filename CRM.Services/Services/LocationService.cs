@@ -85,7 +85,7 @@ namespace CRM.Services.Services
         public async Task<Location> GetById(int id)
         {
             return
-               await _unitOfWork.Locations.SingleOrDefault(i => i.IdLocation== id &&i.Active == 0);
+               await _unitOfWork.Locations.GetByIdActif(id);
         }
    
         public async Task Update(Location EstablishmentToBeUpdated, Location Establishment)
