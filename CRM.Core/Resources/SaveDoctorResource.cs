@@ -12,6 +12,8 @@ namespace CRM.Core.Models
         public string LastName { get; set; }
         public string FirstName { get; set; }
         public string Title { get; set; }
+        public string Email { get; set; }
+
         public int? NbPatientsDay { get; set; }
         public int VersionLink { get; set; }
         public Status StatusLink { get; set; }

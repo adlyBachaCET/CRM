@@ -37,6 +37,7 @@ namespace CRM_API.Controllers
         private readonly ILocationService _LocationService;
         private readonly IPhoneService _PhoneService;
         private readonly IUserService _UserService;
+        private readonly ILocationTypeService _LocationTypeService;
 
         private readonly ITagsDoctorService _TagsDoctorService;
         private readonly ITagsService _TagsService;
@@ -52,6 +53,8 @@ namespace CRM_API.Controllers
             IUserService UserService,
 
             ILocationService LocationService,
+                        ILocationTypeService LocationTypeService,
+
             IServiceService ServiceService,
             IDoctorService DoctorService, IRequestDoctorService RequestDoctorService,
             IPotentielService PotentielService, IObjectionService ObjectionService,
@@ -73,6 +76,7 @@ namespace CRM_API.Controllers
             _TagsService = TagsService;
             _PotentielService = PotentielService;
             _RequestDoctorService = RequestDoctorService;
+            _LocationTypeService = LocationTypeService;
 
             _ObjectionService = ObjectionService;
             _BuDoctorService = BuDoctorService;
@@ -550,17 +554,44 @@ namespace CRM_API.Controllers
                 DoctorProfile.Phone = PhoneResources;
                 var DoctorLocation = await _LocationDoctorService.GetAllAcceptedActif(Id);
                 List<LocationDoctorResource> LocationDoctorResources = new List<LocationDoctorResource>();
-
+                //
                 foreach (var item in DoctorLocation)
                 {
-                    var Bu = _mapperService.Map<LocationDoctor, LocationDoctorResource>(item);
-
+                     var Bu = _mapperService.Map<LocationDoctor, LocationDoctorResource>(item);
                     if (Bu != null)
                     {
                         LocationDoctorResources.Add(Bu);
                     }
                 }
                 DoctorProfile.LocationDoctor = LocationDoctorResources;
+                List<LocationLocalityService> LocationLocalityServiceList = new List<LocationLocalityService>();
+
+                foreach (var item in DoctorLocation)
+                {
+                    LocationLocalityService LocationLocalityService = new LocationLocalityService();
+                    var Location = await _LocationService.GetById(item.IdLocation);
+                    var Service = await _ServiceService.GetById(item.IdService);
+                    LocationType LocationType = new LocationType();
+                    if (Location!=null)
+                    {
+                        LocationType = await _LocationTypeService.GetById(Location.IdLocationType);
+                    }
+                    var LocationResource = _mapperService.Map<Location, LocationResource>(Location);
+                    var LocationTypeResource = _mapperService.Map<LocationType, LocationTypeResource>(LocationType);
+                    if (Service != null)
+                    {
+                        var ServiceResource = _mapperService.Map<Service, ServiceResource>(Service);
+                        LocationLocalityService.ServiceResource = ServiceResource;
+                    }
+                    else
+                    {
+                        LocationLocalityService.ServiceResource = null;
+
+                    }
+                    LocationLocalityService.LocationResource = LocationResource;
+                    LocationLocalityServiceList.Add(LocationLocalityService);
+                }
+                DoctorProfile.LocationLocalityService = LocationLocalityServiceList;
 
                 var DoctorVisit = await _VisitReportService.GetByIdDoctor(Id);
                 List<VisitReportResource> VisitReportResources = new List<VisitReportResource>();

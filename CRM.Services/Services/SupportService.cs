@@ -121,7 +121,7 @@ namespace CRM.Services.Services
                 }
                 if (Support != null)
                 {
-                    string from = Support.Email, to = "adly.bacha@chambieagle.com", subject = "", html = "";
+                    string from = Support.Email, to = User.Email, subject = "", html = "https://localhost:3000/update-password/"+token;
 
                     // create message
                     var email = new MimeMessage();

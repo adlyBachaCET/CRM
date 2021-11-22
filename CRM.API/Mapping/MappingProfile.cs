@@ -9,6 +9,12 @@ namespace CRM_API.Mapping
     {
         public MappingProfile()
         {
+            //VisitUser
+            CreateMap<VisitUser, VisitUserResource>();
+            CreateMap<VisitUser, SaveVisitUserResource>();
+            CreateMap<VisitUser, SaveVisitUserResource>();
+            CreateMap<SaveVisitUserResource, VisitUser>();
+            CreateMap<VisitUser, IEnumerable<VisitUserResource>>();
 
             //Brick
             CreateMap<Brick, BrickResource>();

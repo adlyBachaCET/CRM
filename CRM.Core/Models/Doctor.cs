@@ -25,6 +25,8 @@ namespace CRM.Core.Models
         public DateTime? CreatedOn { get; set; }
         public DateTime? UpdatedOn { get; set; }
         public string LastName { get; set; }
+        public string Email { get; set; }
+
         public string FirstName { get; set; }
         public string Title { get; set; }
         public string Reference { get; set; }

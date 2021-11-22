@@ -19,6 +19,8 @@ namespace CRM.Core.Models
         public string Title { get; set; }
         public int? NbPatientsDay { get; set; }
         public int? LinkedId { get; set; }
+        public string Email { get; set; }
+
         public int VersionLink { get; set; }
         public Status StatusLink { get; set; }
         public int? ManagerApprouved { get; set; }

@@ -14,6 +14,8 @@ namespace CRM.Core.Models
         public int Version { get; set; }
 
         public int IdLocation{ get; set; }
+      //  public LocationResource Location { get; set; }
+
         public int? CreatedBy { get; set; }
         public int? UpdatedBy { get; set; }
 
