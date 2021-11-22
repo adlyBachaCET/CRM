@@ -58,7 +58,8 @@ namespace CRM_API.Controllers
             //*** Creation dans la base de données ***
            if ( mail ==true)
             {
-                return Ok("Mail envoyé");           }
+                return Ok("Mail envoyé");   
+            }
             else
             {
                 return NotFound("L'utilisateur n'est pas trouvé");

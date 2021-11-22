@@ -142,7 +142,7 @@ namespace CRM.Services.Services
                     await smtp.SendAsync(email);
 
                     await smtp.DisconnectAsync(true);
-
+                    Existe = true;
                         return Existe;
                 }
                     else
