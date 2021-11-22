@@ -116,13 +116,13 @@ namespace CRM_API.Controllers
                 var Supports = await _SupportService.getPrincipal(token);
                 if (Supports == null) return NotFound();
                 ErrorMessag.ErrorMessage = "Token Found";
-                ErrorMessag.StatusCode = 400;
+                ErrorMessag.StatusCode = 200;
                 return Ok(new{ ErrorHandling = ErrorMessag, Supports= Supports.Claims });
             }
             catch (Exception ex)
             {
                 ErrorMessag.ErrorMessage = ex.Message;
-                ErrorMessag.StatusCode = 400;
+                ErrorMessag.StatusCode = 404;
                 return BadRequest(ErrorMessag);
             }
         }
