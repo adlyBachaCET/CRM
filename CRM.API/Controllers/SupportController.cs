@@ -52,14 +52,13 @@ namespace CRM_API.Controllers
         }
         [HttpPost("Send")]
         public async Task<ActionResult> Send(SendMail SendMail)
-        { 
-          //  var UserExist =await _UserService 
-    
+        {
+            //  var UserExist =await _UserService 
+            var mail = await _SupportService.Send(SendMail.Name, SendMail.EmailLogin);
             //*** Creation dans la base de données ***
-           if(  await _SupportService.Send(SendMail.Name,SendMail.EmailLogin)==true)
+           if ( mail ==true)
             {
-                return Ok("Changement efféctué");
-            }
+                return Ok("Mail envoyé");           }
             else
             {
                 return NotFound("L'utilisateur n'est pas trouvé");

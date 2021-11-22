@@ -133,15 +133,15 @@ namespace CRM.Services.Services
                     smtp.ServerCertificateValidationCallback = (s, c, h, e) => true;
 
                  
-                      smtp.Connect(Support.Host, Support.Port, false);
+                     await smtp.ConnectAsync(Support.Host, Support.Port, false);
 
-                      smtp.Authenticate(Support.Email, Support.Password);
-                   
-                 
-                    
-                    smtp.Send(email);
+                    await smtp.AuthenticateAsync(Support.Email, Support.Password);
 
-                    smtp.Disconnect(true);
+
+
+                    await smtp.SendAsync(email);
+
+                    await smtp.DisconnectAsync(true);
 
                         return Existe;
                 }
