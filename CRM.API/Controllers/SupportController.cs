@@ -52,13 +52,20 @@ namespace CRM_API.Controllers
         }
         [HttpPost("Send")]
         public async Task<ActionResult> Send(SendMail SendMail)
-        {
+        { 
+          //  var UserExist =await _UserService 
     
             //*** Creation dans la base de données ***
-             await _SupportService.Send(SendMail.Name,SendMail.EmailLogin);
+           if(  await _SupportService.Send(SendMail.Name,SendMail.EmailLogin)==true)
+            {
+                return Ok("Changement efféctué");
+            }
+            else
+            {
+                return NotFound("L'utilisateur n'est pas trouvé");
+            }
             //*** Mappage ***
             ///var SupportResource = _mapperService.Map<Support, SupportResource>(NewSupport);
-            return Ok();
         }
         [HttpGet]
         public async Task<ActionResult<SupportResource>> GetAllSupports()

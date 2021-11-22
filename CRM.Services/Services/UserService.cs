@@ -190,7 +190,7 @@ namespace CRM.Services.Services
             User.IdUser = UserInDB.IdUser;
             User.Status = Status.Approuved;
             User.Active = 0;
-            User.GeneratedPassword = Password;
+            User.Password = Password;
             await _unitOfWork.Users.Add(User);
             await _unitOfWork.CommitAsync();
         }

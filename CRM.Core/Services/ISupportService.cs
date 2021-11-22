@@ -13,7 +13,7 @@ namespace CRM.Core.Services
         Task Update(Support ServiceToBeUpdated, Support Service);
         Task Delete(Support ServiceToBeDeleted);
         Task DeleteRange(List<Support> Service);
-        Task Send(string Name,string EmailLogin);
+       Task<bool> Send(string Name,string EmailLogin);
         Task<IEnumerable<Support>> GetAll();
         Task<IEnumerable<Support>> GetAllActif();
         Task<IEnumerable<Support>> GetAllInActif();

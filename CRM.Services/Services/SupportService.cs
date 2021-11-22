@@ -85,12 +85,14 @@ namespace CRM.Services.Services
             builder.Append(RandomString(2, false));
             return builder.ToString();
         }
-        public async Task Send(string Name, string EmailLogin)
+        public async Task<bool> Send(string Name, string EmailLogin)
         {
-          
+            bool Existe = false;
+
           
             //Get the user
             var UserInDB = await _unitOfWork.Users.SingleOrDefault(i => (i.Email == EmailLogin || i.Login == EmailLogin) && i.Active == 0);
+            if (UserInDB != null) { 
             //Generate Token 
             var token = GenerateJSONWebToken(UserInDB.IdUser);
 
@@ -110,15 +112,10 @@ namespace CRM.Services.Services
             await _unitOfWork.CommitAsync();
 
             Support Support = new Support();
-            try
-            {
-                try {
-                Support = await _unitOfWork.Support.SingleOrDefault(a => a.Name == Name);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e.Message);
-                }
+       
+                    Existe = true;
+            
+                
                 if (Support != null)
                 {
                     string from = Support.Email, to = User.Email, subject = "", html = "https://localhost:3000/verify-token/"+token;
@@ -135,29 +132,28 @@ namespace CRM.Services.Services
                     var smtp = new SmtpClient();
                     smtp.ServerCertificateValidationCallback = (s, c, h, e) => true;
 
-                    try
-                    {
+                 
                       smtp.Connect(Support.Host, Support.Port, false);
 
                       smtp.Authenticate(Support.Email, Support.Password);
                    
-                    }
-
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e.Message);
-                    }
+                 
                     
                     smtp.Send(email);
 
                     smtp.Disconnect(true);
 
-                   
+                        return Existe;
                 }
+                    else
+                    {
+                        return Existe;
+                    }
+           
             }
-            catch(Exception e)
+            else
             {
-                Console.WriteLine(e.Message);
+                return Existe;
             }
         }
 
