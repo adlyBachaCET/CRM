@@ -553,6 +553,9 @@ namespace CRM.Data
                 entity.Property(x => x.IdDoctor).UseIdentityColumn();
                 entity.HasIndex(e => new { e.Active, e.IdDoctor, e.Status,e.Version }).IsUnique();
                 entity.HasIndex(e => e.IdDoctor).IsUnique(false);
+                entity.HasIndex(e => e.Email).IsUnique(false);
+                entity.HasIndex(e => e.FirstName).IsUnique(false);
+                entity.HasIndex(e => e.LastName).IsUnique(false);
 
                 entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
 
@@ -645,7 +648,8 @@ namespace CRM.Data
                 entity.Property(x => x.IdLocation).UseIdentityColumn();
                 entity.HasIndex(e => new { e.Active, e.IdLocation, e.Status,e.Version }).IsUnique();
                 entity.HasIndex(e => e.IdLocation).IsUnique(false);
-     
+                entity.HasIndex(e => e.Name).IsUnique(false);
+
 
                 entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
 
@@ -833,12 +837,14 @@ namespace CRM.Data
                 entity.HasIndex(e => new { e.Active, e.IdLocality, e.Status,e.Version }).IsUnique();
                 entity.HasIndex(e => e.IdLocality).IsUnique(false);
                 entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
-
+                entity.HasIndex(e => e.Name).IsUnique(false);
+               
                 entity.Property(e => e.Name)
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
                 entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
+                entity.HasIndex(e => e.lvl);
 
                 entity.HasOne(d => d.IdParentNavigation)
                     .WithMany(p => p.InverseIdParentNavigation)
@@ -947,7 +953,11 @@ namespace CRM.Data
                 entity.HasIndex(e => e.IdPharmacy).IsUnique(false);
                 entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
 
-     
+                entity.HasIndex(e => e.Email).IsUnique(false);
+                entity.HasIndex(e => e.FirstNameOwner).IsUnique(false);
+                entity.HasIndex(e => e.LastNameOwner).IsUnique(false);
+
+                entity.HasIndex(e => e.Name).IsUnique(false);
 
                 entity.Property(e => e.Name)
                     .HasMaxLength(50)
@@ -1490,6 +1500,10 @@ namespace CRM.Data
                 entity.HasIndex(e => new { e.Active, e.IdUser, e.Status,e.Version }).IsUnique();
                 entity.HasIndex(e => e.IdUser).IsUnique(false);
                 entity.Property(e => e.BirthDate).HasColumnType("date");
+                entity.HasIndex(e => e.RegistrantionNumber).IsUnique(true);
+                entity.HasIndex(e => e.Login).IsUnique(false);
+                entity.HasIndex(e => e.Password).IsUnique(false);
+                entity.HasIndex(e => e.GeneratedPassword).IsUnique(false);
 
                 entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
                 entity.Property(e => e.GeneratedPassword)

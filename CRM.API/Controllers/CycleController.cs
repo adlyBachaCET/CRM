@@ -26,14 +26,22 @@ namespace CRM_API.Controllers
         private readonly ICycleService _CycleService;
         private readonly ICycleUserService _CycleUserService;
         private readonly IUserService _UserService;
+        private readonly IPotentielCycleService _PotentielCycleService;
+        private readonly IPotentielService _PotentielService;
 
         private readonly ISectorService _SectorService;
         private readonly ISectorCycleService _SectorCycleService;
 
         private readonly IMapper _mapperService;
-        public CycleController(IUserService UserService, ICycleUserService CycleUserService,ISectorCycleService SectorCycleService,ISectorService SectorService,ICycleService CycleService, IMapper mapper)
+        public CycleController(IUserService UserService, ICycleUserService CycleUserService, 
+            IPotentielCycleService PotentielCycleService,
+              IPotentielService PotentielService,
+            ISectorCycleService SectorCycleService,ISectorService SectorService,
+            ICycleService CycleService, IMapper mapper)
         {
             _UserService = UserService;
+            _PotentielCycleService = PotentielCycleService;
+            _PotentielService = PotentielService;
 
             _CycleUserService = CycleUserService;
                _SectorCycleService = SectorCycleService;
@@ -55,6 +63,10 @@ namespace CRM_API.Controllers
 
                 //*** Mappage ***
                 var Cycle = _mapperService.Map<SaveCycleResource, Cycle>(AffectationCycleUser.SaveCycleResource);
+            Cycle.CreatedOn = DateTime.UtcNow;
+            Cycle.UpdatedOn = DateTime.UtcNow;
+            Cycle.CreatedBy = Id;
+            Cycle.UpdatedBy = Id;
             //*** Creation dans la base de données ***
             var NewCycle = await _CycleService.Create(Cycle);
             //*** Mappage ***
@@ -89,6 +101,7 @@ namespace CRM_API.Controllers
             {
                 foreach (var item in AffectationCycleUser.Ids)
                 {
+                    
                     SaveCycleUserResource SaveCycleUserResource = new SaveCycleUserResource();
                     SaveCycleUserResource.IdCycle = CycleResource.IdCycle;
                     SaveCycleUserResource.IdUser = item;
@@ -100,9 +113,110 @@ namespace CRM_API.Controllers
                     await _CycleUserService.Create(CycleUser);
                 }
             }
+            if (AffectationCycleUser.CyclePotentiel.Count > 0)
+            {
+                foreach (var item in AffectationCycleUser.CyclePotentiel)
+                {
+                    var Potentiel = await _PotentielService.GetById(item.IdPotentiel);
+                 //   var Potentiel = await _PotentielService.GetById(item.IdPotentiel);
+
+                    PotentielCycle SaveCycleUserResource = new PotentielCycle();
+
+                    SaveCycleUserResource.IdCycle = CycleResource.IdCycle;
+                    SaveCycleUserResource.VersionCycle = CycleResource.Version;
+                    SaveCycleUserResource.StatusCycle = CycleResource.Status;
+                    SaveCycleUserResource.IdCycleNavigation = NewCycle;
+                    SaveCycleUserResource.IdPotentiel = Potentiel.IdPotentiel;
+                    SaveCycleUserResource.VersionPotentiel = Potentiel.Version;
+                    SaveCycleUserResource.StatusPotentiel = Potentiel.Status;
+                    SaveCycleUserResource.IdPotentielNavigation = Potentiel;
+
+                    SaveCycleUserResource.CreatedOn = DateTime.UtcNow;
+                    SaveCycleUserResource.UpdatedOn = DateTime.UtcNow;
+                    SaveCycleUserResource.CreatedBy = Id;
+                    SaveCycleUserResource.UpdatedBy = Id;
+                    SaveCycleUserResource.Freq = item.Frequence;
+                    await _PotentielCycleService.Create(SaveCycleUserResource);
+                }
+            }
                 return Ok(CycleResource);
          
         }
+        [HttpPut("{Id}")]
+        public async Task<ActionResult<CycleResource>> UpdateCycle([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
+        string Token, int Id, AffectationCycleUser AffectationCycleUser)
+        {
+            var claims = _UserService.getPrincipal(Token);
+            var Role = claims.FindFirst("Role").Value;
+            var IdUser = int.Parse(claims.FindFirst("Id").Value);
+            ErrorHandling ErrorMessag = new ErrorHandling();
+
+            var CycleToBeModified = await _CycleService.GetById(Id);
+            if (CycleToBeModified == null) return BadRequest("Le Cycle n'existe pas"); //NotFound();
+            var Cycles = _mapperService.Map<SaveCycleResource, Cycle>(AffectationCycleUser.SaveCycleResource);
+            if (AffectationCycleUser.SaveCycleResource.NbSemaine > CycleToBeModified.NbSemaine)
+            {
+                for (int i = CycleToBeModified.NbSemaine; i < AffectationCycleUser.SaveCycleResource.NbSemaine + 1; i++)
+                {
+                    SaveSectorResource sectorResource = new SaveSectorResource();
+                    sectorResource.Name = "S" + i;
+                    sectorResource.Description = "";
+
+                    var NewSector = _mapperService.Map<SaveSectorResource, Sector>(sectorResource);
+                    NewSector.UpdatedOn = DateTime.UtcNow;
+                    NewSector.CreatedOn = DateTime.UtcNow;
+                    NewSector.CreatedBy = IdUser;
+                    NewSector.UpdatedBy = IdUser;
+                    NewSector.Status = 0;
+                    // sectorResource.
+                    NewSector.Version = 0;
+                    await _SectorService.Create(NewSector);
+                    SaveSectorCycleResource Affectation = new SaveSectorCycleResource();
+                    Affectation.IdCycle = Id;
+                    Affectation.IdSector = NewSector.IdSector;
+                    var AffectationCycleSector = _mapperService.Map<SaveSectorCycleResource, SectorCycle>(Affectation);
+                    AffectationCycleSector.UpdatedOn = DateTime.UtcNow;
+                    AffectationCycleSector.CreatedOn = DateTime.UtcNow;
+                    AffectationCycleSector.CreatedBy = IdUser;
+                    AffectationCycleSector.UpdatedBy = IdUser;
+                    var CreatedCycle = await _SectorCycleService.Create(AffectationCycleSector);
+
+                }
+            }
+            else
+            {
+                for (int i = 0; i < AffectationCycleUser.SaveCycleResource.NbSemaine; i++)
+                { 
+                
+                }
+
+                }
+            await _CycleService.Update(CycleToBeModified, Cycles);
+            var CycleUpdated = await _CycleService.GetById(Id);
+            var CycleUpdatedO = await _CycleService.GetById(Id);
+
+
+            foreach (var item in AffectationCycleUser.Ids)
+            {
+                SaveCycleUserResource SaveCycleUserResource = new SaveCycleUserResource();
+                SaveCycleUserResource.IdCycle = Id;
+                SaveCycleUserResource.IdUser = item;
+                var CycleUser = _mapperService.Map<SaveCycleUserResource, CycleUser>(SaveCycleUserResource);
+                CycleUser.CreatedOn = DateTime.UtcNow;
+                CycleUser.UpdatedOn = DateTime.UtcNow;
+                CycleUser.CreatedBy = IdUser;
+                CycleUser.UpdatedBy = IdUser;
+                var CycleUserInDB = await _CycleUserService.GetByIdCycleUser(Id, item);
+                if (CycleUserInDB == null)
+                {
+                    await _CycleUserService.Create(CycleUser);
+                }
+            }
+            return Ok(CycleUpdatedO);
+
+        }
+
+
         [HttpGet]
         public async Task<ActionResult<CycleResource>> GetAllCycles([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
         string Token)
@@ -227,70 +341,7 @@ namespace CRM_API.Controllers
 
             }
         }
-        [HttpPut("{Id}")]
-        public async Task<ActionResult<CycleResource>> UpdateCycle([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
-        string Token, int Id, AffectationCycleUser AffectationCycleUser)
-        {
-            var claims = _UserService.getPrincipal(Token);
-            var Role = claims.FindFirst("Role").Value;
-            var IdUser = int.Parse(claims.FindFirst("Id").Value);
-            ErrorHandling ErrorMessag = new ErrorHandling();
-          
-                var CycleToBeModified = await _CycleService.GetById(Id);
-            if (CycleToBeModified == null) return BadRequest("Le Cycle n'existe pas"); //NotFound();
-            var Cycles = _mapperService.Map<SaveCycleResource, Cycle>(AffectationCycleUser.SaveCycleResource);
-            for (int i = CycleToBeModified.NbSemaine; i < AffectationCycleUser.SaveCycleResource.NbSemaine+1; i++)
-            {
-                SaveSectorResource sectorResource = new SaveSectorResource();
-                sectorResource.Name = "S" + i;
-                sectorResource.Description = "";
-
-                var NewSector = _mapperService.Map<SaveSectorResource, Sector>(sectorResource);
-                NewSector.UpdatedOn = DateTime.UtcNow;
-                NewSector.CreatedOn = DateTime.UtcNow;
-                NewSector.CreatedBy = IdUser;
-                NewSector.UpdatedBy = IdUser;
-                NewSector.Status = 0;
-                // sectorResource.
-                NewSector.Version = 0;
-                await _SectorService.Create(NewSector);
-                SaveSectorCycleResource Affectation = new SaveSectorCycleResource();
-                Affectation.IdCycle = Id;
-                Affectation.IdSector = NewSector.IdSector;
-                var AffectationCycleSector = _mapperService.Map<SaveSectorCycleResource, SectorCycle>(Affectation);
-                AffectationCycleSector.UpdatedOn = DateTime.UtcNow;
-                AffectationCycleSector.CreatedOn = DateTime.UtcNow;
-                AffectationCycleSector.CreatedBy = IdUser;
-                AffectationCycleSector.UpdatedBy = IdUser;
-                var CreatedCycle = await _SectorCycleService.Create(AffectationCycleSector);
-
-            }
-
-            await _CycleService.Update(CycleToBeModified, Cycles);
-                var CycleUpdated = await _CycleService.GetById(Id);
-            var CycleUpdatedO = await _CycleService.GetById(Id);
-
-
-            foreach (var item in AffectationCycleUser.Ids)
-                {
-                    SaveCycleUserResource SaveCycleUserResource = new SaveCycleUserResource();
-                    SaveCycleUserResource.IdCycle = Id;
-                    SaveCycleUserResource.IdUser = item;
-                    var CycleUser = _mapperService.Map<SaveCycleUserResource, CycleUser>(SaveCycleUserResource);
-                    CycleUser.CreatedOn = DateTime.UtcNow;
-                    CycleUser.UpdatedOn = DateTime.UtcNow;
-                    CycleUser.CreatedBy = IdUser;
-                    CycleUser.UpdatedBy = IdUser;
-                var CycleUserInDB = await _CycleUserService.GetByIdCycleUser(Id, item);
-                if (CycleUserInDB == null) { 
-                    await _CycleUserService.Create(CycleUser);
-                }
-            }
-                return Ok(CycleUpdatedO);
-      
-         }
-
-
+   
         [HttpDelete("{Id}")]
         public async Task<ActionResult> DeleteCycle([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
         string Token, int Id)

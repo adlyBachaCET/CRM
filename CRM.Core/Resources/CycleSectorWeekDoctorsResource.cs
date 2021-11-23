@@ -31,10 +31,7 @@ namespace CRM.Core.Models
         public Status Status { get; set; }
         public int Version { get; set; }
 
-        public virtual Cycle IdCycleNavigation { get; set; }
-        public virtual Doctor IdDoctorNavigation { get; set; }
-        public virtual Sector IdSectorNavigation { get; set; }
-        public virtual User IdUserNavigation { get; set; }
+  
         public DateTime? CreatedOn { get; set; }
         public DateTime? UpdatedOn { get; set; }
         public int Active { get; set; }

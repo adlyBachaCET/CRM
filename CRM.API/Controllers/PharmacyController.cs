@@ -102,7 +102,7 @@ namespace CRM_API.Controllers
             _InfoService = InfoService;
             _mapperService = mapper;
         }
-        [HttpPost]
+        [HttpPost("Verify")]
         public async Task<ActionResult> Verify([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token,
                 SaveAddPharmacyResource SaveAddPharmacyResource)
         {
@@ -143,11 +143,11 @@ namespace CRM_API.Controllers
                 Pharmacy.StatusLocality2 = Locality2.Status;
                 Pharmacy.IdLocality2 = Locality2.IdLocality;
                 Pharmacy.CreatedOn = DateTime.UtcNow;
-            Pharmacy.UpdatedOn = DateTime.UtcNow;
-            Pharmacy.Active = 0;
-            Pharmacy.Version = 0;
-            Pharmacy.CreatedBy = Id;
-            Pharmacy.UpdatedBy = Id;
+                     Pharmacy.UpdatedOn = DateTime.UtcNow;
+                    Pharmacy.Active = 0;
+                 Pharmacy.Version = 0;
+                 Pharmacy.CreatedBy = Id;
+                    Pharmacy.UpdatedBy = Id;
 
                     var Brick1 = await _BrickService.GetByIdActif(SaveAddPharmacyResource.SavePharmacyResource.IdBrick1);
                     var Brick2 = await _BrickService.GetByIdActif(SaveAddPharmacyResource.SavePharmacyResource.IdBrick2);
@@ -461,26 +461,79 @@ namespace CRM_API.Controllers
                 var PharmacyToBeModified = await _PharmacyService.GetById(Id);
             if (PharmacyToBeModified == null) return BadRequest("Le Pharmacy n'existe pas"); //NotFound();
             var Pharmacys = _mapperService.Map<SavePharmacyResource, Pharmacy>(SavePharmacyResource);
-            //var newPharmacy = await _PharmacyService.Create(Pharmacys);
-           // Pharmacys.CreatedOn = SavePharmacyResource.;
-            Pharmacys.UpdatedOn = DateTime.UtcNow;
-                Pharmacys.UpdatedBy = IdUser;
+ 
 
-                if (Role == "Manager")
-                {
-                    Pharmacys.Status = Status.Approuved;
-                }
-                else if (Role == "Delegue")
-                {
-                    Pharmacys.Status = Status.Pending;
-                }
-                await _PharmacyService.Update(PharmacyToBeModified, Pharmacys);
+
+            //*** Mappage ***
+            var Pharmacy = _mapperService.Map<SavePharmacyResource, Pharmacy>(SavePharmacyResource);
+            var Locality1 = await _LocalityService.GetById(SavePharmacyResource.IdLocality1);
+            Pharmacy.NameLocality1 = Locality1.Name;
+            Pharmacy.VersionLocality1 = Locality1.Version;
+            Pharmacy.StatusLocality1 = Locality1.Status;
+            Pharmacy.IdLocality1 = Locality1.IdLocality;
+            var Locality2 = await _LocalityService.GetById(SavePharmacyResource.IdLocality2);
+            Pharmacy.NameLocality2 = Locality2.Name;
+            Pharmacy.VersionLocality2 = Locality2.Version;
+            Pharmacy.StatusLocality2 = Locality2.Status;
+            Pharmacy.IdLocality2 = Locality2.IdLocality;
+            Pharmacy.CreatedOn = DateTime.UtcNow;
+            Pharmacy.UpdatedOn = DateTime.UtcNow;
+            Pharmacy.Active = 0;
+            Pharmacy.Version = 0;
+            Pharmacy.CreatedBy = PharmacyToBeModified.CreatedBy;
+            Pharmacy.UpdatedBy = IdUser;
+
+            var Brick1 = await _BrickService.GetByIdActif(SavePharmacyResource.IdBrick1);
+            var Brick2 = await _BrickService.GetByIdActif(SavePharmacyResource.IdBrick2);
+            if (Brick1 != null)
+            {
+                Pharmacy.IdBrick1 = Brick1.IdBrick;
+                Pharmacy.VersionBrick1 = Brick1.Version;
+                Pharmacy.StatusBrick1 = Brick1.Status;
+                Pharmacy.NameBrick1 = Brick1.Name;
+                Pharmacy.NumBrick1 = Brick1.NumSystemBrick;
+                // Pharmacy.Brick1 = Brick1;
+            }
+            else
+            {
+                Pharmacy.IdBrick1 = null;
+                Pharmacy.VersionBrick1 = null;
+                Pharmacy.StatusBrick1 = null;
+                Pharmacy.NameBrick1 = "";
+                Pharmacy.NumBrick1 = 0;
+            }
+            if (Brick2 != null)
+            {
+                Pharmacy.IdBrick2 = Brick2.IdBrick;
+                Pharmacy.VersionBrick2 = Brick2.Version;
+                Pharmacy.StatusBrick2 = Brick2.Status;
+                Pharmacy.NameBrick2 = Brick2.Name;
+                Pharmacy.NumBrick2 = Brick2.NumSystemBrick;
+                // Pharmacy.Brick2 = Brick2;
+            }
+            else
+            {
+                Pharmacy.IdBrick2 = null;
+                Pharmacy.VersionBrick2 = null;
+                Pharmacy.StatusBrick2 = null;
+                Pharmacy.NameBrick2 = "";
+                Pharmacy.NumBrick2 = 0;
+            }
+            if (Role == "Manager")
+            {
+                Pharmacy.Status = Status.Approuved;
+            }
+            else if (Role == "Delegue")
+            {
+                Pharmacy.Status = Status.Pending;
+            }
+            await _PharmacyService.Update(PharmacyToBeModified, Pharmacys);
 
             var PharmacyUpdated = await _PharmacyService.GetById(Id);
 
             var PharmacyResourceUpdated = _mapperService.Map<Pharmacy, PharmacyResource>(PharmacyUpdated);
 
-            return Ok();
+            return Ok(PharmacyResourceUpdated);
            
         }
         [HttpPut("Approuve/{Id}")]

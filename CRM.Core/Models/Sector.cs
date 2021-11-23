@@ -16,6 +16,7 @@ namespace CRM.Core.Models
         public int? CreatedBy { get; set; }
         public int? UpdatedBy { get; set; }
         public int Active { get; set; }
+
         public int IdSector { get; set; }
         public string Name { get; set; }
         public DateTime? CreatedOn { get; set; }

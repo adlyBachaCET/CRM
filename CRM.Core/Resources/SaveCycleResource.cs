@@ -11,6 +11,8 @@ namespace CRM.Core.Models
         public string Description { get; set; }
         public int? NbDays { get; set; }
         public int NbSemaine { get; set; }
+        public int NbVisitWeek { get; set; }
+
 
     }
 }
