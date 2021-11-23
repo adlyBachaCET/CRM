@@ -102,7 +102,23 @@ namespace CRM_API.Controllers
             _InfoService = InfoService;
             _mapperService = mapper;
         }
+        [HttpPost]
+        public async Task<ActionResult> Verify([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token,
+                SaveAddPharmacyResource SaveAddPharmacyResource)
+        {
+            var Exist = await _PharmacyService.Verify(SaveAddPharmacyResource);
 
+            if (Exist.ExistPharmacyEmail == false && Exist.ExistPharmacyFirstName == false
+                && Exist.ExistPharmacyLastName == false && Exist.ExistPharmacyName == false) {
+                return BadRequest();
+            }
+            else
+            {
+                var genericResult = new { Exist = "Already exists", Pharmacy = Exist };
+
+                return Ok(genericResult);
+            }
+        }
 
         [HttpPost]
         public async Task<ActionResult<PharmacyResource>> CreatePharmacy([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token,
@@ -113,12 +129,7 @@ namespace CRM_API.Controllers
             var Role = claims.FindFirst("Role").Value;
             var Id = int.Parse(claims.FindFirst("Role").Value);
 
-                var Exist = await _PharmacyService.Verify(SaveAddPharmacyResource);
-
-            if (Exist.ExistPharmacyEmail==false&& Exist.ExistPharmacyFirstName == false
-                && Exist.ExistPharmacyLastName== false&& Exist.ExistPharmacyName == false) {
-
-
+      
                     //*** Mappage ***
                     var Pharmacy = _mapperService.Map<SavePharmacyResource, Pharmacy>(SaveAddPharmacyResource.SavePharmacyResource);
                 var Locality1 = await _LocalityService.GetById(SaveAddPharmacyResource.SavePharmacyResource.IdLocality1);
@@ -201,13 +212,8 @@ namespace CRM_API.Controllers
 
 
                 return Ok(genericResult);
-            }
-            else
-            {
-                var genericResult = new { Exist = "Already exists", Pharmacy = Exist };
-
-                return Ok(genericResult);
-                }           
+            
+              
             }
         [HttpGet("Phone/{Number}")]
         public async Task<ActionResult<PharmacyResource>> GetPharmacysNumber([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token,

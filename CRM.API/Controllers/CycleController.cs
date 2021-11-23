@@ -85,6 +85,8 @@ namespace CRM_API.Controllers
               var CreatedCycle= await _SectorCycleService.Create(AffectationCycleSector);
                
                 }
+            if (AffectationCycleUser.Ids.Count > 0)
+            {
                 foreach (var item in AffectationCycleUser.Ids)
                 {
                     SaveCycleUserResource SaveCycleUserResource = new SaveCycleUserResource();
@@ -97,6 +99,7 @@ namespace CRM_API.Controllers
                     CycleUser.UpdatedBy = Id;
                     await _CycleUserService.Create(CycleUser);
                 }
+            }
                 return Ok(CycleResource);
          
         }
@@ -199,18 +202,22 @@ namespace CRM_API.Controllers
             }
         }
         [HttpGet("CyclesByUser/{Id}")]
-        public async Task<ActionResult<CycleResource>> GetCyclesByUserById([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
+        public async Task<ActionResult<List<CycleResource>>> GetCyclesByUserById([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
         string Token, int Id)
         {
             StringValues token = "";
             ErrorHandling ErrorMessag = new ErrorHandling();
             Request.Headers.TryGetValue("token", out token);
+            List<CycleResource> CycleResources = new List<CycleResource>();
             if (token != "")
             {
                 var Cycles = await _CycleUserService.GetByIdUser(Id);
                 if (Cycles == null) return NotFound();
-                var CycleRessource = _mapperService.Map<List<Cycle>, CycleResource>(Cycles);
-                return Ok(CycleRessource);
+                foreach(var item in Cycles) { 
+                var CycleResource = _mapperService.Map<Cycle, CycleResource>(item);
+                    CycleResources.Add(CycleResource);
+                }
+                return Ok(CycleResources);
             }
             else
             {
@@ -232,7 +239,7 @@ namespace CRM_API.Controllers
                 var CycleToBeModified = await _CycleService.GetById(Id);
             if (CycleToBeModified == null) return BadRequest("Le Cycle n'existe pas"); //NotFound();
             var Cycles = _mapperService.Map<SaveCycleResource, Cycle>(AffectationCycleUser.SaveCycleResource);
-            for (int i = CycleToBeModified.NbSemaine; i < AffectationCycleUser.SaveCycleResource.NbSemaine; i++)
+            for (int i = CycleToBeModified.NbSemaine; i < AffectationCycleUser.SaveCycleResource.NbSemaine+1; i++)
             {
                 SaveSectorResource sectorResource = new SaveSectorResource();
                 sectorResource.Name = "S" + i;
