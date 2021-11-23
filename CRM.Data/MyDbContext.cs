@@ -1500,7 +1500,7 @@ namespace CRM.Data
                 entity.HasIndex(e => new { e.Active, e.IdUser, e.Status,e.Version }).IsUnique();
                 entity.HasIndex(e => e.IdUser).IsUnique(false);
                 entity.Property(e => e.BirthDate).HasColumnType("date");
-                entity.HasIndex(e => e.RegistrantionNumber).IsUnique(true);
+                entity.HasIndex(e => new { e.RegistrantionNumber,e.IdUser,e.Version }).IsUnique(true);
                 entity.HasIndex(e => e.Login).IsUnique(false);
                 entity.HasIndex(e => e.Password).IsUnique(false);
                 entity.HasIndex(e => e.GeneratedPassword).IsUnique(false);
