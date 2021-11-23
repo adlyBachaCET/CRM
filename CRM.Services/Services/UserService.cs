@@ -56,6 +56,9 @@ namespace CRM.Services.Services
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
             var claims = new[] {
+                          new Claim("Exipres On", DateTime.UtcNow.AddMinutes(120).ToString()),
+                          new Claim("Created On", DateTime.UtcNow.ToString()),
+
                           new Claim("Photo", userInfo.Photo.ToString()),
                           new Claim("Id", userInfo.IdUser.ToString()),
                           new Claim("FirstName", userInfo.FirstName)

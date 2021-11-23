@@ -60,9 +60,10 @@ namespace CRM_API.Controllers
                 var claims = _UserService.getPrincipal(Token);
                 var Role = claims.FindFirst("Role").Value;
                 var Id = int.Parse(claims.FindFirst("Id").Value);
+                var exp = DateTime.Parse(claims.FindFirst("Exipres On").Value);
 
-                //*** Mappage ***
-                var Cycle = _mapperService.Map<SaveCycleResource, Cycle>(AffectationCycleUser.SaveCycleResource);
+            //*** Mappage ***
+            var Cycle = _mapperService.Map<SaveCycleResource, Cycle>(AffectationCycleUser.SaveCycleResource);
             Cycle.CreatedOn = DateTime.UtcNow;
             Cycle.UpdatedOn = DateTime.UtcNow;
             Cycle.CreatedBy = Id;
@@ -85,16 +86,22 @@ namespace CRM_API.Controllers
                 NewSector.Status = 0;
                     // sectorResource.
                 NewSector.Version = 0;
-                    await _SectorService.Create(NewSector);
-                SaveSectorCycleResource Affectation = new SaveSectorCycleResource();
+               await _SectorService.Create(NewSector);
+                SectorCycle Affectation = new SectorCycle();
                 Affectation.IdCycle = CycleResource.IdCycle;
+                Affectation.VersionCycle = CycleResource.Version;
+                Affectation.StatusCycle = CycleResource.Status;
+                Affectation.IdCycleNavigation = NewCycle;
+
                 Affectation.IdSector = NewSector.IdSector;
-                var AffectationCycleSector = _mapperService.Map<SaveSectorCycleResource, SectorCycle>(Affectation);
-                AffectationCycleSector.UpdatedOn = DateTime.UtcNow;
-                AffectationCycleSector.CreatedOn = DateTime.UtcNow;
-                AffectationCycleSector.CreatedBy = Id;
-               AffectationCycleSector.UpdatedBy = Id;
-              var CreatedCycle= await _SectorCycleService.Create(AffectationCycleSector);
+                Affectation.VersionSector = NewSector.Version;
+                Affectation.StatusSector = NewSector.Status;
+                Affectation.IdSectorNavigation = NewSector;
+                Affectation.UpdatedOn = DateTime.UtcNow;
+                Affectation.CreatedOn = DateTime.UtcNow;
+                Affectation.CreatedBy = Id;
+                Affectation.UpdatedBy = Id;
+              var CreatedCycle= await _SectorCycleService.Create(Affectation);
                
                 }
             if (AffectationCycleUser.Ids.Count > 0)
@@ -102,10 +109,16 @@ namespace CRM_API.Controllers
                 foreach (var item in AffectationCycleUser.Ids)
                 {
                     
-                    SaveCycleUserResource SaveCycleUserResource = new SaveCycleUserResource();
-                    SaveCycleUserResource.IdCycle = CycleResource.IdCycle;
-                    SaveCycleUserResource.IdUser = item;
-                    var CycleUser = _mapperService.Map<SaveCycleUserResource, CycleUser>(SaveCycleUserResource);
+                    CycleUser CycleUser = new CycleUser();
+                    CycleUser.IdCycle = CycleResource.IdCycle;
+                    CycleUser.VersionCycle = CycleResource.Version;
+                    CycleUser.StatusCycle = CycleResource.Status;
+                    CycleUser.Cycle = NewCycle;
+                    var User = await _UserService.GetById(item);
+                    CycleUser.IdUser = item;
+                    CycleUser.VersionUser = User.Version;
+                    CycleUser.StatusUser = User.Status;
+                    CycleUser.User = User;
                     CycleUser.CreatedOn = DateTime.UtcNow;
                     CycleUser.UpdatedOn = DateTime.UtcNow;
                     CycleUser.CreatedBy = Id;
@@ -185,7 +198,7 @@ namespace CRM_API.Controllers
             }
             else
             {
-                for (int i = 0; i < AffectationCycleUser.SaveCycleResource.NbSemaine; i++)
+                for (int i=AffectationCycleUser.SaveCycleResource.NbSemaine; i > CycleToBeModified.NbSemaine-1; i--)
                 { 
                 
                 }

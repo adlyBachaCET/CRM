@@ -389,18 +389,24 @@ namespace CRM_API.Controllers
         /// <summary>This method updates .</summary>
         /// <param name="Id">Id of the BusinessUnit .</param>
         [HttpPut("Photo/{Id}")]
-        public async Task<IActionResult> Photo(int Id, UpdatePhoto File)
+        public async Task<IActionResult> Photo([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
+        string Token, int Id, IFormFile File)
         {
+            var claims = _UserService.getPrincipal(Token);
+            var Role = claims.FindFirst("Role").Value;
+            var IdUser = int.Parse(claims.FindFirst("Id").Value);
+
             try
             {
-                string path = Path.Combine(Directory.GetCurrentDirectory(), "Images", File.FormFile.FileName);
+                string path = Path.Combine(Directory.GetCurrentDirectory(), "Images", File.FileName);
 
                 using (Stream stream = new FileStream(path, FileMode.Create))
                 {
-                    await File.FormFile.CopyToAsync(stream);
+                    await File.CopyToAsync(stream);
                 }
            
-                await _UserService.UpdatePhoto(Id, File.FormFile.FileName);
+                await _UserService.UpdatePhoto(IdUser, File.FileName);
+               //claims.FindFirst("Photo").Value;
 
                 return StatusCode(StatusCodes.Status201Created);
             }
