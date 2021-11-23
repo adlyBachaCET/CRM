@@ -13,6 +13,7 @@ namespace CRM.Core.Services
         Task Delete(CycleUser CycleUserToBeDeleted);
         Task DeleteRange(List<CycleUser> CycleUser);
         Task<List<Cycle>> GetByIdUser(int id);
+        Task<CycleUser> GetByIdCycleUser(int idCycle,int idUser);
 
         Task<IEnumerable<CycleUser>> GetAll();
         Task<IEnumerable<CycleUser>> GetAllActif();

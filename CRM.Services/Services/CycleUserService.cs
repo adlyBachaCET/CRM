@@ -99,6 +99,12 @@ namespace CRM.Services.Services
             return
                              await _unitOfWork.CycleUsers.GetAllInActif();
         }
+
+        public async  Task<CycleUser> GetByIdCycleUser(int idCycle, int idUser)
+        {
+            return
+                            await _unitOfWork.CycleUsers.SingleOrDefault(i => i.IdCycle == idCycle && i.IdUser == idCycle && i.Active == 0);
+        }
         //public Task<CycleUser> CreateCycleUser(CycleUser newCycleUser)
         //{
         //    throw new NotImplementedException();

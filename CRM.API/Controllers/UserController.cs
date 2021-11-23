@@ -87,10 +87,11 @@ namespace CRM_API.Controllers
             User.UpdatedOn = DateTime.UtcNow;
             User.CreatedOn = DateTime.UtcNow;
             var Locality1 = await _LocalityService.GetById(SaveUserResource.IdLocality1);
+            var Locality2 = await _LocalityService.GetById(SaveUserResource.IdLocality2);
+
             User.NameLocality1 = Locality1.Name;
        
             User.IdLocality1 = Locality1.IdLocality;
-            var Locality2 = await _LocalityService.GetById(SaveUserResource.IdLocality2);
             User.NameLocality2 = Locality2.Name;
            User.IdLocality2 = Locality2.IdLocality;
             //*** Creation dans la base de données ***
@@ -201,6 +202,9 @@ namespace CRM_API.Controllers
             var UserResource = _mapperService.Map<User, SaveUserResource>(User);
             var UserResourceWhitoutPassword = _mapperService.Map<SaveUserResource, SaveUserResourceWithoutPassword>(UserResource);
             UserResourceWhitoutPassword.IdUser = Id;
+            UserResourceWhitoutPassword.NameLocality1 = User.NameLocality1;
+            UserResourceWhitoutPassword.NameLocality2 = User.NameLocality2;
+
             Profile.User = UserResourceWhitoutPassword;
 
           
@@ -428,13 +432,16 @@ namespace CRM_API.Controllers
                 User.Password = UserInDataBase.Password;
 
 
-                User.IdLocality1 = UpdateUserResource.User.IdLocality1;
-                User.NameLocality1 = UpdateUserResource.User.NameLocality1;
+                var Locality1 = await _LocalityService.GetById(UpdateUserResource.User.IdLocality1);
+                var Locality2 = await _LocalityService.GetById(UpdateUserResource.User.IdLocality2);
 
-                User.IdLocality2 = UpdateUserResource.User.IdLocality2;
-                User.NameLocality2 = UpdateUserResource.User.NameLocality2;
+                User.NameLocality1 = Locality1.Name;
 
-            
+                User.IdLocality1 = Locality1.IdLocality;
+                User.NameLocality2 = Locality2.Name;
+                User.IdLocality2 = Locality2.IdLocality;
+
+
                 User.UpdatedOn = DateTime.UtcNow;
                User.CreatedOn = UserInDataBase.CreatedOn;
                 //User.IdUser = Id;
