@@ -387,9 +387,10 @@ namespace CRM_API.Controllers
             }
         }
         /// <summary>This method updates .</summary>
-        [HttpPut("Photo")]
+        /// <param name="Id">Id of the BusinessUnit .</param>
+        [HttpPut("Photo/{Id}")]
         public async Task<IActionResult> Photo([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
-        string Token, IFormFile File)
+        string Token, int Id, IFormFile File)
         {
             var claims = _UserService.getPrincipal(Token);
             var Role = claims.FindFirst("Role").Value;
@@ -405,7 +406,7 @@ namespace CRM_API.Controllers
                     await File.CopyToAsync(stream);
                 }
            
-                await _UserService.UpdatePhoto(IdUser, "" + IdUser + ext);
+                await _UserService.UpdatePhoto(Id, "" + IdUser + ext);
                //claims.FindFirst("Photo").Value;
 
                 return StatusCode(StatusCodes.Status201Created);
