@@ -403,11 +403,14 @@ namespace CRM_API.Controllers
                 {
                     string ext = System.IO.Path.GetExtension(f.FileName);
                     string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images", "" + IdUser + ext);
-
-                    using (Stream stream = new FileStream(path, FileMode.Create))
+                    using (var stream = System.IO.File.Create(path))
                     {
                         await f.CopyToAsync(stream);
                     }
+                    /*  using (Stream stream = new FileStream(path, FileMode.Create))
+                      {
+                          await f.CopyToAsync(stream);
+                      }*/
                     await _UserService.UpdatePhoto(IdUser, "https://localhost:44341/Images/" + IdUser + ext);
 
                 }
