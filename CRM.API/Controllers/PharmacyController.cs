@@ -87,6 +87,7 @@ namespace CRM_API.Controllers
             _RequestDoctorService = RequestDoctorService;
             _ProductPharmacyService = ProductPharmacyService;
             _ProductService = ProductService;
+            _PharmacyService = PharmacyService;
 
             _ObjectionService = ObjectionService;
             _DoctorService = DoctorService;

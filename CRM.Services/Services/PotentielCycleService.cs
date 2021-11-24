@@ -51,7 +51,18 @@ namespace CRM.Services.Services
             return
                 await _unitOfWork.PotentielCycles.GetById(id);
         }
-   
+        public async Task<IEnumerable<Potentiel>> GetPotentielsById(int id)
+        {
+            List<Potentiel> Potentiels = new List<Potentiel>();
+            var PotentielCycles = await _unitOfWork.PotentielCycles.Find(i => i.IdCycle == id);
+            foreach(var item in PotentielCycles)
+            {
+                var Potentiel = await _unitOfWork.Potentiels.SingleOrDefault(i => i.IdPotentiel == item.IdPotentiel);
+                Potentiels.Add(Potentiel);
+            }
+            return Potentiels;
+               ;
+        }
         public async Task Update(PotentielCycle PotentielCycleToBeUpdated, PotentielCycle PotentielCycle)
         {
             PotentielCycle.Active = 1;
@@ -86,6 +97,12 @@ namespace CRM.Services.Services
         {
             return
                              await _unitOfWork.PotentielCycles.GetAllInActif();
+        }
+
+        public async Task<PotentielCycle> GetByIdPotentielCycle(int IdPotentiel, int idCycle)
+        {
+            return
+                           await _unitOfWork.PotentielCycles.SingleOrDefault(i=>i.IdCycle==idCycle&& i.IdPotentiel==IdPotentiel&& i.Active==0);
         }
         //public Task<PotentielCycle> CreatePotentielCycle(PotentielCycle newPotentielCycle)
         //{

@@ -27,12 +27,18 @@ namespace CRM.Core.Models
         public int VersionsUser { get; set; }
         
         public virtual User User { get; set; }
-        public int IdDoctor { get; set; }
-        public Status StatusDoctor { get; set; }
+        public int? IdDoctor { get; set; }
+        public Status? StatusDoctor { get; set; }
 
-        public int VersionsDoctor { get; set; }
+        public int? VersionsDoctor { get; set; }
 
         public virtual Doctor Doctor { get; set; }
+        public int? IdPharmacy { get; set; }
+        public Status? StatusPharmacy { get; set; }
+
+        public int? VersionsPharmacy { get; set; }
+
+        public virtual Pharmacy Pharmacy { get; set; }
 
 
     }

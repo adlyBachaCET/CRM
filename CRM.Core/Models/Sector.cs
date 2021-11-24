@@ -21,8 +21,9 @@ namespace CRM.Core.Models
         public string Name { get; set; }
         public DateTime? CreatedOn { get; set; }
         public DateTime? UpdatedOn { get; set; }
-        public string Description { get; set; }
         public Status Status { get; set; }
+        public virtual ICollection<PotentielSector> PotentielSector { get; set; }
+
         public virtual ICollection<Target> Target { get; set; }
         public virtual ICollection<SectorLocality> SectorLocality { get; set; }
         public virtual ICollection<SectorCycle> WeekSectorCycle { get; set; }

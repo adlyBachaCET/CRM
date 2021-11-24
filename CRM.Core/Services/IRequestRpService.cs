@@ -16,6 +16,7 @@ namespace CRM.Core.Services
         Task<IEnumerable<RequestRp>> GetAll();
         Task<IEnumerable<RequestRp>> GetAllActif();
         Task<IEnumerable<RequestRp>> GetAllInActif();
-
+        Task Approuve(RequestRp RequestRpToBeUpdated, RequestRp RequestRp);
+        Task Reject(RequestRp RequestRpToBeUpdated, RequestRp RequestRp);
     }
 }

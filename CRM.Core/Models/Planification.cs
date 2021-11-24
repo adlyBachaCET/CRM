@@ -22,7 +22,6 @@ namespace CRM.Core.Models
 
         public string Description { get; set; }
 
-        public virtual ICollection<PlanificationTarget> PlanificationTarget { get; set; }
 
     }
 }

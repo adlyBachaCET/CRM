@@ -387,10 +387,9 @@ namespace CRM_API.Controllers
             }
         }
         /// <summary>This method updates .</summary>
-        /// <param name="Id">Id of the BusinessUnit .</param>
-        [HttpPut("Photo/{Id}")]
+        [HttpPut("Photo")]
         public async Task<IActionResult> Photo([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
-        string Token, int Id, IFormFile File)
+        string Token, IFormFile File)
         {
             var claims = _UserService.getPrincipal(Token);
             var Role = claims.FindFirst("Role").Value;

@@ -5,7 +5,9 @@ namespace CRM.Core.Models
 {
     public partial class Target 
     {
-        public string IdTarget { get; set; }
+        public string NomTarget { get; set; }
+        public int NumTarget { get; set; }
+
         public int IdCycle { get; set; }
         public Status StatusCycle { get; set; }
         public int VersionCycle { get; set; }      
@@ -44,7 +46,6 @@ namespace CRM.Core.Models
         public DateTime? CreatedOn { get; set; }
         public DateTime? UpdatedOn { get; set; }
         public int Active { get; set; }
-        public virtual ICollection<PlanificationTarget> PlanificationTarget { get; set; }
-
+   
     }
 }

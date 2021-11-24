@@ -57,7 +57,7 @@ namespace CRM.Data.Repositories
         }
         public async Task<IEnumerable<Phone>> GetAllRejected()
         {
-            var result = await MyDbContext.Phone.Where(a => a.Status == Status.Pending).ToListAsync();
+            var result = await MyDbContext.Phone.Where(a => a.Status == Status.Rejected).ToListAsync();
             return result;
         }
 

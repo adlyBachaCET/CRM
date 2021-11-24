@@ -15,7 +15,7 @@ namespace CRM.Core.Models
         public int? CreatedBy { get; set; }
         public int? UpdatedBy { get; set; }
         public int Active { get; set; }
-        public int Freq { get; set; }
+        public float Freq { get; set; }
 
     }
 }

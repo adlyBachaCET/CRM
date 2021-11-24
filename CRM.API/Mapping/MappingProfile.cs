@@ -9,13 +9,34 @@ namespace CRM_API.Mapping
     {
         public MappingProfile()
         {
+            //Target
+            CreateMap<Target, TargetResource>();
+      
+            CreateMap<Target, IEnumerable<TargetResource>>();
+            //Target
+            CreateMap<Appointement, AppointementResource>();
+            CreateMap<Appointement, SaveAppointementResource>();
+            CreateMap<Appointement, SaveAppointementResource>();
+            CreateMap<SaveAppointementResource, Appointement>();
+            CreateMap<Appointement, IEnumerable<AppointementResource>>();
             //VisitUser
             CreateMap<VisitUser, VisitUserResource>();
             CreateMap<VisitUser, SaveVisitUserResource>();
             CreateMap<VisitUser, SaveVisitUserResource>();
             CreateMap<SaveVisitUserResource, VisitUser>();
             CreateMap<VisitUser, IEnumerable<VisitUserResource>>();
-
+            //ActivityUser
+            CreateMap<ActivityUser, ActivityUserResource>();
+            CreateMap<ActivityUser, SaveActivityUserResource>();
+            CreateMap<ActivityUser, SaveActivityUserResource>();
+            CreateMap<SaveActivityUserResource, ActivityUser>();
+            CreateMap<ActivityUser, IEnumerable<ActivityUserResource>>();
+            //Activity
+            CreateMap<Activity, ActivityResource>();
+            CreateMap<Activity, SaveActivityResource>();
+            CreateMap<Activity, SaveActivityResource>();
+            CreateMap<SaveActivityResource, Activity>();
+            CreateMap<Activity, IEnumerable<ActivityResource>>();
             //Brick
             CreateMap<Brick, BrickResource>();
             CreateMap<Brick, SaveBrickResource>();
@@ -257,7 +278,18 @@ namespace CRM_API.Mapping
             CreateMap<SavePotentielCycleResource, PotentielCycle>();
             CreateMap<List<SavePotentielCycleResource>, List<PotentielCycle>>();
             CreateMap<PotentielCycle, IEnumerable<PotentielCycleResource>>();
-
+            //PotentielSector
+            CreateMap<PotentielSector, PotentielSectorResource>();
+            CreateMap<PotentielSector, SavePotentielSectorResource>();
+            CreateMap<SavePotentielSectorResource, PotentielSector>();
+            CreateMap<List<SavePotentielSectorResource>, List<PotentielSector>>();
+            CreateMap<PotentielSector, IEnumerable<PotentielSectorResource>>();
+            //Potentiel
+            CreateMap<Potentiel, PotentielResource>();
+            CreateMap<Potentiel, SavePotentielResource>();
+            CreateMap<SavePotentielResource, Potentiel>();
+            CreateMap<List<SavePotentielResource>, List<Potentiel>>();
+            CreateMap<Potentiel, IEnumerable<PotentielResource>>();
             //WeekInYear
             CreateMap<WeekInYear, WeekInYearResource>();
             CreateMap<WeekInYear, SaveWeekInYearResource>();

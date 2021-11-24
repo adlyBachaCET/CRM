@@ -50,11 +50,16 @@ namespace CRM_API
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             //Services 
+            services.AddScoped<IAppointementService, AppointementService>();
+            services.AddScoped<ITargetService, TargetService>();
+
             services.AddScoped<IProductSampleService, ProductSampleService>();
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IProductPharmacyService, ProductPharmacyService>();
-
             services.AddScoped<ISupportService, SupportService>();
+            services.AddScoped<IActivityUserService, ActivityUserService>();
+
+            services.AddScoped<IActivityService, ActivityService>();
 
             services.AddScoped<ICommandeService, CommandeService>();
             services.AddScoped<IVisitService, VisitService>();
@@ -94,7 +99,9 @@ namespace CRM_API
             services.AddScoped<IPharmacyService, PharmacyService>();
             services.AddScoped<IWholeSalerService, WholeSaleservice>();
             services.AddScoped<ICycleService, CycleService>();
-            services.AddScoped<ICycleBuService, CycleBuService>();
+            services.AddScoped<ICycleBuService, CycleBuService>(); 
+            services.AddScoped<IPotentielSectorService, PotentielSectorService>();
+
             services.AddScoped<IPotentielCycleService, PotentielCycleService>();
             services.AddScoped<ISectorCycleService, SectorCycleService>();
             services.AddScoped<ISectorService, SectorService>();
@@ -102,7 +109,7 @@ namespace CRM_API
 
             services.AddScoped<ISpecialtyService, SpecialtyService>();
 
-services.AddCors(c =>
+            services.AddCors(c =>
             {
                 c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().WithExposedHeaders("token"));
             });

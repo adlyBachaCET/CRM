@@ -15,6 +15,7 @@ namespace CRM.Core.Models
         public DateTime? UpdatedOn { get; set; }
         public int Active { get; set; }
         public string Name { get; set; }
+        public virtual ICollection<PotentielSector> PotentielSector { get; set; }
 
         public virtual ICollection<PotentielCycle> PotentielCycle { get; set; }
     }

@@ -62,7 +62,7 @@ namespace CRM_API.Controllers
             IBusinessUnitService BusinessUnitService,
                         IParticipantService ParticipantService,
                                     IRequestRpService RequestRpService,
-  ICommandeService CommandeService,
+            ICommandeService CommandeService,
             IInfoService InfoService,
             ITagsService TagsService,
             ITagsDoctorService TagsDoctorService,
@@ -93,7 +93,12 @@ namespace CRM_API.Controllers
            _InfoService = InfoService;
             _mapperService = mapper;
         }
-
+        /// <summary>
+        ///  This function creates a cycle.
+        /// </summary>
+        ///<param name="Token">Token of the connected user to be passed in the header.</param>
+        /// <param name="VerifyDoctor">Data of the Doctor to be verified.</param>
+        /// <returns>returns the created cycle.</returns>
         [HttpPost("Verify")]
         public async Task<ActionResult<DoctorResource>> Verify([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token,VerifyDoctor VerifyDoctor)
         {
@@ -136,7 +141,13 @@ namespace CRM_API.Controllers
             return Ok(DoctorExisteResource);
 
         }
-  [HttpPost]
+        /// <summary>
+        ///  This function creates a Doctor.
+        /// </summary>
+        ///<param name="Token">Token of the connected user to be passed in the header.</param>
+        /// <param name="SaveDoctorResource">Data of the Doctor.</param>
+        /// <returns>returns the created Doctor.</returns>
+        [HttpPost]
         public async Task<ActionResult<DoctorResource>> CreateDoctor([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token,
             SaveDoctorResource SaveDoctorResource)
         {
@@ -364,6 +375,12 @@ namespace CRM_API.Controllers
             }
 
         }
+        /// <summary>
+        ///  This function gets the list of the doctor by number
+        /// </summary>
+        ///<param name="Token">Token of the connected user to be passed in the header.</param>
+        ///<param name="Number">Number to be searched.</param>
+        /// <returns>the doctor if found.</returns>
         [HttpGet("Phone/{Number}")]
         public async Task<ActionResult<DoctorResource>> GetDoctorsNumber([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token,int Number)
         {
@@ -379,6 +396,11 @@ namespace CRM_API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        /// <summary>
+        ///  This function gets the list of the doctors 
+        /// </summary>
+        ///<param name="Token">Token of the connected user to be passed in the header.</param>
+        /// <returns>the doctors if found.</returns>
         [HttpGet]
         public async Task<ActionResult<DoctorResource>> GetAllDoctors([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token)
         {
@@ -413,6 +435,11 @@ namespace CRM_API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        /// <summary>
+        ///  This function gets the list of the actif doctors 
+        /// </summary>
+        ///<param name="Token">Token of the connected user to be passed in the header.</param>
+        /// <returns>the doctors if found.</returns>
         [HttpGet("Actif")]
         public async Task<ActionResult<DoctorResource>> GetAllActifDoctors([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token)
         {
@@ -428,7 +455,11 @@ namespace CRM_API.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
+        /// <summary>
+        ///  This function gets the list of the inactif doctors 
+        /// </summary>
+        ///<param name="Token">Token of the connected user to be passed in the header.</param>
+        /// <returns>the doctors if found.</returns>
         [HttpGet("InActif")]
         public async Task<ActionResult<DoctorResource>> GetAllInactifDoctors([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token)
         {
@@ -444,6 +475,11 @@ namespace CRM_API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        /// <summary>
+        ///  This function gets the list of the assingned doctors 
+        /// </summary>
+        ///<param name="Token">Token of the connected user to be passed in the header.</param>
+        /// <returns>the doctors if found.</returns>
         [HttpGet("Assigned")]
         public async Task<ActionResult<DoctorResource>> GetAllAssignedDoctors([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token)
         {
@@ -459,6 +495,11 @@ namespace CRM_API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        /// <summary>
+        ///  This function gets the list of the unassingned doctors 
+        /// </summary>
+        ///<param name="Token">Token of the connected user to be passed in the header.</param>
+        /// <returns>the doctors if found.</returns>
         [HttpGet("NotAssigned")]
         public async Task<ActionResult<DoctorResource>> GetAllNotAssignedDoctors([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token)
         {
@@ -474,6 +515,13 @@ namespace CRM_API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        /// <summary>
+        ///  This function gets the list of the assingned doctors by businessUnit
+        /// </summary>
+        ///<param name="Token">Token of the connected user to be passed in the header.</param>
+        ///<param name="Id">Id of the businessUnit.</param>
+
+        /// <returns>the doctors if found.</returns>
         [HttpGet("Assigned/{Id}")]
         public async Task<ActionResult<DoctorResource>> GetAllAssignedDoctorsByBu([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token,int Id)
         {
@@ -489,6 +537,13 @@ namespace CRM_API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        /// <summary>
+        ///  This function gets the list of the assingned doctors by businessUnit
+        /// </summary>
+        ///<param name="Token">Token of the connected user to be passed in the header.</param>
+        ///<param name="Id">Id of the businessUnit.</param>
+
+        /// <returns>the doctors if found.</returns>
         [HttpGet("NotAssigned/{Id}")]
         public async Task<ActionResult<DoctorResource>> GetAllNotAssignedDoctorsByBu([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token,int Id)
         {
@@ -504,6 +559,12 @@ namespace CRM_API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        /// <summary>
+        ///  This function gets the doctor
+        /// </summary>
+        ///<param name="Token">Token of the connected user to be passed in the header.</param>
+        ///<param name="Id">Id of the doctor.</param>
+        /// <returns>the doctor if found.</returns>
         [HttpGet("{Id}")]
         public async Task<ActionResult<DoctorProfile>> GetDoctorById([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token, int Id)
         {
@@ -724,6 +785,12 @@ namespace CRM_API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        /// <summary>
+        ///  This function is used to Approuve a Doctor
+        /// </summary>
+        ///<param name="Token">Token of the connected user to be passed in the header.</param>
+        /// <param name="Id">Id of the Doctor.</param>
+
         [HttpPut("Approuve/{Id}")]
         public async Task<ActionResult<DoctorResource>> ApprouveDoctor(int Id)
         {
@@ -758,6 +825,11 @@ namespace CRM_API.Controllers
 
             }
         }
+        /// <summary>
+        ///  This function is used to Reject a Doctor
+        /// </summary>
+        ///<param name="Token">Token of the connected user to be passed in the header.</param>
+        /// <param name="Id">Id of the Doctor.</param>
         [HttpPut("Reject/{Id}")]
         public async Task<ActionResult<DoctorResource>> RejectDoctor([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token,int Id)
         {
@@ -792,6 +864,12 @@ namespace CRM_API.Controllers
 
             }
         }
+        /// <summary>
+        ///  This function is used to Update a Doctor
+        /// </summary>
+        ///<param name="Token">Token of the connected user to be passed in the header.</param>
+        /// <param name="Id">Id of the doctor.</param>
+
         [HttpPut("{Id}")]
         public async Task<ActionResult<DoctorResource>> UpdateDoctor([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
         string Token,
@@ -1064,6 +1142,12 @@ namespace CRM_API.Controllers
 
              }
          }*/
+        /// <summary>
+        ///  This function is used to delete a Doctor
+        /// </summary>
+        ///<param name="Token">Token of the connected user to be passed in the header.</param>
+        /// <param name="Id">Id of the doctor.</param>
+
         [HttpDelete("{Id}")]
         public async Task<ActionResult> DeleteDoctor([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token,int Id)
         {
@@ -1081,6 +1165,12 @@ namespace CRM_API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        /// <summary>
+        ///  This function is used to delete a  list Doctor
+        /// </summary>
+        ///<param name="Token">Token of the connected user to be passed in the header.</param>
+        /// <param name="Ids">List of the Ids of the doctor.</param>
+
         [HttpPost("DeleteRange")]
         public async Task<ActionResult> DeleteRange([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token,List<int> Ids)
         {

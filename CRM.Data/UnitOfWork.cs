@@ -9,9 +9,14 @@ namespace CRM.Data
     {
         private readonly MyDbContext _context;
         private IParticipantRepository _ParticipantRepository;
+        private IActivityRepository _ActivityRepository;
+        private IActivityUserRepository _ActivityUserRepository;
+        private IAppointementRepository _AppointementRepository;
+
         private IProductRepository _ProductRepository;
         private IProductSampleRepository _ProductSampleRepository;
         private IProductPharmacyRepository _ProductPharmacyRepository;
+        private IPlanificationRepository _PlanificationRepository;
 
 
         private IRequestRpRepository _RequestRpRepository;
@@ -49,6 +54,7 @@ namespace CRM.Data
         private ISectorLocalityRepository _SectorLocalityRepository;
         private IPotentielRepository _PotentielRepository;
         private IPotentielCycleRepository _PotentielCycleRepository;
+        private IPotentielSectorRepository _PotentielSectorRepository;
 
         private ISectorRepository _SectorRepository;
         private IServiceRepository _ServiceRepository;
@@ -75,6 +81,10 @@ namespace CRM.Data
         public IVisitUserRepository VisitUsers => _VisitUserRepository = _VisitUserRepository ?? new VisitUserRepository(_context);
         public IProductRepository Products => _ProductRepository = _ProductRepository ?? new ProductRepository(_context);
         public IProductPharmacyRepository ProductPharmacys => _ProductPharmacyRepository = _ProductPharmacyRepository ?? new ProductPharmacyRepository(_context);
+        public IPlanificationRepository Planifications => _PlanificationRepository = _PlanificationRepository ?? new PlanificationRepository(_context);
+        public IActivityRepository Activitys => _ActivityRepository = _ActivityRepository ?? new ActivityRepository(_context);
+        public IActivityUserRepository ActivityUsers => _ActivityUserRepository = _ActivityUserRepository ?? new ActivityUserRepository(_context);
+        public IAppointementRepository Appointements => _AppointementRepository = _AppointementRepository ?? new AppointementRepository(_context);
 
         public IParticipantRepository Participants => _ParticipantRepository = _ParticipantRepository ?? new ParticipantRepository(_context);
         public IRequestRpRepository RequestRps => _RequestRpRepository = _RequestRpRepository ?? new RequestRpRepository(_context);
@@ -123,6 +133,7 @@ namespace CRM.Data
         public IPhoneRepository Phones =>_PhoneRepository = _PhoneRepository ?? new PhoneRepository(_context);
 
         public IPotentielCycleRepository PotentielCycles =>_PotentielCycleRepository = _PotentielCycleRepository ?? new PotentielCycleRepository(_context);
+        public IPotentielSectorRepository PotentielSectors => _PotentielSectorRepository = _PotentielSectorRepository ?? new PotentielSectorRepository(_context);
 
         public ISectorLocalityRepository SectorLocalitys =>_SectorLocalityRepository = _SectorLocalityRepository ?? new SectorLocalityRepository(_context);
 

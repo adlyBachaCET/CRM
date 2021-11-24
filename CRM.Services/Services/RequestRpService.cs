@@ -66,7 +66,36 @@ namespace CRM.Services.Services
             await _unitOfWork.RequestRps.Add(RequestRp);
             await _unitOfWork.CommitAsync();
         }
+        public async Task Approuve(RequestRp RequestRpToBeUpdated, RequestRp RequestRp)
+        {
+            RequestRpToBeUpdated.Active = 1;
+            await _unitOfWork.CommitAsync();
+            RequestRp = RequestRpToBeUpdated;
+            RequestRp.Version = RequestRpToBeUpdated.Version + 1;
+            RequestRp.IdRequestRp = RequestRpToBeUpdated.IdRequestRp;
+            RequestRp.Status = Status.Rejected;
+            RequestRp.UpdatedOn = System.DateTime.UtcNow;
+            RequestRp.CreatedOn = RequestRpToBeUpdated.CreatedOn;
 
+            RequestRp.Active = 0;
+
+            await _unitOfWork.RequestRps.Add(RequestRp);
+            await _unitOfWork.CommitAsync();
+
+        }
+        public async Task Reject(RequestRp RequestRpToBeUpdated, RequestRp RequestRp)
+        {
+            RequestRpToBeUpdated.Active = 1;
+            await _unitOfWork.CommitAsync();
+
+            RequestRp.Version = RequestRpToBeUpdated.Version + 1;
+            RequestRp.IdRequestRp = RequestRpToBeUpdated.IdRequestRp;
+            RequestRp.Status = Status.Rejected;
+            RequestRp.Active = 1;
+
+            await _unitOfWork.RequestRps.Add(RequestRp);
+            await _unitOfWork.CommitAsync();
+        }
         public async Task Delete(RequestRp RequestRp)
         {
             //RequestRp musi =  _unitOfWork.RequestRps.SingleOrDefaultAsync(x=>x.Id == RequestRpToBeUpdated.Id);

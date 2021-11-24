@@ -57,18 +57,24 @@ namespace CRM_API.Controllers
 
             if (Pharmacy != null)
             {
+                Participant.IdPharmacy = Pharmacy.IdPharmacy;
+
                 Participant.IdPharmacyNavigation = Pharmacy;
                 Participant.VersionPharmacy = Pharmacy.Version;
                 Participant.StatusPharmacy = Pharmacy.Status;
                 Participant.IdDoctorNavigation = null;
                 Participant.VersionDoctor = null;
                 Participant.StatusDoctor = null;
+
             }
             if (Doctor != null)
             {
+                Participant.IdDoctor = Doctor.IdDoctor;
+
                 Participant.IdDoctorNavigation = Doctor;
                 Participant.VersionDoctor = Doctor.Version;
                 Participant.StatusDoctor = Doctor.Status;
+                Participant.IdPharmacy = null;
 
                 Participant.IdPharmacyNavigation = null;
                 Participant.VersionPharmacy = null;
