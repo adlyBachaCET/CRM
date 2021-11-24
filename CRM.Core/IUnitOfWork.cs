@@ -36,7 +36,7 @@ namespace CRM.Core
         ICycleUserRepository CycleUsers { get; }
 
         ICycleRepository Cycles { get; }
-        ITargetRepository CycleSectorWeekDoctors { get; }
+        ITargetRepository Target { get; }
         IDoctorRepository Doctors{ get; }
         ILocationDoctorRepository LocationDoctors { get; }
         IAdresseRepository Adresses { get; }

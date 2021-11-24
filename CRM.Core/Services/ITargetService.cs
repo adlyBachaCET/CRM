@@ -11,7 +11,7 @@ namespace CRM.Core.Services
         Task<List<Target>> CreateRange(List<Target> newCycleSectorWeekDoctors);
         Task Delete(Target CycleSectorWeekDoctorsToBeDeleted);
         Task DeleteRange(List<Target> CycleSectorWeekDoctors);
-
+        Task<IEnumerable<Target>> GetByNumTarget(int id);
         Task<IEnumerable<Target>> GetAll();
         Task<IEnumerable<Target>> GetAllActif();
         Task<IEnumerable<Target>> GetAllInActif();

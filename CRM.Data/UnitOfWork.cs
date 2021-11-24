@@ -106,7 +106,7 @@ namespace CRM.Data
 
         public ICycleRepository Cycles =>_CycleRepository = _CycleRepository ?? new CycleRepository(_context);
 
-        public ITargetRepository CycleSectorWeekDoctors =>_CycleSectorWeekDoctorRepository = _CycleSectorWeekDoctorRepository ?? new TargetRepository(_context);
+        public ITargetRepository Target =>_CycleSectorWeekDoctorRepository = _CycleSectorWeekDoctorRepository ?? new TargetRepository(_context);
 
 
         public IDoctorRepository Doctors =>_DoctorRepository = _DoctorRepository ?? new DoctorRepository(_context);

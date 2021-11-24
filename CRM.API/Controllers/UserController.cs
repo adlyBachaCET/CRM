@@ -389,8 +389,9 @@ namespace CRM_API.Controllers
         /// <summary>This method updates .</summary>
         /// <param name="Id">Id of the BusinessUnit .</param>
         [HttpPut("Photo")]
+        [Consumes("multipart/form-data")]
         public async Task<IActionResult> Photo([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
-        string Token, IFormFile File)
+        string Token, IFormCollection File)
         {
             var claims = _UserService.getPrincipal(Token);
             var Role = claims.FindFirst("Role").Value;
@@ -398,16 +399,19 @@ namespace CRM_API.Controllers
 
             try
             {
-                string ext = System.IO.Path.GetExtension(File.FileName);
-                string path = Path.Combine(Directory.GetCurrentDirectory(), "Images", ""+IdUser+ ext);
-
-                using (Stream stream = new FileStream(path, FileMode.Create))
+                foreach (var f in File.Files)
                 {
-                    await File.CopyToAsync(stream);
+                    string ext = System.IO.Path.GetExtension(f.FileName);
+                    string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images", "" + IdUser + ext);
+
+                    using (Stream stream = new FileStream(path, FileMode.Create))
+                    {
+                        await f.CopyToAsync(stream);
+                    }
+                    await _UserService.UpdatePhoto(IdUser, "https://localhost:44341/Images/" + IdUser + ext);
+
                 }
-           
-                await _UserService.UpdatePhoto(IdUser, "" + IdUser + ext);
-               //claims.FindFirst("Photo").Value;
+                //claims.FindFirst("Photo").Value;
 
                 return StatusCode(StatusCodes.Status201Created);
             }

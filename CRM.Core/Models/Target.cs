@@ -20,8 +20,7 @@ namespace CRM.Core.Models
         public int VersionUser { get; set; }
         public virtual User IdUserNavigation { get; set; }
 
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
+
         public int? IdDoctor { get; set; }
         public Status? StatusDoctor { get; set; }
         public int? VersionDoctor { get; set; }
@@ -31,7 +30,7 @@ namespace CRM.Core.Models
         public Status? StatusPharmacy { get; set; }
         public int? VersionPharmacy { get; set; }
         public virtual Pharmacy IdPharmacyNavigation { get; set; }
-        public int? IdSector { get; set; }
+        public int IdSector { get; set; }
 
         public Status StatusSector { get; set; }
         public int VersionSector { get; set; }

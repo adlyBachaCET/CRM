@@ -18,25 +18,25 @@ namespace CRM.Services.Services
         public async Task<Target> Create(Target newCycleSectorWeekDoctors)
         {
 
-            await _unitOfWork.CycleSectorWeekDoctors.Add(newCycleSectorWeekDoctors);
+            await _unitOfWork.Target.Add(newCycleSectorWeekDoctors);
             await _unitOfWork.CommitAsync();
             return newCycleSectorWeekDoctors;
         }
         public async Task<List<Target>> CreateRange(List<Target> newCycleSectorWeekDoctors)
         {
 
-            await _unitOfWork.CycleSectorWeekDoctors.AddRange(newCycleSectorWeekDoctors);
+            await _unitOfWork.Target.AddRange(newCycleSectorWeekDoctors);
             await _unitOfWork.CommitAsync();
             return newCycleSectorWeekDoctors;
         }
         public async Task<IEnumerable<Target>> GetAll()
         {
             return
-                           await _unitOfWork.CycleSectorWeekDoctors.GetAll();
+                           await _unitOfWork.Target.GetAll();
         }
         public async Task<Doctor> GetDoctor(int IdDoctor)
         {
-            var a=await _unitOfWork.CycleSectorWeekDoctors.SingleOrDefault(i=>i.IdDoctor==IdDoctor);
+            var a=await _unitOfWork.Target.SingleOrDefault(i=>i.IdDoctor==IdDoctor);
             return a.IdDoctorNavigation;
         }
       
@@ -44,9 +44,13 @@ namespace CRM.Services.Services
         public async Task<Target> GetById(int id)
         {
             return
-                await _unitOfWork.CycleSectorWeekDoctors.GetById(id);
+                await _unitOfWork.Target.GetById(id);
         }
-   
+        public async Task<IEnumerable<Target>> GetByNumTarget(int id)
+        {
+            return
+                await _unitOfWork.Target.Find(i=>i.NumTarget==id);
+        }
         public async Task Update(Target CycleSectorWeekDoctorsToBeUpdated, Target CycleSectorWeekDoctors)
         {
             CycleSectorWeekDoctors.Active = 1;
@@ -74,13 +78,13 @@ namespace CRM.Services.Services
         public async Task<IEnumerable<Target>> GetAllActif()
         {
             return
-                             await _unitOfWork.CycleSectorWeekDoctors.GetAllActif();
+                             await _unitOfWork.Target.GetAllActif();
         }
 
         public async Task<IEnumerable<Target>> GetAllInActif()
         {
             return
-                             await _unitOfWork.CycleSectorWeekDoctors.GetAllInActif();
+                             await _unitOfWork.Target.GetAllInActif();
         }
         //public Task<CycleSectorWeekDoctors> CreateCycleSectorWeekDoctors(CycleSectorWeekDoctors newCycleSectorWeekDoctors)
         //{

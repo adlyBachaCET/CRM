@@ -134,7 +134,7 @@ namespace CRM.Services.Services
             }
 
             List<Doctor> DoctorsAssigned = new List<Doctor>();
-            var list1 = await _unitOfWork.CycleSectorWeekDoctors.Find(i => i.IdDoctorNavigation.Active == 0 && i.IdDoctorNavigation.LinkedId == null);
+            var list1 = await _unitOfWork.Target.Find(i => i.IdDoctorNavigation.Active == 0 && i.IdDoctorNavigation.LinkedId == null);
             foreach (var item in list)
             {
                 DoctorsAssigned.Add(item);
@@ -146,7 +146,7 @@ namespace CRM.Services.Services
         public async Task<IEnumerable<Doctor>> GetDoctorsAssigned()
         {
             List<Doctor> doctors = new List<Doctor>();
-            var a = await _unitOfWork.CycleSectorWeekDoctors.Find(i => i.IdDoctorNavigation.Active == 0 && i.IdDoctorNavigation.LinkedId == null);
+            var a = await _unitOfWork.Target.Find(i => i.IdDoctorNavigation.Active == 0 && i.IdDoctorNavigation.LinkedId == null);
             foreach (var item in a)
             {
                 doctors.Add(item.IdDoctorNavigation);
@@ -156,7 +156,7 @@ namespace CRM.Services.Services
         public async Task<IEnumerable<Doctor>> GetDoctorsNotAssigned()
         {
             List<Doctor> DoctorsAssigned = new List<Doctor>();
-            var list = await _unitOfWork.CycleSectorWeekDoctors.Find(i => i.IdDoctorNavigation.Active == 0 && i.IdDoctorNavigation.LinkedId == null);
+            var list = await _unitOfWork.Target.Find(i => i.IdDoctorNavigation.Active == 0 && i.IdDoctorNavigation.LinkedId == null);
             foreach (var item in list)
             {
                 DoctorsAssigned.Add(item.IdDoctorNavigation);
