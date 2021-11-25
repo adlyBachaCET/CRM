@@ -18,13 +18,6 @@ namespace CRM.Core.Models
         public Status? StatusPharmacy { get; set; }
         public int? VersionPharmacy { get; set; }
         public virtual PharmacyResource IdPharmacyNavigation { get; set; }
-        public int IdSector { get; set; }
-
-        public Status StatusSector { get; set; }
-        public int VersionSector { get; set; }
-
-        public virtual SectorResource IdSectorNavigation { get; set; }
-
 
         public Status Status { get; set; }
         public int Version { get; set; }

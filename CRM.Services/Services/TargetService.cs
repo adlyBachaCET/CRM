@@ -57,10 +57,10 @@ namespace CRM.Services.Services
             await _unitOfWork.CommitAsync();
         }
 
-        public async Task Delete(Target CycleSectorWeekDoctors)
+        public async Task Delete(Target Target)
         {
             //CycleSectorWeekDoctors musi =  _unitOfWork.CycleSectorWeekDoctors.SingleOrDefaultAsync(x=>x.Id == CycleSectorWeekDoctorsToBeUpdated.Id);
-            CycleSectorWeekDoctors.Active = 1;
+            Target.Active = 1;
 
             await _unitOfWork.CommitAsync();
         }

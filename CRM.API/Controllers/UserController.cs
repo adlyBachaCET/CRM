@@ -148,7 +148,7 @@ namespace CRM_API.Controllers
         {
             IActionResult response = Unauthorized();
             ErrorHandling errorHandling = new ErrorHandling();
-            var user = await _UserService.AuthenticateManager(lm);
+            var user = await _UserService.AuthenticateDelegate(lm);
 
             if (user != null)
             {

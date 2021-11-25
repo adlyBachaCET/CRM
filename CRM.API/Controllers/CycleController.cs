@@ -588,7 +588,6 @@ namespace CRM_API.Controllers
                             PotentielSectorResources.Add(PotentielResource);
                         }
                     }
-                    Bu.IdSectorNavigation = SectorResource;
                  
                     var Doctor = await _DoctorService.GetById(item.IdDoctor);
                     if (Doctor != null) { 
@@ -601,9 +600,13 @@ namespace CRM_API.Controllers
                         var PharmacyResource = _mapperService.Map<Pharmacy, PharmacyResource>(Pharmacy);
                         Bu.IdPharmacyNavigation = PharmacyResource;
                     }
-
+                    if (Bu.IdPharmacyNavigation==null && Bu.IdDoctorNavigation==null) 
+                    {
+                    }
+                    else {
                     TargetResources.Add(Bu);
-                  
+                    }
+
                 }
          
                 return Ok(new { UserResource= UserResource,
@@ -676,7 +679,7 @@ namespace CRM_API.Controllers
         ///  This function Create a target
         /// </summary>
         ///<param name="Token">Token of the connected user to be passed in the header.</param>
-        /// <param name="Ids">Id1 id of the cycle Id2 id of the User.</param>
+        /// <param name="Target">IdUser idSector idCycle and either {idDoctor or idPharmacy} ifyou choose one the other must be set to null.</param>
         [HttpPost("CreateTarget")]
         public async Task<ActionResult> CreateTarget([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
         string Token, SaveTargetResource Target)
