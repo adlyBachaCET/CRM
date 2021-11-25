@@ -63,14 +63,20 @@ namespace CRM_API.Controllers
             return Ok(LocalityResource);
         }
         [HttpGet]
-        public async Task<ActionResult<LocalityResource>> GetAllLocalitys()
+        public async Task<ActionResult<List<LocalityResource>>> GetAllLocalitys()
         {
             try
             {
-                var Employe = await _LocalityService.GetAll();
-                if (Employe == null) return NotFound();
+                List<LocalityResource> LocalityResource = new List<LocalityResource>();
+                var Localities = await _LocalityService.GetAll();
+                if (Localities == null) return NotFound();
+                foreach (var item in Localities)
+                {
+                    var Locality = _mapperService.Map<Locality, LocalityResource>(item);
+                    LocalityResource.Add(Locality);
+                }
                 // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
-                return Ok(Employe);
+                return Ok(LocalityResource);
             }
             catch (Exception ex)
             {
@@ -122,7 +128,7 @@ namespace CRM_API.Controllers
             }
         }
         [HttpGet("LVL")]
-        public async Task<ActionResult<LocalityResource>> GetAllActifLocalitysLVL1()
+        public async Task<ActionResult<List<LocalityResource>>> GetAllActifLocalitysLVL1()
         {
             try
             {
@@ -144,7 +150,7 @@ namespace CRM_API.Controllers
             }
         }
         [HttpGet("InActif")]
-        public async Task<ActionResult<LocalityResource>> GetAllInactifLocalitys()
+        public async Task<ActionResult<List<LocalityResource>>> GetAllInactifLocalitys()
         {
             try
             {

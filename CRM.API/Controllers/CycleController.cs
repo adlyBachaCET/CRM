@@ -535,14 +535,15 @@ namespace CRM_API.Controllers
         ///  This function gets the cycle by id
         /// </summary>
         ///<param name="Token">Token of the connected user to be passed in the header.</param>
-        ///<param name="Id">Id of the cycle.</param>
+        ///<param name="PassToPlanification">Id of the cycle.</param>
         /// <returns>The cycle with its potentiels.</returns>
         [HttpPost("PassToPlanification")]
-        public async Task<ActionResult> PassToPlanification( PassToPlanification Id)
+        public async Task<ActionResult> PassToPlanification( PassToPlanification PassToPlanification)
         {
-            int Year = Id.Start.Year;
-            int Month = Id.Start.Month;
-            int Day = Id.Start.Day;
+
+            int Year = PassToPlanification.Start.Year;
+            int Month = PassToPlanification.Start.Month;
+            int Day = PassToPlanification.Start.Day;
 
             var currentCulture = CultureInfo.CurrentCulture;
             var weekNo = currentCulture.Calendar.GetWeekOfYear(
@@ -550,9 +551,16 @@ namespace CRM_API.Controllers
             currentCulture.DateTimeFormat.CalendarWeekRule,
             currentCulture.DateTimeFormat.FirstDayOfWeek);
 
-            int Year1 = Id.End.Year;
-            int Month1 = Id.End.Month;
-            int Day1 = Id.End.Day;
+           var Target= await getTarget(PassToPlanification.NumTarget);
+
+            if (PassToPlanification.Occurence!=null)
+            {
+
+
+            }
+            int Year1 = PassToPlanification.End.Year;
+            int Month1 = PassToPlanification.End.Month;
+            int Day1 = PassToPlanification.End.Day;
 
             var weekNo1 = currentCulture.Calendar.GetWeekOfYear(
 
@@ -615,37 +623,52 @@ namespace CRM_API.Controllers
             Request.Headers.TryGetValue("token", out token);
             if (token != "")
             {
-               // var Cycles = await _CycleService.GetById(Num);
-                var Target = await _TargetService.GetByNumTarget(Num);
-                List<TargetResource> TargetResources = new List<TargetResource>();
-                List<PotentielResource> PotentielResources = new List<PotentielResource>();
-                List<PotentielResource> PotentielSectorResources = new List<PotentielResource>();
-                User User = new User();
-                UserResource UserResource = new UserResource();
-                Cycle Cycle = new Cycle();
-                CycleResource CycleResource = new CycleResource();
-                List<Sector> Sectors = new List<Sector>();
-                List<SectorResource> SectorResources = new List<SectorResource>();
-                Cycle = await _TargetService.GetCycleByNumTarget(Num);
-                CycleResource = _mapperService.Map<Cycle, CycleResource>(Cycle);
-                var PotentielCycle = await _PotentielCycleService.GetPotentielsById(Cycle.IdCycle);
-                foreach (var o in PotentielCycle)
+                return Ok(await getTarget(Num));
+            }
+            else
+            {
+                ErrorMessag.ErrorMessage = "Empty Token";
+                ErrorMessag.StatusCode = 400;
+                return Ok(ErrorMessag);
+
+            }
+        }
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public async Task<TargetByNumber> getTarget(int Num)
+        {
+            TargetByNumber TargetByNumber = new TargetByNumber();
+            var Target = await _TargetService.GetByNumTarget(Num);
+            List<TargetResource> TargetResources = new List<TargetResource>();
+            List<PotentielResource> PotentielResources = new List<PotentielResource>();
+            List<PotentielResource> PotentielSectorResources = new List<PotentielResource>();
+            User User = new User();
+            UserResource UserResource = new UserResource();
+
+            List<Sector> Sectors = new List<Sector>();
+            List<SectorResource> SectorResources = new List<SectorResource>();
+            Cycle Cycle = new Cycle();
+            CycleResource CycleResource = new CycleResource();
+            Cycle = await _TargetService.GetCycleByNumTarget(Num);
+            CycleResource = _mapperService.Map<Cycle, CycleResource>(Cycle);
+            var PotentielCycle = await _PotentielCycleService.GetPotentielsById(Cycle.IdCycle);
+            foreach (var o in PotentielCycle)
+            {
+                var PotentielResource = _mapperService.Map<Potentiel, PotentielResource>(o);
+
+                if (PotentielResource != null)
                 {
-                    var PotentielResource = _mapperService.Map<Potentiel, PotentielResource>(o);
-
-                    if (PotentielResource != null)
-                    {
-                        PotentielResources.Add(PotentielResource);
-                    }
+                    PotentielResources.Add(PotentielResource);
                 }
+            }
 
-                var SectorsByTarget = await _TargetService.GetSectorsByNumTarget(Num);
-                foreach(var item in SectorsByTarget) {
+            var SectorsByTarget = await _TargetService.GetSectorsByNumTarget(Num);
+            foreach (var item in SectorsByTarget)
+            {
 
                 var SectorResource = _mapperService.Map<Sector, SectorResource>(item);
-                   SectorResources.Add(SectorResource);
+                SectorResources.Add(SectorResource);
 
-                    var PotentielSector = await _PotentielSectorService.GetPotentielsById(item.IdSector);
+                var PotentielSector = await _PotentielSectorService.GetPotentielsById(item.IdSector);
                 foreach (var o in PotentielSector)
                 {
                     var PotentielResource = _mapperService.Map<Potentiel, PotentielResource>(o);
@@ -655,53 +678,48 @@ namespace CRM_API.Controllers
                         PotentielSectorResources.Add(PotentielResource);
                     }
                 }
-                }
-                foreach (var item in Target)
+            }
+            foreach (var item in Target)
+            {
+                var Bu = _mapperService.Map<Target, TargetResource>(item);
+
+                User = await _UserService.GetById(item.IdUser);
+                UserResource = _mapperService.Map<User, UserResource>(User);
+                //var Sector = await _SectorService.GetById(item.IdSector);
+                // var SectorResource = _mapperService.Map<Sector, SectorResource>(Sector);
+
+                //Bu.IdCycleNavigation = CycleResource;
+
+                var Doctor = await _DoctorService.GetById(item.IdDoctor);
+                if (Doctor != null)
                 {
-                    var Bu = _mapperService.Map<Target, TargetResource>(item);
-
-                    User = await _UserService.GetById(item.IdUser);
-                    UserResource = _mapperService.Map<User, UserResource>(User);
-                    //var Sector = await _SectorService.GetById(item.IdSector);
-                   // var SectorResource = _mapperService.Map<Sector, SectorResource>(Sector);
-                  
-                    //Bu.IdCycleNavigation = CycleResource;
-                    
-                    var Doctor = await _DoctorService.GetById(item.IdDoctor);
-                    if (Doctor != null) { 
-                var DoctorResource = _mapperService.Map<Doctor, DoctorResource>(Doctor);
-                    Bu.IdDoctorNavigation = DoctorResource;
+                    var DoctorResource = _mapperService.Map<Doctor, DoctorResource>(Doctor);
+                    Bu.Doctor = DoctorResource;
                 }
-                    var Pharmacy = await _PharmacyService.GetById(item.IdPharmacy);
-                    if (Pharmacy != null)
-                    {
-                        var PharmacyResource = _mapperService.Map<Pharmacy, PharmacyResource>(Pharmacy);
-                        Bu.IdPharmacyNavigation = PharmacyResource;
-                    }
-                    if (Bu.IdPharmacyNavigation==null && Bu.IdDoctorNavigation==null) 
-                    {
-                    }
-                    else {
+                var Pharmacy = await _PharmacyService.GetById(item.IdPharmacy);
+                if (Pharmacy != null)
+                {
+                    var PharmacyResource = _mapperService.Map<Pharmacy, PharmacyResource>(Pharmacy);
+                    Bu.Pharmacy = PharmacyResource;
+                }
+                if (Bu.Pharmacy == null && Bu.Doctor == null)
+                {
+                }
+                else
+                {
                     TargetResources.Add(Bu);
-                    }
-
                 }
          
-                return Ok(new { UserResource= UserResource,
-                    CycleResource = CycleResource,
-                    CyclePotentiel = PotentielResources,
-                    SectorSectorResources = SectorResources,
-                    PotentielSectorResources = PotentielSectorResources,
-                    TargetResources = TargetResources,
-                });
             }
-            else
-            {
-                ErrorMessag.ErrorMessage = "Empty Token";
-                ErrorMessag.StatusCode = 400;
-                return Ok(ErrorMessag);
+            TargetByNumber.TargetResources = TargetResources;
+            UserResource = _mapperService.Map<User, UserResource>(User);
+            CycleResource = _mapperService.Map<Cycle, CycleResource>(Cycle);
 
-            }
+            TargetByNumber.User = UserResource;
+            TargetByNumber.Cycle = CycleResource;
+            TargetByNumber.PotentielResources = PotentielResources;
+            TargetByNumber.PotentielSectorResources = PotentielSectorResources;
+            return TargetByNumber;
         }
         /// <summary>
         ///  This function gets the Cycle By User By Id
