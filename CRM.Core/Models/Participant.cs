@@ -22,10 +22,10 @@ namespace CRM.Core.Models
         public int? UpdatedBy { get; set; }
         public Status Status { get; set; }
         public virtual RequestRp IdRequestRpNavigation { get; set; }
-        public int IdUser { get; set; }
-        public Status StatusUser { get; set; }
+        public int? IdUser { get; set; }
+        public Status? StatusUser { get; set; }
 
-        public int VersionUser { get; set; }
+        public int? VersionUser { get; set; }
         public virtual User IdUserNavigation { get; set; }
         public string Organisme { get; set; }
         public int? IdPharmacy { get; set; }

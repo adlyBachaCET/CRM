@@ -30,6 +30,7 @@ namespace CRM_API.Controllers
         {
             _UserService = UserService;
             _PharmacyService = PharmacyService;
+            _DoctorService = DoctorService;
 
             _CommandeService = CommandeService;
             _mapperService = mapper;

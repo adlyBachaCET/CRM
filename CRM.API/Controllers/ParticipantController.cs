@@ -90,12 +90,138 @@ namespace CRM_API.Controllers
             Participant.IdUserNavigation = User;
             Participant.VersionUser = User.Version;
             Participant.StatusUser = User.Status;
+            Participant.IdUser = User.IdUser;
+
             //*** Creation dans la base de données ***
             var NewParticipant = await _ParticipantService.Create(Participant);
             //*** Mappage ***
             var ParticipantResource = _mapperService.Map<Participant, ParticipantResource>(NewParticipant);
             return Ok(ParticipantResource);
       
+        }
+        [HttpPost("Range")]
+        public async Task<ActionResult<ParticipantResource>> CreateRangeParticipant(ListSaveParticipantResource SaveParticipantResource)
+        {
+
+            if (SaveParticipantResource.IdDoctor.Count>0)
+            {
+                foreach(var item in SaveParticipantResource.IdDoctor) { 
+                //*** Mappage ***
+                var Participant = new Participant();
+                Participant.UpdatedOn = DateTime.UtcNow;
+                Participant.CreatedOn = DateTime.UtcNow;
+                Participant.Active = 0;
+                Participant.Status = 0;
+                Participant.UpdatedBy = 0;
+                Participant.CreatedBy = 0;
+                var Doctor = await _DoctorService.GetById(item);
+                Participant.IdDoctor = Doctor.IdDoctor;
+               Participant.IdDoctorNavigation = Doctor;
+               Participant.VersionDoctor = Doctor.Version;
+               Participant.StatusDoctor = Doctor.Status;
+               Participant.IdPharmacy = null;
+               Participant.IdPharmacyNavigation = null;
+               Participant.VersionPharmacy = null;
+               Participant.StatusPharmacy = null;
+               Participant.IdUserNavigation = null;
+               Participant.VersionUser = null;
+               Participant.StatusUser = null;
+               Participant.IdUser = null;
+
+            var RequestRp = await _RequestRpService.GetById(SaveParticipantResource.IdRequestRp);
+               Participant.IdRequestRpNavigation = RequestRp;
+               Participant.VersionRequestRp = RequestRp.Version;
+               Participant.StatusRequestRp = RequestRp.Status;
+                    Participant.IdRequestRp = RequestRp.IdRequestRp;
+
+
+                    //*** Creation dans la base de données ***
+                    var NewParticipant = await _ParticipantService.Create(Participant);
+                var ParticipantResource = _mapperService.Map<Participant, ParticipantResource>(NewParticipant);
+                }
+            }
+
+            if (SaveParticipantResource.IdPharmacy.Count > 0)
+            {
+                foreach (var item in SaveParticipantResource.IdPharmacy)
+                {
+                    //*** Mappage ***
+                    var Participant = new Participant();
+                    Participant.UpdatedOn = DateTime.UtcNow;
+                    Participant.CreatedOn = DateTime.UtcNow;
+                    Participant.Active = 0;
+                    Participant.Status = 0;
+                    Participant.UpdatedBy = 0;
+                    Participant.CreatedBy = 0;
+                    var Pharmacy = await _PharmacyService.GetById(item);
+                    Participant.IdDoctor =null;
+                    Participant.IdDoctorNavigation = null;
+                    Participant.VersionDoctor = null;
+                    Participant.StatusDoctor = null;
+                    Participant.IdPharmacy = Pharmacy.IdPharmacy;
+                    Participant.IdPharmacyNavigation = Pharmacy;
+                    Participant.VersionPharmacy = Pharmacy.Version;
+                    Participant.StatusPharmacy = Pharmacy.Status;
+                    Participant.IdUserNavigation = null;
+                    Participant.VersionUser = null;
+                    Participant.StatusUser = null;
+                    Participant.IdUser = null;
+
+                    var RequestRp = await _RequestRpService.GetById(SaveParticipantResource.IdRequestRp);
+                    Participant.IdRequestRpNavigation = RequestRp;
+                    Participant.VersionRequestRp = RequestRp.Version;
+                    Participant.StatusRequestRp = RequestRp.Status;
+                    Participant.IdRequestRp = RequestRp.IdRequestRp;
+
+
+
+                    //*** Creation dans la base de données ***
+                    var NewParticipant = await _ParticipantService.Create(Participant);
+                    var ParticipantResource = _mapperService.Map<Participant, ParticipantResource>(NewParticipant);
+                }
+            }
+            if (SaveParticipantResource.IdUser.Count > 0)
+            {
+                foreach (var item in SaveParticipantResource.IdUser)
+                {
+                    //*** Mappage ***
+                    var Participant = new Participant();
+                    Participant.UpdatedOn = DateTime.UtcNow;
+                    Participant.CreatedOn = DateTime.UtcNow;
+                    Participant.Active = 0;
+                    Participant.Status = 0;
+                    Participant.UpdatedBy = 0;
+                    Participant.CreatedBy = 0;
+                    var User = await _UserService.GetById(item);
+                    Participant.IdDoctor = null;
+                    Participant.IdDoctorNavigation = null;
+                    Participant.VersionDoctor = null;
+                    Participant.StatusDoctor = null;
+                    Participant.IdPharmacy = null;
+                    Participant.IdPharmacyNavigation = null;
+                    Participant.VersionPharmacy = null;
+                    Participant.StatusPharmacy = null;
+                    Participant.IdUserNavigation = User;
+                    Participant.VersionUser = User.Version;
+                    Participant.StatusUser = User.Status;
+                    Participant.IdUser = User.IdUser;
+
+                    var RequestRp = await _RequestRpService.GetById(SaveParticipantResource.IdRequestRp);
+                    Participant.IdRequestRpNavigation = RequestRp;
+                    Participant.VersionRequestRp = RequestRp.Version;
+                    Participant.StatusRequestRp = RequestRp.Status;
+                    Participant.IdRequestRp = RequestRp.IdRequestRp;
+
+
+                    //*** Creation dans la base de données ***
+                    var NewParticipant = await _ParticipantService.Create(Participant);
+                    var ParticipantResource = _mapperService.Map<Participant, ParticipantResource>(NewParticipant);
+                }
+            }
+            //*** Mappage ***
+
+            return Ok();
+
         }
         [HttpGet]
         public async Task<ActionResult<ParticipantResource>> GetAllParticipants()

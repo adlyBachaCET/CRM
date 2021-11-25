@@ -14,14 +14,14 @@ namespace CRM_API.Controllers
     [ApiController]
     [EnableCors("AllowOrigin")]
 
-    public class WeekSectorCycleController : ControllerBase
+    public class SectorCycleController : ControllerBase
     {
         public IList<SectorCycle> WeekSectorCycles;
 
         private readonly ISectorCycleService _WeekSectorCycleService;
 
         private readonly IMapper _mapperService;
-        public WeekSectorCycleController(ISectorCycleService WeekSectorCycleService, IMapper mapper)
+        public SectorCycleController(ISectorCycleService WeekSectorCycleService, IMapper mapper)
         {
             _WeekSectorCycleService = WeekSectorCycleService;
             _mapperService = mapper;

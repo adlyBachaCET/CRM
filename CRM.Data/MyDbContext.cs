@@ -700,14 +700,12 @@ namespace CRM.Data
             modelBuilder.Entity<Participant>(entity =>
             {
                 entity.HasKey(e => new {
-                    e.IdUser,
-                    e.StatusUser,
-                    e.VersionUser,
-
-             
+                  
                     e.IdRequestRp,
                     e.StatusRequestRp,
-                    e.VersionRequestRp
+                    e.VersionRequestRp,
+                    e.Status,
+                    e.Version,
                 });
 
                 entity.Property(e => e.CreatedOn).HasColumnType("timestamp");

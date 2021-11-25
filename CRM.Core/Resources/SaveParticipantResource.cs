@@ -15,4 +15,17 @@ namespace CRM.Core.Models
         public string Organisme { get; set; }
 
     }
+
+    public partial class ListSaveParticipantResource
+    {
+
+        public int IdRequestRp { get; set; }
+        public List<int> IdDoctor { get; set; }
+        public List<int> IdPharmacy { get; set; }
+
+        public List<int> IdUser { get; set; }
+
+        public List<string> Organisme { get; set; }
+
+    }
 }

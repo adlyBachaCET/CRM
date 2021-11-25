@@ -67,6 +67,33 @@ namespace CRM.Services.Services
             return
                 Sectors;
         }
+        public async Task<Cycle> GetCycleByNumTarget(int id)
+        {
+            var Target = await _unitOfWork.Target.SingleOrDefault(i => i.NumTarget == id);
+            Cycle Cycle = new Cycle();
+
+
+            Cycle = await _unitOfWork.Cycles.GetByIdActif(Target.IdCycle);
+         
+
+            
+            return
+                Cycle;
+        }
+        public async Task<IEnumerable<Target>> GetTargetsByIdUser(int id)
+        {
+            var Target = await _unitOfWork.Target.Find(i => i.IdUser == id);
+            List<Target> DistinctTarget = new List<Target>();
+            foreach(var item in Target)
+            {
+                if(!DistinctTarget.Contains(item))
+                {
+                    DistinctTarget.Add(item);
+                }
+            }
+            return
+                DistinctTarget;
+        }
         public async Task Update(Target CycleSectorWeekDoctorsToBeUpdated, Target CycleSectorWeekDoctors)
         {
             CycleSectorWeekDoctors.Active = 1;

@@ -11,6 +11,7 @@ using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -534,6 +535,75 @@ namespace CRM_API.Controllers
         ///  This function gets the cycle by id
         /// </summary>
         ///<param name="Token">Token of the connected user to be passed in the header.</param>
+        ///<param name="Id">Id of the cycle.</param>
+        /// <returns>The cycle with its potentiels.</returns>
+        [HttpPost("PassToPlanification")]
+        public async Task<ActionResult> PassToPlanification( PassToPlanification Id)
+        {
+            int Year = Id.Start.Year;
+            int Month = Id.Start.Month;
+            int Day = Id.Start.Day;
+
+            var currentCulture = CultureInfo.CurrentCulture;
+            var weekNo = currentCulture.Calendar.GetWeekOfYear(
+            new DateTime(Year, Month, Day),
+            currentCulture.DateTimeFormat.CalendarWeekRule,
+            currentCulture.DateTimeFormat.FirstDayOfWeek);
+
+            int Year1 = Id.End.Year;
+            int Month1 = Id.End.Month;
+            int Day1 = Id.End.Day;
+
+            var weekNo1 = currentCulture.Calendar.GetWeekOfYear(
+
+           new DateTime(Year1, Month1, Day1),
+           currentCulture.DateTimeFormat.CalendarWeekRule,
+           currentCulture.DateTimeFormat.FirstDayOfWeek);
+            return Ok(weekNo);
+
+        }
+
+            /// <summary>
+            ///  This function gets the cycle by id
+            /// </summary>
+            ///<param name="Token">Token of the connected user to be passed in the header.</param>
+            ///<param name="Id">Id of the cycle.</param>
+            /// <returns>The cycle with its potentiels.</returns>
+            [HttpGet("Targets/{Id}")]
+        public async Task<ActionResult> GetTargetsById([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
+        string Token, int Id)
+        {
+            StringValues token = "";
+            ErrorHandling ErrorMessag = new ErrorHandling();
+            Request.Headers.TryGetValue("token", out token);
+            if (token != "")
+            {
+                var Targets = await _TargetService.GetTargetsByIdUser(Id);
+                List<int> TargetIds = new List<int>();
+                List<string> CycleNames = new List<string>();
+
+                foreach (var item in Targets)
+                {
+                    TargetIds.Add(item.NumTarget);
+                    var Cycle = await _CycleService.GetById(item.IdCycle);
+                    CycleNames.Add(Cycle.Name);
+
+                }
+
+                return Ok(new { TargetResources = TargetIds, CycleNames = CycleNames });
+            }
+            else
+            {
+                ErrorMessag.ErrorMessage = "Empty Token";
+                ErrorMessag.StatusCode = 400;
+                return Ok(ErrorMessag);
+
+            }
+        }
+        /// <summary>
+        ///  This function gets the cycle by id
+        /// </summary>
+        ///<param name="Token">Token of the connected user to be passed in the header.</param>
         ///<param name="Num">Id of the cycle.</param>
         /// <returns>The cycle with its potentiels.</returns>
         [HttpGet("Target/{Num}")]
@@ -556,6 +626,8 @@ namespace CRM_API.Controllers
                 CycleResource CycleResource = new CycleResource();
                 List<Sector> Sectors = new List<Sector>();
                 List<SectorResource> SectorResources = new List<SectorResource>();
+                Cycle = await _TargetService.GetCycleByNumTarget(Num);
+                CycleResource = _mapperService.Map<Cycle, CycleResource>(Cycle);
                 var PotentielCycle = await _PotentielCycleService.GetPotentielsById(Cycle.IdCycle);
                 foreach (var o in PotentielCycle)
                 {
@@ -569,7 +641,11 @@ namespace CRM_API.Controllers
 
                 var SectorsByTarget = await _TargetService.GetSectorsByNumTarget(Num);
                 foreach(var item in SectorsByTarget) {
-                var PotentielSector = await _PotentielSectorService.GetPotentielsById(item.IdSector);
+
+                var SectorResource = _mapperService.Map<Sector, SectorResource>(item);
+                   SectorResources.Add(SectorResource);
+
+                    var PotentielSector = await _PotentielSectorService.GetPotentielsById(item.IdSector);
                 foreach (var o in PotentielSector)
                 {
                     var PotentielResource = _mapperService.Map<Potentiel, PotentielResource>(o);
@@ -588,9 +664,7 @@ namespace CRM_API.Controllers
                     UserResource = _mapperService.Map<User, UserResource>(User);
                     //var Sector = await _SectorService.GetById(item.IdSector);
                    // var SectorResource = _mapperService.Map<Sector, SectorResource>(Sector);
-                  //  SectorResources.Add(SectorResource);
-                    Cycle = await _CycleService.GetById(item.IdCycle);
-                    CycleResource = _mapperService.Map<Cycle, CycleResource>(Cycle);
+                  
                     //Bu.IdCycleNavigation = CycleResource;
                     
                     var Doctor = await _DoctorService.GetById(item.IdDoctor);

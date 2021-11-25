@@ -12,7 +12,10 @@ namespace CRM.Core.Services
         Task Delete(Target CycleSectorWeekDoctorsToBeDeleted);
         Task DeleteRange(List<Target> CycleSectorWeekDoctors);
         Task<IEnumerable<Target>> GetByNumTarget(int id);
-        Task<IEnumerable<Target>> GetAll();
+        Task<IEnumerable<Target>> GetAll(); 
+        Task<IEnumerable<Target>> GetTargetsByIdUser(int id);
+
+        Task<Cycle> GetCycleByNumTarget(int id);
         Task<IEnumerable<Target>> GetAllActif();
         Task<IEnumerable<Target>> GetAllInActif();
         Task<IEnumerable<Sector>> GetSectorsByNumTarget(int id);

@@ -78,14 +78,20 @@ namespace CRM_API.Controllers
             }
         }
         [HttpGet("Actif")]
-        public async Task<ActionResult<LocalityResource>> GetAllActifLocalitys()
+        public async Task<ActionResult<List<LocalityResource>>> GetAllActifLocalitys()
         {
             try
             {
-                var Employe = await _LocalityService.GetAllActif();
-                if (Employe == null) return NotFound();
+                List<LocalityResource> LocalityResource = new List<LocalityResource>();
+                var Localities = await _LocalityService.GetAllActif();
+                if (Localities == null) return NotFound();
+                foreach (var item in Localities)
+                {
+                     var Locality = _mapperService.Map<Locality, LocalityResource>(item);
+                    LocalityResource.Add(Locality);
+                }
                 // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
-                return Ok(Employe);
+                return Ok(LocalityResource);
             }
             catch (Exception ex)
             {
@@ -93,14 +99,20 @@ namespace CRM_API.Controllers
             }
         }
         [HttpGet("LVL/{Id}")]
-        public async Task<ActionResult<LocalityResource>> GetAllActifLocalitysLVL2(int Id)
+        public async Task<ActionResult<List<LocalityResource>>> GetAllActifLocalitysLVL2(int Id)
         {
             try
             {
-                var Employe = await _LocalityService.GetAllActifLVL2(Id);
-                if (Employe == null) return NotFound();
+                List<LocalityResource> LocalityResource = new List<LocalityResource>();
+                var Localities = await _LocalityService.GetAllActifLVL2(Id);
+                if (Localities == null) return NotFound();
+                foreach (var item in Localities)
+                {
+                    var Locality = _mapperService.Map<Locality, LocalityResource>(item);
+                    LocalityResource.Add(Locality);
+                }
                 // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
-               return Ok(Employe);
+                return Ok(LocalityResource);
 
 
             }
@@ -114,10 +126,17 @@ namespace CRM_API.Controllers
         {
             try
             {
-                var Employe = await _LocalityService.GetAllActifLVL1();
-                if (Employe == null) return NotFound();
+                List<LocalityResource> LocalityResource = new List<LocalityResource>();
+                var Localities = await _LocalityService.GetAllActifLVL1();
+                if (Localities == null) return NotFound();
+                foreach (var item in Localities)
+                {
+                    var Locality = _mapperService.Map<Locality, LocalityResource>(item);
+                    LocalityResource.Add(Locality);
+                }
                 // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
-                return Ok(Employe);
+                return Ok(LocalityResource);
+
             }
             catch (Exception ex)
             {
@@ -129,10 +148,16 @@ namespace CRM_API.Controllers
         {
             try
             {
-                var Employe = await _LocalityService.GetAllInActif();
-                if (Employe == null) return NotFound();
+                List<LocalityResource> LocalityResource = new List<LocalityResource>();
+                var Localities = await _LocalityService.GetAllInActif();
+                if (Localities == null) return NotFound();
+                foreach (var item in Localities)
+                {
+                    var Locality = _mapperService.Map<Locality, LocalityResource>(item);
+                    LocalityResource.Add(Locality);
+                }
                 // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
-                return Ok(Employe);
+                return Ok(LocalityResource);
             }
             catch (Exception ex)
             {

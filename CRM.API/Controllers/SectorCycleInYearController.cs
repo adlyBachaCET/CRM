@@ -14,7 +14,7 @@ namespace CRM_API.Controllers
     [ApiController]
     [EnableCors("AllowOrigin")]
 
-    public class WeekSectorCycleInYearController : ControllerBase
+    public class SectorCycleInYearController : ControllerBase
     {
         public IList<SectorCycleInYear> WeekSectorCycleInYears;
 
@@ -24,7 +24,7 @@ namespace CRM_API.Controllers
                 private readonly IWeekInYearService _WeekInYearService;
 
         private readonly IMapper _mapperService;
-        public WeekSectorCycleInYearController(IWeekInYearService WeekInYearService,
+        public SectorCycleInYearController(IWeekInYearService WeekInYearService,
             ICycleService CycleService,ISectorService SectorService,
             ISectorCycleInYearService WeekSectorCycleInYearService, IMapper mapper)
         {
