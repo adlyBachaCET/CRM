@@ -53,8 +53,19 @@ namespace CRM.Services.Services
         }
         public async Task<IEnumerable<Sector>> GetSectorsByNumTarget(int id)
         {var Target = await _unitOfWork.Target.Find(i => i.NumTarget == id);
+            List<Sector> Sectors = new List<Sector>();
+
+            foreach (var item in Target)
+            {
+                Sector Sector = await _unitOfWork.Sectors.GetByIdActif(item.IdSector);
+                if(!Sectors.Contains(Sector))
+                {
+                    Sectors.Add(Sector);
+                }
+
+            }
             return
-                null;
+                Sectors;
         }
         public async Task Update(Target CycleSectorWeekDoctorsToBeUpdated, Target CycleSectorWeekDoctors)
         {

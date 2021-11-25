@@ -703,10 +703,8 @@ namespace CRM.Data
                     e.IdUser,
                     e.StatusUser,
                     e.VersionUser,
-                    e.IdDoctor,
-                    e.StatusDoctor,
-                    e.VersionDoctor
-                ,
+
+             
                     e.IdRequestRp,
                     e.StatusRequestRp,
                     e.VersionRequestRp
@@ -720,12 +718,12 @@ namespace CRM.Data
                     .WithMany()
                     .HasForeignKey(d => new { d.IdDoctor, d.StatusDoctor, d.VersionDoctor })
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Participant_Doctor");
+                    .HasConstraintName("FK_Participant_Doctor").IsRequired(false);
                 entity.HasOne(d => d.IdPharmacyNavigation)
                     .WithMany()
                     .HasForeignKey(d => new { d.IdPharmacy, d.StatusPharmacy, d.VersionPharmacy })
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Participant_Pharmacy");
+                    .HasConstraintName("FK_Participant_Pharmacy").IsRequired(false);
 
                 entity.HasOne(d => d.IdRequestRpNavigation)
                         .WithMany(p => p.Participant)

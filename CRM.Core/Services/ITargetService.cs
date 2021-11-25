@@ -15,6 +15,6 @@ namespace CRM.Core.Services
         Task<IEnumerable<Target>> GetAll();
         Task<IEnumerable<Target>> GetAllActif();
         Task<IEnumerable<Target>> GetAllInActif();
-
+        Task<IEnumerable<Sector>> GetSectorsByNumTarget(int id);
     }
 }

@@ -12,9 +12,9 @@ namespace CRM.Core.Models
         public Status StatusRequestRp{ get; set; }
         public int VersionRequestRp{ get; set; }
 
-        public int IdDoctor { get; set; }
-        public Status StatusDoctor { get; set; }
-        public int VersionDoctor { get; set; }
+        public int? IdDoctor { get; set; }
+        public Status? StatusDoctor { get; set; }
+        public int? VersionDoctor { get; set; }
         public int Version { get; set; }
         public int? CreatedBy { get; set; }
         public int? UpdatedBy { get; set; }

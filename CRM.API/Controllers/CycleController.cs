@@ -556,7 +556,6 @@ namespace CRM_API.Controllers
                 CycleResource CycleResource = new CycleResource();
                 List<Sector> Sectors = new List<Sector>();
                 List<SectorResource> SectorResources = new List<SectorResource>();
-               
                 var PotentielCycle = await _PotentielCycleService.GetPotentielsById(Cycle.IdCycle);
                 foreach (var o in PotentielCycle)
                 {
@@ -568,7 +567,9 @@ namespace CRM_API.Controllers
                     }
                 }
 
-                var PotentielSector = await _PotentielSectorService.GetPotentielsById(Sector.IdSector);
+                var SectorsByTarget = await _TargetService.GetSectorsByNumTarget(Num);
+                foreach(var item in SectorsByTarget) {
+                var PotentielSector = await _PotentielSectorService.GetPotentielsById(item.IdSector);
                 foreach (var o in PotentielSector)
                 {
                     var PotentielResource = _mapperService.Map<Potentiel, PotentielResource>(o);
@@ -578,16 +579,16 @@ namespace CRM_API.Controllers
                         PotentielSectorResources.Add(PotentielResource);
                     }
                 }
-
+                }
                 foreach (var item in Target)
                 {
                     var Bu = _mapperService.Map<Target, TargetResource>(item);
 
                     User = await _UserService.GetById(item.IdUser);
                     UserResource = _mapperService.Map<User, UserResource>(User);
-                    var Sector = await _SectorService.GetById(item.IdSector);
-                    var SectorResource = _mapperService.Map<Sector, SectorResource>(Sector);
-                    SectorResources.Add(SectorResource);
+                    //var Sector = await _SectorService.GetById(item.IdSector);
+                   // var SectorResource = _mapperService.Map<Sector, SectorResource>(Sector);
+                  //  SectorResources.Add(SectorResource);
                     Cycle = await _CycleService.GetById(item.IdCycle);
                     CycleResource = _mapperService.Map<Cycle, CycleResource>(Cycle);
                     //Bu.IdCycleNavigation = CycleResource;
