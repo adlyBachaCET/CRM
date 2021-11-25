@@ -556,6 +556,29 @@ namespace CRM_API.Controllers
                 CycleResource CycleResource = new CycleResource();
                 List<Sector> Sectors = new List<Sector>();
                 List<SectorResource> SectorResources = new List<SectorResource>();
+               
+                var PotentielCycle = await _PotentielCycleService.GetPotentielsById(Cycle.IdCycle);
+                foreach (var o in PotentielCycle)
+                {
+                    var PotentielResource = _mapperService.Map<Potentiel, PotentielResource>(o);
+
+                    if (PotentielResource != null)
+                    {
+                        PotentielResources.Add(PotentielResource);
+                    }
+                }
+
+                var PotentielSector = await _PotentielSectorService.GetPotentielsById(Sector.IdSector);
+                foreach (var o in PotentielSector)
+                {
+                    var PotentielResource = _mapperService.Map<Potentiel, PotentielResource>(o);
+
+                    if (PotentielResource != null)
+                    {
+                        PotentielSectorResources.Add(PotentielResource);
+                    }
+                }
+
                 foreach (var item in Target)
                 {
                     var Bu = _mapperService.Map<Target, TargetResource>(item);
@@ -568,27 +591,7 @@ namespace CRM_API.Controllers
                     Cycle = await _CycleService.GetById(item.IdCycle);
                     CycleResource = _mapperService.Map<Cycle, CycleResource>(Cycle);
                     //Bu.IdCycleNavigation = CycleResource;
-                    var PotentielCycle = await _PotentielCycleService.GetPotentielsById(Cycle.IdCycle);
-                    foreach (var o in PotentielCycle)
-                    {
-                        var PotentielResource = _mapperService.Map<Potentiel, PotentielResource>(o);
-
-                        if (PotentielResource != null)
-                        {
-                            PotentielResources.Add(PotentielResource);
-                        }
-                    }
-                    var PotentielSector = await _PotentielSectorService.GetPotentielsById(Sector.IdSector);
-                    foreach (var o in PotentielSector)
-                    {
-                        var PotentielResource = _mapperService.Map<Potentiel, PotentielResource>(o);
-
-                        if (PotentielResource != null)
-                        {
-                            PotentielSectorResources.Add(PotentielResource);
-                        }
-                    }
-                 
+                    
                     var Doctor = await _DoctorService.GetById(item.IdDoctor);
                     if (Doctor != null) { 
                 var DoctorResource = _mapperService.Map<Doctor, DoctorResource>(Doctor);

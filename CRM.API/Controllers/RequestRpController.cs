@@ -58,8 +58,8 @@ namespace CRM_API.Controllers
                     RequestRp.CreatedOn = DateTime.UtcNow;
                     RequestRp.Active = 0;
                     RequestRp.Status = 0;
-                    RequestRp.CreatedBy = 0;
-                    RequestRp.UpdatedBy = 0;
+                    RequestRp.CreatedBy = IdUser;
+                    RequestRp.UpdatedBy = IdUser;
                     if (Role == "Manager")
                     {
                         RequestRp.Status = Status.Approuved;

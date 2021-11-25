@@ -37,7 +37,12 @@ namespace CRM.Data.Repositories
             var result = await MyDbContext.Target.Where(a => a.Active == 0 && a.IdCycle == id).FirstOrDefaultAsync();
             return result;
         }
-
+        public async Task<Target> GetByIdActifNum(int id)
+        {
+            var result = await MyDbContext.Target.Where(a => a.Active == 0 && a.NumTarget == id).ToListAsync();
+            result.
+            return result;
+        }
         public async Task<IEnumerable<Target>> GetAllAcceptedActif()
         {
             var result = await MyDbContext.Target.Where(a => a.Active == 0 && a.Status == Status.Approuved).ToListAsync();
