@@ -8,13 +8,7 @@ namespace CRM.Core.Models
         public string NomTarget { get; set; }
         public int NumTarget { get; set; }
 
-        public int IdCycle { get; set; }
-        public Status StatusCycle { get; set; }
-        public int VersionCycle { get; set; }
-        public virtual CycleResource IdCycleNavigation { get; set; }
-
-
-
+   
         public int? IdDoctor { get; set; }
         public Status? StatusDoctor { get; set; }
         public int? VersionDoctor { get; set; }

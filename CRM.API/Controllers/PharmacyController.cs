@@ -128,7 +128,7 @@ namespace CRM_API.Controllers
                      
             var claims = _UserService.getPrincipal(Token);
             var Role = claims.FindFirst("Role").Value;
-            var Id = int.Parse(claims.FindFirst("Role").Value);
+            var Id = int.Parse(claims.FindFirst("Id").Value);
 
       
                     //*** Mappage ***

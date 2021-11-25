@@ -11,7 +11,11 @@ namespace CRM_API.Mapping
         {
             //Target
             CreateMap<Target, TargetResource>();
-      
+            CreateMap<Target, SaveTargetResource>();
+            CreateMap<SaveTargetResource, Target>();
+            CreateMap<SaveTargetResource, TargetResource>();
+            CreateMap<TargetResource, Target>();
+
             CreateMap<Target, IEnumerable<TargetResource>>();
             //Target
             CreateMap<Appointement, AppointementResource>();

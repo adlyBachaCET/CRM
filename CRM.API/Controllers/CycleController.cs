@@ -552,7 +552,10 @@ namespace CRM_API.Controllers
                 List<PotentielResource> PotentielSectorResources = new List<PotentielResource>();
                 User User = new User();
                 UserResource UserResource = new UserResource();
-
+                Cycle Cycle = new Cycle();
+                CycleResource CycleResource = new CycleResource();
+                List<Sector> Sectors = new List<Sector>();
+                List<SectorResource> SectorResources = new List<SectorResource>();
                 foreach (var item in Target)
                 {
                     var Bu = _mapperService.Map<Target, TargetResource>(item);
@@ -561,9 +564,10 @@ namespace CRM_API.Controllers
                     UserResource = _mapperService.Map<User, UserResource>(User);
                     var Sector = await _SectorService.GetById(item.IdSector);
                     var SectorResource = _mapperService.Map<Sector, SectorResource>(Sector);
-                    var Cycle = await _CycleService.GetById(item.IdCycle);
-                    var CycleResource = _mapperService.Map<Cycle, CycleResource>(Cycle);
-                    Bu.IdCycleNavigation = CycleResource;
+                    SectorResources.Add(SectorResource);
+                    Cycle = await _CycleService.GetById(item.IdCycle);
+                    CycleResource = _mapperService.Map<Cycle, CycleResource>(Cycle);
+                    //Bu.IdCycleNavigation = CycleResource;
                     var PotentielCycle = await _PotentielCycleService.GetPotentielsById(Cycle.IdCycle);
                     foreach (var o in PotentielCycle)
                     {
@@ -602,7 +606,13 @@ namespace CRM_API.Controllers
                   
                 }
          
-                return Ok(new { UserResource= UserResource, TargetResources = TargetResources,CyclePotentiel= PotentielResources, PotentielSectorResources= PotentielSectorResources });
+                return Ok(new { UserResource= UserResource,
+                    CycleResource = CycleResource,
+                    CyclePotentiel = PotentielResources,
+                    SectorSectorResources = SectorResources,
+                    PotentielSectorResources = PotentielSectorResources,
+                    TargetResources = TargetResources,
+                });
             }
             else
             {
@@ -662,5 +672,164 @@ namespace CRM_API.Controllers
                 return NoContent();
    
         }
-   }
+        /// <summary>
+        ///  This function Create a target
+        /// </summary>
+        ///<param name="Token">Token of the connected user to be passed in the header.</param>
+        /// <param name="Ids">Id1 id of the cycle Id2 id of the User.</param>
+        [HttpPost("CreateTarget")]
+        public async Task<ActionResult> CreateTarget([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
+        string Token, SaveTargetResource Target)
+        {
+            var claims = _UserService.getPrincipal(Token);
+            var Role = claims.FindFirst("Role").Value;
+            var IdUser = int.Parse(claims.FindFirst("Id").Value);
+            var exp = DateTime.Parse(claims.FindFirst("Exipres On").Value);
+
+            ErrorHandling ErrorMessag = new ErrorHandling();
+            List<Sector> Sectors = new List<Sector>();
+            List<Sector> SectorsCreated = new List<Sector>();
+            List<SectorResource> SectorResources = new List<SectorResource>();
+
+            SectorCycle SectorCycleCreated = new SectorCycle();
+            var User = await _UserService.GetById(Target.IdUser);
+            var UserResource = _mapperService.Map<User, UserResource>(User);
+            int? numTarget = null; ;
+            var Cycle = await _CycleService.GetById(Target.IdCycle);
+            List<PotentielResource> PotentielResources = new List<PotentielResource>();
+            IEnumerable<Potentiel> Potentiel = Enumerable.Empty<Potentiel>();
+            if (Cycle == null) return NotFound();
+            var CycleRessource = _mapperService.Map<Cycle, CycleResource>(Cycle);
+            var Doctor = await _DoctorService.GetById(Target.IdDoctor);
+            var Pharmacy = await _PharmacyService.GetById(Target.IdPharmacy);
+            var Sector = await _SectorService.GetById(Target.IdSector);
+
+            if (Cycle != null)
+            {
+
+                Potentiel = await _PotentielCycleService.GetPotentielsById(Cycle.IdCycle);
+
+                foreach (var item in Potentiel)
+                {
+                    var Bu = _mapperService.Map<Potentiel, PotentielResource>(item);
+
+                    if (Bu != null)
+                    {
+                        PotentielResources.Add(Bu);
+                    }
+                }
+
+        
+
+                //Random random = new Random();
+                //int num = random.Next();
+                //Target.NumTarget = ;
+             
+
+                    PotentielSector PotentielSector = new PotentielSector();
+                    foreach (var item1 in Potentiel)
+                    {
+                        PotentielSector.IdPotentiel = item1.IdPotentiel;
+                        PotentielSector.VersionPotentiel = item1.Version;
+                        PotentielSector.StatusPotentiel = item1.Status;
+                        PotentielSector.IdPotentielNavigation = item1;
+                        PotentielSector.IdSector = Sector.IdSector;
+                        PotentielSector.VersionSector = Sector.Version;
+                        PotentielSector.StatusSector = Sector.Status;
+                        PotentielSector.IdSectorNavigation = Sector;
+                        PotentielSector.CreatedOn = DateTime.UtcNow;
+                        PotentielSector.UpdatedOn = DateTime.UtcNow;
+                        PotentielSector.CreatedBy = IdUser;
+                        PotentielSector.UpdatedBy = IdUser;
+                     //   var PotentielSectorCreated = await _PotentielSectorService.Create(PotentielSector);
+
+
+                    }
+                    SectorCycle SectorCycle = new SectorCycle();
+
+                    SectorCycle.IdCycle = Cycle.IdCycle;
+                    SectorCycle.VersionCycle = Cycle.Version;
+                    SectorCycle.StatusCycle = Cycle.Status;
+                    SectorCycle.IdCycleNavigation = Cycle;
+                    SectorCycle.IdSector = Sector.IdSector;
+                    SectorCycle.VersionSector = Sector.Version;
+                    SectorCycle.StatusSector = Sector.Status;
+                    SectorCycle.IdSectorNavigation = Sector;
+                    SectorCycle.CreatedOn = DateTime.UtcNow;
+                    SectorCycle.UpdatedOn = DateTime.UtcNow;
+                    SectorCycle.CreatedBy = IdUser;
+                    SectorCycle.UpdatedBy = IdUser;
+
+                    //SectorCycleCreated = await _SectorCycleService.Create(SectorCycle);
+                    var SectorResource = _mapperService.Map<Sector, SectorResource>(Sector);
+                    SectorResources.Add(SectorResource);
+                    var TargetResource = _mapperService.Map<SaveTargetResource, TargetResource>(Target);
+
+                    var NewTarget = _mapperService.Map<TargetResource, Target>(TargetResource);
+
+                    NewTarget.IdSector = Sector.IdSector;
+                    NewTarget.VersionSector = Sector.Version;
+                    NewTarget.StatusCycle = Sector.Status;
+                    NewTarget.IdSectorNavigation = Sector;
+                    NewTarget.IdCycle = Cycle.IdCycle;
+                    NewTarget.VersionCycle = Cycle.Version;
+                    NewTarget.StatusCycle = Cycle.Status;
+                    NewTarget.IdCycleNavigation = Cycle;
+                    NewTarget.IdUser = User.IdUser;
+                    NewTarget.VersionUser = User.Version;
+                    NewTarget.StatusCycle = User.Status;
+                    NewTarget.IdUserNavigation = User;
+                    if (Doctor != null) 
+                    {
+                        NewTarget.IdDoctor = Doctor.IdDoctor;
+                        NewTarget.VersionDoctor = Doctor.Version;
+                        NewTarget.StatusDoctor = Doctor.Status;
+                        NewTarget.IdDoctorNavigation = Doctor;
+                    }
+                    else if (Doctor == null) 
+                    {
+                        NewTarget.IdDoctor = null;
+                        NewTarget.VersionDoctor = null;
+                        NewTarget.StatusDoctor = null;
+                        NewTarget.IdDoctorNavigation = null;
+                    }
+                    if (Pharmacy != null)
+                    {
+                        NewTarget.IdPharmacy = Pharmacy.IdPharmacy;
+                        NewTarget.VersionPharmacy = Pharmacy.Version;
+                        NewTarget.StatusPharmacy = Pharmacy.Status;
+                        NewTarget.IdPharmacyNavigation = Pharmacy;
+
+                    }
+                    else if (Pharmacy == null)
+                    {
+                        NewTarget.IdPharmacy = null;
+                        NewTarget.VersionPharmacy = null;
+                        NewTarget.StatusPharmacy = null;
+                        NewTarget.IdPharmacyNavigation = null;
+                    }
+                    NewTarget.CreatedOn = DateTime.UtcNow;
+                    NewTarget.UpdatedOn = DateTime.UtcNow;
+                    NewTarget.CreatedBy = IdUser;
+                    NewTarget.UpdatedBy = IdUser;
+                    var TargetCreated = await _TargetService.Create(NewTarget);
+                    var TargetCreatedResource = _mapperService.Map<Target, TargetResource>(TargetCreated);
+                    numTarget = TargetResource.NumTarget;
+                
+
+
+            }
+
+            return Ok(new
+            {
+                PotentielResources = PotentielResources,
+                CycleRessource = CycleRessource,
+                UserResource = UserResource,
+                SectorResources = SectorResources,
+                numTarget = numTarget
+            });
+
+        }
+
+    }
 }
