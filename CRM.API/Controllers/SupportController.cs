@@ -173,7 +173,7 @@ namespace CRM_API.Controllers
                     }
                     else
                     {
-                        return BadRequest("Passord missmatch");
+                        return BadRequest("Password missmatch");
                     }
                 }
             }
