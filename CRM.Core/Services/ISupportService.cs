@@ -19,8 +19,8 @@ namespace CRM.Core.Services
         Task<IEnumerable<Support>> GetAllInActif();
         Task<Support> GetByNameActif(string Name);
         Task<ClaimsPrincipal> getPrincipal(string token);
+        Task<bool> SendMailMobile(string Name, string EmailLogin, string html);
 
-
-
+        Task<ClaimsPrincipal> getPrincipalByEmailLogin(string EmailLogin);
     }
 }

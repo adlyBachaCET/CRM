@@ -8,7 +8,8 @@ namespace CRM.Core.Models
         public int IdSector { get; set; }
         public int VersionSector { get; set; }
         public Status StatusSector { get; set; }
-
+        public virtual SectorResource IdSectorNavigation { get; set; }
+        public virtual PotentielResource IdPotentielNavigation { get; set; }
         public int IdPotentiel { get; set; }
         public Status StatusPotentiel { get; set; }
         public int? CreatedBy { get; set; }

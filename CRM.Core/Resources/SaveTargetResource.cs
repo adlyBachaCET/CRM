@@ -14,4 +14,6 @@ namespace CRM.Core.Models
         public int IdSector { get; set; }
         public string Note { get; set; }
     }
+   
+  
 }

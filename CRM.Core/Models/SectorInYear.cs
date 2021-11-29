@@ -3,12 +3,9 @@ using System.Collections.Generic;
 
 namespace CRM.Core.Models
 {
-    public partial class SectorCycleInYear 
+    public partial class SectorInYear 
     {
-        public int IdCycle { get; set; }
-        public Status StatusCycle { get; set; }
-
-        public int VersionCycle { get; set; }
+  
 
         public int IdSector { get; set; }
         public Status StatusSector { get; set; }
@@ -24,7 +21,6 @@ namespace CRM.Core.Models
 
         public int Version { get; set; }
 
-        public virtual Cycle IdCycleNavigation { get; set; }
         public virtual Sector IdSectorNavigation { get; set; }
         public virtual WeekInYear OrderNavigation { get; set; }
         public Status Status { get; set; }
@@ -32,5 +28,7 @@ namespace CRM.Core.Models
         public DateTime? UpdatedOn { get; set; }
         public int Active { get; set; }
         public int Lock { get; set; }
+        public bool Request { get; set; }
+
     }
 }

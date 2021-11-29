@@ -234,9 +234,9 @@ namespace CRM_API.Controllers
                         LD.Active = 0;
                         LD.CreatedBy = Id;
                         LD.UpdatedBy = Id;
-                        LD.Order = SaveLocationResource.OrderLocation.Order;
-                        LD.Primary = SaveLocationResource.OrderLocation.Primary;
-                        LD.ChefService = SaveLocationResource.Chief.ChiefService;
+                        //LD.Order = SaveLocationResource.OrderLocation.Order;
+                        //LD.Primary = SaveLocationResource.OrderLocation.Primary;
+                        //LD.ChefService = SaveLocationResource.Chief.ChiefService;
                         var NewLocationDoctor = await _LocationDoctorService.Create(LD);
 
                     }

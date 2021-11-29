@@ -5,7 +5,6 @@ namespace CRM.Core.Models
 {
     public partial class SaveWeekSectorCycleInYearResource 
     {
-        public int IdCycle { get; set; }
    
 
         public int IdSector { get; set; }

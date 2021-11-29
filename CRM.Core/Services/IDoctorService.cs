@@ -12,6 +12,7 @@ namespace CRM.Core.Services
         Task<Doctor> Create(Doctor newDoctor);
         Task<List<Doctor>> CreateRange(List<Doctor> newDoctor);
         Task Update(Doctor DoctorToBeUpdated, Doctor Doctor);
+        Task<IEnumerable<Doctor>> GetMyDoctorsWithoutAppointment(int Id);
         Task Delete(Doctor DoctorToBeDeleted);
         Task DeleteRange(List<Doctor> Doctor);
         Task<IEnumerable<Doctor>> GetAllDoctorsByBu(int Id);

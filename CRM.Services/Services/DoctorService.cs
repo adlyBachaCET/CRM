@@ -110,8 +110,11 @@ namespace CRM.Services.Services
         }
         public async Task<IEnumerable<Doctor>> GetDoctorsAssignedByBu(int Id)
         {
+            var BuUser = await _unitOfWork.BuUsers.SingleOrDefault(i => i.IdUser == Id);
+
             List<Doctor> list = new List<Doctor>();
-            var Bu = await _unitOfWork.BuDoctors.Find(i => i.IdBu == Id);
+            var Bu = await _unitOfWork.BuDoctors.Find(i => i.IdBu == BuUser.IdBu);
+
             foreach (var item in Bu)
             {
                 list.Add(await _unitOfWork.Doctors.SingleOrDefault(i => i.IdDoctor == item.IdDoctor));
@@ -126,37 +129,64 @@ namespace CRM.Services.Services
         }
         public async Task<IEnumerable<Doctor>> GetDoctorsNotAssignedByBu(int Id)
         {
+            var BuUser = await _unitOfWork.BuUsers.SingleOrDefault(i => i.IdUser == Id&&i.Active==0);
+
             List<Doctor> list = new List<Doctor>();
-            var Bu = await _unitOfWork.BuDoctors.Find(i => i.IdBu == Id);
+            var Bu = await _unitOfWork.BuDoctors.Find(i => i.IdBu == BuUser.IdBu && i.Active == 0);
             foreach (var item in Bu)
             {
-                list.Add(await _unitOfWork.Doctors.SingleOrDefault(i => i.IdDoctor == item.IdDoctor));
+                list.Add(await _unitOfWork.Doctors.SingleOrDefault(i => i.IdDoctor == item.IdDoctor&&i.Active==0));
             }
 
             List<Doctor> DoctorsAssigned = new List<Doctor>();
-            var list1 = await _unitOfWork.Target.Find(i => i.IdDoctorNavigation.Active == 0 && i.IdDoctorNavigation.LinkedId == null);
-            foreach (var item in list)
+            var list1 = await _unitOfWork.Target.Find(i => i.IdDoctorNavigation.Active == 0 && i.IdDoctorNavigation != null && i.Active == 0);
+            foreach(var item in list1)
             {
-                DoctorsAssigned.Add(item);
+                var Doctor = await _unitOfWork.Doctors.SingleOrDefault(i => i.Active == 0 && i.IdDoctor == item.IdDoctor && i.Active == 0);
+                DoctorsAssigned.Add(Doctor);
             }
             var Alldoctors = await _unitOfWork.Doctors.Find(i => i.Status == Status.Approuved && i.Active == 0);
             var result = Alldoctors.Except(DoctorsAssigned).ToList();
             return DoctorsAssigned;
         }
+        public async Task<IEnumerable<Doctor>> GetMyDoctorsWithoutAppointment(int Id)
+        {
+            var BuUser = await _unitOfWork.BuUsers.SingleOrDefault(i => i.IdUser == Id && i.Active == 0);
+
+            List<Doctor> list = new List<Doctor>();
+            var Bu = await _unitOfWork.BuDoctors.Find(i => i.IdBu == BuUser.IdBu && i.Active == 0);
+            foreach (var item in Bu)
+            {
+                list.Add(await _unitOfWork.Doctors.SingleOrDefault(i => i.IdDoctor == item.IdDoctor && i.Active == 0));
+            }
+
+            List<Doctor> DoctorsWithoutAppointment = new List<Doctor>();
+            var list1 = await _unitOfWork.Appointements.Find(i => i.Doctor.Active == 0 && i.Doctor != null && i.IdUser==Id);
+            foreach (var item in list1)
+            {
+                var Doctor = await _unitOfWork.Doctors.SingleOrDefault(i => i.Active == 0 && i.IdDoctor == item.IdDoctor);
+                DoctorsWithoutAppointment.Add(Doctor);
+            }
+            var Alldoctors = await _unitOfWork.Doctors.Find(i => i.Status == Status.Approuved && i.Active == 0);
+            var result = Alldoctors.Except(DoctorsWithoutAppointment).ToList();
+            return result;
+        }
+
         public async Task<IEnumerable<Doctor>> GetDoctorsAssigned()
         {
-            List<Doctor> doctors = new List<Doctor>();
-            var a = await _unitOfWork.Target.Find(i => i.IdDoctorNavigation.Active == 0 && i.IdDoctorNavigation.LinkedId == null);
-            foreach (var item in a)
+            List<Doctor> DoctorsAssigned = new List<Doctor>();
+            var list1 = await _unitOfWork.Target.Find(i => i.IdDoctorNavigation.Active == 0 && i.IdDoctor != null);
+            foreach (var item in list1)
             {
-                doctors.Add(item.IdDoctorNavigation);
+                var Doctor = await _unitOfWork.Doctors.SingleOrDefault(i => i.Active == 0 && i.IdDoctor == item.IdDoctor);
+                DoctorsAssigned.Add(Doctor);
             }
-            return doctors;
+            return DoctorsAssigned;
         }
         public async Task<IEnumerable<Doctor>> GetDoctorsNotAssigned()
         {
             List<Doctor> DoctorsAssigned = new List<Doctor>();
-            var list = await _unitOfWork.Target.Find(i => i.IdDoctorNavigation.Active == 0 && i.IdDoctorNavigation.LinkedId == null);
+            var list = await _unitOfWork.Target.Find(i => i.IdDoctorNavigation.Active == 0 && i.IdDoctorNavigation == null);
             foreach (var item in list)
             {
                 DoctorsAssigned.Add(item.IdDoctorNavigation);

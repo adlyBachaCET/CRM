@@ -23,12 +23,14 @@ namespace CRM_API.Controllers
         
         private readonly IActivityService _ActivityService;
         private readonly IUserService _UserService;
+                private readonly IActivityUserService _ActivityUserService;
 
         private readonly IMapper _mapperService;
         public ActivityController(IUserService UserService,
-                        IActivityService ActivityService, IMapper mapper)
+                        IActivityService ActivityService, IActivityUserService ActivityUserService, IMapper mapper)
         {
             _UserService = UserService;
+            _ActivityUserService = ActivityUserService;
 
             _ActivityService = ActivityService;
             _mapperService = mapper;
@@ -64,7 +66,28 @@ namespace CRM_API.Controllers
                 var NewActivity = await _ActivityService.Create(Activity);
                 //*** Mappage ***
                 var ActivityResource = _mapperService.Map<Activity, ActivityResource>(NewActivity);
-                return Ok(ActivityResource);
+                    var ActivityUser = new ActivityUser();
+                    var User = await _UserService.GetById(Id);
+                    ActivityUser.IdUser = User.IdUser;
+                    ActivityUser.StatusUser = User.Status;
+                    ActivityUser.VersionUser = User.Version;
+                    ActivityUser.User = User;
+                    ActivityUser.UpdatedOn = User.UpdatedOn;
+                    ActivityUser.CreatedOn = User.CreatedOn;
+                    ActivityUser.UpdatedBy = User.UpdatedBy;
+                    var ActivitysinessUnit = await _ActivityService.GetById(ActivityResource.IdActivity);
+                    ActivityUser.IdUser = ActivitysinessUnit.IdActivity;
+                    ActivityUser.StatusUser = ActivitysinessUnit.Status;
+                    ActivityUser.VersionUser = ActivitysinessUnit.Version;
+                    ActivityUser.Activity = ActivitysinessUnit;
+                    ActivityUser.UpdatedOn = ActivitysinessUnit.UpdatedOn;
+                    ActivityUser.CreatedOn = ActivitysinessUnit.CreatedOn;
+                    ActivityUser.UpdatedBy = ActivitysinessUnit.UpdatedBy;
+                    //*** Creation dans la base de données ***
+                    ActivityUser.CreatedBy = 0;
+                    ActivityUser.UpdatedBy = 0;
+                    var NewActivityUser = await _ActivityUserService.Create(ActivityUser);
+                    return Ok(ActivityResource);
             }
             else
             {

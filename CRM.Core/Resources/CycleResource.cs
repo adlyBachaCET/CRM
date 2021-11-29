@@ -16,7 +16,7 @@ namespace CRM.Core.Models
         public DateTime? UpdatedOn { get; set; }
         public string Description { get; set; }
         public int? NbDays { get; set; }
-        public int? NbSemaine { get; set; }
+        public int NbSemaine { get; set; }
 
         public int? CreatedBy { get; set; }
         public int? UpdatedBy { get; set; }

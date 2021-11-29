@@ -5,7 +5,8 @@ namespace CRM.Core.Models
 {
     public partial class Target 
     {
-        public string NomTarget { get; set; }
+        public int ValTarget { get; set; }
+
         public int NumTarget { get; set; }
 
         public int IdCycle { get; set; }

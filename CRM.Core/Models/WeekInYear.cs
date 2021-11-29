@@ -7,7 +7,7 @@ namespace CRM.Core.Models
     {
         public WeekInYear()
         {
-            WeekSectorCycleInYearOrderNavigation = new HashSet<SectorCycleInYear>();
+            WeekSectorCycleInYearOrderNavigation = new HashSet<SectorInYear>();
         }
         public int Version { get; set; }
         public int? CreatedBy { get; set; }
@@ -20,6 +20,6 @@ namespace CRM.Core.Models
         public int Order { get; set; }
         public int? Lock { get; set; }
         public Status Status { get; set; }
-        public virtual ICollection<SectorCycleInYear> WeekSectorCycleInYearOrderNavigation { get; set; }
+        public virtual ICollection<SectorInYear> WeekSectorCycleInYearOrderNavigation { get; set; }
     }
 }

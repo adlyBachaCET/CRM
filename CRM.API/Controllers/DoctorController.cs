@@ -397,6 +397,29 @@ namespace CRM_API.Controllers
             }
         }
         /// <summary>
+        ///  This function gets the list of the doctor Without Appointment
+        /// </summary>
+        ///<param name="Token">Token of the connected user to be passed in the header.</param>
+        /// <returns>the doctors if found.</returns>
+        [HttpGet("GetDoctorsWithoutAppointment")]
+        public async Task<ActionResult<DoctorResource>> GetDoctorsWithoutAppointment([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token)
+        {
+            try
+            {
+                var claims = _UserService.getPrincipal(Token);
+                var Id = int.Parse(claims.FindFirst("Id").Value);
+                var Role = claims.FindFirst("Role").Value;
+                var Employe = await _DoctorService.GetMyDoctorsWithoutAppointment(Id);
+                if (Employe == null) return NotFound();
+                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
+                return Ok(Employe);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        /// <summary>
         ///  This function gets the list of the doctors 
         /// </summary>
         ///<param name="Token">Token of the connected user to be passed in the header.</param>
@@ -505,7 +528,7 @@ namespace CRM_API.Controllers
         {
             try
             {
-                var Employe = await _DoctorService.GetDoctorsAssigned();
+                var Employe = await _DoctorService.GetDoctorsNotAssigned();
                 if (Employe == null) return NotFound();
                 // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
                 return Ok(Employe);
@@ -544,12 +567,15 @@ namespace CRM_API.Controllers
         ///<param name="Id">Id of the businessUnit.</param>
 
         /// <returns>the doctors if found.</returns>
-        [HttpGet("NotAssigned/{Id}")]
-        public async Task<ActionResult<DoctorResource>> GetAllNotAssignedDoctorsByBu([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token,int Id)
+        [HttpGet("NotAssignedByBu")]
+        public async Task<ActionResult<DoctorResource>> GetAllNotAssignedDoctorsByBu([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token)
         {
             try
             {
-                var Employe = await _DoctorService.GetDoctorsNotAssignedByBu(Id);
+                var claims = _UserService.getPrincipal(Token);
+                var Role = claims.FindFirst("Role").Value;
+                var IdUser = int.Parse(claims.FindFirst("Id").Value);
+                var Employe = await _DoctorService.GetDoctorsNotAssignedByBu(IdUser);
                 if (Employe == null) return NotFound();
                 // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
                 return Ok(Employe);

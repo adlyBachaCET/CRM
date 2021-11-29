@@ -5,10 +5,11 @@ namespace CRM.Core.Models
 {
     public partial class TargetResource
     {
-        public string NomTarget { get; set; }
+        public int ValTarget { get; set; }
         public int NumTarget { get; set; }
+        public int IdSector { get; set; }
 
-   
+
         public int? IdDoctor { get; set; }
         public Status? StatusDoctor { get; set; }
         public int? VersionDoctor { get; set; }

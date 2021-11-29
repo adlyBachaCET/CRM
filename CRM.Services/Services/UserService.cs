@@ -56,7 +56,7 @@ namespace CRM.Services.Services
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
             var claims = new[] {
-                          new Claim("Exipres On", DateTime.UtcNow.AddMinutes(120).ToString()),
+                          new Claim("Exipres On", DateTime.UtcNow.AddMinutes(300).ToString()),
                           new Claim("Created On", DateTime.UtcNow.ToString()),
 
                           new Claim("Photo", userInfo.Photo.ToString()),
@@ -80,7 +80,7 @@ namespace CRM.Services.Services
             var token = new JwtSecurityToken(_config["Jwt:Issuer"],
               _config["Jwt:Issuer"],
               claims,
-              expires: DateTime.Now.AddMinutes(120),
+              expires: DateTime.Now.AddMinutes(300),
               signingCredentials: credentials);
 
             return new JwtSecurityTokenHandler().WriteToken(token);

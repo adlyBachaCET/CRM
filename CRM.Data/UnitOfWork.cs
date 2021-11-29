@@ -65,7 +65,7 @@ namespace CRM.Data
         private IWholeSalerLocalityRepository _WholeSalerLocalityRepository;
         private IWholeSalerRepository _WholeSaleRepository;
         private IUserRepository _UserRepository;
-        private ISectorCycleInYearRepository _WeekSectorCycleInYearRepository;
+        private ISectorInYearRepository _WeekSectorCycleInYearRepository;
 
         private ISectorCycleRepository _WeekSectorCycleRepository;
 
@@ -91,7 +91,7 @@ namespace CRM.Data
         public ICommandeRepository Commandes => _CommandeRepository = _CommandeRepository ?? new CommandeRepository(_context);
         public ISupportRepository Support => _SupportRepository = _SupportRepository ?? new SupportRepository(_context);
 
-        public ISectorCycleInYearRepository WeekSectorCycleInYears => _WeekSectorCycleInYearRepository = _WeekSectorCycleInYearRepository ?? new SectorCycleInYearRepository(_context);
+        public ISectorInYearRepository SectorInYear => _WeekSectorCycleInYearRepository = _WeekSectorCycleInYearRepository ?? new SectorInYearRepository(_context);
         public ISectorCycleRepository WeekSectorCycles => _WeekSectorCycleRepository = _WeekSectorCycleRepository ?? new SectorCycleRepository(_context);
 
 

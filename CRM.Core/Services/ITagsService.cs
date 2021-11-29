@@ -17,6 +17,6 @@ namespace CRM.Core.Services
         Task<IEnumerable<Tags>> GetAllActif();
         Task<IEnumerable<Tags>> GetAllInActif();
         Task<Tags> GetByExistantActif(string Name);
-
+  
     }
 }

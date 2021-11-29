@@ -64,7 +64,7 @@ namespace CRM.Core
         IWeekInYearRepository WeekInYears { get; }
         IWholeSalerLocalityRepository WholeSalerLocalitys { get; }
         IWholeSalerRepository WholeSales { get; }
-        ISectorCycleInYearRepository WeekSectorCycleInYears { get; }
+        ISectorInYearRepository SectorInYear { get; }
         ISectorCycleRepository WeekSectorCycles { get; }
 
         Task<int> CommitAsync();

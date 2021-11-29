@@ -7,8 +7,6 @@ namespace CRM.Core.Models
     {
         public LocationAdd LocationAdd { get; set; }
 
-        public OrderLocation OrderLocation { get; set; }
-        public Chief Chief { get; set; }
 
 
         public List<SaveServiceResource> SaveServiceResource { get; set; }
@@ -22,7 +20,6 @@ namespace CRM.Core.Models
 
 
         public string Name { get; set; }
-        public int? Primary { get; set; }
 
 
         public int IdLocality1 { get; set; }

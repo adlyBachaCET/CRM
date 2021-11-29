@@ -134,6 +134,56 @@ namespace CRM_API.Controllers
                 return BadRequest(ErrorMessag);
             }
         }
+        [HttpPost("SendMobile")]
+        public async Task<ActionResult> SendMobile(SendMailHtml SendMailHtml)
+        {
+            //  var UserExist =await _UserService 
+            var mail = await _SupportService.SendMailMobile(SendMailHtml.Name, SendMailHtml.EmailLogin, SendMailHtml.Html);
+            //*** Creation dans la base de données ***
+            if (mail == true)
+            {
+                return Ok("Mail envoyé");
+            }
+            else
+            {
+                return NotFound("L'utilisateur n'est pas trouvé");
+            }
+            //*** Mappage ***
+            ///var SupportResource = _mapperService.Map<Support, SupportResource>(NewSupport);
+        }
+        [HttpPost("VerifyMobile")]
+        public async Task<ActionResult> VerifyToken([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token,
+           EmailLoginPassword EmailLoginPassword)
+        {
+            // StringValues token = "";
+            ErrorHandling ErrorMessag = new ErrorHandling();
+            //  Request.Headers.TryGetValue("token", out token);
+
+            try
+            {
+                var Supports = await _SupportService.getPrincipalByEmailLogin(EmailLoginPassword.LoginEmail);
+
+                if (Supports == null) return NotFound();
+                else
+                {
+                    var Password = Supports.FindFirst("Password").Value;
+                    if(Password== EmailLoginPassword.ConfirmPassword) {
+                        //Response.Headers.Add("Token", Token);
+                        return Ok(new { Token= Token, Supports = Supports.Claims });
+                    }
+                    else
+                    {
+                        return BadRequest("Passord missmatch");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorMessag.ErrorMessage = ex.Message;
+                ErrorMessag.StatusCode = 404;
+                return BadRequest(ErrorMessag);
+            }
+        }
         [HttpPut("UpdateForgottenPassword")]
         public async Task<ActionResult> UpdateForgottenPassword([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token,
            TokenPassword TokenPassword)

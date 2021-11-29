@@ -73,7 +73,7 @@ namespace CRM.Services.Services
             // Generate a random number  
             Random random = new Random();
             // Any random integer   
-            string num = random.Next().ToString();
+            string num = random.Next(from,to).ToString();
             return num;
 
         }
@@ -95,7 +95,7 @@ namespace CRM.Services.Services
             if (UserInDB != null) { 
             //Generate Token 
             var token = GenerateJSONWebToken(UserInDB.IdUser);
-
+            var Principal = getPrincipal(token);
             //Update the user's password with th newly created token
             UserInDB.Active = 1;
             await _unitOfWork.CommitAsync();
@@ -157,12 +157,84 @@ namespace CRM.Services.Services
             }
         }
 
+        public async Task<bool> SendMailMobile(string Name, string EmailLogin ,string html)
+        {
+            bool Existe = false;
+            //Get the user
+            var UserInDB = await _unitOfWork.Users.SingleOrDefault(i => (i.Email == EmailLogin || i.Login == EmailLogin) && i.Active == 0);
+            if (UserInDB != null)
+            {
+                //Generate Token 
+                var token = GenerateJSONWebToken(UserInDB.IdUser);
+                var Principal = getPrincipal(token);
+                //Update the user's password with th newly created token
+                UserInDB.Active = 1;
+                await _unitOfWork.CommitAsync();
 
+                await _unitOfWork.CommitAsync();
+                User User = new User();
+                User = UserInDB;
+                User.Version = UserInDB.Version + 1;
+                User.IdUser = UserInDB.IdUser;
+                User.Status = Status.Approuved;
+                User.Active = 0;
+                User.GeneratedPassword = token;
+                await _unitOfWork.Users.Add(User);
+                await _unitOfWork.CommitAsync();
+
+                Support Support = new Support();
+
+                Support = await _unitOfWork.Support.SingleOrDefault(a => a.Name == Name);
+
+
+                if (Support != null)
+                {
+                    string from = Support.Email, to = User.Email, subject = "";
+
+                    // create message
+                    var email = new MimeMessage();
+                    email.From.Add(MailboxAddress.Parse(from));
+                    email.To.Add(MailboxAddress.Parse(to));
+                    email.Subject = subject;
+                    var claims = await getPrincipal(token);
+                    var Password = claims.FindFirst("Password").Value;
+                    email.Body = new TextPart(TextFormat.Html) { Text = html+ Password };
+                    //Get mail Adresse
+
+                    // send email
+                    var smtp = new SmtpClient();
+                    smtp.ServerCertificateValidationCallback = (s, c, h, e) => true;
+
+
+                    await smtp.ConnectAsync(Support.Host, Support.Port, false);
+
+                    await smtp.AuthenticateAsync(Support.Email, Support.Password);
+
+
+
+                    await smtp.SendAsync(email);
+
+                    await smtp.DisconnectAsync(true);
+                    Existe = true;
+                    return Existe;
+                }
+                else
+                {
+                    return Existe;
+                }
+
+            }
+            else
+            {
+                return Existe;
+            }
+        }
 
         public string GenerateJSONWebToken(int Id)
         {
-            var claims = new[] {
-                           new Claim("Id", Id.ToString())};
+            string RadomPassword = RandomNumber(100000, 999999);
+            var claims = new[] {new Claim("Password", RadomPassword.ToString()),
+                                       new Claim("Id", Id.ToString())};
             ///var details = JObject.Parse(userInfo.ToString());
            // string json = JsonConvert.SerializeObject(userInfo);
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
@@ -177,7 +249,50 @@ namespace CRM.Services.Services
         }
 
 
+        public async Task<ClaimsPrincipal> getPrincipalByEmailLogin(string EmailLogin)
+        {
+            bool SameInDB = false;
+            var UserInDB = await _unitOfWork.Users.SingleOrDefault(i => (i.Email == EmailLogin || i.Login == EmailLogin) && i.Active == 0);
+            if (UserInDB != null)
+            {
+                SameInDB = true;
+            }
+            if (SameInDB == true)
+            {
+                var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
 
+
+                var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+                JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
+                JwtSecurityToken jwtToken = (JwtSecurityToken)tokenHandler.ReadToken(UserInDB.GeneratedPassword);
+                if (jwtToken == null)
+                    return null;
+                byte[] key = Encoding.ASCII.GetBytes(_config["Jwt:Key"]);
+                TokenValidationParameters parameters = new TokenValidationParameters()
+                {
+                    ValidIssuer = _config["Jwt:Issuer"],
+                    ValidAudience = _config["Jwt:Issuer"],
+                    ValidateLifetime = true,
+                    RequireExpirationTime = true,
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ClockSkew = TimeSpan.Zero
+                };
+                SecurityToken securityToken;
+                ClaimsPrincipal principal = tokenHandler.ValidateToken(UserInDB.GeneratedPassword,
+                      parameters, out securityToken);
+                return principal;
+
+
+
+            }
+            else
+            {
+                return null;
+            }
+
+        }
         public async Task<ClaimsPrincipal> getPrincipal(string token)
         {
             bool SameInDB = false;

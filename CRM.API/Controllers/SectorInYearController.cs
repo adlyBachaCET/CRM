@@ -14,25 +14,25 @@ namespace CRM_API.Controllers
     [ApiController]
     [EnableCors("AllowOrigin")]
 
-    public class SectorCycleInYearController : ControllerBase
+    public class SectorInYearController : ControllerBase
     {
-        public IList<SectorCycleInYear> WeekSectorCycleInYears;
+        public IList<SectorInYear> WeekSectorCycleInYears;
 
-        private readonly ISectorCycleInYearService _WeekSectorCycleInYearService;
+        private readonly ISectorInYearService _SectorInYearService;
         private readonly ISectorService _SectorService;
         private readonly ICycleService _CycleService;
                 private readonly IWeekInYearService _WeekInYearService;
 
         private readonly IMapper _mapperService;
-        public SectorCycleInYearController(IWeekInYearService WeekInYearService,
+        public SectorInYearController(IWeekInYearService WeekInYearService,
             ICycleService CycleService,ISectorService SectorService,
-            ISectorCycleInYearService WeekSectorCycleInYearService, IMapper mapper)
+            ISectorInYearService WeekSectorCycleInYearService, IMapper mapper)
         {
             _SectorService = SectorService;
             _CycleService = CycleService;
             _WeekInYearService = WeekInYearService;
 
-            _WeekSectorCycleInYearService = WeekSectorCycleInYearService;
+            _SectorInYearService = WeekSectorCycleInYearService;
             _mapperService = mapper;
         }
 
@@ -41,44 +41,44 @@ namespace CRM_API.Controllers
         public async Task<ActionResult<WeekSectorCycleInYearResource>> CreateWeekSectorCycleInYear(SaveWeekSectorCycleInYearResource SaveWeekSectorCycleInYearResource)
         {
             //*** Mappage ***
-            var WeekSectorCycleInYear = _mapperService.Map<SaveWeekSectorCycleInYearResource, SectorCycleInYear>(SaveWeekSectorCycleInYearResource);
-            WeekSectorCycleInYear.CreatedOn = DateTime.UtcNow;
-            WeekSectorCycleInYear.UpdatedOn = DateTime.UtcNow;
-            WeekSectorCycleInYear.Active = 0;
-            WeekSectorCycleInYear.Version = 0;
-            WeekSectorCycleInYear.CreatedBy = 0;
-            WeekSectorCycleInYear.UpdatedBy = 0;
-            var Cycle = await _CycleService.GetById(SaveWeekSectorCycleInYearResource.IdCycle);
+            var SectorInYear = _mapperService.Map<SaveWeekSectorCycleInYearResource, SectorInYear>(SaveWeekSectorCycleInYearResource);
+            SectorInYear.CreatedOn = DateTime.UtcNow;
+            SectorInYear.UpdatedOn = DateTime.UtcNow;
+            SectorInYear.Active = 0;
+            SectorInYear.Version = 0;
+            SectorInYear.CreatedBy = 0;
+            SectorInYear.UpdatedBy = 0;
+            SectorInYear.Lock =0 ;
+            SectorInYear.Request = false;
+
             var Sector = await _SectorService.GetById(SaveWeekSectorCycleInYearResource.IdSector);
             var WeekInYear = await _WeekInYearService.GetById(SaveWeekSectorCycleInYearResource.Order, SaveWeekSectorCycleInYearResource.Year);
-            WeekSectorCycleInYear.IdCycle = Cycle.IdCycle;
-            WeekSectorCycleInYear.VersionCycle = Cycle.Version;
-            WeekSectorCycleInYear.StatusCycle = Cycle.Status;
-            WeekSectorCycleInYear.IdCycleNavigation = Cycle;
 
-            WeekSectorCycleInYear.IdSector = Sector.IdSector;
-            WeekSectorCycleInYear.VersionSector = Sector.Version;
-            WeekSectorCycleInYear.StatusSector = Sector.Status;
-            WeekSectorCycleInYear.IdSectorNavigation = Sector;
 
-            WeekSectorCycleInYear.Order = WeekInYear.Order;
-            WeekSectorCycleInYear.Year = WeekInYear.Year;
-            WeekSectorCycleInYear.VersionWeekInYear = WeekInYear.Version;
-            WeekSectorCycleInYear.StatusWeekInYear = WeekInYear.Status;
-            WeekSectorCycleInYear.OrderNavigation = WeekInYear;
+            SectorInYear.IdSector = Sector.IdSector;
+            SectorInYear.VersionSector = Sector.Version;
+            SectorInYear.StatusSector = Sector.Status;
+            SectorInYear.IdSectorNavigation = Sector;
+
+            SectorInYear.Order = WeekInYear.Order;
+            SectorInYear.Year = WeekInYear.Year;
+            SectorInYear.VersionWeekInYear = WeekInYear.Version;
+            SectorInYear.StatusWeekInYear = WeekInYear.Status;
+            SectorInYear.OrderNavigation = WeekInYear;
 
             //*** Creation dans la base de données ***
-            var NewWeekSectorCycleInYear = await _WeekSectorCycleInYearService.Create(WeekSectorCycleInYear);
+            var NewWeekSectorCycleInYear = await _SectorInYearService.Create(SectorInYear);
             //*** Mappage ***
-            var WeekSectorCycleInYearResource = _mapperService.Map<SectorCycleInYear, WeekSectorCycleInYearResource>(NewWeekSectorCycleInYear);
+            var WeekSectorCycleInYearResource = _mapperService.Map<SectorInYear, WeekSectorCycleInYearResource>(NewWeekSectorCycleInYear);
             return Ok(WeekSectorCycleInYearResource);
         }
+
         [HttpGet]
         public async Task<ActionResult<WeekSectorCycleInYearResource>> GetAllWeekSectorCycleInYears()
         {
             try
             {
-                var Employe = await _WeekSectorCycleInYearService.GetAll();
+                var Employe = await _SectorInYearService.GetAll();
                 if (Employe == null) return NotFound();
                 // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
                 return Ok(Employe);
@@ -93,7 +93,7 @@ namespace CRM_API.Controllers
         {
             try
             {
-                var Employe = await _WeekSectorCycleInYearService.GetAllActif();
+                var Employe = await _SectorInYearService.GetAllActif();
                 if (Employe == null) return NotFound();
                 // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
                 return Ok(Employe);
@@ -108,7 +108,7 @@ namespace CRM_API.Controllers
         {
             try
             {
-                var Employe = await _WeekSectorCycleInYearService.GetAllInActif();
+                var Employe = await _SectorInYearService.GetAllInActif();
                 if (Employe == null) return NotFound();
                 // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
                 return Ok(Employe);
@@ -124,10 +124,36 @@ namespace CRM_API.Controllers
         {
             try
             {
-                var WeekSectorCycleInYears = await _WeekSectorCycleInYearService.GetById(Id);
+                var WeekSectorCycleInYears = await _SectorInYearService.GetById(Id);
                 if (WeekSectorCycleInYears == null) return NotFound();
-                var WeekSectorCycleInYearRessource = _mapperService.Map<SectorCycleInYear, WeekSectorCycleInYearResource>(WeekSectorCycleInYears);
+                var WeekSectorCycleInYearRessource = _mapperService.Map<SectorInYear, WeekSectorCycleInYearResource>(WeekSectorCycleInYears);
                 return Ok(WeekSectorCycleInYearRessource);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPut("Request/{Id}")]
+        public async Task<ActionResult<WeekSectorCycleInYearResource>> RequestSectorCycleInYearById(int Id)
+        {
+            try
+            {
+                await _SectorInYearService.RequestOpeningWeek(Id);
+             return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPut("Deny/{Id}")]
+        public async Task<ActionResult<WeekSectorCycleInYearResource>> Deny(int Id)
+        {
+            try
+            {
+                await _SectorInYearService.DenyRequestOpeningWeek(Id);
+                return Ok();
             }
             catch (Exception ex)
             {
@@ -159,9 +185,9 @@ namespace CRM_API.Controllers
             try
             {
 
-                var sub = await _WeekSectorCycleInYearService.GetById(Id);
+                var sub = await _SectorInYearService.GetById(Id);
                 if (sub == null) return BadRequest("Le WeekSectorCycleInYear  n'existe pas"); //NotFound();
-                await _WeekSectorCycleInYearService.Delete(sub);
+                await _SectorInYearService.Delete(sub);
                 ;
                 return NoContent();
             }
@@ -175,15 +201,15 @@ namespace CRM_API.Controllers
         {
             try
             {
-                List<SectorCycleInYear> empty = new List<SectorCycleInYear>();
+                List<SectorInYear> empty = new List<SectorInYear>();
                 foreach (var item in Ids)
                 {
-                    var sub = await _WeekSectorCycleInYearService.GetById(item);
+                    var sub = await _SectorInYearService.GetById(item);
                     empty.Add(sub);
                     if (sub == null) return BadRequest("Le WeekSectorCycleInYear  n'existe pas"); //NotFound();
 
                 }
-                await _WeekSectorCycleInYearService.DeleteRange(empty);
+                await _SectorInYearService.DeleteRange(empty);
                 ;
                 return NoContent();
             }

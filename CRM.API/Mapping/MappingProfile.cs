@@ -253,7 +253,10 @@ namespace CRM_API.Mapping
             CreateMap<List<SaveCycleResource>, List<Cycle>>();
             CreateMap<Cycle, IEnumerable<CycleResource>>();
             //Sector
+            CreateMap<SaveSectorResource, SectorResource>();
             CreateMap<Sector, SectorResource>();
+            CreateMap<SectorResource, Sector>();
+
             CreateMap<Sector, SaveSectorResource>();
             CreateMap<SaveSectorResource, Sector>();
             CreateMap<List<SaveSectorResource>, List<Sector>>();

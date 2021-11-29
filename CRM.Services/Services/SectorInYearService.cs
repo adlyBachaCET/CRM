@@ -6,32 +6,32 @@ using System.Threading.Tasks;
 
 namespace CRM.Services.Services
 {
-    public class SectorCycleInYearService : ISectorCycleInYearService
+    public class SectorInYearService : ISectorInYearService
     {
         protected readonly IUnitOfWork _unitOfWork;
-        public SectorCycleInYearService(IUnitOfWork unitOfWork)
+        public SectorInYearService(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<SectorCycleInYear> Create(SectorCycleInYear newWeekSectorCycleInYear)
+        public async Task<SectorInYear> Create(SectorInYear newWeekSectorCycleInYear)
         {
 
-            await _unitOfWork.WeekSectorCycleInYears.Add(newWeekSectorCycleInYear);
+            await _unitOfWork.SectorInYear.Add(newWeekSectorCycleInYear);
             await _unitOfWork.CommitAsync();
             return newWeekSectorCycleInYear;
         }
-        public async Task<List<SectorCycleInYear>> CreateRange(List<SectorCycleInYear> newWeekSectorCycleInYear)
+        public async Task<List<SectorInYear>> CreateRange(List<SectorInYear> newWeekSectorCycleInYear)
         {
 
-            await _unitOfWork.WeekSectorCycleInYears.AddRange(newWeekSectorCycleInYear);
+            await _unitOfWork.SectorInYear.AddRange(newWeekSectorCycleInYear);
             await _unitOfWork.CommitAsync();
             return newWeekSectorCycleInYear;
         }
-        public async Task<IEnumerable<SectorCycleInYear>> GetAll()
+        public async Task<IEnumerable<SectorInYear>> GetAll()
         {
             return
-                           await _unitOfWork.WeekSectorCycleInYears.GetAll();
+                           await _unitOfWork.SectorInYear.GetAll();
         }
 
        /* public async Task Delete(WeekSectorCycleInYear WeekSectorCycleInYear)
@@ -46,19 +46,32 @@ namespace CRM.Services.Services
         //          .GetAllWithArtisteAsync();
         //}
 
-        public async Task<SectorCycleInYear> GetById(int id)
+        public async Task<SectorInYear> GetById(int id)
         {
             return
-                await _unitOfWork.WeekSectorCycleInYears.GetById(id);
+                await _unitOfWork.SectorInYear.GetById(id);
         }
    
-        public async Task Update(SectorCycleInYear WeekSectorCycleInYearToBeUpdated, SectorCycleInYear WeekSectorCycleInYear)
+        public async Task Update(SectorInYear WeekSectorCycleInYearToBeUpdated, SectorInYear WeekSectorCycleInYear)
         {
             WeekSectorCycleInYear.Active = 1;
             await _unitOfWork.CommitAsync();
         }
+        public async Task RequestOpeningWeek(int IdSector)
+        {
+            var SectorInYear=await _unitOfWork.SectorInYear.SingleOrDefault(i=>i.IdSector==IdSector&& i.Active==0);
 
-        public async Task Delete(SectorCycleInYear WeekSectorCycleInYear)
+            SectorInYear.Request =true ;
+            await _unitOfWork.CommitAsync();
+        }
+        public async Task DenyRequestOpeningWeek(int IdSector)
+        {
+            var SectorInYear = await _unitOfWork.SectorInYear.SingleOrDefault(i => i.IdSector == IdSector && i.Active == 0);
+            SectorInYear.Lock = 1;
+            SectorInYear.Request = false;
+            await _unitOfWork.CommitAsync();
+        }
+        public async Task Delete(SectorInYear WeekSectorCycleInYear)
         {
             //WeekSectorCycleInYear musi =  _unitOfWork.WeekSectorCycleInYears.SingleOrDefaultAsync(x=>x.Id == WeekSectorCycleInYearToBeUpdated.Id);
             WeekSectorCycleInYear.Active = 1;
@@ -66,7 +79,7 @@ namespace CRM.Services.Services
             await _unitOfWork.CommitAsync();
         }
 
-        public async Task DeleteRange(List<SectorCycleInYear> WeekSectorCycleInYear)
+        public async Task DeleteRange(List<SectorInYear> WeekSectorCycleInYear)
         {
             foreach (var item in WeekSectorCycleInYear)
             {
@@ -76,16 +89,16 @@ namespace CRM.Services.Services
             }
         }
 
-        public async Task<IEnumerable<SectorCycleInYear>> GetAllActif()
+        public async Task<IEnumerable<SectorInYear>> GetAllActif()
         {
             return
-                             await _unitOfWork.WeekSectorCycleInYears.GetAllActif();
+                             await _unitOfWork.SectorInYear.GetAllActif();
         }
 
-        public async Task<IEnumerable<SectorCycleInYear>> GetAllInActif()
+        public async Task<IEnumerable<SectorInYear>> GetAllInActif()
         {
             return
-                             await _unitOfWork.WeekSectorCycleInYears.GetAllInActif();
+                             await _unitOfWork.SectorInYear.GetAllInActif();
         }
         //public Task<WeekSectorCycleInYear> CreateWeekSectorCycleInYear(WeekSectorCycleInYear newWeekSectorCycleInYear)
         //{

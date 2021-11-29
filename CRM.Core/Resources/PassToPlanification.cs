@@ -7,7 +7,7 @@ namespace CRM.Core.Resources
     public class PassToPlanification
     {
         public DateTime Start { get; set; }
-        public DateTime End { get; set; }
+        public DateTime? End { get; set; }
         public int? Occurence { get; set; }
         public int NumTarget { get; set; }
     }

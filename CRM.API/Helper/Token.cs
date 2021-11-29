@@ -21,6 +21,12 @@ namespace CRM_API.Helper
 
         public string NewPassword { get; set; }
     }
+    public class EmailLoginPassword
+    {
+        public string ConfirmPassword { get; set; }
+
+        public string LoginEmail { get; set; }
+    }
 
 }
 

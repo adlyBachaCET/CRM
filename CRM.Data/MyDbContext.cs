@@ -94,7 +94,7 @@ namespace CRM.Data
         public virtual DbSet<User> User { get; set; }
         public virtual DbSet<WeekInYear> WeekInYear { get; set; }
         public virtual DbSet<SectorCycle> SectorCycle { get; set; }
-        public virtual DbSet<SectorCycleInYear> SectorCycleInYear { get; set; }
+        public virtual DbSet<SectorInYear> SectorCycleInYear { get; set; }
         public virtual DbSet<WholeSaler> WholeSaler { get; set; }
         public virtual DbSet<WholeSalerLocality> WholeSalerLocality { get; set; }
 
@@ -503,9 +503,9 @@ namespace CRM.Data
             {
       
 
-                entity.HasKey(d => new { d.IdCycle, d.StatusCycle, d.VersionCycle,
-                    d.IdUser, d.StatusUser, d.VersionUser, 
-                    d.IdSector, d.StatusSector, d.VersionSector });
+                entity.HasKey(d => new { d.ValTarget});
+                entity.Property(x => x.ValTarget).UseIdentityColumn();
+
                 entity.HasIndex(e => e.NumTarget).IsUnique(false);
 
 
@@ -1583,17 +1583,12 @@ namespace CRM.Data
     
             });
 
-            modelBuilder.Entity<SectorCycleInYear>(entity =>
+            modelBuilder.Entity<SectorInYear>(entity =>
             {
-                entity.HasKey(e => new { e.IdCycle,e.StatusCycle,e.VersionCycle
-                    ,e.VersionSector,e.StatusSector, e.IdSector
+                entity.HasKey(e => new {e.VersionSector,e.StatusSector, e.IdSector
                     , e.VersionWeekInYear, e.StatusWeekInYear,e.Order,e.Year });
 
-                entity.HasOne(d => d.IdCycleNavigation)
-                    .WithMany(p => p.WeekSectorCycleInYear)
-                    .HasForeignKey(d => new { d.IdCycle, d.StatusCycle, d.VersionCycle })
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_WeekSectorCycleInYear_Cycle");
+            
 
                 entity.HasOne(d => d.IdSectorNavigation)
                     .WithMany(p => p.WeekSectorCycleInYear)

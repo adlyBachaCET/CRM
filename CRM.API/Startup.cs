@@ -105,7 +105,7 @@ namespace CRM_API
             services.AddScoped<IPotentielCycleService, PotentielCycleService>();
             services.AddScoped<ISectorCycleService, SectorCycleService>();
             services.AddScoped<ISectorService, SectorService>();
-            services.AddScoped<ISectorCycleInYearService, SectorCycleInYearService>();
+            services.AddScoped<ISectorInYearService, SectorInYearService>();
 
             services.AddScoped<ISpecialtyService, SpecialtyService>();
 

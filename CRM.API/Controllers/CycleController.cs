@@ -41,11 +41,11 @@ namespace CRM_API.Controllers
         private readonly ISectorCycleService _SectorCycleService;
 
         private readonly IMapper _mapperService;
-        public CycleController(IUserService UserService, IPharmacyService PharmacyService, 
-            IDoctorService DoctorService, ICycleUserService CycleUserService, 
+        public CycleController(IUserService UserService, IPharmacyService PharmacyService,
+            IDoctorService DoctorService, ICycleUserService CycleUserService,
             IPotentielCycleService PotentielCycleService, ITargetService TargetService,
               IPotentielService PotentielService, IPotentielSectorService PotentielSectorService,
-            ISectorCycleService SectorCycleService,ISectorService SectorService,
+            ISectorCycleService SectorCycleService, ISectorService SectorService,
             ICycleService CycleService, IMapper mapper)
         {
             _UserService = UserService;
@@ -57,7 +57,7 @@ namespace CRM_API.Controllers
             _PharmacyService = PharmacyService;
 
             _CycleUserService = CycleUserService;
-               _SectorCycleService = SectorCycleService;
+            _SectorCycleService = SectorCycleService;
             _SectorService = SectorService;
             _CycleService = CycleService;
             _mapperService = mapper;
@@ -74,11 +74,11 @@ namespace CRM_API.Controllers
         string Token, AffectationCycleUser AffectationCycleUser)
         {
             ErrorHandling ErrorMessag = new ErrorHandling();
-          
-                var claims = _UserService.getPrincipal(Token);
-                var Role = claims.FindFirst("Role").Value;
-                var Id = int.Parse(claims.FindFirst("Id").Value);
-                var exp = DateTime.Parse(claims.FindFirst("Exipres On").Value);
+
+            var claims = _UserService.getPrincipal(Token);
+            var Role = claims.FindFirst("Role").Value;
+            var Id = int.Parse(claims.FindFirst("Id").Value);
+            var exp = DateTime.Parse(claims.FindFirst("Exipres On").Value);
 
             //*** Mappage ***
             var Cycle = _mapperService.Map<SaveCycleResource, Cycle>(AffectationCycleUser.SaveCycleResource);
@@ -98,14 +98,14 @@ namespace CRM_API.Controllers
             var NewCycle = await _CycleService.Create(Cycle);
             //*** Mappage ***
             var CycleResource = _mapperService.Map<Cycle, CycleResource>(NewCycle);
-        
-      
+
+
             if (AffectationCycleUser.CyclePotentiel.Count > 0)
             {
                 foreach (var item in AffectationCycleUser.CyclePotentiel)
                 {
                     var Potentiel = await _PotentielService.GetById(item.IdPotentiel);
-                 //   var Potentiel = await _PotentielService.GetById(item.IdPotentiel);
+                    //   var Potentiel = await _PotentielService.GetById(item.IdPotentiel);
 
                     PotentielCycle SaveCycleUserResource = new PotentielCycle();
 
@@ -128,7 +128,7 @@ namespace CRM_API.Controllers
             }
 
             return Ok(CycleResource);
-         
+
         }
         /// <summary>
         ///  This function Asign Users To a Cycle
@@ -188,6 +188,8 @@ namespace CRM_API.Controllers
         public async Task<ActionResult> AsignSectorsToCycle([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
         string Token, UniqueId Ids)
         {
+            Random random = new Random();
+            int num = random.Next();
             var claims = _UserService.getPrincipal(Token);
             var Role = claims.FindFirst("Role").Value;
             var IdUser = int.Parse(claims.FindFirst("Id").Value);
@@ -201,14 +203,14 @@ namespace CRM_API.Controllers
             SectorCycle SectorCycleCreated = new SectorCycle();
             var User = await _UserService.GetById(Ids.Id2);
             var UserResource = _mapperService.Map<User, UserResource>(User);
-            int? numTarget = null; ;
+            int numTarget = 0; ;
             var Cycle = await _CycleService.GetById(Ids.Id1);
             List<PotentielResource> PotentielResources = new List<PotentielResource>();
-             IEnumerable< Potentiel > Potentiel = Enumerable.Empty<Potentiel>();
+            IEnumerable<Potentiel> Potentiel = Enumerable.Empty<Potentiel>();
             if (Cycle == null) return NotFound();
             var CycleRessource = _mapperService.Map<Cycle, CycleResource>(Cycle);
             if (Cycle != null)
-                    {
+            {
                 Potentiel = await _PotentielCycleService.GetPotentielsById(Cycle.IdCycle);
 
                 foreach (var item in Potentiel)
@@ -222,49 +224,57 @@ namespace CRM_API.Controllers
                 }
                 for (int i = 0; i < Cycle.NbSemaine; i++)
                 {
-                    Sector Sector = new Sector();
-                    Sector.Version = 0;
-                    Sector.Status = 0;
-                    Sector.CreatedOn = DateTime.UtcNow;
-                    Sector.UpdatedOn = DateTime.UtcNow;
-                    Sector.CreatedBy = IdUser;
-                    Sector.UpdatedBy = IdUser;
+                    SaveSectorResource SaveSectorResource = new SaveSectorResource();
                     int n = i + 1;
-                    Sector.Name = "S" + n;
+                    SaveSectorResource.Name = "S" + n;
 
-                    Sectors.Add(Sector);
-                  
+                    var SectorResource = _mapperService.Map<SaveSectorResource, Sector>(SaveSectorResource);
+
+                    SectorResource.Version = 0;
+                    SectorResource.Status = 0;
+                    SectorResource.CreatedOn = DateTime.UtcNow;
+                    SectorResource.UpdatedOn = DateTime.UtcNow;
+                    SectorResource.CreatedBy = IdUser;
+                    SectorResource.UpdatedBy = IdUser;
+
+                    //var SectorCreated = await _SectorService.Create(SectorResource);
+
+                    Sectors.Add(SectorResource);
+
                 }
                 if (Sectors.Count > 0)
                 {
                     SectorsCreated = await _SectorService.CreateRange(Sectors);
-
                 }
 
-                var Target = new Target();
-                Random random = new Random();
-                int num = random.Next();
-                Target.NumTarget = num;
+          
                 for (int i = 0; i < SectorsCreated.Count; i++)
                 {
+                    var Target = new Target();
 
+                    Target.NumTarget = num;
                     PotentielSector PotentielSector = new PotentielSector();
-                    foreach(var item in Potentiel) { 
-                    PotentielSector.IdPotentiel = item.IdPotentiel;
-                    PotentielSector.VersionPotentiel = item.Version;
-                    PotentielSector.StatusPotentiel = item.Status;
-                    PotentielSector.IdPotentielNavigation = item;
-                    PotentielSector.IdSector = SectorsCreated[i].IdSector;
-                    PotentielSector.VersionSector = SectorsCreated[i].Version;
-                    PotentielSector.StatusSector = SectorsCreated[i].Status;
-                    PotentielSector.IdSectorNavigation = SectorsCreated[i];
-                    PotentielSector.CreatedOn = DateTime.UtcNow;
-                    PotentielSector.UpdatedOn = DateTime.UtcNow;
-                    PotentielSector.CreatedBy = IdUser;
-                    PotentielSector.UpdatedBy = IdUser;
-                    var PotentielSectorCreated = await _PotentielSectorService.Create(PotentielSector);
+                    foreach (var item in Potentiel)
+                    {
+                        PotentielSector.IdPotentiel = item.IdPotentiel;
+                        PotentielSector.VersionPotentiel = item.Version;
+                        PotentielSector.StatusPotentiel = item.Status;
+                        PotentielSector.IdPotentielNavigation = item;
+                        PotentielSector.IdSector = SectorsCreated[i].IdSector;
+                        PotentielSector.VersionSector = SectorsCreated[i].Version;
+                        PotentielSector.StatusSector = SectorsCreated[i].Status;
+                        PotentielSector.IdSectorNavigation = SectorsCreated[i];
+                        PotentielSector.CreatedOn = DateTime.UtcNow;
+                        PotentielSector.UpdatedOn = DateTime.UtcNow;
+                        PotentielSector.CreatedBy = IdUser;
+                        PotentielSector.UpdatedBy = IdUser;
+                        PotentielSector.Active = 0;
+                        PotentielSector.Status = 0;
+                        PotentielSector.Freq = 0;
 
-                    
+                        var PotentielSectorCreated = await _PotentielSectorService.Create(PotentielSector);
+
+
                     }
                     SectorCycle SectorCycle = new SectorCycle();
 
@@ -274,7 +284,7 @@ namespace CRM_API.Controllers
                     SectorCycle.IdCycleNavigation = Cycle;
                     var Sector = await _SectorService.GetById(SectorsCreated[i].IdSector);
                     SectorCycle.IdSector = Sector.IdSector;
-                    SectorCycle.VersionSector = Sector .Version;
+                    SectorCycle.VersionSector = Sector.Version;
                     SectorCycle.StatusSector = Sector.Status;
                     SectorCycle.IdSectorNavigation = Sector;
                     SectorCycle.CreatedOn = DateTime.UtcNow;
@@ -282,10 +292,10 @@ namespace CRM_API.Controllers
                     SectorCycle.CreatedBy = IdUser;
                     SectorCycle.UpdatedBy = IdUser;
 
-                    SectorCycleCreated=await _SectorCycleService.Create(SectorCycle);
+                    SectorCycleCreated = await _SectorCycleService.Create(SectorCycle);
                     var SectorResource = _mapperService.Map<Sector, SectorResource>(SectorsCreated[i]);
                     SectorResources.Add(SectorResource);
-                
+
 
                     Target.IdSector = Sector.IdSector;
                     Target.VersionSector = Sector.Version;
@@ -311,6 +321,7 @@ namespace CRM_API.Controllers
                     Target.UpdatedOn = DateTime.UtcNow;
                     Target.CreatedBy = IdUser;
                     Target.UpdatedBy = IdUser;
+
                     var TargetCreated = await _TargetService.Create(Target);
                     var TargetResource = _mapperService.Map<Target, TargetResource>(TargetCreated);
                     numTarget = TargetResource.NumTarget;
@@ -318,13 +329,8 @@ namespace CRM_API.Controllers
 
 
             }
-
-            return Ok(new { PotentielResources= PotentielResources ,
-                CycleRessource = CycleRessource,
-                UserResource= UserResource,
-                SectorResources= SectorResources,
-                numTarget= numTarget
-            });
+            var target = await getTarget(numTarget);
+            return Ok(target);
 
         }
 
@@ -362,7 +368,7 @@ namespace CRM_API.Controllers
             }
             await _CycleService.Update(CycleToBeModified, Cycles);
             var CycleUpdated = await _CycleService.GetById(Id);
-           
+
             if (AffectationCycleUser.CyclePotentiel.Count > 0)
             {
                 foreach (var item in AffectationCycleUser.CyclePotentiel)
@@ -432,7 +438,7 @@ namespace CRM_API.Controllers
                 return Ok(ErrorMessag);
 
             }
-            }
+        }
         /// <summary>
         ///  This function gets the list of all actif cycles
         /// </summary>
@@ -521,7 +527,7 @@ namespace CRM_API.Controllers
                 }
                 if (Cycles == null) return NotFound();
                 var CycleRessource = _mapperService.Map<Cycle, CycleResource>(Cycles);
-                return Ok(new { Potentiels= PotentielResources, Cycles= CycleRessource });
+                return Ok(new { Potentiels = PotentielResources, Cycles = CycleRessource });
             }
             else
             {
@@ -538,75 +544,297 @@ namespace CRM_API.Controllers
         ///<param name="PassToPlanification">Id of the cycle.</param>
         /// <returns>The cycle with its potentiels.</returns>
         [HttpPost("PassToPlanification")]
-        public async Task<ActionResult> PassToPlanification( PassToPlanification PassToPlanification)
+        public async Task<ActionResult> PassToPlanification([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
+        string Token, PassToPlanification PassToPlanification)
         {
+            var claims = _UserService.getPrincipal(Token);
+            var Role = claims.FindFirst("Role").Value;
+            var IdUser = int.Parse(claims.FindFirst("Id").Value);
+            var exp = DateTime.Parse(claims.FindFirst("Exipres On").Value);
 
             int Year = PassToPlanification.Start.Year;
             int Month = PassToPlanification.Start.Month;
             int Day = PassToPlanification.Start.Day;
+            List<SectorResource> SectorResources = new List<SectorResource>();
 
             var currentCulture = CultureInfo.CurrentCulture;
             var weekNo = currentCulture.Calendar.GetWeekOfYear(
             new DateTime(Year, Month, Day),
             currentCulture.DateTimeFormat.CalendarWeekRule,
             currentCulture.DateTimeFormat.FirstDayOfWeek);
+            List<Sector> Sectors = new List<Sector>();
+            List<Sector> SectorsCreated = new List<Sector>();
+            var Target = await getTarget(PassToPlanification.NumTarget);
 
-           var Target= await getTarget(PassToPlanification.NumTarget);
+            /*
+                        if (PassToPlanification.Occurence != null)
+                        {
+                            var num = Target.Cycle.NbSemaine * PassToPlanification.Occurence;
+                            //Create the new Sectors and add them to a list 
+                            for (int i = Target.Cycle.NbSemaine; i < (num - Target.Cycle.NbSemaine) + 1; i++)
+                            {
 
-            if (PassToPlanification.Occurence!=null)
-            {
+                                Sector Sector = new Sector();
+                                Sector.Version = 0;
+                                Sector.Status = 0;
+                                Sector.CreatedOn = DateTime.UtcNow;
+                                Sector.UpdatedOn = DateTime.UtcNow;
+                                Sector.CreatedBy = IdUser;
+                                Sector.UpdatedBy = IdUser;
+                                int n = i + 1;
+                                Sector.Name = "S" + n;
+
+                                Sectors.Add(Sector);
 
 
-            }
-            int Year1 = PassToPlanification.End.Year;
-            int Month1 = PassToPlanification.End.Month;
-            int Day1 = PassToPlanification.End.Day;
+                                if (Sectors.Count > 0)
+                                {
+                                    SectorsCreated = await _SectorService.CreateRange(Sectors);
 
-            var weekNo1 = currentCulture.Calendar.GetWeekOfYear(
+                                }
+                            }
 
-           new DateTime(Year1, Month1, Day1),
-           currentCulture.DateTimeFormat.CalendarWeekRule,
-           currentCulture.DateTimeFormat.FirstDayOfWeek);
-            return Ok(weekNo);
+                            //Creation of the potentiel for each new sector and assign them to the cycle create them in the target
+                            for (int i = 0; i < SectorsCreated.Count; i++)
+                            {
 
-        }
+                                PotentielSector PotentielSector = new PotentielSector();
+                                foreach (var item in Target.PotentielResources)
+                                {
+                                    PotentielSector.IdPotentiel = item.IdPotentiel;
+                                    PotentielSector.VersionPotentiel = item.Version;
+                                    PotentielSector.StatusPotentiel = item.Status;
+                                    var Potentiel = _mapperService.Map<PotentielResource, Potentiel>(item);
 
-            /// <summary>
-            ///  This function gets the cycle by id
-            /// </summary>
-            ///<param name="Token">Token of the connected user to be passed in the header.</param>
-            ///<param name="Id">Id of the cycle.</param>
-            /// <returns>The cycle with its potentiels.</returns>
-            [HttpGet("Targets/{Id}")]
+                                    PotentielSector.IdPotentielNavigation = Potentiel;
+                                    PotentielSector.IdSector = SectorsCreated[i].IdSector;
+                                    PotentielSector.VersionSector = SectorsCreated[i].Version;
+                                    PotentielSector.StatusSector = SectorsCreated[i].Status;
+                                    PotentielSector.IdSectorNavigation = SectorsCreated[i];
+                                    PotentielSector.CreatedOn = DateTime.UtcNow;
+                                    PotentielSector.UpdatedOn = DateTime.UtcNow;
+                                    PotentielSector.CreatedBy = IdUser;
+                                    PotentielSector.UpdatedBy = IdUser;
+                                    PotentielSector.Active = 0;
+                                    PotentielSector.Status = 0;
+                                    PotentielSector.Freq = 0;
+
+                                    var PotentielSectorCreated = await _PotentielSectorService.Create(PotentielSector);
+
+
+                                }
+                                SectorCycle SectorCycle = new SectorCycle();
+                                var Cycle = _mapperService.Map<CycleResource, Cycle>(Target.Cycle);
+
+                                SectorCycle.IdCycle = Target.Cycle.IdCycle;
+                                SectorCycle.VersionCycle = Target.Cycle.Version;
+                                SectorCycle.StatusCycle = Target.Cycle.Status;
+                                SectorCycle.IdCycleNavigation = Cycle;
+                                var Sector = await _SectorService.GetById(SectorsCreated[i].IdSector);
+                                SectorCycle.IdSector = Sector.IdSector;
+                                SectorCycle.VersionSector = Sector.Version;
+                                SectorCycle.StatusSector = Sector.Status;
+                                SectorCycle.IdSectorNavigation = Sector;
+                                SectorCycle.CreatedOn = DateTime.UtcNow;
+                                SectorCycle.UpdatedOn = DateTime.UtcNow;
+                                SectorCycle.CreatedBy = IdUser;
+                                SectorCycle.UpdatedBy = IdUser;
+
+                                var SectorCycleCreated = await _SectorCycleService.Create(SectorCycle);
+                                var SectorResource = _mapperService.Map<Sector, SectorResource>(SectorsCreated[i]);
+                                SectorResources.Add(SectorResource);
+
+                                Target NewTarget = new Target();
+                                NewTarget.IdSector = Sector.IdSector;
+                                NewTarget.VersionSector = Sector.Version;
+                                NewTarget.StatusCycle = Sector.Status;
+                                NewTarget.IdSectorNavigation = Sector;
+                                NewTarget.IdCycle = Cycle.IdCycle;
+                                NewTarget.VersionCycle = Cycle.Version;
+                                NewTarget.StatusCycle = Cycle.Status;
+                                NewTarget.IdCycleNavigation = Cycle;
+                                NewTarget.IdUser = Target.User.IdUser;
+                                NewTarget.VersionUser = Target.User.Version;
+                                NewTarget.StatusCycle = Target.User.Status;
+                                var User = _mapperService.Map<UserResource, User>(Target.User);
+
+                                NewTarget.IdUserNavigation = User;
+                                NewTarget.IdDoctor = null;
+                                NewTarget.VersionDoctor = null;
+                                NewTarget.StatusDoctor = null;
+                                NewTarget.IdDoctorNavigation = null;
+                                NewTarget.IdPharmacy = null;
+                                NewTarget.VersionPharmacy = null;
+                                NewTarget.StatusPharmacy = null;
+                                NewTarget.IdPharmacyNavigation = null;
+                                NewTarget.CreatedOn = DateTime.UtcNow;
+                                NewTarget.UpdatedOn = DateTime.UtcNow;
+                                NewTarget.CreatedBy = IdUser;
+                                NewTarget.UpdatedBy = IdUser;
+                                var TargetCreated = await _TargetService.Create(NewTarget);
+                                var TargetResource = _mapperService.Map<Target, TargetResource>(TargetCreated);
+                                //numTarget = TargetResource.NumTarget;
+                            }
+
+
+
+
+                        }
+
+                        if (PassToPlanification.End != null)
+                        {
+                            string date = ""+ PassToPlanification.End;
+                            DateTime inputDate = DateTime.Parse(date.Trim());
+                            int Year1 = inputDate.Year;
+                            int Month1 = inputDate.Month;
+                            int Day1 = inputDate.Day;
+
+                            var weekNo1 = currentCulture.Calendar.GetWeekOfYear(
+
+                           new DateTime(Year1, Month1, Day1),
+                           currentCulture.DateTimeFormat.CalendarWeekRule,
+                           currentCulture.DateTimeFormat.FirstDayOfWeek);
+
+                            var num = weekNo1-weekNo;
+                            //Create the new Sectors and add them to a list 
+                            for (int i = Target.Cycle.NbSemaine; i < (num - Target.Cycle.NbSemaine) + 1; i++)
+                            {
+
+                                Sector Sector = new Sector();
+                                Sector.Version = 0;
+                                Sector.Status = 0;
+                                Sector.CreatedOn = DateTime.UtcNow;
+                                Sector.UpdatedOn = DateTime.UtcNow;
+                                Sector.CreatedBy = IdUser;
+                                Sector.UpdatedBy = IdUser;
+                                int n = i + 1;
+                                Sector.Name = "S" + n;
+
+                                Sectors.Add(Sector);
+
+
+                                if (Sectors.Count > 0)
+                                {
+                                    SectorsCreated = await _SectorService.CreateRange(Sectors);
+
+                                }
+                            }
+
+                            //Creation of the potentiel for each new sector and assign them to the cycle create them in the target
+                            for (int i = 0; i < SectorsCreated.Count; i++)
+                            {
+
+                                PotentielSector PotentielSector = new PotentielSector();
+                                foreach (var item in Target.PotentielResources)
+                                {
+                                    PotentielSector.IdPotentiel = item.IdPotentiel;
+                                    PotentielSector.VersionPotentiel = item.Version;
+                                    PotentielSector.StatusPotentiel = item.Status;
+                                    var Potentiel = _mapperService.Map<PotentielResource, Potentiel>(item);
+
+                                    PotentielSector.IdPotentielNavigation = Potentiel;
+                                    PotentielSector.IdSector = SectorsCreated[i].IdSector;
+                                    PotentielSector.VersionSector = SectorsCreated[i].Version;
+                                    PotentielSector.StatusSector = SectorsCreated[i].Status;
+                                    PotentielSector.IdSectorNavigation = SectorsCreated[i];
+                                    PotentielSector.CreatedOn = DateTime.UtcNow;
+                                    PotentielSector.UpdatedOn = DateTime.UtcNow;
+                                    PotentielSector.CreatedBy = IdUser;
+                                    PotentielSector.UpdatedBy = IdUser;
+                                    PotentielSector.Active = 0;
+                                    PotentielSector.Status = 0;
+                                    PotentielSector.Freq = 0;
+
+                                    var PotentielSectorCreated = await _PotentielSectorService.Create(PotentielSector);
+
+
+                                }
+                                SectorCycle SectorCycle = new SectorCycle();
+                                var Cycle = _mapperService.Map<CycleResource, Cycle>(Target.Cycle);
+
+                                SectorCycle.IdCycle = Target.Cycle.IdCycle;
+                                SectorCycle.VersionCycle = Target.Cycle.Version;
+                                SectorCycle.StatusCycle = Target.Cycle.Status;
+                                SectorCycle.IdCycleNavigation = Cycle;
+                                var Sector = await _SectorService.GetById(SectorsCreated[i].IdSector);
+                                SectorCycle.IdSector = Sector.IdSector;
+                                SectorCycle.VersionSector = Sector.Version;
+                                SectorCycle.StatusSector = Sector.Status;
+                                SectorCycle.IdSectorNavigation = Sector;
+                                SectorCycle.CreatedOn = DateTime.UtcNow;
+                                SectorCycle.UpdatedOn = DateTime.UtcNow;
+                                SectorCycle.CreatedBy = IdUser;
+                                SectorCycle.UpdatedBy = IdUser;
+
+                                var SectorCycleCreated = await _SectorCycleService.Create(SectorCycle);
+                                var SectorResource = _mapperService.Map<Sector, SectorResource>(SectorsCreated[i]);
+                                SectorResources.Add(SectorResource);
+
+                                Target NewTarget = new Target();
+                                NewTarget.IdSector = Sector.IdSector;
+                                NewTarget.VersionSector = Sector.Version;
+                                NewTarget.StatusCycle = Sector.Status;
+                                NewTarget.IdSectorNavigation = Sector;
+                                NewTarget.IdCycle = Cycle.IdCycle;
+                                NewTarget.VersionCycle = Cycle.Version;
+                                NewTarget.StatusCycle = Cycle.Status;
+                                NewTarget.IdCycleNavigation = Cycle;
+                                NewTarget.IdUser = Target.User.IdUser;
+                                NewTarget.VersionUser = Target.User.Version;
+                                NewTarget.StatusCycle = Target.User.Status;
+                                var User = _mapperService.Map<UserResource, User>(Target.User);
+
+                                NewTarget.IdUserNavigation = User;
+                                NewTarget.IdDoctor = null;
+                                NewTarget.VersionDoctor = null;
+                                NewTarget.StatusDoctor = null;
+                                NewTarget.IdDoctorNavigation = null;
+                                NewTarget.IdPharmacy = null;
+                                NewTarget.VersionPharmacy = null;
+                                NewTarget.StatusPharmacy = null;
+                                NewTarget.IdPharmacyNavigation = null;
+                                NewTarget.CreatedOn = DateTime.UtcNow;
+                                NewTarget.UpdatedOn = DateTime.UtcNow;
+                                NewTarget.CreatedBy = IdUser;
+                                NewTarget.UpdatedBy = IdUser;
+                                var TargetCreated = await _TargetService.Create(NewTarget);
+                                var TargetResource = _mapperService.Map<Target, TargetResource>(TargetCreated);
+                                //numTarget = TargetResource.NumTarget;
+                            }
+
+
+                        }
+                       */
+            return Ok();
+
+        }     /// <summary>
+              ///  This function gets the cycle by id
+              /// </summary>
+              ///<param name="Token">Token of the connected user to be passed in the header.</param>
+              ///<param name="Id">Id of the cycle.</param>
+              /// <returns>The cycle with its potentiels.</returns>
+        [HttpGet("Targets")]
         public async Task<ActionResult> GetTargetsById([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
-        string Token, int Id)
+        string Token)
         {
-            StringValues token = "";
-            ErrorHandling ErrorMessag = new ErrorHandling();
-            Request.Headers.TryGetValue("token", out token);
-            if (token != "")
+            var claims = _UserService.getPrincipal(Token);
+            var Role = claims.FindFirst("Role").Value;
+            var IdUser = int.Parse(claims.FindFirst("Id").Value);
+            var exp = DateTime.Parse(claims.FindFirst("Exipres On").Value);
+            var Targets = await _TargetService.GetTargetsByIdUser(IdUser);
+            List<int> TargetIds = new List<int>();
+            List<string> CycleNames = new List<string>();
+
+            foreach (var item in Targets)
             {
-                var Targets = await _TargetService.GetTargetsByIdUser(Id);
-                List<int> TargetIds = new List<int>();
-                List<string> CycleNames = new List<string>();
-
-                foreach (var item in Targets)
-                {
-                    TargetIds.Add(item.NumTarget);
-                    var Cycle = await _CycleService.GetById(item.IdCycle);
-                    CycleNames.Add(Cycle.Name);
-
-                }
-
-                return Ok(new { TargetResources = TargetIds, CycleNames = CycleNames });
-            }
-            else
-            {
-                ErrorMessag.ErrorMessage = "Empty Token";
-                ErrorMessag.StatusCode = 400;
-                return Ok(ErrorMessag);
+                TargetIds.Add(item.NumTarget);
+                var Cycle = await _CycleService.GetById(item.IdCycle);
+                CycleNames.Add(Cycle.Name);
 
             }
+
+            return Ok(new { TargetResources = TargetIds, CycleNames = CycleNames });
+
         }
         /// <summary>
         ///  This function gets the cycle by id
@@ -633,16 +861,202 @@ namespace CRM_API.Controllers
 
             }
         }
-        [ApiExplorerSettings(IgnoreApi = true)]
-        public async Task<TargetByNumber> getTarget(int Num)
+        /// <summary>
+        ///  This function Swaps  
+        /// </summary>
+        ///<param name="Token">Token of the connected user to be passed in the header.</param>
+        ///<param name="WeekSwap">NumTarget of the Target.</param>
+        [HttpPost("SwapWeeks")]
+        public async Task<ActionResult<CycleResource>> SwapWeeks([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
+        string Token, WeekSwap WeekSwap)
         {
+            StringValues token = "";
+            ErrorHandling ErrorMessag = new ErrorHandling();
+            Request.Headers.TryGetValue("token", out token);
+            if (token != "")
+            {
+                await _TargetService.WeekSwap(WeekSwap);
+                return Ok();
+            }
+            else
+            {
+                ErrorMessag.ErrorMessage = "Empty Token";
+                ErrorMessag.StatusCode = 400;
+                return Ok(ErrorMessag);
+
+            }
+        }
+        /// <summary>
+        ///  This function Swaps  
+        /// </summary>
+        ///<param name="Token">Token of the connected user to be passed in the header.</param>
+        ///<param name="WeekDeletion">NumTarget of the Target.</param>
+        [HttpPost("WeekDeletion")]
+        public async Task<ActionResult<CycleResource>> WeekDeletion([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
+        string Token, WeekDeletion WeekDeletion)
+        {
+            StringValues token = "";
+            ErrorHandling ErrorMessag = new ErrorHandling();
+            Request.Headers.TryGetValue("token", out token);
+            if (token != "")
+            {
+                await _TargetService.DeleteWeek(WeekDeletion);
+                var Plan = getTarget(WeekDeletion.NumTarget);
+                return Ok(Plan);
+            }
+            else
+            {
+                ErrorMessag.ErrorMessage = "Empty Token";
+                ErrorMessag.StatusCode = 400;
+                return Ok(ErrorMessag);
+
+            }
+        }
+
+        /// <summary>
+        ///  This function update week 
+        /// </summary>
+        ///<param name="Token">Token of the connected user to be passed in the header.</param>
+        ///<param name="WeekUpdate">NumTarget of the Target.</param>
+        [HttpPost("UpdateWeek")]
+        public async Task<ActionResult<CycleResource>> UpdateWeek([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
+        string Token, WeekUpdate WeekUpdate)
+        {
+            var claims = _UserService.getPrincipal(Token);
+            var Role = claims.FindFirst("Role").Value;
+            var IdUser = int.Parse(claims.FindFirst("Id").Value);
+            var exp = DateTime.Parse(claims.FindFirst("Exipres On").Value);
+            List<Target> Targets = new List<Target>();
+            int NumTarget = WeekUpdate.NumTarget;
+            ErrorHandling ErrorMessag = new ErrorHandling();
+            var Target = await getTarget(WeekUpdate.NumTarget);
+            StringValues token = "";
+            Request.Headers.TryGetValue("token", out token);
+            if (token != "")
+            {
+                WeekDeletion WeekDeletion = new WeekDeletion();
+                WeekDeletion.IdSector1 = WeekUpdate.NewContent.IdSector;
+                WeekDeletion.NumTarget = WeekUpdate.NumTarget;
+                await _TargetService.DeleteWeek(WeekDeletion);
+              
+                    var Sector = await _SectorService.GetById(WeekUpdate.NewContent.IdSector);
+                    var User = await _UserService.GetById(Target.User.IdUser);
+                    var Cycle = await _CycleService.GetById(Target.Cycle.IdCycle);
+
+                    foreach (var j in WeekUpdate.NewContent.IdDoctor)
+                    {
+                        var Doctor = await _DoctorService.GetById(j);
+                        if (Doctor != null)
+                        {
+                            var NewTarget = new Target();
+
+                            NewTarget.NumTarget = WeekUpdate.NumTarget;
+                            NewTarget.IdSector = Sector.IdSector;
+                            NewTarget.VersionSector = Sector.Version;
+                            NewTarget.StatusCycle = Sector.Status;
+                            NewTarget.IdSectorNavigation = Sector;
+                            NewTarget.IdCycle = Cycle.IdCycle;
+                            NewTarget.VersionCycle = Cycle.Version;
+                            NewTarget.StatusCycle = Cycle.Status;
+                            NewTarget.IdCycleNavigation = Cycle;
+                            NewTarget.IdUser = User.IdUser;
+                            NewTarget.VersionUser = User.Version;
+                            NewTarget.StatusCycle = User.Status;
+                            NewTarget.IdUserNavigation = User;
+                            NewTarget.IdDoctor = Doctor.IdDoctor;
+                            NewTarget.VersionDoctor = Doctor.Version;
+                            NewTarget.StatusDoctor = Doctor.Status;
+                            NewTarget.IdDoctorNavigation = Doctor;
+                            NewTarget.IdPharmacy = null;
+                            NewTarget.VersionPharmacy = null;
+                            NewTarget.StatusPharmacy = null;
+                            NewTarget.IdPharmacyNavigation = null;
+                            NewTarget.CreatedOn = DateTime.UtcNow;
+                            NewTarget.UpdatedOn = DateTime.UtcNow;
+                            NewTarget.CreatedBy = IdUser;
+                            NewTarget.UpdatedBy = IdUser;
+                            var TargetCreated = await _TargetService.Create(NewTarget);
+
+                            Targets.Add(TargetCreated);
+                        }
+                    }
+                    foreach (var j in WeekUpdate.NewContent.IdPharmacy)
+                    {
+                        var Pharmacy = await _PharmacyService.GetById(j);
+                        if (Pharmacy != null)
+                        {
+                            var NewTarget = new Target();
+
+                            NewTarget.NumTarget = WeekUpdate.NumTarget;
+                            NewTarget.IdSector = Sector.IdSector;
+                            NewTarget.VersionSector = Sector.Version;
+                            NewTarget.StatusCycle = Sector.Status;
+                            NewTarget.IdSectorNavigation = Sector;
+                            NewTarget.IdCycle = Cycle.IdCycle;
+                            NewTarget.VersionCycle = Cycle.Version;
+                            NewTarget.StatusCycle = Cycle.Status;
+                            NewTarget.IdCycleNavigation = Cycle;
+                            NewTarget.IdUser = User.IdUser;
+                            NewTarget.VersionUser = User.Version;
+                            NewTarget.StatusCycle = User.Status;
+                            NewTarget.IdUserNavigation = User;
+                            NewTarget.IdDoctor = null;
+                            NewTarget.VersionDoctor = null;
+                            NewTarget.StatusDoctor = null;
+                            NewTarget.IdDoctorNavigation = null;
+                            NewTarget.IdPharmacy = Pharmacy.IdPharmacy;
+                            NewTarget.VersionPharmacy = Pharmacy.Version;
+                            NewTarget.StatusPharmacy = Pharmacy.Status;
+                            NewTarget.IdPharmacyNavigation = Pharmacy;
+                            NewTarget.CreatedOn = DateTime.UtcNow;
+                            NewTarget.UpdatedOn = DateTime.UtcNow;
+                            NewTarget.CreatedBy = IdUser;
+                            NewTarget.UpdatedBy = IdUser;
+                            var TargetCreated = await _TargetService.Create(NewTarget);
+
+                            Targets.Add(TargetCreated);
+                        }
+
+
+
+
+
+                   
+
+
+                    //var TargetCreatedResource = _mapperService.Map<Target, TargetResource>(TargetCreated);
+
+
+
+
+
+
+
+                }
+               // var Plan = getTarget(WeekDeletion.NumTarget);
+                return Ok();
+            }
+            else
+            {
+                ErrorMessag.ErrorMessage = "Empty Token";
+                ErrorMessag.StatusCode = 400;
+                return Ok(ErrorMessag);
+
+            }
+        }
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public async Task<Week> getTarget(int Num)
+        {
+            Week Plan = new Week();
             TargetByNumber TargetByNumber = new TargetByNumber();
             var Target = await _TargetService.GetByNumTarget(Num);
+            List<WeekTarget> WeekTarget = new List<WeekTarget>();
             List<TargetResource> TargetResources = new List<TargetResource>();
             List<PotentielResource> PotentielResources = new List<PotentielResource>();
             List<PotentielResource> PotentielSectorResources = new List<PotentielResource>();
             User User = new User();
             UserResource UserResource = new UserResource();
+
 
             List<Sector> Sectors = new List<Sector>();
             List<SectorResource> SectorResources = new List<SectorResource>();
@@ -650,6 +1064,8 @@ namespace CRM_API.Controllers
             CycleResource CycleResource = new CycleResource();
             Cycle = await _TargetService.GetCycleByNumTarget(Num);
             CycleResource = _mapperService.Map<Cycle, CycleResource>(Cycle);
+            User = await _TargetService.GetUserByNumTarget(Num);
+            UserResource = _mapperService.Map<User, UserResource>(User);
             var PotentielCycle = await _PotentielCycleService.GetPotentielsById(Cycle.IdCycle);
             foreach (var o in PotentielCycle)
             {
@@ -661,66 +1077,61 @@ namespace CRM_API.Controllers
                 }
             }
 
-            var SectorsByTarget = await _TargetService.GetSectorsByNumTarget(Num);
+            var SectorsByTarget = await _TargetService.GetFullSectorsByNumTarget(Num);
             foreach (var item in SectorsByTarget)
             {
-
+                WeekTarget target = new WeekTarget();
+                int i = 0;
+                // Week Week = new Week();
+                Plan.User = UserResource;
+                Plan.Cycle = CycleResource;
                 var SectorResource = _mapperService.Map<Sector, SectorResource>(item);
-                SectorResources.Add(SectorResource);
+                Plan.PotentielResourceCycle = PotentielResources;
+                target.Sector = SectorResource;
+                List<PharmacyResource> Pharmacys = new List<PharmacyResource>();
+                List<DoctorResource> Doctors = new List<DoctorResource>();
 
                 var PotentielSector = await _PotentielSectorService.GetPotentielsById(item.IdSector);
+                List<PotentielResource> PotSector = new List<PotentielResource>();
                 foreach (var o in PotentielSector)
                 {
                     var PotentielResource = _mapperService.Map<Potentiel, PotentielResource>(o);
 
                     if (PotentielResource != null)
                     {
-                        PotentielSectorResources.Add(PotentielResource);
+                        PotSector.Add(PotentielResource);
                     }
                 }
+                List<PotentielResource> PotentielsResources = new List<PotentielResource>();
+                PotentielsResources = PotSector;
+                PotentielTotal PotentielTotal = new PotentielTotal();
+                PotentielTotal.PotentielResourceSector = PotSector;
+                target.PotentielTotal = PotentielTotal;
+                var ListPharmacy = await _TargetService.GetPharmacysByNumTarget(Num, item.IdSector);
+                foreach (var p in ListPharmacy)
+                {
+                    var PharmacyResource = _mapperService.Map<Pharmacy, PharmacyResource>(p);
+                    Pharmacys.Add(PharmacyResource);
+                }
+                target.Pharmacys = Pharmacys;
+                var ListDoctor = await _TargetService.GetDoctorsByNumTarget(Num, item.IdSector);
+                foreach (var p in ListDoctor)
+                {
+                    var DoctorResource = _mapperService.Map<Doctor, DoctorResource>(p);
+                    Doctors.Add(DoctorResource);
+                }
+                target.Doctors = Doctors;
+                WeekTarget.Add(target);
             }
-            foreach (var item in Target)
-            {
-                var Bu = _mapperService.Map<Target, TargetResource>(item);
+            Plan.NumTarget = Num;
+            Plan.WeekTarget = WeekTarget;
+            return Plan;
 
-                User = await _UserService.GetById(item.IdUser);
-                UserResource = _mapperService.Map<User, UserResource>(User);
-                //var Sector = await _SectorService.GetById(item.IdSector);
-                // var SectorResource = _mapperService.Map<Sector, SectorResource>(Sector);
-
-                //Bu.IdCycleNavigation = CycleResource;
-
-                var Doctor = await _DoctorService.GetById(item.IdDoctor);
-                if (Doctor != null)
-                {
-                    var DoctorResource = _mapperService.Map<Doctor, DoctorResource>(Doctor);
-                    Bu.Doctor = DoctorResource;
-                }
-                var Pharmacy = await _PharmacyService.GetById(item.IdPharmacy);
-                if (Pharmacy != null)
-                {
-                    var PharmacyResource = _mapperService.Map<Pharmacy, PharmacyResource>(Pharmacy);
-                    Bu.Pharmacy = PharmacyResource;
-                }
-                if (Bu.Pharmacy == null && Bu.Doctor == null)
-                {
-                }
-                else
-                {
-                    TargetResources.Add(Bu);
-                }
-         
-            }
-            TargetByNumber.TargetResources = TargetResources;
-            UserResource = _mapperService.Map<User, UserResource>(User);
-            CycleResource = _mapperService.Map<Cycle, CycleResource>(Cycle);
-
-            TargetByNumber.User = UserResource;
-            TargetByNumber.Cycle = CycleResource;
-            TargetByNumber.PotentielResources = PotentielResources;
-            TargetByNumber.PotentielSectorResources = PotentielSectorResources;
-            return TargetByNumber;
         }
+
+
+
+
         /// <summary>
         ///  This function gets the Cycle By User By Id
         /// </summary>
@@ -739,8 +1150,9 @@ namespace CRM_API.Controllers
             {
                 var Cycles = await _CycleUserService.GetByIdUser(Id);
                 if (Cycles == null) return NotFound();
-                foreach(var item in Cycles) { 
-                var CycleResource = _mapperService.Map<Cycle, CycleResource>(item);
+                foreach (var item in Cycles)
+                {
+                    var CycleResource = _mapperService.Map<Cycle, CycleResource>(item);
                     CycleResources.Add(CycleResource);
                 }
                 return Ok(CycleResources);
@@ -762,14 +1174,30 @@ namespace CRM_API.Controllers
         public async Task<ActionResult> DeleteCycle([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
         string Token, int Id)
         {
-      
 
-                var sub = await _CycleService.GetById(Id);
-                if (sub == null) return BadRequest("Le Cycle  n'existe pas"); //NotFound();
-                await _CycleService.Delete(sub);
-                ;
-                return NoContent();
-   
+
+            var sub = await _CycleService.GetById(Id);
+            if (sub == null) return BadRequest("Le Cycle  n'existe pas"); //NotFound();
+            await _CycleService.Delete(sub);
+            ;
+            return NoContent();
+
+        }
+        /// <summary>
+        ///  This function deactivates the cycle By Id
+        /// </summary>
+        ///<param name="Token">Token of the connected user to be passed in the header.</param>
+        ///<param name="Id">Id of the cycle.</param>
+        [HttpDelete("RemoveAll")]
+        public async Task<ActionResult> DeleteAllTargets([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
+        string Token)
+        {
+
+
+            await _TargetService.RemoveAll();
+            ;
+            return NoContent();
+
         }
         /// <summary>
         ///  This function Create a target
@@ -818,103 +1246,103 @@ namespace CRM_API.Controllers
                     }
                 }
 
-        
+
 
                 //Random random = new Random();
                 //int num = random.Next();
                 //Target.NumTarget = ;
-             
-
-                    PotentielSector PotentielSector = new PotentielSector();
-                    foreach (var item1 in Potentiel)
-                    {
-                        PotentielSector.IdPotentiel = item1.IdPotentiel;
-                        PotentielSector.VersionPotentiel = item1.Version;
-                        PotentielSector.StatusPotentiel = item1.Status;
-                        PotentielSector.IdPotentielNavigation = item1;
-                        PotentielSector.IdSector = Sector.IdSector;
-                        PotentielSector.VersionSector = Sector.Version;
-                        PotentielSector.StatusSector = Sector.Status;
-                        PotentielSector.IdSectorNavigation = Sector;
-                        PotentielSector.CreatedOn = DateTime.UtcNow;
-                        PotentielSector.UpdatedOn = DateTime.UtcNow;
-                        PotentielSector.CreatedBy = IdUser;
-                        PotentielSector.UpdatedBy = IdUser;
-                     //   var PotentielSectorCreated = await _PotentielSectorService.Create(PotentielSector);
 
 
-                    }
-                    SectorCycle SectorCycle = new SectorCycle();
+                PotentielSector PotentielSector = new PotentielSector();
+                foreach (var item1 in Potentiel)
+                {
+                    PotentielSector.IdPotentiel = item1.IdPotentiel;
+                    PotentielSector.VersionPotentiel = item1.Version;
+                    PotentielSector.StatusPotentiel = item1.Status;
+                    PotentielSector.IdPotentielNavigation = item1;
+                    PotentielSector.IdSector = Sector.IdSector;
+                    PotentielSector.VersionSector = Sector.Version;
+                    PotentielSector.StatusSector = Sector.Status;
+                    PotentielSector.IdSectorNavigation = Sector;
+                    PotentielSector.CreatedOn = DateTime.UtcNow;
+                    PotentielSector.UpdatedOn = DateTime.UtcNow;
+                    PotentielSector.CreatedBy = IdUser;
+                    PotentielSector.UpdatedBy = IdUser;
+                    //   var PotentielSectorCreated = await _PotentielSectorService.Create(PotentielSector);
 
-                    SectorCycle.IdCycle = Cycle.IdCycle;
-                    SectorCycle.VersionCycle = Cycle.Version;
-                    SectorCycle.StatusCycle = Cycle.Status;
-                    SectorCycle.IdCycleNavigation = Cycle;
-                    SectorCycle.IdSector = Sector.IdSector;
-                    SectorCycle.VersionSector = Sector.Version;
-                    SectorCycle.StatusSector = Sector.Status;
-                    SectorCycle.IdSectorNavigation = Sector;
-                    SectorCycle.CreatedOn = DateTime.UtcNow;
-                    SectorCycle.UpdatedOn = DateTime.UtcNow;
-                    SectorCycle.CreatedBy = IdUser;
-                    SectorCycle.UpdatedBy = IdUser;
 
-                    //SectorCycleCreated = await _SectorCycleService.Create(SectorCycle);
-                    var SectorResource = _mapperService.Map<Sector, SectorResource>(Sector);
-                    SectorResources.Add(SectorResource);
-                    var TargetResource = _mapperService.Map<SaveTargetResource, TargetResource>(Target);
+                }
+                SectorCycle SectorCycle = new SectorCycle();
 
-                    var NewTarget = _mapperService.Map<TargetResource, Target>(TargetResource);
+                SectorCycle.IdCycle = Cycle.IdCycle;
+                SectorCycle.VersionCycle = Cycle.Version;
+                SectorCycle.StatusCycle = Cycle.Status;
+                SectorCycle.IdCycleNavigation = Cycle;
+                SectorCycle.IdSector = Sector.IdSector;
+                SectorCycle.VersionSector = Sector.Version;
+                SectorCycle.StatusSector = Sector.Status;
+                SectorCycle.IdSectorNavigation = Sector;
+                SectorCycle.CreatedOn = DateTime.UtcNow;
+                SectorCycle.UpdatedOn = DateTime.UtcNow;
+                SectorCycle.CreatedBy = IdUser;
+                SectorCycle.UpdatedBy = IdUser;
 
-                    NewTarget.IdSector = Sector.IdSector;
-                    NewTarget.VersionSector = Sector.Version;
-                    NewTarget.StatusCycle = Sector.Status;
-                    NewTarget.IdSectorNavigation = Sector;
-                    NewTarget.IdCycle = Cycle.IdCycle;
-                    NewTarget.VersionCycle = Cycle.Version;
-                    NewTarget.StatusCycle = Cycle.Status;
-                    NewTarget.IdCycleNavigation = Cycle;
-                    NewTarget.IdUser = User.IdUser;
-                    NewTarget.VersionUser = User.Version;
-                    NewTarget.StatusCycle = User.Status;
-                    NewTarget.IdUserNavigation = User;
-                    if (Doctor != null) 
-                    {
-                        NewTarget.IdDoctor = Doctor.IdDoctor;
-                        NewTarget.VersionDoctor = Doctor.Version;
-                        NewTarget.StatusDoctor = Doctor.Status;
-                        NewTarget.IdDoctorNavigation = Doctor;
-                    }
-                    else if (Doctor == null) 
-                    {
-                        NewTarget.IdDoctor = null;
-                        NewTarget.VersionDoctor = null;
-                        NewTarget.StatusDoctor = null;
-                        NewTarget.IdDoctorNavigation = null;
-                    }
-                    if (Pharmacy != null)
-                    {
-                        NewTarget.IdPharmacy = Pharmacy.IdPharmacy;
-                        NewTarget.VersionPharmacy = Pharmacy.Version;
-                        NewTarget.StatusPharmacy = Pharmacy.Status;
-                        NewTarget.IdPharmacyNavigation = Pharmacy;
+                //SectorCycleCreated = await _SectorCycleService.Create(SectorCycle);
+                var SectorResource = _mapperService.Map<Sector, SectorResource>(Sector);
+                SectorResources.Add(SectorResource);
+                var TargetResource = _mapperService.Map<SaveTargetResource, TargetResource>(Target);
 
-                    }
-                    else if (Pharmacy == null)
-                    {
-                        NewTarget.IdPharmacy = null;
-                        NewTarget.VersionPharmacy = null;
-                        NewTarget.StatusPharmacy = null;
-                        NewTarget.IdPharmacyNavigation = null;
-                    }
-                    NewTarget.CreatedOn = DateTime.UtcNow;
-                    NewTarget.UpdatedOn = DateTime.UtcNow;
-                    NewTarget.CreatedBy = IdUser;
-                    NewTarget.UpdatedBy = IdUser;
-                    var TargetCreated = await _TargetService.Create(NewTarget);
-                    var TargetCreatedResource = _mapperService.Map<Target, TargetResource>(TargetCreated);
-                    numTarget = TargetResource.NumTarget;
-                
+                var NewTarget = _mapperService.Map<TargetResource, Target>(TargetResource);
+
+                NewTarget.IdSector = Sector.IdSector;
+                NewTarget.VersionSector = Sector.Version;
+                NewTarget.StatusCycle = Sector.Status;
+                NewTarget.IdSectorNavigation = Sector;
+                NewTarget.IdCycle = Cycle.IdCycle;
+                NewTarget.VersionCycle = Cycle.Version;
+                NewTarget.StatusCycle = Cycle.Status;
+                NewTarget.IdCycleNavigation = Cycle;
+                NewTarget.IdUser = User.IdUser;
+                NewTarget.VersionUser = User.Version;
+                NewTarget.StatusCycle = User.Status;
+                NewTarget.IdUserNavigation = User;
+                if (Doctor != null)
+                {
+                    NewTarget.IdDoctor = Doctor.IdDoctor;
+                    NewTarget.VersionDoctor = Doctor.Version;
+                    NewTarget.StatusDoctor = Doctor.Status;
+                    NewTarget.IdDoctorNavigation = Doctor;
+                }
+                else if (Doctor == null)
+                {
+                    NewTarget.IdDoctor = null;
+                    NewTarget.VersionDoctor = null;
+                    NewTarget.StatusDoctor = null;
+                    NewTarget.IdDoctorNavigation = null;
+                }
+                if (Pharmacy != null)
+                {
+                    NewTarget.IdPharmacy = Pharmacy.IdPharmacy;
+                    NewTarget.VersionPharmacy = Pharmacy.Version;
+                    NewTarget.StatusPharmacy = Pharmacy.Status;
+                    NewTarget.IdPharmacyNavigation = Pharmacy;
+
+                }
+                else if (Pharmacy == null)
+                {
+                    NewTarget.IdPharmacy = null;
+                    NewTarget.VersionPharmacy = null;
+                    NewTarget.StatusPharmacy = null;
+                    NewTarget.IdPharmacyNavigation = null;
+                }
+                NewTarget.CreatedOn = DateTime.UtcNow;
+                NewTarget.UpdatedOn = DateTime.UtcNow;
+                NewTarget.CreatedBy = IdUser;
+                NewTarget.UpdatedBy = IdUser;
+                var TargetCreated = await _TargetService.Create(NewTarget);
+                var TargetCreatedResource = _mapperService.Map<Target, TargetResource>(TargetCreated);
+                numTarget = TargetResource.NumTarget;
+
 
 
             }
@@ -929,6 +1357,128 @@ namespace CRM_API.Controllers
             });
 
         }
+        /// <summary>
+        ///  This function Create a target
+        /// </summary>
+        ///<param name="Token">Token of the connected user to be passed in the header.</param>
+        /// <param name="Target">IdUser idSector idCycle and either {idDoctor or idPharmacy} ifyou choose one the other must be set to null.</param>
+        [HttpPost("CreateTargetList")]
+        public async Task<ActionResult> CreateTargetList([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
+        string Token, TargetList TargetList)
+        {
+            var claims = _UserService.getPrincipal(Token);
+            var Role = claims.FindFirst("Role").Value;
+            var IdUser = int.Parse(claims.FindFirst("Id").Value);
+            var exp = DateTime.Parse(claims.FindFirst("Exipres On").Value);
+            List<Target> Targets = new List<Target>();
+            int NumTarget = TargetList.NumTarget;
+            ErrorHandling ErrorMessag = new ErrorHandling();
+            var Target = await getTarget(TargetList.NumTarget);
 
+            if (Target != null)
+            {
+        
+
+                    foreach (var item in TargetList.WeekContents)
+                    {
+                        var Sector = await _SectorService.GetById(item.IdSector);
+                        var User = await _UserService.GetById(Target.User.IdUser);
+                        var Cycle = await _CycleService.GetById(Target.Cycle.IdCycle);
+
+                        foreach (var j in item.IdDoctor)
+                        {
+                            var Doctor = await _DoctorService.GetById(j);
+                            if (Doctor != null)
+                            {
+                                var NewTarget = new Target();
+
+                                NewTarget.NumTarget = TargetList.NumTarget;
+                                NewTarget.IdSector = Sector.IdSector;
+                                NewTarget.VersionSector = Sector.Version;
+                                NewTarget.StatusCycle = Sector.Status;
+                                NewTarget.IdSectorNavigation = Sector;
+                                NewTarget.IdCycle = Cycle.IdCycle;
+                                NewTarget.VersionCycle = Cycle.Version;
+                                NewTarget.StatusCycle = Cycle.Status;
+                                NewTarget.IdCycleNavigation = Cycle;
+                                NewTarget.IdUser = User.IdUser;
+                                NewTarget.VersionUser = User.Version;
+                                NewTarget.StatusCycle = User.Status;
+                                NewTarget.IdUserNavigation = User;
+                                NewTarget.IdDoctor = Doctor.IdDoctor;
+                                NewTarget.VersionDoctor = Doctor.Version;
+                                NewTarget.StatusDoctor = Doctor.Status;
+                                NewTarget.IdDoctorNavigation = Doctor;
+                                NewTarget.IdPharmacy = null;
+                                NewTarget.VersionPharmacy = null;
+                                NewTarget.StatusPharmacy = null;
+                                NewTarget.IdPharmacyNavigation = null;
+                                NewTarget.CreatedOn = DateTime.UtcNow;
+                                NewTarget.UpdatedOn = DateTime.UtcNow;
+                                NewTarget.CreatedBy = IdUser;
+                                NewTarget.UpdatedBy = IdUser;
+                                var TargetCreated = await _TargetService.Create(NewTarget);
+
+                                Targets.Add(TargetCreated);
+                            }
+                        }
+                        foreach (var j in item.IdPharmacy)
+                        {
+                            var Pharmacy = await _PharmacyService.GetById(j);
+                            if (Pharmacy != null)
+                            {
+                                var NewTarget = new Target();
+
+                                NewTarget.NumTarget = TargetList.NumTarget;
+                                NewTarget.IdSector = Sector.IdSector;
+                                NewTarget.VersionSector = Sector.Version;
+                                NewTarget.StatusCycle = Sector.Status;
+                                NewTarget.IdSectorNavigation = Sector;
+                                NewTarget.IdCycle = Cycle.IdCycle;
+                                NewTarget.VersionCycle = Cycle.Version;
+                                NewTarget.StatusCycle = Cycle.Status;
+                                NewTarget.IdCycleNavigation = Cycle;
+                                NewTarget.IdUser = User.IdUser;
+                                NewTarget.VersionUser = User.Version;
+                                NewTarget.StatusCycle = User.Status;
+                                NewTarget.IdUserNavigation = User;
+                                NewTarget.IdDoctor = null;
+                                NewTarget.VersionDoctor = null;
+                                NewTarget.StatusDoctor = null;
+                                NewTarget.IdDoctorNavigation = null;
+                                NewTarget.IdPharmacy = Pharmacy.IdPharmacy;
+                                NewTarget.VersionPharmacy = Pharmacy.Version;
+                                NewTarget.StatusPharmacy = Pharmacy.Status;
+                                NewTarget.IdPharmacyNavigation = Pharmacy;
+                                NewTarget.CreatedOn = DateTime.UtcNow;
+                                NewTarget.UpdatedOn = DateTime.UtcNow;
+                                NewTarget.CreatedBy = IdUser;
+                                NewTarget.UpdatedBy = IdUser;
+                                var TargetCreated = await _TargetService.Create(NewTarget);
+
+                                Targets.Add(TargetCreated);
+                            }
+                        
+
+
+
+
+                    }
+
+
+                    //var TargetCreatedResource = _mapperService.Map<Target, TargetResource>(TargetCreated);
+
+
+
+
+
+
+
+                }
+
+            }
+            var Plan = await getTarget(NumTarget);
+            return Ok(Plan);
+        }
     }
 }
