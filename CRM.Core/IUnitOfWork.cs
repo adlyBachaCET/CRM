@@ -14,7 +14,8 @@ namespace CRM.Core
 
         IProductPharmacyRepository ProductPharmacys { get; }
         IProductRepository Products { get; }
-        IProductSampleRepository ProductSamples { get; }
+        IProductSellingObjectivesRepository ProductSellingObjectivess { get; }
+        ISellingObjectivesRepository SellingObjectivess { get; }
 
         IVisitUserRepository VisitUsers { get; }
         IParticipantRepository Participants { get; }

@@ -28,6 +28,18 @@ namespace CRM.Services.Services
             await _unitOfWork.CommitAsync();
             return newProduct;
         }
+        public async Task<List<SellingObjectives>> GetSellingObjectivesByIdProduct(int? id)
+        {
+            List<SellingObjectives> SellingObjectives = new List<SellingObjectives>();
+            var SOP = await _unitOfWork.ProductSellingObjectivess.Find(i => i.IdProduct == id && i.Active == 0);
+            foreach (var item in SOP)
+            {
+                var SellingObjective = await _unitOfWork.SellingObjectivess.SingleOrDefault(i => i.IdSellingObjectives == item.IdSellingObjectives);
+                SellingObjectives.Add(SellingObjective);
+            }
+            return SellingObjectives;
+        }
+
         public async Task<IEnumerable<Product>> GetAll()
         {
             return
@@ -46,12 +58,24 @@ namespace CRM.Services.Services
         //          .GetAllWithArtisteAsync();
         //}
 
-        public async Task<Product> GetById(int id)
+        public async Task<Product> GetById(int? id)
         {
              return
-               await _unitOfWork.Products.GetById(id);
+               await _unitOfWork.Products.SingleOrDefault(i=>i.IdProduct==id&& i.Active==0);
         }
-   
+        public async Task<List<Product>> GetByIdUser(int id)
+        {
+            BusinessUnit BusinessUnit = new BusinessUnit();
+            var buUser = await _unitOfWork.BuUsers.SingleOrDefault(i=>i.IdUser==id);
+            List<Product> products = new List<Product>();
+            var list  =await _unitOfWork.Products.Find(i => i.IdBu == buUser.IdBu && i.Active == 0);
+           foreach(var item in list)
+            {
+                products.Add(item);
+            }
+            return products;
+              
+        }
         public async Task Update(Product ProductToBeUpdated, Product Product)
         {
             ProductToBeUpdated.Active = 1;

@@ -29,7 +29,6 @@ namespace CRM.Data
         public virtual DbSet<SellingObjectives> SellingObjectives { get; set; }
         public virtual DbSet<ProductPharmacy> ProductPharmacy { get; set; }
         public virtual DbSet<Product> Product { get; set; }
-        public virtual DbSet<ProductSample> ProductSample { get; set; }
 
         public virtual DbSet<RequestRp> RequestRp { get; set; }
 
@@ -493,7 +492,7 @@ namespace CRM.Data
                     .HasConstraintName("FK_ProductBu_BusinessUnit");
 
                 entity.HasOne(d => d.IdProductNavigation)
-                    .WithMany(p => p.ProductBu)
+                    .WithMany()
                     .HasForeignKey(d => new { d.IdProduct, d.StatusProduct, d.VersionProduct })
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_CycleBu_Cycle");
@@ -883,6 +882,7 @@ namespace CRM.Data
                 entity.HasIndex(e => new { e.Active, e.IdProduct, e.Status, e.Version }).IsUnique();
                 entity.HasIndex(e => e.IdProduct).IsUnique(false);
                 entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
+                entity.HasIndex(e => e.IdBu).IsUnique(false);
 
                 entity.Property(e => e.Designation)
                     .HasMaxLength(50)
@@ -890,27 +890,12 @@ namespace CRM.Data
 
                 entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
 
-                entity.HasOne(d => d.ProductSample)
+                entity.HasOne(d => d.Bu)
                     .WithMany()
-                    .HasForeignKey(d => new { d.IdProductSample, d.StatusProductSample, d.VersionProductSample })
-                    .HasConstraintName("FK_Product_ProductSample").IsRequired(false);
+                    .HasForeignKey(d => new { d.IdBu, d.StatusBu, d.VersionBu })
+                    .HasConstraintName("FK_Product_Bu").IsRequired(false);
             });
-            modelBuilder.Entity<ProductSample>(entity =>
-            {
-                entity.HasKey(e => new { e.IdProductSample, e.Status, e.Version });
-                entity.Property(x => x.IdProductSample).UseIdentityColumn();
-                entity.HasIndex(e => new { e.Active, e.IdProductSample, e.Status, e.Version }).IsUnique();
-                entity.HasIndex(e => e.IdProductSample).IsUnique(false);
-                entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
-
-                entity.Property(e => e.Designation)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
-
-              
-            });
+   
             modelBuilder.Entity<Adresse>(entity =>
             {
                 entity.HasKey(e => new { e.IdAdresse, e.Status, e.Version });
@@ -1074,6 +1059,10 @@ namespace CRM.Data
                   .WithMany()
                   .HasForeignKey(d => new { d.IdUser, d.StatusUser, d.VersionUser })
                   .HasConstraintName("FK_Objection_User").IsRequired(false);
+                entity.HasOne(d => d.Product)
+             .WithMany()
+             .HasForeignKey(d => new { d.IdProduct, d.StatusProduct, d.VersionProduct })
+             .HasConstraintName("FK_Objection_Product").IsRequired(false);
             });
             modelBuilder.Entity<RequestDoctor>(entity =>
             {
@@ -1329,13 +1318,13 @@ namespace CRM.Data
                     .HasConstraintName("FK_TagsDoctor_Specialty");
             });
 
-            modelBuilder.Entity<ProductSampleVisitReport>(entity =>
+            modelBuilder.Entity<ProductVisitReport>(entity =>
             {
-                entity.HasKey(e => new { e.IdProductSample, e.StatusProductSample, e.VersionProductSample, e.IdReport, e.StatusReport, e.VersionReport });
+                entity.HasKey(e => new { e.IdProduct, e.StatusProduct, e.VersionProduct, e.IdReport, e.StatusReport, e.VersionReport });
 
-                entity.HasOne(d => d.ProductSample)
-                    .WithMany(p => p.ProductSampleVisitReport)
-                    .HasForeignKey(d => new { d.IdProductSample, d.StatusProductSample, d.VersionProductSample })
+                entity.HasOne(d => d.Product)
+                    .WithMany(p => p.ProductVisitReport)
+                    .HasForeignKey(d => new { d.IdProduct, d.StatusProduct, d.VersionProduct })
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_VisitVisitReport_Visit");
 
@@ -1362,22 +1351,7 @@ namespace CRM.Data
                     .HasConstraintName("FK_VisitVisitReport_Report");
             });
 
-            modelBuilder.Entity<ProductVisitReport>(entity =>
-            {
-                entity.HasKey(e => new { e.IdProduct, e.StatusProduct, e.VersionProduct, e.IdReport, e.StatusReport, e.VersionReport });
-
-                entity.HasOne(d => d.Product)
-                    .WithMany(p => p.ProductVisitReport)
-                    .HasForeignKey(d => new { d.IdProduct, d.StatusProduct, d.VersionProduct })
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_VisitVisitReport_Visit");
-
-                entity.HasOne(d => d.Report)
-                    .WithMany(p => p.ProductVisitReport)
-                    .HasForeignKey(d => new { d.IdReport, d.StatusReport, d.VersionReport })
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_VisitVisitReport_Report");
-            });
+ 
             modelBuilder.Entity<TagsRequestRp>(entity =>
             {
                 entity.HasKey(e => new { e.IdRequestRp, e.StatusRequestRp, e.VersionRequestRp, e.IdTags, e.StatusTags, e.VersionTags });

@@ -25,8 +25,10 @@ namespace CRM.Core.Models
         public string Accompaniement { get; set; }
         public string InfoAccompaniement { get; set; }
         public string Competitiveintelligence { get; set; }
-        public string Commentaire { get; set; }
-       // public string Competitiveintelligence { get; set; }
+        public string Commentary { get; set; }
+        public string Name_Replacement { get; set; }
+
+        // public string Competitiveintelligence { get; set; }
 
         public string Objectif { get; set; }
         public string ObjectifNextVisit { get; set; }
@@ -34,7 +36,7 @@ namespace CRM.Core.Models
         public string CycleTtype { get; set; }
         public ICollection<VisitRequestReport> VisitRequestReport { get; set; }
 
-        public ICollection<ProductSampleVisitReport> ProductSampleVisitReport { get; set; }
+        public ICollection<ProductVisitReport> ProductSampleVisitReport { get; set; }
 
         public ICollection<ProductVisitReport> ProductVisitReport { get; set; }
 

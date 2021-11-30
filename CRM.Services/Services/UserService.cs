@@ -58,7 +58,6 @@ namespace CRM.Services.Services
             var claims = new[] {
                           new Claim("Exipres On", DateTime.UtcNow.AddMinutes(300).ToString()),
                           new Claim("Created On", DateTime.UtcNow.ToString()),
-
                           new Claim("Photo", userInfo.Photo.ToString()),
                           new Claim("Id", userInfo.IdUser.ToString()),
                           new Claim("FirstName", userInfo.FirstName)

@@ -21,7 +21,7 @@ namespace CRM.Core.Models
         public Status StatusVisit { get; set; }
         public virtual VisitResource Visit { get; set; }
         public string VisiteType { get; set; }
-
+    
         public string Accompaniement { get; set; }
         public string InfoAccompaniement { get; set; }
         public string Competitiveintelligence { get; set; }
@@ -30,7 +30,8 @@ namespace CRM.Core.Models
         public string ObjectifNextVisit { get; set; }
 
         public string CycleTtype { get; set; }
-
+        public string Commentary { get; set; }
+        public string Name_Replacement { get; set; }
 
     }
 }

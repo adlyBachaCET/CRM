@@ -21,6 +21,6 @@ namespace CRM.Core.Models
 
         public string Description { get; set; }
 
-        public ICollection<ProductSampleVisitReport> ProductSampleVisitReport { get; set; }
+        public ICollection<ProductVisitReport> ProductSampleVisitReport { get; set; }
     }
 }

@@ -31,8 +31,9 @@ namespace CRM_API.Controllers
         private readonly ILocationTypeService _LocationTypeService;
 
         private readonly IMapper _mapperService;
-        public LocationController(ILocalityService LocalityService, IServiceService ServiceService, ILocationService LocationService,
-            ILocationDoctorService LocationDoctorService, IUserService UserService, IBrickService BrickService, ILocationTypeService LocationTypeService, IMapper mapper)
+        public LocationController( IServiceService ServiceService, ILocationService LocationService,
+            ILocationDoctorService LocationDoctorService, IUserService UserService, IBrickService BrickService, ILocalityService LocalityService,
+            ILocationTypeService LocationTypeService, IMapper mapper)
         {
             _LocationService = LocationService;
 

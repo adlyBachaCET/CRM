@@ -24,7 +24,8 @@ namespace CRM_API.Controllers
 
         private readonly IDoctorService _DoctorService;
         private readonly IVisitReportService _VisitReportService;
-
+        private readonly ILocalityService _LocalityService;
+        private readonly IBrickService _BrickService;
         private readonly IBusinessUnitService _BusinessUnitService;
         private readonly IRequestRpService _RequestRpService;
         private readonly ICommandeService _CommandeService;
@@ -54,14 +55,14 @@ namespace CRM_API.Controllers
 
             ILocationService LocationService,
                         ILocationTypeService LocationTypeService,
-
+             ILocalityService LocalityService,
             IServiceService ServiceService,
             IDoctorService DoctorService, IRequestDoctorService RequestDoctorService,
             IPotentielService PotentielService, IObjectionService ObjectionService,
             ISpecialtyService SpecialtyService,
             IBusinessUnitService BusinessUnitService,
-                        IParticipantService ParticipantService,
-                                    IRequestRpService RequestRpService,
+            IParticipantService ParticipantService,
+            IRequestRpService RequestRpService,
             ICommandeService CommandeService,
             IInfoService InfoService,
             ITagsService TagsService,
@@ -69,6 +70,8 @@ namespace CRM_API.Controllers
             IVisitReportService VisitReportService,
             IBuDoctorService BuDoctorService, IMapper mapper)
         {
+            _LocationService = LocationService;
+            _LocalityService = LocalityService;
             _VisitReportService = VisitReportService;
             _TagsDoctorService = TagsDoctorService;
             _LocationDoctorService = LocationDoctorService;
@@ -77,7 +80,6 @@ namespace CRM_API.Controllers
             _PotentielService = PotentielService;
             _RequestDoctorService = RequestDoctorService;
             _LocationTypeService = LocationTypeService;
-
             _ObjectionService = ObjectionService;
             _BuDoctorService = BuDoctorService;
             _DoctorService = DoctorService;
@@ -88,10 +90,9 @@ namespace CRM_API.Controllers
             _ParticipantService = ParticipantService;
             _RequestRpService = RequestRpService;
             _CommandeService = CommandeService;
-
             _BusinessUnitService = BusinessUnitService;
            _InfoService = InfoService;
-            _mapperService = mapper;
+           _mapperService = mapper;
         }
         /// <summary>
         ///  This function creates a cycle.
@@ -181,25 +182,131 @@ namespace CRM_API.Controllers
                     var NewDoctor = await _DoctorService.Create(Doctor);
                     var DoctorResource = _mapperService.Map<Doctor, DoctorResource>(NewDoctor);
 
+                if (SaveDoctorResource.Cabinet != null)
+                {
+                 //*** Mappage ***
+                        var Location = _mapperService.Map<LocationAdd, Location>(SaveDoctorResource.Cabinet);
+                        Location.UpdatedOn = DateTime.UtcNow;
+                        Location.CreatedOn = DateTime.UtcNow;
+                        Location.Version = 0;
+                        Location.Active = 0;
+
+                        if (Role == "Manager")
+                        {
+                            Location.Status = Status.Approuved;
+                        }
+                        else if (Role == "Delegue")
+                        {
+                            Location.Status = Status.Pending;
+                        }
+                        var Locality1 = await _LocalityService.GetById(SaveDoctorResource.Cabinet.IdLocality1);
+                        Location.NameLocality1 = Locality1.Name;
+                        Location.VersionLocality1 = Locality1.Version;
+                        Location.StatusLocality1 = Locality1.Status;
+                        Location.IdLocality1 = Locality1.IdLocality;
+                        var Locality2 = await _LocalityService.GetById(SaveDoctorResource.Cabinet.IdLocality2);
+                        Location.NameLocality2 = Locality2.Name;
+                        Location.VersionLocality2 = Locality2.Version;
+                        Location.StatusLocality2 = Locality2.Status;
+                        Location.IdLocality2 = Locality1.IdLocality;
+                        var NewLocationType = await _LocationTypeService.GetById(SaveDoctorResource.Cabinet.IdLocationType);
+                        Location.NameLocationType = NewLocationType.Name;
+                        Location.StatusLocationType = NewLocationType.Status;
+                        Location.VersionLocationType = NewLocationType.Version;
+                        Location.TypeLocationType = NewLocationType.Type;
+                        Location.CreatedBy = Id;
+                        Location.UpdatedBy = Id;
+                        if (SaveDoctorResource.Cabinet.IdBrick1 != 0)
+                        {
+                            var Brick1 = await _BrickService.GetByIdActif(SaveDoctorResource.Cabinet.IdBrick1);
+                            if (Brick1 != null)
+                            {
+                                Location.IdBrick1 = Brick1.IdBrick;
+                                Location.VersionBrick1 = Brick1.Version;
+                                Location.StatusBrick1 = Brick1.Status;
+                                Location.NameBrick1 = Brick1.Name;
+                                Location.NumBrick1 = Brick1.NumSystemBrick;
+                                // Pharmacy.Brick1 = Brick1;
+                            }
+                            else
+                            {
+                                Location.IdBrick1 = null;
+                                Location.VersionBrick1 = null;
+                                Location.StatusBrick1 = null;
+                                Location.NameBrick1 = "";
+                                Location.NumBrick1 = 0;
+                            }
+                        }
+                    if (SaveDoctorResource.Cabinet.IdBrick2 != 0)
+                    {
+                        var Brick2 = await _BrickService.GetByIdActif(SaveDoctorResource.Cabinet.IdBrick2);
+                      
+                            if (Brick2 != null)
+                            {
+                                Location.IdBrick2 = Brick2.IdBrick;
+                                Location.VersionBrick2 = Brick2.Version;
+                                Location.StatusBrick2 = Brick2.Status;
+                                Location.NameBrick2 = Brick2.Name;
+                                Location.NumBrick2 = Brick2.NumSystemBrick;
+                                // Pharmacy.Brick2 = Brick2;
+                            }
+                            else
+                            {
+                                Location.IdBrick2 = null;
+                                Location.VersionBrick2 = null;
+                                Location.StatusBrick2 = null;
+                                Location.NameBrick2 = "";
+                                Location.NumBrick2 = 0;
+                            }
+                        }
+                        var NewCabinet = await _LocationService.Create(Location);
+
+                        //*** Mappage ***
+                        var CabinetResource = _mapperService.Map<Location, LocationResource>(NewCabinet);
+                    LocationDoctor LocationDoctor = new LocationDoctor();
+                    LocationDoctor.IdLocation = CabinetResource.IdLocation;
+
+
+                    LocationDoctor.IdDoctor = NewDoctor.IdDoctor;
+
+
+              
+                    LocationDoctor.IdService = 0;
+
+                  
+
+                    LocationDoctor.Status = Status.Approuved;
+                    LocationDoctor.Version = 0;
+                    LocationDoctor.Active = 0;
+                    LocationDoctor.CreatedOn = DateTime.UtcNow;
+                    LocationDoctor.UpdatedOn = DateTime.UtcNow;
+                    LocationDoctor.CreatedBy = Id;
+                    LocationDoctor.UpdatedBy = Id;
+                    await _LocationDoctorService.Create(LocationDoctor);
+                }
                     if (SaveDoctorResource.Location != null)
                     {
                         foreach (var item in SaveDoctorResource.Location)
                         {
                             var location = await _LocationService.GetById(item.IdLocation);
-                            if (location == null)
-                            {
+                        if (location == null)
+                        {
 
-                            }
-                            else
+                        }
+                        else
+                        {
+                            LocationDoctor LocationDoctor = new LocationDoctor();
+                            var OldLocationDoctor = await _LocationDoctorService.GetByIdActif(NewDoctor.IdDoctor, location.IdLocation);
+                            if (OldLocationDoctor != null)
                             {
-                                LocationDoctor LocationDoctor = new LocationDoctor();
                                 LocationDoctor.IdLocation = location.IdLocation;
 
 
                                 LocationDoctor.IdDoctor = NewDoctor.IdDoctor;
 
 
-                                if (item.IdService != 0) {
+                                if (item.IdService != 0)
+                                {
                                     var NewService = await _ServiceService.GetById(item.IdService);
                                     LocationDoctor.IdService = NewService.IdService;
 
@@ -219,6 +326,7 @@ namespace CRM_API.Controllers
                                 LocationDoctor.UpdatedBy = Id;
                                 await _LocationDoctorService.Create(LocationDoctor);
                             }
+                        }
                         }
                     }
 
@@ -385,7 +493,7 @@ namespace CRM_API.Controllers
                     }
                 var DoctorResourceInfo = await GetById(DoctorResource.IdDoctor);
 
-                return Ok(DoctorResource); 
+                return Ok(DoctorResourceInfo); 
             
             }
             else
@@ -1151,14 +1259,14 @@ namespace CRM_API.Controllers
         [HttpPut("{Id}")]
         public async Task<ActionResult<DoctorListObject>> UpdateDoctor([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
         string Token,
-            int Id,SaveDoctorResource SaveDoctorResource)
+            int Id, SaveDoctorResourceUpdate SaveDoctorResource)
         {
             var claims = _UserService.getPrincipal(Token);
             var IdUser = int.Parse(claims.FindFirst("Id").Value);
             var Role = claims.FindFirst("Role").Value;
             var DoctorToBeModified = await _DoctorService.GetById(Id);
             if (DoctorToBeModified == null) return BadRequest("Le Doctor n'existe pas"); //NotFound();
-            var Doctor = _mapperService.Map<SaveDoctorResource, Doctor>(SaveDoctorResource);
+            var Doctor = _mapperService.Map<SaveDoctorResourceUpdate, Doctor>(SaveDoctorResource);
             //var newDoctor = await _DoctorService.Create(Doctors);
             if (Role == "Manager")
             {
@@ -1169,8 +1277,8 @@ namespace CRM_API.Controllers
                 Doctor.Status = Status.Pending;
             }
 
-            Doctor.CreatedBy = IdUser;
-            Doctor.UpdatedBy = DoctorToBeModified.UpdatedBy;
+            Doctor.CreatedBy = DoctorToBeModified.CreatedBy ;
+            Doctor.UpdatedBy = IdUser;
             Doctor.CreatedOn = DoctorToBeModified.CreatedOn;
             Doctor.UpdatedOn = DateTime.UtcNow;
             Doctor.Version = DoctorToBeModified.Version+1;
@@ -1190,7 +1298,7 @@ namespace CRM_API.Controllers
                     }
                     else
                     {
-                        var LocationDoctorExist = await _LocationDoctorService.GetById(DoctorUpdated.IdDoctor, location.IdLocation);
+                        var LocationDoctorExist = await _LocationDoctorService.GetByIdActif(DoctorUpdated.IdDoctor, location.IdLocation);
                         if (LocationDoctorExist != null) {
                         
                         }

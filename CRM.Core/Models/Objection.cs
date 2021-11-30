@@ -15,6 +15,7 @@ namespace CRM.Core.Models
         public string Name { get; set; }
 
         public Status Status { get; set; }
+        public int Satisfaction { get; set; }
 
 
         public int? CreatedBy { get; set; }
@@ -36,8 +37,16 @@ namespace CRM.Core.Models
 
 
         public virtual Pharmacy Pharmacy{ get; set; }
+        public bool OnProduct { get; set; }
 
+        public int? IdProduct { get; set; }
+        public int? VersionProduct { get; set; }
+        public Status? StatusProduct { get; set; }
+
+
+        public virtual Product Product { get; set; }
+        public string Commentary { get; set; }
 
     }
-  
+
 }

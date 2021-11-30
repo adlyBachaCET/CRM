@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 namespace CRM_API.Controllers
@@ -22,18 +23,18 @@ namespace CRM_API.Controllers
         private readonly IDoctorService _DoctorService;
         private readonly IUserService _UserService;
         private readonly IPharmacyService _PharmacyService;
-        private readonly IProductSampleService _ProductSampleService;
+        private readonly IBusinessUnitService _BuService;
 
         private readonly IRequestRpService _RequestRpService;
 
         private readonly IMapper _mapperService;
         public ProductController(IRequestRpService RequestRpService,
-            IUserService UserService, IProductSampleService ProductSampleService, IPharmacyService PharmacyService,
+            IUserService UserService, IBusinessUnitService BuService, IPharmacyService PharmacyService,
             IDoctorService DoctorService,IProductService ProductService, IMapper mapper)
         {
             _RequestRpService = RequestRpService;
             _UserService = UserService;
-            _ProductSampleService = ProductSampleService;
+            _BuService = BuService;
             _PharmacyService = PharmacyService;
 
             _DoctorService = DoctorService;
@@ -43,32 +44,37 @@ namespace CRM_API.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult<ProductResource>> CreateProduct(SaveProductResource SaveProductResource)
+        public async Task<ActionResult<ProductResource>> CreateProduct([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
+        string Token, SaveProductResource SaveProductResource)
   {
+            var claims = _UserService.getPrincipal(Token);
+            var Role = claims.FindFirst("Role").Value;
+            var IdUser = int.Parse(claims.FindFirst("Id").Value);
+            var exp = DateTime.Parse(claims.FindFirst("Exipres On").Value);
             //*** Mappage ***
             var Product = _mapperService.Map<SaveProductResource, Product>(SaveProductResource);
             Product.UpdatedOn = DateTime.UtcNow;
             Product.CreatedOn = DateTime.UtcNow;
             Product.Active = 0;
             Product.Status = 0;
-            Product.UpdatedBy = 0;
-            Product.CreatedBy = 0;
-            var ProductSample = await _ProductSampleService.GetById(SaveProductResource.IdProductSample);
+            Product.UpdatedBy = IdUser;
+            Product.CreatedBy = IdUser;
+            var Bu = await _BuService.GetById(SaveProductResource.IdBu);
 
-            if (ProductSample != null)
+            if (Bu != null)
             {
-                Product.IdProductSample = ProductSample.IdProductSample;
-                Product.ProductSample = ProductSample;
-                Product.VersionProductSample = ProductSample.Version;
-                Product.StatusProductSample = ProductSample.Status;
+                Product.IdBu = Bu.IdBu;
+                Product.Bu = Bu;
+                Product.VersionBu = Bu.Version;
+                Product.StatusBu = Bu.Status;
 
             }
             else
             {
-                Product.IdProductSample = null;
-                Product.ProductSample = null;
-                Product.VersionProductSample = null;
-                Product.StatusProductSample = null;
+                Product.IdBu = null;
+                Product.Bu = null;
+                Product.VersionBu = null;
+                Product.StatusBu = null;
 
             }
             var NewProduct = await _ProductService.Create(Product);
@@ -79,14 +85,28 @@ namespace CRM_API.Controllers
 
         }
         [HttpGet]
-        public async Task<ActionResult<ProductResource>> GetAllProducts()
+        public async Task<ActionResult<ProductResource>> GetAllProducts([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
+        string Token)
         {
             try
             {
-                var Employe = await _ProductService.GetAll();
-                if (Employe == null) return NotFound();
+                var claims = _UserService.getPrincipal(Token);
+                var Role = claims.FindFirst("Role").Value;
+                var IdUser = int.Parse(claims.FindFirst("Id").Value);
+                var exp = DateTime.Parse(claims.FindFirst("Exipres On").Value);
+                var Products = await _ProductService.GetAll();
+                List<ProductResource> ProductResources = new List<ProductResource>();
+                foreach (var item in Products)
+                {
+                   var ProductResource = _mapperService.Map<Product, ProductResource>(item);
+                    var Bu = await _BuService.GetById(ProductResource.IdBu);
+                    var BusinessUnit = _mapperService.Map<BusinessUnit, BusinessUnitResource>(Bu);
+
+                    ProductResource.Bu = BusinessUnit;
+                    ProductResources.Add(ProductResource);
+                }
                 // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
-                return Ok(Employe);
+                return Ok(ProductResources);
             }
             catch (Exception ex)
             {
@@ -94,14 +114,28 @@ namespace CRM_API.Controllers
             }
         }
         [HttpGet("Actif")]
-        public async Task<ActionResult<ProductResource>> GetAllActifProducts()
+        public async Task<ActionResult<ProductResource>> GetAllActifProducts([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
+        string Token)
         {
             try
             {
-                var Employe = await _ProductService.GetAllActif();
-                if (Employe == null) return NotFound();
+                var claims = _UserService.getPrincipal(Token);
+                var Role = claims.FindFirst("Role").Value;
+                var IdUser = int.Parse(claims.FindFirst("Id").Value);
+                var exp = DateTime.Parse(claims.FindFirst("Exipres On").Value);
+                var Products = await _ProductService.GetAllActif();
+                List<ProductResource> ProductResources = new List<ProductResource>();
+                foreach (var item in Products)
+                {
+                    var ProductResource = _mapperService.Map<Product, ProductResource>(item);
+                    var Bu = await _BuService.GetById(ProductResource.IdBu);
+                    var BusinessUnit = _mapperService.Map<BusinessUnit, BusinessUnitResource>(Bu);
+
+                    ProductResource.Bu = BusinessUnit;
+                    ProductResources.Add(ProductResource);
+                }
                 // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
-                return Ok(Employe);
+                return Ok(ProductResources);
             }
             catch (Exception ex)
             {
@@ -109,14 +143,28 @@ namespace CRM_API.Controllers
             }
         }
         [HttpGet("InActif")]
-        public async Task<ActionResult<ProductResource>> GetAllInactifProducts()
+        public async Task<ActionResult<ProductResource>> GetAllInactifProducts([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
+        string Token)
         {
             try
             {
-                var Employe = await _ProductService.GetAllInActif();
-                if (Employe == null) return NotFound();
+                var claims = _UserService.getPrincipal(Token);
+                var Role = claims.FindFirst("Role").Value;
+                var IdUser = int.Parse(claims.FindFirst("Id").Value);
+                var exp = DateTime.Parse(claims.FindFirst("Exipres On").Value);
+                var Products = await _ProductService.GetAllInActif();
+                List<ProductResource> ProductResources = new List<ProductResource>();
+                foreach (var item in Products)
+                {
+                    var ProductResource = _mapperService.Map<Product, ProductResource>(item);
+                    var Bu = await _BuService.GetById(ProductResource.IdBu);
+                    var BusinessUnit = _mapperService.Map<BusinessUnit, BusinessUnitResource>(Bu);
+
+                    ProductResource.Bu = BusinessUnit;
+                    ProductResources.Add(ProductResource);
+                }
                 // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
-                return Ok(Employe);
+                return Ok(ProductResources);
             }
             catch (Exception ex)
             {
@@ -125,13 +173,22 @@ namespace CRM_API.Controllers
         }
 
         [HttpGet("{Id}")]
-        public async Task<ActionResult<ProductResource>> GetProductById(int Id)
+        public async Task<ActionResult<ProductResource>> GetProductById([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
+        string Token, int Id)
         {
             try
             {
+                var claims = _UserService.getPrincipal(Token);
+                var Role = claims.FindFirst("Role").Value;
+                var IdUser = int.Parse(claims.FindFirst("Id").Value);
+                var exp = DateTime.Parse(claims.FindFirst("Exipres On").Value);
                 var Products = await _ProductService.GetById(Id);
                 if (Products == null) return NotFound();
                 var ProductRessource = _mapperService.Map<Product, ProductResource>(Products);
+                var Bu = await _BuService.GetById(ProductRessource.IdBu);
+                var BusinessUnit = _mapperService.Map<BusinessUnit, BusinessUnitResource>(Bu);
+
+                ProductRessource.Bu = BusinessUnit;
                 return Ok(ProductRessource);
             }
             catch (Exception ex)
@@ -139,10 +196,42 @@ namespace CRM_API.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPut("{Id}")]
-        public async Task<ActionResult<ProductResource>> UpdateProduct(int Id, SaveProductResource SaveProductResource)
+        [HttpGet("ByBu")]
+        public async Task<ActionResult<ProductResource>> GetProductsByBu([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
+        string Token)
         {
+            try
+            {
+                var claims = _UserService.getPrincipal(Token);
+                var Role = claims.FindFirst("Role").Value;
+                var IdUser = int.Parse(claims.FindFirst("Id").Value);
+                var exp = DateTime.Parse(claims.FindFirst("Exipres On").Value);
+                List<ProductResource> ProductResources = new List<ProductResource>();
+                var Products = await _ProductService.GetByIdUser(IdUser);
+                if (Products == null) return NotFound();
+                foreach(var item in Products) { 
+                var ProductRessource = _mapperService.Map<Product, ProductResource>(item);
+                    var Bu = await _BuService.GetById(ProductRessource.IdBu);
+                    var BusinessUnit = _mapperService.Map<BusinessUnit, BusinessUnitResource>(Bu);
 
+                    ProductRessource.Bu = BusinessUnit;
+                    ProductResources.Add(ProductRessource);
+                }
+                return Ok(ProductResources);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPut("{Id}")]
+        public async Task<ActionResult<ProductResource>> UpdateProduct([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
+        string Token, int Id, SaveProductResource SaveProductResource)
+        {
+            var claims = _UserService.getPrincipal(Token);
+            var Role = claims.FindFirst("Role").Value;
+            var IdUser = int.Parse(claims.FindFirst("Id").Value);
+            var exp = DateTime.Parse(claims.FindFirst("Exipres On").Value);
             var ProductToBeModified = await _ProductService.GetById(Id);
             if (ProductToBeModified == null) return BadRequest("Le Product n'existe pas"); //NotFound();
             var Products = _mapperService.Map<SaveProductResource, Product>(SaveProductResource);
@@ -150,25 +239,25 @@ namespace CRM_API.Controllers
             Products.CreatedOn = DateTime.UtcNow;
             Products.Active = 0;
             Products.Status = 0;
-            Products.UpdatedBy = 0;
+            Products.UpdatedBy = IdUser;
             Products.CreatedBy = Products.CreatedBy;
             //var newProduct = await _ProductService.Create(Products);
-            var ProductSample = await _ProductSampleService.GetById(SaveProductResource.IdProductSample);
+            var Bu = await _BuService.GetById(SaveProductResource.IdBu);
 
-            if (ProductSample.IdProductSample != ProductToBeModified.IdProductSample)
+            if (Bu.IdBu != ProductToBeModified.IdBu)
             {
-                Products.IdProductSample = ProductSample.IdProductSample;
-                Products.ProductSample = ProductSample;
-                Products.VersionProductSample = ProductSample.Version;
-                Products.StatusProductSample = ProductSample.Status;
+                Products.IdBu = Bu.IdBu;
+                Products.Bu = Bu;
+                Products.VersionBu = Bu.Version;
+                Products.StatusBu = Bu.Status;
 
             }
             else
             {
-                Products.IdProductSample = ProductToBeModified.IdProductSample;
-                Products.ProductSample = ProductToBeModified.ProductSample;
-                Products.VersionProductSample = ProductToBeModified.VersionProductSample;
-                Products.StatusProductSample = ProductToBeModified.StatusProductSample;
+                Products.IdBu = ProductToBeModified.IdBu;
+                Products.Bu = ProductToBeModified.Bu;
+                Products.VersionBu = ProductToBeModified.VersionBu;
+                Products.StatusBu = ProductToBeModified.StatusBu;
 
             }
             await _ProductService.Update(ProductToBeModified, Products);
@@ -176,17 +265,24 @@ namespace CRM_API.Controllers
             var ProductUpdated = await _ProductService.GetById(Id);
 
             var ProductResourceUpdated = _mapperService.Map<Product, ProductResource>(ProductUpdated);
+            var BuGot = await _BuService.GetById(ProductResourceUpdated.IdBu);
+            var BusinessUnit = _mapperService.Map<BusinessUnit, BusinessUnitResource>(BuGot);
 
-            return Ok();
+            ProductResourceUpdated.Bu = BusinessUnit;
+            return Ok(ProductResourceUpdated);
         }
 
 
         [HttpDelete("{Id}")]
-        public async Task<ActionResult> DeleteProduct(int Id)
+        public async Task<ActionResult> DeleteProduct([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
+        string Token, int Id)
         {
             try
             {
-
+                var claims = _UserService.getPrincipal(Token);
+                var Role = claims.FindFirst("Role").Value;
+                var IdUser = int.Parse(claims.FindFirst("Id").Value);
+                var exp = DateTime.Parse(claims.FindFirst("Exipres On").Value);
                 var sub = await _ProductService.GetById(Id);
                 if (sub == null) return BadRequest("Le Product  n'existe pas"); //NotFound();
                 await _ProductService.Delete(sub);
@@ -199,10 +295,15 @@ namespace CRM_API.Controllers
             }
         }
         [HttpPost("DeleteRange")]
-        public async Task<ActionResult> DeleteRange(List<int> Ids)
+        public async Task<ActionResult> DeleteRange([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
+        string Token, List<int> Ids)
         {
             try
             {
+                var claims = _UserService.getPrincipal(Token);
+                var Role = claims.FindFirst("Role").Value;
+                var IdUser = int.Parse(claims.FindFirst("Id").Value);
+                var exp = DateTime.Parse(claims.FindFirst("Exipres On").Value);
                 List<Product> empty = new List<Product>();
                 foreach (var item in Ids)
                 {
