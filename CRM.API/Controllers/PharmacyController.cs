@@ -370,6 +370,15 @@ namespace CRM_API.Controllers
                 }
                 PharmacyProfile.Phone = PhoneResources;
 
+            var Potentiel = await _PotentielService.GetById(Pharmacys.IdPotentiel);
+            PotentielPharmacy PotentielPharmacy = new PotentielPharmacy();
+            if (Potentiel != null)
+            {
+                PotentielPharmacy.IdPotentiel = Potentiel.IdPotentiel;
+                PotentielPharmacy.NamePotentiel = Potentiel.Name;
+                PharmacyResource.PotentielPharmacy = PotentielPharmacy;
+            }
+
             return PharmacyProfile;
         }
 
@@ -434,6 +443,14 @@ namespace CRM_API.Controllers
                     }
                 }
                 PharmacyProfile.Objection = ObjectionResources;
+                var Potentiel = await _PotentielService.GetById(Pharmacys.IdPotentiel);
+                PotentielPharmacy PotentielPharmacy = new PotentielPharmacy();
+                if (Potentiel != null)
+                {
+                    PotentielPharmacy.IdPotentiel = Potentiel.IdPotentiel;
+                    PotentielPharmacy.NamePotentiel = Potentiel.Name;
+                    PharmacyResource.PotentielPharmacy = PotentielPharmacy;
+                }
 
                 var RequestDoctors = await _RequestDoctorService.GetByIdActifPharmacy(Id);
                 List<RequestDoctorResource> RequestDoctorResources = new List<RequestDoctorResource>();

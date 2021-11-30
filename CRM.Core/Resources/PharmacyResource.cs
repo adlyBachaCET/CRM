@@ -34,11 +34,16 @@ namespace CRM.Core.Models
         public int PostalCode { get; set; }
         public int IdPotentiel { get; set; }
 
-        public string NamePotentiel { get; set; }
+        public PotentielPharmacy PotentielPharmacy { get; set; }
 
         public string FirstNameOwner { get; set; }
         public string LastNameOwner { get; set; }
         public string Email { get; set; }
 
+    }
+    public partial class PotentielPharmacy
+    {
+        public int IdPotentiel { get; set; }
+        public string NamePotentiel { get; set; }
     }
 }
