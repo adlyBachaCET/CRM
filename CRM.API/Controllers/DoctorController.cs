@@ -726,24 +726,34 @@ namespace CRM_API.Controllers
                     var DoctorResource = _mapperService.Map<Doctor, DoctorResource>(Doctors);
                     var Potentiel = await _PotentielService.GetById(Doctors.IdPotentiel);
                     PotentielDoctor PotentielDoctor = new PotentielDoctor();
-                    PotentielDoctor.IdPotentiel = Potentiel.IdPotentiel;
-                    PotentielDoctor.NamePotentiel = Potentiel.Name;
-                    DoctorResource.Potentiel = PotentielDoctor;
+                    if (Potentiel != null)
+                    {
+                        PotentielDoctor.IdPotentiel = Potentiel.IdPotentiel;
+                        PotentielDoctor.NamePotentiel = Potentiel.Name;
+                        DoctorResource.Potentiel = PotentielDoctor;
+                    }
+                    List<Specialities> SpecialitiesList = new List<Specialities>();
 
                     var Specialty1 = await _SpecialtyService.GetById(Doctors.IdSpecialty1);
                     Specialities Specialities1 = new Specialities();
-                    Specialities1.IdSpecialty = Specialty1.IdSpecialty;
-                    Specialities1.NameSpecialty = Specialty1.Name;
-                    Specialities1.Abr = Specialty1.Abreviation;
+                    if (Specialty1 != null)
+                    {
+                        Specialities1.IdSpecialty = Specialty1.IdSpecialty;
+                        Specialities1.NameSpecialty = Specialty1.Name;
+                        Specialities1.Abr = Specialty1.Abreviation;
+
+                    }
                     Specialities Specialities2 = new Specialities();
 
                     var Specialty2 = await _SpecialtyService.GetById(Doctors.IdSpecialty2);
+                    if (Specialty2 != null) { 
                     Specialities2.IdSpecialty = Specialty2.IdSpecialty;
                     Specialities2.NameSpecialty = Specialty2.Name;
                     Specialities2.Abr = Specialty2.Abreviation;
-                    List<Specialities> SpecialitiesList = new List<Specialities>();
+                        SpecialitiesList.Add(Specialities2);
+
+                    }
                     SpecialitiesList.Add(Specialities1);
-                    SpecialitiesList.Add(Specialities2);
                     DoctorResource.Specialities = SpecialitiesList;
                     DoctorListObject.Doctor = DoctorResource;
                     var TagsDoctor = await _TagsDoctorService.GetByIdActif(Id);

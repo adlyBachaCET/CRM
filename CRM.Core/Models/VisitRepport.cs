@@ -25,6 +25,8 @@ namespace CRM.Core.Models
         public string Accompaniement { get; set; }
         public string InfoAccompaniement { get; set; }
         public string Competitiveintelligence { get; set; }
+        public string Commentaire { get; set; }
+       // public string Competitiveintelligence { get; set; }
 
         public string Objectif { get; set; }
         public string ObjectifNextVisit { get; set; }
