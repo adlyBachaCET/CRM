@@ -122,7 +122,7 @@ namespace CRM_API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<PharmacyResource>> CreatePharmacy([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token,
+        public async Task<ActionResult<PharmacyObjectList>> CreatePharmacy([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token,
        SaveAddPharmacyResource SaveAddPharmacyResource)
         {
                      
@@ -209,23 +209,31 @@ namespace CRM_API.Controllers
                     var PhoneResource = _mapperService.Map<Phone, PhoneResource>(NewPhone);
                     PhoneResourceOld = PhoneResource;
                 }
-                var genericResult = new { Phones = PhoneResourceOld, Pharmacy = PharmacyResource };
+            var PharmacyObject = await PharmacyById(PharmacyResource.IdPharmacy);
 
 
-                return Ok(genericResult);
+            return Ok(PharmacyObject);
             
               
             }
         [HttpGet("Phone/{Number}")]
-        public async Task<ActionResult<PharmacyResource>> GetPharmacysNumber([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token,
+        public async Task<ActionResult<PharmacyObjectList>> GetPharmacysNumber([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token,
       int Number)
         {
             try
             {
+            
+                List<PharmacyObjectList> PharmacyObjectList = new List<PharmacyObjectList>();
+
                 var Employe = await _PharmacyService.GetByExistantPhoneNumberActif(Number);
                 if (Employe == null) return NotFound();
+                foreach (var item in Employe)
+                {
+                    var Pharmacy = await PharmacyById(item.IdPharmacy);
+                    PharmacyObjectList.Add(Pharmacy);
+                }
                 // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
-                return Ok(Employe);
+                return Ok(PharmacyObjectList);
             }
             catch (Exception ex)
             {
@@ -233,15 +241,23 @@ namespace CRM_API.Controllers
             }
         }
         [HttpPost("NearBy")]
-        public async Task<ActionResult<PharmacyResource>> GetPharmacysNumber([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token,
+        public async Task<ActionResult<PharmacyObjectList>> GetPharmacysNumber([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token,
       Nearby Nearby)
         {
             try
             {
+          
+                List<PharmacyObjectList> PharmacyObjectList = new List<PharmacyObjectList>();
+
                 var Employe = await _PharmacyService.GetByNearByActif(Nearby.Locality1, Nearby.Locality2, Nearby.CodePostal);
                 if (Employe == null) return NotFound();
+                foreach (var item in Employe)
+                {
+                    var Pharmacy = await PharmacyById(item.IdPharmacy);
+                    PharmacyObjectList.Add(Pharmacy);
+                }
                 // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
-                return Ok(Employe);
+                return Ok(PharmacyObjectList);
             }
             catch (Exception ex)
             {
@@ -249,15 +265,23 @@ namespace CRM_API.Controllers
             }
         }
         [HttpGet]
-        public async Task<ActionResult<PharmacyResource>> GetAllPharmacys([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token
+        public async Task<ActionResult<PharmacyObjectList>> GetAllPharmacys([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token
       )
         {
             try
             {
-                var Employe = await _PharmacyService.GetAll();
+   
+                List<PharmacyObjectList> PharmacyObjectList = new List<PharmacyObjectList>();
+
+                var Employe = await _PharmacyService.GetAllActif();
                 if (Employe == null) return NotFound();
+                foreach (var item in Employe)
+                {
+                    var Pharmacy = await PharmacyById(item.IdPharmacy);
+                    PharmacyObjectList.Add(Pharmacy);
+                }
                 // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
-                return Ok(Employe);
+                return Ok(PharmacyObjectList);
             }
             catch (Exception ex)
             {
@@ -267,7 +291,7 @@ namespace CRM_API.Controllers
 
 
         [HttpGet("Assigned")]
-        public async Task<ActionResult<PharmacyResource>> GetPharmacysAssigned([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token
+        public async Task<ActionResult<PharmacyObjectList>> GetPharmacysAssigned([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token
       )
         {
             try
@@ -285,7 +309,7 @@ namespace CRM_API.Controllers
 
 
         [HttpGet("Actif")]
-        public async Task<ActionResult<PharmacyResource>> GetAllActifPharmacys([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token
+        public async Task<ActionResult<PharmacyObjectList>> GetAllActifPharmacys([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token
       )
         {
             try
@@ -301,7 +325,7 @@ namespace CRM_API.Controllers
             }
         }
         [HttpGet("InActif")]
-        public async Task<ActionResult<PharmacyResource>> GetAllInactifPharmacys([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token
+        public async Task<ActionResult<PharmacyObjectList>> GetAllInactifPharmacys([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token
       )
         {
             try
@@ -316,9 +340,41 @@ namespace CRM_API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public async Task<PharmacyObjectList> PharmacyById(int Id)
+        {
+            PharmacyObjectList PharmacyProfile = new PharmacyObjectList();
+            
+
+
+                var Pharmacys = await _PharmacyService.GetById(Id);
+
+                var PharmacyResource = _mapperService.Map<Pharmacy, PharmacyResource>(Pharmacys);
+
+                PharmacyProfile.Pharmacy = PharmacyResource;
+
+
+
+
+                var Phone = await _PhoneService.GetByIdPharmacy(Id);
+                List<PhoneResource> PhoneResources = new List<PhoneResource>();
+
+                foreach (var item in Phone)
+                {
+                    var Bu = _mapperService.Map<Phone, PhoneResource>(item);
+
+                    if (Bu != null)
+                    {
+                        PhoneResources.Add(Bu);
+                    }
+                }
+                PharmacyProfile.Phone = PhoneResources;
+
+            return PharmacyProfile;
+        }
 
         [HttpGet("{Id}")]
-        public async Task<ActionResult<DoctorProfile>> GetPharmacyById([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token,
+        public async Task<ActionResult<PharmacyProfile>> GetPharmacyById([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token,
       int Id)
         {
             PharmacyProfile PharmacyProfile = new PharmacyProfile();
@@ -451,7 +507,7 @@ namespace CRM_API.Controllers
             }
         }
         [HttpPut("{Id}")]
-        public async Task<ActionResult<PharmacyResource>> UpdatePharmacy([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token,
+        public async Task<ActionResult<PharmacyObjectList>> UpdatePharmacy([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token,
       int Id, SavePharmacyResource SavePharmacyResource)
         {
     
@@ -533,8 +589,8 @@ namespace CRM_API.Controllers
             var PharmacyUpdated = await _PharmacyService.GetById(Id);
 
             var PharmacyResourceUpdated = _mapperService.Map<Pharmacy, PharmacyResource>(PharmacyUpdated);
-
-            return Ok(PharmacyResourceUpdated);
+            var PharmacyUpdatedNew = await PharmacyById(PharmacyResourceUpdated.IdPharmacy);
+            return Ok(PharmacyUpdatedNew);
            
         }
         [HttpPut("Approuve/{Id}")]
@@ -561,8 +617,8 @@ namespace CRM_API.Controllers
                 var PharmacyUpdated = await _PharmacyService.GetById(Id);
 
                 var PharmacyResourceUpdated = _mapperService.Map<Pharmacy, PharmacyResource>(PharmacyUpdated);
-
-                return Ok(PharmacyResourceUpdated);
+                var PharmacyUpdatedNew = await PharmacyById(PharmacyResourceUpdated.IdPharmacy);
+                return Ok(PharmacyUpdatedNew);
             }
             else
             {
@@ -596,8 +652,8 @@ namespace CRM_API.Controllers
                 var PharmacyUpdated = await _PharmacyService.GetById(Id);
 
                 var PharmacyResourceUpdated = _mapperService.Map<Pharmacy, PharmacyResource>(PharmacyUpdated);
-
-                return Ok(PharmacyResourceUpdated);
+                var PharmacyUpdatedNew = await PharmacyById(PharmacyResourceUpdated.IdPharmacy);
+                return Ok(PharmacyUpdatedNew);
             }
             else
             {

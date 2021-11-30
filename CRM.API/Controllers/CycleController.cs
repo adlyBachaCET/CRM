@@ -836,6 +836,29 @@ namespace CRM_API.Controllers
             return Ok(new { TargetResources = TargetIds, CycleNames = CycleNames });
 
         }
+        [HttpGet("AllTargets")]
+        public async Task<ActionResult> AllTargets([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
+        string Token)
+        {
+            var claims = _UserService.getPrincipal(Token);
+            var Role = claims.FindFirst("Role").Value;
+            var IdUser = int.Parse(claims.FindFirst("Id").Value);
+            var exp = DateTime.Parse(claims.FindFirst("Exipres On").Value);
+            var Targets = await _TargetService.GetTargets();
+            List<int> TargetIds = new List<int>();
+            List<string> CycleNames = new List<string>();
+
+            foreach (var item in Targets)
+            {
+                TargetIds.Add(item.NumTarget);
+                var Cycle = await _CycleService.GetById(item.IdCycle);
+                CycleNames.Add(Cycle.Name);
+
+            }
+
+            return Ok(new { TargetResources = TargetIds, CycleNames = CycleNames });
+
+        }
         /// <summary>
         ///  This function gets the cycle by id
         /// </summary>

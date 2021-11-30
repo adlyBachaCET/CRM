@@ -19,5 +19,14 @@ namespace CRM.Core.Models
         public List<ProductResource> Product { get; set; }
 
     }
+    public partial class PharmacyObjectList
+    {
 
+        public PharmacyResource Pharmacy { get; set; }
+
+        public List<PhoneResource> Phone { get; set; }
+
+
+
+    }
 }

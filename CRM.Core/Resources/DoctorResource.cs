@@ -5,7 +5,7 @@ namespace CRM.Core.Models
 {
     public partial class DoctorResource
     {
-   
+
         public int IdDoctor { get; set; }
         public int Version { get; set; }
         public Status Status { get; set; }
@@ -20,19 +20,27 @@ namespace CRM.Core.Models
         public int? NbPatientsDay { get; set; }
         public int? LinkedId { get; set; }
         public string Email { get; set; }
+        public string Reference { get; set; }
 
         public int VersionLink { get; set; }
         public Status StatusLink { get; set; }
         public int? ManagerApprouved { get; set; }
-        public int IdSpecialty1 { get; set; }
-        public string NameSpecialty1 { get; set; }
-        public int IdSpecialty2 { get; set; }
-        public string NameSpecialty2 { get; set; }
-        public string Reference { get; set; }
+        public PotentielDoctor Potentiel { get; set; }
 
+        public List<Specialities> Specialities { get; set; }
 
+    }
+    public partial class PotentielDoctor
+    {
         public int IdPotentiel { get; set; }
         public string NamePotentiel { get; set; }
+    }
+    public partial class Specialities
+    {
+        public int IdSpecialty { get; set; }
+        public string NameSpecialty { get; set; }
+        public string Abr { get; set; }
+
 
 
     }

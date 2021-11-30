@@ -196,6 +196,23 @@ namespace CRM.Services.Services
         {
             throw new NotImplementedException();
         }
+
+        public async Task<IEnumerable<Pharmacy>> GetMyPharmacysWithoutAppointment(int Id)
+        {
+          //  var BuUser = await _unitOfWork.BuUsers.SingleOrDefault(i => i.IdUser == Id && i.Active == 0);
+
+      
+            List<Pharmacy> PharmacysWithoutAppointment = new List<Pharmacy>();
+            var list1 = await _unitOfWork.Appointements.Find(i => i.Pharmacy.Active == 0 && i.Pharmacy != null && i.IdUser == Id);
+            foreach (var item in list1)
+            {
+                var Pharmacy = await _unitOfWork.Pharmacys.SingleOrDefault(i => i.Active == 0 && i.IdPharmacy == item.IdPharmacy);
+                PharmacysWithoutAppointment.Add(Pharmacy);
+            }
+            var AllPharmacys = await _unitOfWork.Pharmacys.Find(i => i.Status == Status.Approuved && i.Active == 0);
+            var result = AllPharmacys.Except(PharmacysWithoutAppointment).ToList();
+            return result;
+        }
         //public Task<Pharmacy> CreatePharmacy(Pharmacy newPharmacy)
         //{
         //    throw new NotImplementedException();

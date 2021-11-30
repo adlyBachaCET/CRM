@@ -58,7 +58,7 @@ namespace CRM.Services.Services
           foreach (var item in Potentiels) { 
             foreach (var doc in Doctors)
             {
-                var Pot = await _unitOfWork.Potentiels.SingleOrDefault(i => i.IdPotentiel == doc.IdPotentiel && i.Active == 0);
+                var Pot = await _unitOfWork.Potentiels.SingleOrDefault(i => i.IdPotentiel == doc.Potentiel.IdPotentiel && i.Active == 0);
                 Potentiels.Add(Pot);
             }
             }
@@ -188,7 +188,23 @@ namespace CRM.Services.Services
             return
                 DistinctTarget;
         }
-        public async Task Update(Target CycleSectorWeekDoctorsToBeUpdated, Target CycleSectorWeekDoctors)
+        public async Task<IEnumerable<Target>> GetTargets()
+        {
+            var Target = await _unitOfWork.Target.Find(i => i.Active == 0
+           && (i.IdPharmacyNavigation != null
+           || i.IdDoctorNavigation != null));
+            List<Target> DistinctTarget = new List<Target>();
+            foreach (var item in Target)
+            {
+                if (!DistinctTarget.Contains(item))
+                {
+                    DistinctTarget.Add(item);
+                }
+            }
+            return
+                DistinctTarget;
+        }
+            public async Task Update(Target CycleSectorWeekDoctorsToBeUpdated, Target CycleSectorWeekDoctors)
         {
             CycleSectorWeekDoctors.Active = 1;
             await _unitOfWork.CommitAsync();

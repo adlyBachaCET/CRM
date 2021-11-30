@@ -26,5 +26,6 @@ namespace CRM.Core.Services
         Task UpdateWeek(WeekUpdate WeekUpdate);
         Task<User> GetUserByNumTarget(int id);
         Task RemoveAll();
+        Task<IEnumerable<Target>> GetTargets();
     }
 }
