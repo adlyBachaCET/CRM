@@ -285,13 +285,13 @@ namespace CRM_API.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpGet("Type/{TypeName}")]
+        [HttpGet("Type/{Id}")]
         public async Task<ActionResult<List<LocationResource>>> GetAllLocationsByType([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token,
-            int TypeName)
+            int Id)
         {
             try
             {
-                var Locations = await _LocationService.GetAllByType(TypeName);
+                var Locations = await _LocationService.GetAllByType(Id);
                 if (Locations == null) return NotFound();
                 List<LocationResource> LocationResources = new List<LocationResource>();
                 foreach (var item in Locations)
