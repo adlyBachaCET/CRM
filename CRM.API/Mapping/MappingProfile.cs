@@ -79,12 +79,7 @@ namespace CRM_API.Mapping
             CreateMap<Participant, SaveParticipantResource>();
             CreateMap<SaveParticipantResource, Participant>();
             CreateMap<Participant, IEnumerable<ParticipantResource>>();
-            //RequestDoctor
-            CreateMap<RequestDoctor, RequestDoctorResource>();
-            CreateMap<RequestDoctor, SaveRequestDoctorResource>();
-            CreateMap<RequestDoctor, SaveRequestDoctorResource>();
-            CreateMap<SaveRequestDoctorResource, RequestDoctor>();
-            CreateMap<RequestDoctor, IEnumerable<RequestDoctorResource>>();
+
             //Objection
             CreateMap<Objection, ObjectionResource>();
             CreateMap<Objection, SaveObjectionResource>();
@@ -212,7 +207,6 @@ namespace CRM_API.Mapping
             CreateMap<IEnumerable<RequestRp>, IEnumerable<RequestRpResource>>();
             CreateMap<IEnumerable<Commande>, IEnumerable<CommandeResource>>();
             CreateMap<IEnumerable<Objection>, IEnumerable<ObjectionResource>>();
-            CreateMap<IEnumerable<RequestDoctor>, IEnumerable<RequestDoctorResource>>();
             CreateMap<IEnumerable<BusinessUnit>, IEnumerable<BusinessUnitResource>>();
             CreateMap<IEnumerable<LocationDoctor>, IEnumerable<LocationDoctorResource>>();
             CreateMap<IEnumerable<Phone>, IEnumerable<PhoneResource>>();
@@ -227,7 +221,6 @@ namespace CRM_API.Mapping
             CreateMap< IEnumerable<RequestRpResource> ,IEnumerable<RequestRp>>();
             CreateMap<IEnumerable<CommandeResource> ,IEnumerable<Commande>>();
             CreateMap < IEnumerable < ObjectionResource > ,IEnumerable<Objection>>();
-            CreateMap<IEnumerable<RequestDoctorResource> ,IEnumerable<RequestDoctor>>();
             CreateMap < IEnumerable < BusinessUnitResource > ,IEnumerable <BusinessUnit>>();
             CreateMap< IEnumerable < LocationDoctorResource > ,IEnumerable <LocationDoctor>>();
             CreateMap < IEnumerable < PhoneResource > ,IEnumerable <Phone>>();

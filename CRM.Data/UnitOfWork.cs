@@ -29,7 +29,6 @@ namespace CRM.Data
         private IBrickRepository _BrickRepository;
         private IVisitReportRepository _VisitReportRepository;
         private IVisitRepository _VisitRepository;
-        private IRequestDoctorRepository _RequestDoctorRepository;
 
         private IBuDoctorRepository _BuDoctorRepository;
         private IBusinessUnitRepository _BusinessUnitRepository;
@@ -74,7 +73,6 @@ namespace CRM.Data
         public IBrickRepository Bricks => _BrickRepository = _BrickRepository ?? new BrickRepository(_context);
         public IVisitReportRepository VisitReports => _VisitReportRepository = _VisitReportRepository ?? new VisitReportRepository(_context);
         public IVisitRepository Visits => _VisitRepository = _VisitRepository ?? new VisitRepository(_context);
-        public IRequestDoctorRepository RequestDoctors => _RequestDoctorRepository = _RequestDoctorRepository ?? new RequestDoctorRepository(_context);
 
         public IObjectionRepository Objections => _ObjectionRepository = _ObjectionRepository ?? new ObjectionRepository(_context);
         public IVisitUserRepository VisitUsers => _VisitUserRepository = _VisitUserRepository ?? new VisitUserRepository(_context);

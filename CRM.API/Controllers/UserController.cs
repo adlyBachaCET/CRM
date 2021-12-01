@@ -35,7 +35,6 @@ namespace CRM_API.Controllers
 
         private readonly IBuUserService _BuUserService;
         private readonly IBusinessUnitService _BusinessUnitService;
-        private readonly IRequestDoctorService _RequestDoctorService;
         private readonly IObjectionService _ObjectionService;
 
         private readonly IVisitUserService _VisitUserService;
@@ -49,13 +48,12 @@ namespace CRM_API.Controllers
         private readonly IMapper _mapperService;
         public UserController(IParticipantService ParticipantService, IRequestRpService RequestRpService, 
             IObjectionService ObjectionService, IVisitService VisitService, IVisitUserService VisitUserService,
-            IRequestDoctorService RequestDoctorService, IBusinessUnitService BusinessUnitService,
+             IBusinessUnitService BusinessUnitService,
            ILocalityService LocalityService, IBrickService BrickService,
             IBuUserService BuUserService, IUserService UserService, ISupportService SupportService,
             IPhoneService PhoneService, ICommandeService CommandeService,
             IMapper mapper)
         {
-            _RequestDoctorService = RequestDoctorService;
             _VisitUserService = VisitUserService;
             _VisitService = VisitService;
             _ParticipantService = ParticipantService;
@@ -248,19 +246,7 @@ namespace CRM_API.Controllers
                 }
             }
             Profile.Objection = ObjectionResources;
-            var RequestDoctor = await _RequestDoctorService.GetByIdActifUser(Id);
-            //var Users = _mapperService.Map< IEnumerable < User >, IEnumerable<SaveUserResource>>(Delegates);
-            List<RequestDoctorResource> RequestDoctorResources = new List<RequestDoctorResource>();
-            foreach (var item in RequestDoctor)
-            {
-                var NewRequestDoctor = _mapperService.Map<RequestDoctor, RequestDoctorResource>(item);
 
-                if (NewRequestDoctor != null)
-                {
-                    RequestDoctorResources.Add(NewRequestDoctor);
-                }
-            }
-            Profile.RequestDoctor = RequestDoctorResources;
 
             var Visits = await _VisitUserService.GetAllById(Id);
             List<Visit> VisitList = new List<Visit>();

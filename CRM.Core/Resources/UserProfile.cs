@@ -11,7 +11,6 @@ namespace CRM.Core.Models
 
         public SaveBusinessUnitResource BusinessUnit { get; set; }
         public List<UserResource> UserOfBu { get; set; }
-        public List<RequestDoctorResource> RequestDoctor { get; set; }
 
         public List<ObjectionResource> Objection { get; set; }
         public List<VisitResource> Visit { get; set; }

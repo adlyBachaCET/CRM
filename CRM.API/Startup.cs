@@ -72,7 +72,6 @@ namespace CRM_API
             services.AddScoped<IVisitReportService, VisitReportService>();
             services.AddScoped<IVisitService, VisitService>();
             services.AddScoped<IObjectionService, ObjectionService>();
-            services.AddScoped<IRequestDoctorService, RequestDoctorService>();
 
             services.AddScoped<IBrickService, BrickService>();
             services.AddScoped<IPhoneService, PhoneService>();

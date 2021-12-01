@@ -46,7 +46,6 @@ namespace CRM_API.Controllers
         private readonly ITagsDoctorService _TagsDoctorService;
         private readonly ITagsService _TagsService;
         private readonly IObjectionService _ObjectionService;
-        private readonly IRequestDoctorService _RequestDoctorService;
         private readonly IProductPharmacyService _ProductPharmacyService;
         private readonly IProductService _ProductService;
 
@@ -61,7 +60,7 @@ namespace CRM_API.Controllers
              IProductPharmacyService ProductPharmacyService,
             ILocationService LocationService,
             IServiceService ServiceService, IProductService ProductService,
-            IDoctorService DoctorService, IRequestDoctorService RequestDoctorService,
+            IDoctorService DoctorService,
             IPotentielService PotentielService, IObjectionService ObjectionService,
             ISpecialtyService SpecialtyService,
             IBusinessUnitService BusinessUnitService,
@@ -84,7 +83,6 @@ namespace CRM_API.Controllers
             _LocationService = LocationService;
             _TagsService = TagsService;
             _PotentielService = PotentielService;
-            _RequestDoctorService = RequestDoctorService;
             _ProductPharmacyService = ProductPharmacyService;
             _ProductService = ProductService;
             _PharmacyService = PharmacyService;
@@ -452,20 +450,8 @@ namespace CRM_API.Controllers
                     PharmacyResource.PotentielPharmacy = PotentielPharmacy;
                 }
 
-                var RequestDoctors = await _RequestDoctorService.GetByIdActifPharmacy(Id);
-                List<RequestDoctorResource> RequestDoctorResources = new List<RequestDoctorResource>();
+               
 
-                foreach (var item in RequestDoctors)
-                {
-                    var Bu = _mapperService.Map<RequestDoctor, RequestDoctorResource>(item);
-
-                    if (Bu != null)
-                    {
-                        RequestDoctorResources.Add(Bu);
-                    }
-                }
-
-                PharmacyProfile.RequestDoctors = RequestDoctorResources;
                 var Participant = await _ParticipantService.GetAllByIdPharmacy(Id);
                 List<RequestRp> RequestRpList = new List<RequestRp>();
                 foreach (var item in Participant)

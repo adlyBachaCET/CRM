@@ -48,9 +48,7 @@ namespace CRM.Core.Models
         public string Response { get; set; }
 
         public int? Satisfaction { get; set; }
-        public StatusSatisfaction? StatusSatisfaction { get; set; }
 
-        public StatusCompletion StatusCompletion { get; set; }
     }
 
 }

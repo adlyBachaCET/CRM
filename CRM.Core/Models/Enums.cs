@@ -9,15 +9,9 @@ namespace CRM.Core.Models
         Approuved,
         Rejected,
         Pending,
-    }
-    public enum StatusSatisfaction
-    {
         Statisfied,
         NotSatisfied,
+
     }
-    public enum StatusCompletion
-    {
-        Completed,
-        NotCompleted
-    }
+
 }

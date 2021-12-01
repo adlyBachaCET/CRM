@@ -43,7 +43,6 @@ namespace CRM_API.Controllers
         private readonly ITagsDoctorService _TagsDoctorService;
         private readonly ITagsService _TagsService;
         private readonly IObjectionService _ObjectionService;
-        private readonly IRequestDoctorService _RequestDoctorService;
 
         private readonly IInfoService _InfoService;
         private readonly IPotentielService _PotentielService;
@@ -57,7 +56,7 @@ namespace CRM_API.Controllers
                         ILocationTypeService LocationTypeService,
              ILocalityService LocalityService,
             IServiceService ServiceService,
-            IDoctorService DoctorService, IRequestDoctorService RequestDoctorService,
+            IDoctorService DoctorService,
             IPotentielService PotentielService, IObjectionService ObjectionService,
             ISpecialtyService SpecialtyService,
             IBusinessUnitService BusinessUnitService,
@@ -78,7 +77,6 @@ namespace CRM_API.Controllers
             _LocationService = LocationService;
             _TagsService = TagsService;
             _PotentielService = PotentielService;
-            _RequestDoctorService = RequestDoctorService;
             _LocationTypeService = LocationTypeService;
             _ObjectionService = ObjectionService;
             _BuDoctorService = BuDoctorService;
@@ -926,18 +924,7 @@ namespace CRM_API.Controllers
 
 
 
-                    var RequestDoctors = await _RequestDoctorService.GetByIdActifDoctor(Id);
-                    List<RequestDoctorResource> RequestDoctorResources = new List<RequestDoctorResource>();
-
-                    foreach (var item in RequestDoctors)
-                    {
-                        var Bu = _mapperService.Map<RequestDoctor, RequestDoctorResource>(item);
-
-                        if (Bu != null)
-                        {
-                            RequestDoctorResources.Add(Bu);
-                        }
-                    }
+                   
 
 
                 }
@@ -1116,20 +1103,8 @@ namespace CRM_API.Controllers
                 }
                 DoctorProfile.Objection = ObjectionResources;
 
-                var RequestDoctors = await _RequestDoctorService.GetByIdActifDoctor(Id);
-                List<RequestDoctorResource> RequestDoctorResources = new List<RequestDoctorResource>();
+         
 
-                foreach (var item in RequestDoctors)
-                {
-                    var Bu = _mapperService.Map<RequestDoctor, RequestDoctorResource>(item);
-
-                    if (Bu != null)
-                    {
-                        RequestDoctorResources.Add(Bu);
-                    }
-                }
-
-                DoctorProfile.RequestDoctors = RequestDoctorResources;
                 var Participant = await _ParticipantService.GetAllByIdDoctor(Id);
                 List<RequestRp> RequestRpList = new List<RequestRp>();
                 foreach (var item in Participant)
