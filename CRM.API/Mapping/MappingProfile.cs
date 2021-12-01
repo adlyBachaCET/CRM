@@ -66,12 +66,7 @@ namespace CRM_API.Mapping
             CreateMap<SellingObjectives, SaveSellingObjectivesResource>();
             CreateMap<SaveSellingObjectivesResource, SellingObjectives>();
             CreateMap<SellingObjectives, IEnumerable<SellingObjectivesResource>>();
-            //ProductSellingObjectives
-            CreateMap<ProductSellingObjectives, ProductSellingObjectivesResource>();
-            CreateMap<ProductSellingObjectives, SaveProductSellingObjectivesResource>();
-            CreateMap<ProductSellingObjectives, SaveProductSellingObjectivesResource>();
-            CreateMap<SaveProductSellingObjectivesResource, ProductSellingObjectives>();
-            CreateMap<ProductSellingObjectives, IEnumerable<ProductSellingObjectivesResource>>();
+
             //RequestRp
             CreateMap<RequestRp, RequestRpResource>();
             CreateMap<RequestRp, SaveRequestRpResource>();

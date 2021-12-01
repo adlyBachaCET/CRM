@@ -314,7 +314,6 @@ namespace CRM_API.Controllers
                                 else
                                 {
                                     LocationDoctor.IdService = 0;
-
                                 }
 
                                 LocationDoctor.Status = Status.Approuved;

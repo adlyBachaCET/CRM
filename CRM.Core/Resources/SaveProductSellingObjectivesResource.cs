@@ -11,7 +11,6 @@ namespace CRM.Core.Models
 
         public int Quantity { get; set; }
         
-        public int? IdDoctor { get; set; }
    
      
 

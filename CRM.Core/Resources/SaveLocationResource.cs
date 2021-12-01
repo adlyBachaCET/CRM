@@ -5,11 +5,11 @@ namespace CRM.Core.Models
 {
     public partial class SaveLocationResource 
     {
-        public LocationAdd LocationAdd { get; set; }
+        public LocationAdd LocationDetails { get; set; }
 
 
 
-        public List<SaveServiceResource> SaveServiceResource { get; set; }
+        public List<SaveServiceResource> ServiceList { get; set; }
     }
 
     public class LocationAdd

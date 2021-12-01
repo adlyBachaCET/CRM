@@ -18,15 +18,14 @@ namespace CRM.Core.Models
         public DateTime Start { get; set; }
         public DateTime End { get; set; }
         public string Description { get; set; }
-        public virtual ICollection<ProductSellingObjectives> ProductSellingObjectives { get; set; }
 
         public int? IdPharmacy { get; set; }
-        public int VersionPharmacy { get; set; }
-        public Status StatusPharmacy { get; set; }
+        public int? VersionPharmacy { get; set; }
+        public Status? StatusPharmacy { get; set; }
         public virtual Pharmacy Pharmacy { get; set; }
         public int? IdDoctor { get; set; }
-        public int VersionDoctor { get; set; }
-        public Status StatusDoctor { get; set; }
+        public int? VersionDoctor { get; set; }
+        public Status? StatusDoctor { get; set; }
         public virtual Doctor Doctor { get; set; }
 
         public int? IdUser { get; set; }
@@ -34,6 +33,10 @@ namespace CRM.Core.Models
         public Status StatusUser { get; set; }
         public virtual User User { get; set; }
 
-
+        public int IdProduct { get; set; }
+        public Status StatusProduct { get; set; }
+        public int VersionProduct { get; set; }
+        public virtual Product IdProductNavigation { get; set; }
+        public int Quantity { get; set; }
     }
 }

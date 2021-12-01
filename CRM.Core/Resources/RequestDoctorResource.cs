@@ -24,6 +24,8 @@ namespace CRM.Core.Models
         public int? IdPharmacy { get; set; }
         public int? VersionPharmacy { get; set; }
         public Status? StatusPharmacy { get; set; }
+        public StatusRequest StatusRequest { get; set; }
+        public string Commentary { get; set; }
 
 
     }

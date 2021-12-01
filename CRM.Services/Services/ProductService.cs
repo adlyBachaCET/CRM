@@ -31,7 +31,7 @@ namespace CRM.Services.Services
         public async Task<List<SellingObjectives>> GetSellingObjectivesByIdProduct(int? id)
         {
             List<SellingObjectives> SellingObjectives = new List<SellingObjectives>();
-            var SOP = await _unitOfWork.ProductSellingObjectivess.Find(i => i.IdProduct == id && i.Active == 0);
+            var SOP = await _unitOfWork.SellingObjectivess.Find(i => i.IdProduct == id && i.Active == 0);
             foreach (var item in SOP)
             {
                 var SellingObjective = await _unitOfWork.SellingObjectivess.SingleOrDefault(i => i.IdSellingObjectives == item.IdSellingObjectives);

@@ -31,7 +31,6 @@ namespace CRM.Core.Models
         public Status? StatusBu { get; set; }
         public BusinessUnit Bu { get; set; }
         public virtual ICollection<ProductFile> ProductFile { get; set; }
-        public virtual ICollection<ProductSellingObjectives> ProductSellingObjectives { get; set; }
         public virtual ICollection<ProductPharmacy> ProductPharmacy { get; set; }
 
         public ICollection<ProductVisitReport> ProductVisitReport { get; set; }

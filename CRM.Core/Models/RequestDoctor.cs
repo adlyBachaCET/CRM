@@ -9,6 +9,9 @@ namespace CRM.Core.Models
         public int IdRequestDoctor { get; set; }
         public int Version { get; set; }
         public Status Status { get; set; }
+        public string Commentary { get; set; }
+
+        public StatusRequest StatusRequest { get; set; }
         public int? CreatedBy { get; set; }
         public int? UpdatedBy { get; set; }
         public DateTime? UpdatedOn { get; set; }
@@ -32,5 +35,9 @@ namespace CRM.Core.Models
 
 
 
+    }
+    public enum StatusRequest
+    {
+        Open,Closed
     }
 }

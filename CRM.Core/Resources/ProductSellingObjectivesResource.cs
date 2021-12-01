@@ -16,7 +16,7 @@ namespace CRM.Core.Models
         public int NameSellingObjectives{ get; set; }
         public int? CreatedBy { get; set; }
         public int? UpdatedBy { get; set; }
-        public virtual SellingObjectives IdSellingObjectivesNavigation { get; set; }
+        public virtual SellingObjectivesResource IdSellingObjectivesNavigation { get; set; }
         public virtual ProductResource IdProductNavigation { get; set; }
         public Status Status { get; set; }
         public DateTime? CreatedOn { get; set; }
@@ -24,12 +24,7 @@ namespace CRM.Core.Models
         public int Active { get; set; }
         public int Quantity { get; set; }
        
-        
-        public int? IdDoctor { get; set; }
-   
-        public int VersionDoctor { get; set; }
-        public Status StatusDoctor { get; set; }
-        public virtual DoctorListObject Doctor { get; set; }
+
 
 
     }

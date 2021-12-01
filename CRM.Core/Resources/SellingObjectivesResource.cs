@@ -20,18 +20,23 @@ namespace CRM.Core.Models
         public string Description { get; set; }
 
         public int? IdPharmacy { get; set; }
-        public int VersionPharmacy { get; set; }
-        public Status StatusPharmacy { get; set; }
-        public virtual PharmacyObjectList Pharmacy { get; set; }
+        public int? VersionPharmacy { get; set; }
+        public Status? StatusPharmacy { get; set; }
+        public virtual PharmacyResource Pharmacy { get; set; }
         public int? IdDoctor { get; set; }
-        public int VersionDoctor { get; set; }
-        public Status StatusDoctor { get; set; }
-        public virtual DoctorListObject Doctor { get; set; }
+        public int? VersionDoctor { get; set; }
+        public Status? StatusDoctor { get; set; }
+        public virtual DoctorResource Doctor { get; set; }
 
         public int? IdUser { get; set; }
         public int VersionUser { get; set; }
         public Status StatusUser { get; set; }
         public virtual UserResource User { get; set; }
+        public int IdProduct { get; set; }
+        public Status StatusProduct { get; set; }
+        public int VersionProduct { get; set; }
+        public virtual ProductResource IdProductNavigation { get; set; }
+        public int Quantity { get; set; }
 
 
     }

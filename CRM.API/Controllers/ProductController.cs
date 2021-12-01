@@ -171,6 +171,34 @@ namespace CRM_API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [HttpGet("SellingObjectives/{Id}")]
+        public async Task<ActionResult<List<SellingObjectivesResource>>> GetSellingObjectivesByIdProduct([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
+        string Token,int Id)
+        {
+            try
+            {
+                var claims = _UserService.getPrincipal(Token);
+                var Role = claims.FindFirst("Role").Value;
+                var IdUser = int.Parse(claims.FindFirst("Id").Value);
+                var exp = DateTime.Parse(claims.FindFirst("Exipres On").Value);
+                var SellingObjectives = await _ProductService.GetSellingObjectivesByIdProduct(Id);
+                List<SellingObjectivesResource> SellingObjectivesResources = new List<SellingObjectivesResource>();
+                foreach (var item in SellingObjectives)
+                {
+                    var SellingObjectivesResource = _mapperService.Map<SellingObjectives, SellingObjectivesResource>(item);
+                  //  var BusinessUnit = _mapperService.Map<BusinessUnit, BusinessUnitResource>(Bu);
+
+                   //SellingObjectivesResource.Bu = BusinessUnit;
+                    SellingObjectivesResources.Add(SellingObjectivesResource);
+                }
+                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
+                return Ok(SellingObjectivesResources);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
         [HttpGet("{Id}")]
         public async Task<ActionResult<ProductResource>> GetProductById([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
@@ -189,7 +217,17 @@ namespace CRM_API.Controllers
                 var BusinessUnit = _mapperService.Map<BusinessUnit, BusinessUnitResource>(Bu);
 
                 ProductRessource.Bu = BusinessUnit;
-                return Ok(ProductRessource);
+                var SellingObjectives = await _ProductService.GetSellingObjectivesByIdProduct(Id);
+                List<SellingObjectivesResource> SellingObjectivesResources = new List<SellingObjectivesResource>();
+                foreach (var item in SellingObjectives)
+                {
+                    var SellingObjectivesResource = _mapperService.Map<SellingObjectives, SellingObjectivesResource>(item);
+                    //  var BusinessUnit = _mapperService.Map<BusinessUnit, BusinessUnitResource>(Bu);
+
+                    //SellingObjectivesResource.Bu = BusinessUnit;
+                    SellingObjectivesResources.Add(SellingObjectivesResource);
+                }
+                return Ok(new { ProductRessource = ProductRessource , SellingObjectivesResources = SellingObjectivesResources });
             }
             catch (Exception ex)
             {

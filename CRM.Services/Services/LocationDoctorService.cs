@@ -51,7 +51,11 @@ namespace CRM.Services.Services
             return
                 await _unitOfWork.LocationDoctors.GetByIdActif(id, IdLocation);
         }
-   
+        public async Task<LocationDoctor> GetByIdLocationAndService(int id, int IdLocation)
+        {
+            return
+                await _unitOfWork.LocationDoctors.SingleOrDefault(i=>i.IdService==id&& i.IdLocation==IdLocation && i.Active ==0);
+        }
         public async Task Update(LocationDoctor EstablishmentDoctorToBeUpdated, LocationDoctor EstablishmentDoctor)
         {
             EstablishmentDoctor.Active = 1;

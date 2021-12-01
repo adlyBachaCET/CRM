@@ -40,7 +40,22 @@ namespace CRM.Services.Services
             return
                            await _unitOfWork.Locations.GetAll();
         }
-
+        public async Task<IEnumerable<Location>> GetAllByType(string TypeName)
+        {
+            return
+                           await _unitOfWork.Locations.Find(i=>i.NameLocationType==TypeName&& i.Active==0);
+        }
+        public async Task<IEnumerable<Service>> GetAllServices(int Id)
+        {
+            List<Service> Services = new List<Service>();
+            var ServicesLocation = await _unitOfWork.LocationDoctors.Find(i => i.IdLocation == Id && i.IdDoctor==null && i.Active == 0);
+            foreach(var item in ServicesLocation)
+            {
+                var Service = await _unitOfWork.Services.GetByIdActif(item.IdService);
+                Services.Add(Service);
+            }
+            return Services;
+        }
         /* public async Task Delete(Establishment Establishment)
          {
              _unitOfWork.Establishments.Remove(Establishment);

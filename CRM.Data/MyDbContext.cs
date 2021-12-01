@@ -25,7 +25,6 @@ namespace CRM.Data
 
         public virtual DbSet<BuFile> BuFile { get; set; }
         public virtual DbSet<ProductFile> ProductFile { get; set; }
-        public virtual DbSet<ProductSellingObjectives> ProductSellingObjectives { get; set; }
         public virtual DbSet<SellingObjectives> SellingObjectives { get; set; }
         public virtual DbSet<ProductPharmacy> ProductPharmacy { get; set; }
         public virtual DbSet<Product> Product { get; set; }
@@ -383,26 +382,7 @@ namespace CRM.Data
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ProductPharmacy_Pharmacy");
             });
-            modelBuilder.Entity<ProductSellingObjectives>(entity =>
-            {
-                entity.HasKey(e => new { e.IdSellingObjectives, e.StatusSellingObjectives, e.VersionSellingObjectives, e.StatusProduct, e.VersionProduct, e.IdProduct });
 
-                entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
-
-                entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
-
-                entity.HasOne(d => d.IdProductNavigation)
-                    .WithMany(p => p.ProductSellingObjectives)
-                    .HasForeignKey(d => new { d.IdProduct, d.StatusProduct, d.VersionProduct })
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ProductSellingObjectives_Product");
-
-                entity.HasOne(d => d.IdSellingObjectivesNavigation)
-                    .WithMany(p => p.ProductSellingObjectives)
-                    .HasForeignKey(d => new { d.IdSellingObjectives, d.StatusSellingObjectives, d.VersionSellingObjectives })
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ProductSellingObjectives_Objectives");
-            });
             modelBuilder.Entity<MessageUser>(entity =>
             {
                 entity.HasKey(e => new { e.IdUser1, e.StatusUser1, e.VersionUser1,
@@ -1159,7 +1139,10 @@ namespace CRM.Data
                 .WithMany()
                 .HasForeignKey(d => new { d.IdDoctor, d.StatusDoctor, d.VersionDoctor })
                 .HasConstraintName("FK_SellingObjectives_Doctor").IsRequired(false);
-
+                entity.HasOne(d => d.IdProductNavigation)
+              .WithMany()
+              .HasForeignKey(d => new { d.IdProduct, d.StatusProduct, d.VersionProduct })
+              .HasConstraintName("FK_SellingObjectives_Product").IsRequired(false);
 
 
             });

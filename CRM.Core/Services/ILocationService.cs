@@ -12,7 +12,8 @@ namespace CRM.Core.Services
         Task Update(Location EstablishmentToBeUpdated, Location Establishment);
         Task Delete(Location EstablishmentToBeDeleted);
         Task DeleteRange(List<Location> Establishment);
-
+        Task<IEnumerable<Service>> GetAllServices(int Id);
+        Task<IEnumerable<Location>> GetAllByType(string TypeName);
         Task<IEnumerable<Location>> GetAll();
         Task<IEnumerable<Location>> GetAllActif();
         Task<IEnumerable<Location>> GetAllInActif();

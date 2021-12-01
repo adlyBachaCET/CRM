@@ -16,6 +16,16 @@ namespace CRM.Services.Services
 
         public async Task<SellingObjectives> Create(SellingObjectives newSellingObjectives)
         {
+            if (newSellingObjectives.IdProduct != 0)
+            {
+                var Product = await _unitOfWork.Products.SingleOrDefault(a => a.IdProduct == newSellingObjectives.IdProduct && a.Active == 0);
+                newSellingObjectives.IdProduct = Product.IdProduct;
+                newSellingObjectives.VersionProduct = Product.Version;
+                newSellingObjectives.StatusProduct = Product.Status;
+                newSellingObjectives.IdProductNavigation = Product;
+
+            }
+       
             if (newSellingObjectives.IdDoctor != 0)
             {
                 var Doctor = await _unitOfWork.Doctors.SingleOrDefault(a => a.IdDoctor == newSellingObjectives.IdDoctor && a.Active == 0);
@@ -23,7 +33,13 @@ namespace CRM.Services.Services
                 newSellingObjectives.VersionDoctor = Doctor.Version;
                 newSellingObjectives.StatusDoctor = Doctor.Status;
                 newSellingObjectives.Doctor = Doctor;
-
+            }
+            else
+            {
+                newSellingObjectives.IdDoctor = null;
+                newSellingObjectives.VersionDoctor = null;
+                newSellingObjectives.StatusDoctor = null;
+                newSellingObjectives.Doctor = null;
             }
             if (newSellingObjectives.IdPharmacy != 0)
             {
@@ -32,6 +48,13 @@ namespace CRM.Services.Services
                 newSellingObjectives.VersionPharmacy = Pharmacy.Version;
                 newSellingObjectives.StatusPharmacy = Pharmacy.Status;
                 newSellingObjectives.Pharmacy = Pharmacy;
+            }
+            else
+            {
+                newSellingObjectives.IdPharmacy = null;
+                newSellingObjectives.VersionPharmacy = null;
+                newSellingObjectives.StatusPharmacy = null;
+                newSellingObjectives.Pharmacy = null;
             }
             if (newSellingObjectives.IdUser!= 0)
             {

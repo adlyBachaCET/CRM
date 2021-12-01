@@ -17,6 +17,6 @@ namespace CRM.Core.Services
         Task<IEnumerable<LocationDoctor>> GetAll();
         Task<IEnumerable<LocationDoctor>> GetAllActif();
         Task<IEnumerable<LocationDoctor>> GetAllInActif();
-
+        Task<LocationDoctor> GetByIdLocationAndService(int id, int IdLocation);
     }
 }
