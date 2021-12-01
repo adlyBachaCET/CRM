@@ -13,7 +13,7 @@ namespace CRM.Core.Services
         Task Delete(Location EstablishmentToBeDeleted);
         Task DeleteRange(List<Location> Establishment);
         Task<IEnumerable<Service>> GetAllServices(int Id);
-        Task<IEnumerable<Location>> GetAllByType(string TypeName);
+        Task<IEnumerable<Location>> GetAllByType(int TypeName);
         Task<IEnumerable<Location>> GetAll();
         Task<IEnumerable<Location>> GetAllActif();
         Task<IEnumerable<Location>> GetAllInActif();

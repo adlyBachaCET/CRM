@@ -40,10 +40,10 @@ namespace CRM.Services.Services
             return
                            await _unitOfWork.Locations.GetAll();
         }
-        public async Task<IEnumerable<Location>> GetAllByType(string TypeName)
+        public async Task<IEnumerable<Location>> GetAllByType(int TypeName)
         {
             return
-                           await _unitOfWork.Locations.Find(i=>i.NameLocationType==TypeName&& i.Active==0);
+                           await _unitOfWork.Locations.Find(i=>i.IdLocationType==TypeName&& i.Active==0);
         }
         public async Task<IEnumerable<Service>> GetAllServices(int Id)
         {

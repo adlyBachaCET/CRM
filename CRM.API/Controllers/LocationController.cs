@@ -287,7 +287,7 @@ namespace CRM_API.Controllers
         }
         [HttpGet("Type/{TypeName}")]
         public async Task<ActionResult<List<LocationResource>>> GetAllLocationsByType([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token,
-            string TypeName)
+            int TypeName)
         {
             try
             {
