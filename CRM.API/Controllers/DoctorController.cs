@@ -184,8 +184,9 @@ namespace CRM_API.Controllers
 
                 if (SaveDoctorResource.Cabinet != null)
                 {
+                    foreach(var item in SaveDoctorResource.Cabinet) { 
                  //*** Mappage ***
-                        var Location = _mapperService.Map<LocationAdd, Location>(SaveDoctorResource.Cabinet);
+                        var Location = _mapperService.Map<LocationAdd, Location>(item);
                         Location.UpdatedOn = DateTime.UtcNow;
                         Location.CreatedOn = DateTime.UtcNow;
                         Location.Version = 0;
@@ -199,26 +200,26 @@ namespace CRM_API.Controllers
                         {
                             Location.Status = Status.Pending;
                         }
-                        var Locality1 = await _LocalityService.GetById(SaveDoctorResource.Cabinet.IdLocality1);
+                        var Locality1 = await _LocalityService.GetById(item.IdLocality1);
                         Location.NameLocality1 = Locality1.Name;
                         Location.VersionLocality1 = Locality1.Version;
                         Location.StatusLocality1 = Locality1.Status;
                         Location.IdLocality1 = Locality1.IdLocality;
-                        var Locality2 = await _LocalityService.GetById(SaveDoctorResource.Cabinet.IdLocality2);
+                        var Locality2 = await _LocalityService.GetById(item.IdLocality2);
                         Location.NameLocality2 = Locality2.Name;
                         Location.VersionLocality2 = Locality2.Version;
                         Location.StatusLocality2 = Locality2.Status;
                         Location.IdLocality2 = Locality1.IdLocality;
-                        var NewLocationType = await _LocationTypeService.GetById(SaveDoctorResource.Cabinet.IdLocationType);
+                        var NewLocationType = await _LocationTypeService.GetById(item.IdLocationType);
                         Location.NameLocationType = NewLocationType.Name;
                         Location.StatusLocationType = NewLocationType.Status;
                         Location.VersionLocationType = NewLocationType.Version;
                         Location.TypeLocationType = NewLocationType.Type;
                         Location.CreatedBy = Id;
                         Location.UpdatedBy = Id;
-                        if (SaveDoctorResource.Cabinet.IdBrick1 != 0)
+                        if (item.IdBrick1 != 0)
                         {
-                            var Brick1 = await _BrickService.GetByIdActif(SaveDoctorResource.Cabinet.IdBrick1);
+                            var Brick1 = await _BrickService.GetByIdActif(item.IdBrick1);
                             if (Brick1 != null)
                             {
                                 Location.IdBrick1 = Brick1.IdBrick;
@@ -237,9 +238,9 @@ namespace CRM_API.Controllers
                                 Location.NumBrick1 = 0;
                             }
                         }
-                    if (SaveDoctorResource.Cabinet.IdBrick2 != 0)
+                    if (item.IdBrick2 != 0)
                     {
-                        var Brick2 = await _BrickService.GetByIdActif(SaveDoctorResource.Cabinet.IdBrick2);
+                        var Brick2 = await _BrickService.GetByIdActif(item.IdBrick2);
                       
                             if (Brick2 != null)
                             {
@@ -284,7 +285,8 @@ namespace CRM_API.Controllers
                     LocationDoctor.UpdatedBy = Id;
                     await _LocationDoctorService.Create(LocationDoctor);
                 }
-                    if (SaveDoctorResource.Location != null)
+                }
+                if (SaveDoctorResource.Location != null)
                     {
                         foreach (var item in SaveDoctorResource.Location)
                         {

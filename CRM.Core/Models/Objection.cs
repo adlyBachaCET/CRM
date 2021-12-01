@@ -32,6 +32,8 @@ namespace CRM.Core.Models
         public int VersionUser { get; set; }
         public Status StatusUser { get; set; }
         public virtual User User { get; set; }
+        public string CreatedByName { get; set; }
+        public string UpdatedByName { get; set; }
 
         public int? IdPharmacy{ get; set; }
         public int? VersionPharmacy{ get; set; }

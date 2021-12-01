@@ -41,7 +41,8 @@ namespace CRM.Core.Models
         public int? IdProduct { get; set; }
         public int? VersionProduct { get; set; }
         public Status? StatusProduct { get; set; }
-
+        public string CreatedByName { get; set; }
+        public string UpdatedByName { get; set; }
 
         public virtual ProductResource Product { get; set; }
         public string Response { get; set; }

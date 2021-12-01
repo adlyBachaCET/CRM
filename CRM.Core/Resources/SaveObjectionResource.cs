@@ -13,12 +13,13 @@ namespace CRM.Core.Models
         public int IdDoctor { get; set; }
         public int IdUser { get; set; }
 
-        public int IdPharmacy { get; set; }
+        public int? IdPharmacy { get; set; }
         public int? IdProduct { get; set; }
 
         public string Response { get; set; }
         public bool OnProduct { get; set; }
         public string Name { get; set; }
+
 
         public int? Satisfaction { get; set; }
         public StatusSatisfaction? StatusSatisfaction { get; set; }

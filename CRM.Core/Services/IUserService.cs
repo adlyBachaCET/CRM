@@ -14,7 +14,7 @@ namespace CRM.Core.Services
         Task Update(User UserToBeUpdated, User User);
         Task Delete(User UserToBeDeleted);
         Task DeleteRange(List<User> User);
-        string GenerateJSONWebToken(User userInfo);
+        Task<string> GenerateJSONWebToken(User userInfo);
         Task<User> AuthenticateManager(LoginModel lm);
         Task<User> AuthenticateDelegate(LoginModel lm);
         Task<IEnumerable<User>> GetAll();

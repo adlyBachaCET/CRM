@@ -114,7 +114,7 @@ namespace CRM_API.Controllers
         
             if (user != null)
             {
-                var tokenString = _UserService.GenerateJSONWebToken(user);
+                var tokenString = await _UserService.GenerateJSONWebToken(user);
 
                 response = Ok(new { token = tokenString });
                 var cookieOptions = new CookieOptions
@@ -152,7 +152,7 @@ namespace CRM_API.Controllers
 
             if (user != null)
             {
-                var tokenString = _UserService.GenerateJSONWebToken(user);
+                var tokenString = await _UserService.GenerateJSONWebToken(user);
 
                 response = Ok(new { token = tokenString });
                 var cookieOptions = new CookieOptions

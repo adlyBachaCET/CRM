@@ -28,7 +28,7 @@ namespace CRM.Core.Models
         public virtual List<SaveInfoResource> Infos { get; set; }
         public virtual List<SavePhoneResource> Phones { get; set; }
         public virtual ICollection<SaveTagsResource> Tags { get; set; }
-        public virtual LocationAdd Cabinet { get; set; }
+        public virtual List<LocationAdd> Cabinet { get; set; }
 
 
     }

@@ -29,7 +29,8 @@ namespace CRM.Core.Models
         public virtual Pharmacy Pharmacy { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-
+        public string CreatedByName { get; set; }
+        public string UpdatedByName { get; set; }
         public int IdUser{ get; set; }
         public int VersionUser { get; set; }
         public Status StatusUser { get; set; }

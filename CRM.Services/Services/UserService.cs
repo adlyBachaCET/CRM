@@ -49,13 +49,14 @@ namespace CRM.Services.Services
                            await _unitOfWork.Users.GetAll();
         }
 
-        public string GenerateJSONWebToken(User userInfo)
+        public async Task<string> GenerateJSONWebToken(User userInfo)
         {
-            ///var details = JObject.Parse(userInfo.ToString());
+            var Bu =await _unitOfWork.BuUsers.SingleOrDefault(i=>i.IdUser==userInfo.IdUser&& i.Active==0) ;
            // string json = JsonConvert.SerializeObject(userInfo);
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
             var claims = new[] {
+                          new Claim("IdBu", Bu.IdBu.ToString()),
                           new Claim("Exipres On", DateTime.UtcNow.AddMinutes(300).ToString()),
                           new Claim("Created On", DateTime.UtcNow.ToString()),
                           new Claim("Photo", userInfo.Photo.ToString()),
@@ -79,7 +80,7 @@ namespace CRM.Services.Services
             var token = new JwtSecurityToken(_config["Jwt:Issuer"],
               _config["Jwt:Issuer"],
               claims,
-              expires: DateTime.Now.AddMinutes(300),
+              expires: DateTime.Now.AddHours(8),
               signingCredentials: credentials);
 
             return new JwtSecurityTokenHandler().WriteToken(token);

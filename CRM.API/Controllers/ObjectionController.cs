@@ -50,7 +50,8 @@ namespace CRM_API.Controllers
             var Role = claims.FindFirst("Role").Value;
             var Id = int.Parse(claims.FindFirst("Id").Value);
             var exp = DateTime.Parse(claims.FindFirst("Exipres On").Value);
-
+            var FirstName = claims.FindFirst("FirstName").Value;
+            var LastName = claims.FindFirst("LastName").Value;
             //*** Mappage ***
             var Objection = _mapperService.Map<SaveObjectionResource, Objection>(SaveObjectionResource);
             Objection.UpdatedOn = DateTime.UtcNow;
@@ -59,6 +60,8 @@ namespace CRM_API.Controllers
             Objection.Status = 0;
             Objection.CreatedBy = Id;
             Objection.UpdatedBy = Id;
+            Objection.CreatedByName = FirstName+ " "+ LastName;
+            Objection.UpdatedByName = FirstName + " " + LastName;
             var Doctor = await _DoctorService.GetById(SaveObjectionResource.IdDoctor);
         
             var Pharmacy = await _PharmacyService.GetById(SaveObjectionResource.IdPharmacy);
@@ -97,6 +100,41 @@ namespace CRM_API.Controllers
             var NewObjection = await _ObjectionService.Create(Objection);
             //*** Mappage ***
             var ObjectionResource = _mapperService.Map<Objection, ObjectionResource>(NewObjection);
+            if (ObjectionResource.IdDoctor != 0)
+            {
+                var OldDoctor = await _DoctorService.GetById(ObjectionResource.IdDoctor);
+                var DoctorResource = _mapperService.Map<Doctor, DoctorResource>(OldDoctor);
+
+                ObjectionResource.Doctor = DoctorResource;
+
+            }
+            if (ObjectionResource.IdProduct != 0)
+            {
+                var OldProduct = await _ProductService.GetById(ObjectionResource.IdProduct);
+                var ProductResource = _mapperService.Map<Product, ProductResource>(OldProduct);
+
+                var Bu = await _BusinessUnitService.GetById((int)OldProduct.IdBu);
+                var BuResource = _mapperService.Map<BusinessUnit, BusinessUnitResource>(Bu);
+                ProductResource.Bu = BuResource;
+                ObjectionResource.Product = ProductResource;
+
+            }
+            if (ObjectionResource.IdPharmacy != 0)
+            {
+                var OldPharmacy = await _PharmacyService.GetById(ObjectionResource.IdPharmacy);
+                var PharmacyResource = _mapperService.Map<Pharmacy, PharmacyResource>(OldPharmacy);
+
+                ObjectionResource.Pharmacy = PharmacyResource;
+
+            }
+            if (ObjectionResource.IdUser != 0)
+            {
+                var OldUser = await _UserService.GetById(ObjectionResource.IdUser);
+                var UserResource = _mapperService.Map<User, UserResource>(OldUser);
+
+                ObjectionResource.User = UserResource;
+
+            }
             return Ok(ObjectionResource);
       
         }
@@ -108,6 +146,8 @@ namespace CRM_API.Controllers
             {
                 var claims = _UserService.getPrincipal(Token);
                 var Role = claims.FindFirst("Role").Value;
+          
+
                 var Id = int.Parse(claims.FindFirst("Id").Value);
                 var exp = DateTime.Parse(claims.FindFirst("Exipres On").Value);
                 var Objections = await _ObjectionService.GetAll();
@@ -127,7 +167,10 @@ namespace CRM_API.Controllers
                     {
                         var Product = await _ProductService.GetById(ObjectionResource.IdProduct);
                         var ProductResource = _mapperService.Map<Product, ProductResource>(Product);
-
+                        
+                        var Bu = await _BusinessUnitService.GetById((int)Product.IdBu);
+                        var BuResource = _mapperService.Map<BusinessUnit , BusinessUnitResource>(Bu);
+                        ProductResource.Bu = BuResource;
                         ObjectionResource.Product = ProductResource;
 
                     }
@@ -147,6 +190,7 @@ namespace CRM_API.Controllers
                         ObjectionResource.User = UserResource;
 
                     }
+           
                     ObjectionResources.Add(ObjectionResource);
                 }
                 return Ok(ObjectionResources);
@@ -184,7 +228,9 @@ namespace CRM_API.Controllers
                     {
                         var Product = await _ProductService.GetById(ObjectionResource.IdProduct);
                         var ProductResource = _mapperService.Map<Product, ProductResource>(Product);
-
+                        var Bu = await _BusinessUnitService.GetById((int)Product.IdBu);
+                        var BuResource = _mapperService.Map<BusinessUnit, BusinessUnitResource>(Bu);
+                        ProductResource.Bu = BuResource;
                         ObjectionResource.Product = ProductResource;
 
                     }
@@ -241,7 +287,9 @@ namespace CRM_API.Controllers
                     {
                         var Product = await _ProductService.GetById(ObjectionResource.IdProduct);
                         var ProductResource = _mapperService.Map<Product, ProductResource>(Product);
-
+                        var Bu = await _BusinessUnitService.GetById((int)Product.IdBu);
+                        var BuResource = _mapperService.Map<BusinessUnit, BusinessUnitResource>(Bu);
+                        ProductResource.Bu = BuResource;
                         ObjectionResource.Product = ProductResource;
 
                     }
@@ -296,7 +344,9 @@ namespace CRM_API.Controllers
                 {
                     var Product = await _ProductService.GetById(ObjectionResource.IdProduct);
                     var ProductResource = _mapperService.Map<Product, ProductResource>(Product);
-
+                    var Bu = await _BusinessUnitService.GetById((int)Product.IdBu);
+                    var BuResource = _mapperService.Map<BusinessUnit, BusinessUnitResource>(Bu);
+                    ProductResource.Bu = BuResource;
                     ObjectionResource.Product = ProductResource;
 
                 }
@@ -331,6 +381,8 @@ namespace CRM_API.Controllers
             var Role = claims.FindFirst("Role").Value;
             var IdUser = int.Parse(claims.FindFirst("Id").Value);
             var exp = DateTime.Parse(claims.FindFirst("Exipres On").Value);
+            var FirstName = claims.FindFirst("FirstName").Value;
+            var LastName = claims.FindFirst("LastName").Value;
             var ObjectionToBeModified = await _ObjectionService.GetById(Id);
             if (ObjectionToBeModified == null) return BadRequest("Le Objection n'existe pas"); //NotFound();
             var Objection = _mapperService.Map<SaveObjectionResource, Objection>(SaveObjectionResource);
@@ -341,6 +393,8 @@ namespace CRM_API.Controllers
             Objection.Status = 0;
             Objection.UpdatedBy = IdUser;
             Objection.CreatedBy = ObjectionToBeModified.CreatedBy;
+            Objection.UpdatedByName = FirstName+" "+LastName;
+            Objection.CreatedByName = ObjectionToBeModified.CreatedByName;
             var Doctor = await _DoctorService.GetById(SaveObjectionResource.IdDoctor);
 
             var Pharmacy = await _PharmacyService.GetById(SaveObjectionResource.IdPharmacy);
@@ -411,7 +465,9 @@ namespace CRM_API.Controllers
             {
                 var Product = await _ProductService.GetById(ObjectionResourceUpdated.IdProduct);
                 var ProductResource = _mapperService.Map<Product, ProductResource>(Product);
-
+                var Bu = await _BusinessUnitService.GetById((int)Product.IdBu);
+                var BuResource = _mapperService.Map<BusinessUnit, BusinessUnitResource>(Bu);
+                ProductResource.Bu = BuResource;
                 ObjectionResourceUpdated.Product = ProductResource;
 
             }
