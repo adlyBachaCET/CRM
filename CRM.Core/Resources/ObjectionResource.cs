@@ -24,18 +24,18 @@ namespace CRM.Core.Models
         public Status? StatusDoctor { get; set; }
 
 
-        public virtual DoctorListObject Doctor { get; set; }
+        public virtual DoctorResource Doctor { get; set; }
         public int IdUser { get; set; }
         public int VersionUser { get; set; }
         public Status StatusUser { get; set; }
-        public virtual User User { get; set; }
+        public virtual UserResource User { get; set; }
 
         public int? IdPharmacy { get; set; }
         public int? VersionPharmacy { get; set; }
         public Status? StatusPharmacy { get; set; }
 
 
-        public virtual PharmacyObjectList Pharmacy { get; set; }
+        public virtual PharmacyResource Pharmacy { get; set; }
         public bool OnProduct { get; set; }
 
         public int? IdProduct { get; set; }
@@ -44,10 +44,12 @@ namespace CRM.Core.Models
 
 
         public virtual ProductResource Product { get; set; }
-        public string Commentary { get; set; }
+        public string Response { get; set; }
 
-        public int Satisfaction { get; set; }
+        public int? Satisfaction { get; set; }
+        public StatusSatisfaction? StatusSatisfaction { get; set; }
 
+        public StatusCompletion StatusCompletion { get; set; }
     }
 
 }

@@ -10,5 +10,7 @@ namespace CRM.Core.Models
         public int IdUser { get; set; }
         public int? IdPharmacy { get; set; }
         public string Description { get; set; }
+        public string Response { get; set; }
+
     }
 }

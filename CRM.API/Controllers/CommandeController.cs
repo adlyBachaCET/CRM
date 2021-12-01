@@ -143,6 +143,25 @@ namespace CRM_API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [HttpGet("User/{IdUser}")]
+        public async Task<ActionResult<List<CommandeResource>>> GetCommandeByIdUser(int IdUser)
+        {
+            try
+            {
+                var Commandes = await _CommandeService.GetByIdActifUser(IdUser);
+                if (Commandes == null) return NotFound();
+                List<CommandeResource> CommandeResources = new List<CommandeResource>();
+                foreach(var item in Commandes) {
+                var CommandeRessource = _mapperService.Map<Commande, CommandeResource>(item);
+                    CommandeResources.Add(CommandeRessource);
+                }
+                return Ok(CommandeResources);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
         [HttpPut("{Id}")]
         public async Task<ActionResult<CommandeResource>> UpdateCommande(int Id, SaveCommandeResource SaveCommandeResource)
         {

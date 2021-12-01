@@ -28,10 +28,10 @@ namespace CRM.Services.Services
             await _unitOfWork.CommitAsync();
             return newEstablishmentDoctor;
         }
-        public async Task<IEnumerable<LocationDoctor>> GetAll()
+        public async Task<IEnumerable<LocationDoctor>> GetAll(int IdDoctor)
         {
             return
-                           await _unitOfWork.LocationDoctors.GetAll();
+                           await _unitOfWork.LocationDoctors.Find(i=>i.IdDoctor==IdDoctor &&i.Active==0);
         }
 
        /* public async Task Delete(EstablishmentDoctor EstablishmentDoctor)

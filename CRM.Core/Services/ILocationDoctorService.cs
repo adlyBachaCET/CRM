@@ -14,7 +14,7 @@ namespace CRM.Core.Services
         Task Delete(LocationDoctor EstablishmentDoctorToBeDeleted);
         Task DeleteRange(List<LocationDoctor> EstablishmentDoctor);
         Task<IEnumerable<LocationDoctor>> GetAllAcceptedActif(int Id);
-        Task<IEnumerable<LocationDoctor>> GetAll();
+        Task<IEnumerable<LocationDoctor>> GetAll(int IdDoctor);
         Task<IEnumerable<LocationDoctor>> GetAllActif();
         Task<IEnumerable<LocationDoctor>> GetAllInActif();
         Task<LocationDoctor> GetByIdLocationAndService(int id, int IdLocation);

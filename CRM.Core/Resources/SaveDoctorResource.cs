@@ -58,6 +58,8 @@ namespace CRM.Core.Models
         public virtual List<SavePhoneResource> Phones { get; set; }
         public virtual ICollection<SaveTagsResource> Tags { get; set; }
 
+        public virtual List<LocationAdd> ListOfLocations { get; set; }
+
 
     }
 }

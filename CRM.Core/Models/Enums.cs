@@ -8,11 +8,16 @@ namespace CRM.Core.Models
     {
         Approuved,
         Rejected,
-        Pending
+        Pending,
     }
-    public enum Organism
+    public enum StatusSatisfaction
     {
-        Pharmacy,
-        WholeSaler
+        Statisfied,
+        NotSatisfied,
+    }
+    public enum StatusCompletion
+    {
+        Completed,
+        NotCompleted
     }
 }

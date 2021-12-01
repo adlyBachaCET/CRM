@@ -1285,12 +1285,129 @@ namespace CRM_API.Controllers
             Doctor.IdDoctor = Id;
             await _DoctorService.Update(DoctorToBeModified, Doctor);
             var DoctorUpdated = await _DoctorService.GetById(Id);
+            List<LocationDoctor> LocationDoctors = new List<LocationDoctor>();
+            var OldLocationDoctor = await _LocationDoctorService.GetAll(Doctor.IdDoctor);
+            foreach (var item in SaveDoctorResource.ListOfLocations)
+            {
+
+                if (item != null)
+                {
+                    //*** Mappage ***
+                    var Location = _mapperService.Map<LocationAdd, Location>(item);
+                    Location.UpdatedOn = DateTime.UtcNow;
+                    Location.CreatedOn = DateTime.UtcNow;
+                    Location.Version = 0;
+                    Location.Active = 0;
+
+                    if (Role == "Manager")
+                    {
+                        Location.Status = Status.Approuved;
+                    }
+                    else if (Role == "Delegue")
+                    {
+                        Location.Status = Status.Pending;
+                    }
+                    var Locality1 = await _LocalityService.GetById(item.IdLocality1);
+                    Location.NameLocality1 = Locality1.Name;
+                    Location.VersionLocality1 = Locality1.Version;
+                    Location.StatusLocality1 = Locality1.Status;
+                    Location.IdLocality1 = Locality1.IdLocality;
+                    var Locality2 = await _LocalityService.GetById(item.IdLocality2);
+                    Location.NameLocality2 = Locality2.Name;
+                    Location.VersionLocality2 = Locality2.Version;
+                    Location.StatusLocality2 = Locality2.Status;
+                    Location.IdLocality2 = Locality1.IdLocality;
+                    var NewLocationType = await _LocationTypeService.GetById(item.IdLocationType);
+                    Location.NameLocationType = NewLocationType.Name;
+                    Location.StatusLocationType = NewLocationType.Status;
+                    Location.VersionLocationType = NewLocationType.Version;
+                    Location.TypeLocationType = NewLocationType.Type;
+                    Location.CreatedBy = Id;
+                    Location.UpdatedBy = Id;
+                    if (item.IdBrick1 != 0)
+                    {
+                        var Brick1 = await _BrickService.GetByIdActif(item.IdBrick1);
+                        if (Brick1 != null)
+                        {
+                            Location.IdBrick1 = Brick1.IdBrick;
+                            Location.VersionBrick1 = Brick1.Version;
+                            Location.StatusBrick1 = Brick1.Status;
+                            Location.NameBrick1 = Brick1.Name;
+                            Location.NumBrick1 = Brick1.NumSystemBrick;
+                            // Pharmacy.Brick1 = Brick1;
+                        }
+                        else
+                        {
+                            Location.IdBrick1 = null;
+                            Location.VersionBrick1 = null;
+                            Location.StatusBrick1 = null;
+                            Location.NameBrick1 = "";
+                            Location.NumBrick1 = 0;
+                        }
+                    }
+                    if (item.IdBrick2 != 0)
+                    {
+                        var Brick2 = await _BrickService.GetByIdActif(item.IdBrick2);
+
+                        if (Brick2 != null)
+                        {
+                            Location.IdBrick2 = Brick2.IdBrick;
+                            Location.VersionBrick2 = Brick2.Version;
+                            Location.StatusBrick2 = Brick2.Status;
+                            Location.NameBrick2 = Brick2.Name;
+                            Location.NumBrick2 = Brick2.NumSystemBrick;
+                            // Pharmacy.Brick2 = Brick2;
+                        }
+                        else
+                        {
+                            Location.IdBrick2 = null;
+                            Location.VersionBrick2 = null;
+                            Location.StatusBrick2 = null;
+                            Location.NameBrick2 = "";
+                            Location.NumBrick2 = 0;
+                        }
+                    }
+                    var NewCabinet = await _LocationService.Create(Location);
+
+                    //*** Mappage ***
+                    var CabinetResource = _mapperService.Map<Location, LocationResource>(NewCabinet);
+                    LocationDoctor LocationDoctor = new LocationDoctor();
+                    LocationDoctor.IdLocation = CabinetResource.IdLocation;
+
+
+                    LocationDoctor.IdDoctor = Doctor.IdDoctor;
+
+
+
+                    LocationDoctor.IdService = 0;
+
+
+
+                    LocationDoctor.Status = Status.Approuved;
+                    LocationDoctor.Version = 0;
+                    LocationDoctor.Active = 0;
+                    LocationDoctor.CreatedOn = DateTime.UtcNow;
+                    LocationDoctor.UpdatedOn = DateTime.UtcNow;
+                    LocationDoctor.CreatedBy = Id;
+                    LocationDoctor.UpdatedBy = Id;
+                    await _LocationDoctorService.Create(LocationDoctor);
+                }
+            }
             if (SaveDoctorResource.Location != null)
             {
+           
+
+                foreach (var i in OldLocationDoctor)
+                {
+                    LocationDoctors.Add(i);
+                }
+
+                await _LocationDoctorService.DeleteRange(LocationDoctors);
+
                 foreach (var item in SaveDoctorResource.Location)
                 {
                     var location = await _LocationService.GetById(item.IdLocation);
-
+                 
                     if (location == null)
                     {
 

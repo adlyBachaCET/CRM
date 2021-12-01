@@ -101,7 +101,7 @@ namespace CRM_API.Controllers
       
         }
         [HttpGet]
-        public async Task<ActionResult<ObjectionResource>> GetAllObjections([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
+        public async Task<ActionResult<List<ObjectionResource>>> GetAllObjections([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
         string Token)
         {
             try
@@ -110,10 +110,46 @@ namespace CRM_API.Controllers
                 var Role = claims.FindFirst("Role").Value;
                 var Id = int.Parse(claims.FindFirst("Id").Value);
                 var exp = DateTime.Parse(claims.FindFirst("Exipres On").Value);
-                var Employe = await _ObjectionService.GetAll();
-                if (Employe == null) return NotFound();
-                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
-                return Ok(Employe);
+                var Objections = await _ObjectionService.GetAll();
+                if (Objections == null) return NotFound();
+                List<ObjectionResource> ObjectionResources = new List<ObjectionResource>();
+                foreach (var item in Objections)
+                {
+                    var ObjectionResource = _mapperService.Map<Objection, ObjectionResource>(item);
+                    if (ObjectionResource.IdDoctor != 0) {
+                    var Doctor = await _DoctorService.GetById(ObjectionResource.IdDoctor);
+                        var DoctorResource = _mapperService.Map<Doctor, DoctorResource>(Doctor);
+
+                        ObjectionResource.Doctor = DoctorResource;
+
+                    }
+                    if (ObjectionResource.IdProduct != 0)
+                    {
+                        var Product = await _ProductService.GetById(ObjectionResource.IdProduct);
+                        var ProductResource = _mapperService.Map<Product, ProductResource>(Product);
+
+                        ObjectionResource.Product = ProductResource;
+
+                    }
+                    if (ObjectionResource.IdPharmacy != 0)
+                    {
+                        var Pharmacy = await _PharmacyService.GetById(ObjectionResource.IdPharmacy);
+                        var PharmacyResource = _mapperService.Map<Pharmacy, PharmacyResource>(Pharmacy);
+
+                        ObjectionResource.Pharmacy = PharmacyResource;
+
+                    }
+                    if (ObjectionResource.IdUser != 0)
+                    {
+                        var User = await _UserService.GetById(ObjectionResource.IdUser);
+                        var UserResource = _mapperService.Map<User, UserResource>(User);
+
+                        ObjectionResource.User = UserResource;
+
+                    }
+                    ObjectionResources.Add(ObjectionResource);
+                }
+                return Ok(ObjectionResources);
             }
             catch (Exception ex)
             {
@@ -121,7 +157,7 @@ namespace CRM_API.Controllers
             }
         }
         [HttpGet("Actif")]
-        public async Task<ActionResult<ObjectionResource>> GetAllActifObjections([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
+        public async Task<ActionResult<List<ObjectionResource>>> GetAllActifObjections([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
         string Token)
         {
             try
@@ -130,10 +166,47 @@ namespace CRM_API.Controllers
                 var Role = claims.FindFirst("Role").Value;
                 var Id = int.Parse(claims.FindFirst("Id").Value);
                 var exp = DateTime.Parse(claims.FindFirst("Exipres On").Value);
-                var Employe = await _ObjectionService.GetAllActif();
-                if (Employe == null) return NotFound();
-                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
-                return Ok(Employe);
+                var Objections = await _ObjectionService.GetAllActif();
+                if (Objections == null) return NotFound();
+                List<ObjectionResource> ObjectionResources = new List<ObjectionResource>();
+                foreach (var item in Objections)
+                {
+                    var ObjectionResource = _mapperService.Map<Objection, ObjectionResource>(item);
+                    if (ObjectionResource.IdDoctor != 0)
+                    {
+                        var Doctor = await _DoctorService.GetById(ObjectionResource.IdDoctor);
+                        var DoctorResource = _mapperService.Map<Doctor, DoctorResource>(Doctor);
+
+                        ObjectionResource.Doctor = DoctorResource;
+
+                    }
+                    if (ObjectionResource.IdProduct != 0)
+                    {
+                        var Product = await _ProductService.GetById(ObjectionResource.IdProduct);
+                        var ProductResource = _mapperService.Map<Product, ProductResource>(Product);
+
+                        ObjectionResource.Product = ProductResource;
+
+                    }
+                    if (ObjectionResource.IdPharmacy != 0)
+                    {
+                        var Pharmacy = await _PharmacyService.GetById(ObjectionResource.IdPharmacy);
+                        var PharmacyResource = _mapperService.Map<Pharmacy, PharmacyResource>(Pharmacy);
+
+                        ObjectionResource.Pharmacy = PharmacyResource;
+
+                    }
+                    if (ObjectionResource.IdUser != 0)
+                    {
+                        var User = await _UserService.GetById(ObjectionResource.IdUser);
+                        var UserResource = _mapperService.Map<User, UserResource>(User);
+
+                        ObjectionResource.User = UserResource;
+
+                    }
+                    ObjectionResources.Add(ObjectionResource);
+                }
+                return Ok(ObjectionResources);
             }
             catch (Exception ex)
             {
@@ -141,7 +214,7 @@ namespace CRM_API.Controllers
             }
         }
         [HttpGet("InActif")]
-        public async Task<ActionResult<ObjectionResource>> GetAllInactifObjections([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
+        public async Task<ActionResult<List<ObjectionResource>>> GetAllInactifObjections([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
         string Token)
         {
             try
@@ -150,10 +223,47 @@ namespace CRM_API.Controllers
                 var Role = claims.FindFirst("Role").Value;
                 var Id = int.Parse(claims.FindFirst("Id").Value);
                 var exp = DateTime.Parse(claims.FindFirst("Exipres On").Value);
-                var Employe = await _ObjectionService.GetAllInActif();
-                if (Employe == null) return NotFound();
-                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
-                return Ok(Employe);
+                var Objections = await _ObjectionService.GetAllInActif();
+                if (Objections == null) return NotFound();
+                List<ObjectionResource> ObjectionResources = new List<ObjectionResource>();
+                foreach (var item in Objections)
+                {
+                    var ObjectionResource = _mapperService.Map<Objection, ObjectionResource>(item);
+                    if (ObjectionResource.IdDoctor != 0)
+                    {
+                        var Doctor = await _DoctorService.GetById(ObjectionResource.IdDoctor);
+                        var DoctorResource = _mapperService.Map<Doctor, DoctorResource>(Doctor);
+
+                        ObjectionResource.Doctor = DoctorResource;
+
+                    }
+                    if (ObjectionResource.IdProduct != 0)
+                    {
+                        var Product = await _ProductService.GetById(ObjectionResource.IdProduct);
+                        var ProductResource = _mapperService.Map<Product, ProductResource>(Product);
+
+                        ObjectionResource.Product = ProductResource;
+
+                    }
+                    if (ObjectionResource.IdPharmacy != 0)
+                    {
+                        var Pharmacy = await _PharmacyService.GetById(ObjectionResource.IdPharmacy);
+                        var PharmacyResource = _mapperService.Map<Pharmacy, PharmacyResource>(Pharmacy);
+
+                        ObjectionResource.Pharmacy = PharmacyResource;
+
+                    }
+                    if (ObjectionResource.IdUser != 0)
+                    {
+                        var User = await _UserService.GetById(ObjectionResource.IdUser);
+                        var UserResource = _mapperService.Map<User, UserResource>(User);
+
+                        ObjectionResource.User = UserResource;
+
+                    }
+                    ObjectionResources.Add(ObjectionResource);
+                }
+                return Ok(ObjectionResources);
             }
             catch (Exception ex)
             {
@@ -173,8 +283,40 @@ namespace CRM_API.Controllers
                 var exp = DateTime.Parse(claims.FindFirst("Exipres On").Value);
                 var Objections = await _ObjectionService.GetById(Id);
                 if (Objections == null) return NotFound();
-                var ObjectionRessource = _mapperService.Map<Objection, ObjectionResource>(Objections);
-                return Ok(ObjectionRessource);
+                var ObjectionResource = _mapperService.Map<Objection, ObjectionResource>(Objections);
+                if (ObjectionResource.IdDoctor != 0)
+                {
+                    var Doctor = await _DoctorService.GetById(ObjectionResource.IdDoctor);
+                    var DoctorResource = _mapperService.Map<Doctor, DoctorResource>(Doctor);
+
+                    ObjectionResource.Doctor = DoctorResource;
+
+                }
+                if (ObjectionResource.IdProduct != 0)
+                {
+                    var Product = await _ProductService.GetById(ObjectionResource.IdProduct);
+                    var ProductResource = _mapperService.Map<Product, ProductResource>(Product);
+
+                    ObjectionResource.Product = ProductResource;
+
+                }
+                if (ObjectionResource.IdPharmacy != 0)
+                {
+                    var Pharmacy = await _PharmacyService.GetById(ObjectionResource.IdPharmacy);
+                    var PharmacyResource = _mapperService.Map<Pharmacy, PharmacyResource>(Pharmacy);
+
+                    ObjectionResource.Pharmacy = PharmacyResource;
+
+                }
+                if (ObjectionResource.IdUser != 0)
+                {
+                    var User = await _UserService.GetById(ObjectionResource.IdUser);
+                    var UserResource = _mapperService.Map<User, UserResource>(User);
+
+                    ObjectionResource.User = UserResource;
+
+                }
+                return Ok(ObjectionResource);
             }
             catch (Exception ex)
             {
@@ -202,49 +344,54 @@ namespace CRM_API.Controllers
             var Doctor = await _DoctorService.GetById(SaveObjectionResource.IdDoctor);
 
             var Pharmacy = await _PharmacyService.GetById(SaveObjectionResource.IdPharmacy);
-
-            if (Pharmacy.IdPharmacy != Objection.IdPharmacy)
+            if (Objection.IdPharmacy != 0)
             {
-                Objection.Name = Pharmacy.Name;
-                Objection.Pharmacy = Pharmacy;
-                Objection.VersionPharmacy = Pharmacy.Version;
-                Objection.StatusPharmacy = Pharmacy.Status;
-                Objection.Doctor = null;
-                Objection.VersionDoctor = null;
-                Objection.StatusDoctor = null;
-            }
-            else
-            {
-                Objection.Name = Objection.Name;
-                Objection.Pharmacy = Objection.Pharmacy;
-                Objection.VersionPharmacy = Objection.VersionPharmacy;
-                Objection.StatusPharmacy = Objection.StatusPharmacy;
-                Objection.Doctor = null;
-                Objection.VersionDoctor = null;
-                Objection.StatusDoctor = null;
-            }
-            if (Doctor.IdDoctor != Objection.IdDoctor)
-            {
-                Objection.Name = Doctor.Title + " " + Doctor.FirstName + " " + Doctor.LastName;
-                Objection.Doctor = Doctor;
-                Objection.VersionDoctor = Doctor.Version;
-                Objection.StatusDoctor = Doctor.Status;
-
-                Objection.Pharmacy = null;
-                Objection.VersionPharmacy = null;
-                Objection.StatusPharmacy = null;
-            }
-            else
-            {
+                if (Pharmacy.IdPharmacy != Objection.IdPharmacy)
+                {
+                    Objection.Name = Pharmacy.Name;
+                    Objection.Pharmacy = Pharmacy;
+                    Objection.VersionPharmacy = Pharmacy.Version;
+                    Objection.StatusPharmacy = Pharmacy.Status;
+                    Objection.Doctor = null;
+                    Objection.VersionDoctor = null;
+                    Objection.StatusDoctor = null;
+                }
+                else
                 {
                     Objection.Name = Objection.Name;
-                    Objection.Doctor = Objection.Doctor;
-                    Objection.VersionDoctor = Objection.VersionDoctor;
-                    Objection.StatusDoctor = Objection.StatusDoctor;
+                    Objection.Pharmacy = Objection.Pharmacy;
+                    Objection.VersionPharmacy = Objection.VersionPharmacy;
+                    Objection.StatusPharmacy = Objection.StatusPharmacy;
+                    Objection.Doctor = null;
+                    Objection.VersionDoctor = null;
+                    Objection.StatusDoctor = null;
+                }
+            }
+            if (Objection.IdDoctor != 0)
+            {
+                if (Doctor.IdDoctor != Objection.IdDoctor)
+                {
+                    Objection.Name = Doctor.Title + " " + Doctor.FirstName + " " + Doctor.LastName;
+                    Objection.Doctor = Doctor;
+                    Objection.VersionDoctor = Doctor.Version;
+                    Objection.StatusDoctor = Doctor.Status;
 
                     Objection.Pharmacy = null;
                     Objection.VersionPharmacy = null;
                     Objection.StatusPharmacy = null;
+                }
+                else
+                {
+                    {
+                        Objection.Name = Objection.Name;
+                        Objection.Doctor = Objection.Doctor;
+                        Objection.VersionDoctor = Objection.VersionDoctor;
+                        Objection.StatusDoctor = Objection.StatusDoctor;
+
+                        Objection.Pharmacy = null;
+                        Objection.VersionPharmacy = null;
+                        Objection.StatusPharmacy = null;
+                    }
                 }
             }
             await _ObjectionService.Update(ObjectionToBeModified, Objection);
@@ -252,7 +399,38 @@ namespace CRM_API.Controllers
             var ObjectionUpdated = await _ObjectionService.GetById(Id);
 
             var ObjectionResourceUpdated = _mapperService.Map<Objection, ObjectionResource>(ObjectionUpdated);
+            if (ObjectionResourceUpdated.IdDoctor != 0)
+            {
+                var DoctorNew = await _DoctorService.GetById(ObjectionResourceUpdated.IdDoctor);
+                var DoctorResource = _mapperService.Map<Doctor, DoctorResource>(DoctorNew);
 
+                ObjectionResourceUpdated.Doctor = DoctorResource;
+
+            }
+            if (ObjectionResourceUpdated.IdProduct != 0)
+            {
+                var Product = await _ProductService.GetById(ObjectionResourceUpdated.IdProduct);
+                var ProductResource = _mapperService.Map<Product, ProductResource>(Product);
+
+                ObjectionResourceUpdated.Product = ProductResource;
+
+            }
+            if (ObjectionResourceUpdated.IdPharmacy != 0)
+            {
+                var PharmacyNew = await _PharmacyService.GetById(ObjectionResourceUpdated.IdPharmacy);
+                var PharmacyResource = _mapperService.Map<Pharmacy, PharmacyResource>(PharmacyNew);
+
+                ObjectionResourceUpdated.Pharmacy = PharmacyResource;
+
+            }
+            if (ObjectionResourceUpdated.IdUser != 0)
+            {
+                var User = await _UserService.GetById(ObjectionResourceUpdated.IdUser);
+                var UserResource = _mapperService.Map<User, UserResource>(User);
+
+                ObjectionResourceUpdated.User = UserResource;
+
+            }
             return Ok(ObjectionResourceUpdated);
         }
 
