@@ -1298,10 +1298,11 @@ namespace CRM_API.Controllers
                     else
                     {
                         var LocationDoctorExist = await _LocationDoctorService.GetByIdActif(DoctorUpdated.IdDoctor, location.IdLocation);
-                        if (LocationDoctorExist != null) {
-                        
+                        if (LocationDoctorExist != null) 
+                        { 
+                            await _LocationDoctorService.Delete(LocationDoctorExist);
                         }
-                        else {
+
                         LocationDoctor LocationDoctor = new LocationDoctor();
                         LocationDoctor.IdLocation = location.IdLocation;
                         LocationDoctor.IdDoctor = DoctorUpdated.IdDoctor;
@@ -1322,7 +1323,7 @@ namespace CRM_API.Controllers
                         LocationDoctor.CreatedBy = IdUser;
                         LocationDoctor.UpdatedBy = IdUser;
                         await _LocationDoctorService.Create(LocationDoctor);
-                        }
+                        
                     }
                 }
             }
