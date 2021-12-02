@@ -12,13 +12,13 @@ namespace CRM.Core.Services
         Task Update(Objection ObjectionToBeUpdated, Objection Objection);
         Task Delete(Objection ObjectionToBeDeleted);
         Task DeleteRange(List<Objection> Objection);
-        Task<IEnumerable<Objection>> GetByIdPharmacy(int id);
+        Task<IEnumerable<Objection>> GetByIdPharmacy(RequestObjection RequestObjection, int id);
 
 
         Task<IEnumerable<Objection>> GetAll();
         Task<IEnumerable<Objection>> GetAllActif();
         Task<IEnumerable<Objection>> GetAllInActif();
-        Task<IEnumerable<Objection>> GetByIdDoctor(int id);
+        Task<IEnumerable<Objection>> GetByIdDoctor(RequestObjection RequestObjection, int id);
         Task<IEnumerable<Objection>> GetByIdActifDoctor(int Id);
         Task<IEnumerable<Objection>> GetByIdActifUser(int Id);
         Task<IEnumerable<Objection>> GetAll(Status? Status, RequestObjection RequestObjection);

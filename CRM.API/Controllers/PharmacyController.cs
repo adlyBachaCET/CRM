@@ -427,17 +427,30 @@ namespace CRM_API.Controllers
 
                 PharmacyProfile.VisitReports = VisitReportResources;
 
-                var Objections = await _ObjectionService.GetByIdPharmacy(Id);
+                var Objections = await _ObjectionService.GetByIdPharmacy(RequestObjection.Objection, Id);
 
                 List<ObjectionResource> ObjectionResources = new List<ObjectionResource>();
 
                 foreach (var item in Objections)
                 {
-                    var Bu = _mapperService.Map<Objection, ObjectionResource>(item);
+                    var Objection = _mapperService.Map<Objection, ObjectionResource>(item);
 
-                    if (Bu != null)
+                    if (Objection != null)
                     {
-                        ObjectionResources.Add(Bu);
+                        ObjectionResources.Add(Objection);
+                    }
+                }
+                var Requests = await _ObjectionService.GetByIdPharmacy(RequestObjection.Request, Id);
+
+                List<ObjectionResource> RequestResources = new List<ObjectionResource>();
+
+                foreach(var item in Objections)
+                {
+                    var Request = _mapperService.Map<Objection, ObjectionResource>(item);
+
+                    if (Request != null)
+                    {
+                        RequestResources.Add(Request);
                     }
                 }
                 PharmacyProfile.Objection = ObjectionResources;

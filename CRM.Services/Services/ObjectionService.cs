@@ -158,15 +158,15 @@ namespace CRM.Services.Services
                              await _unitOfWork.Objections.GetAllInActif();
         }
 
-        public async Task<IEnumerable<Objection>> GetByIdDoctor(int id)
+        public async Task<IEnumerable<Objection>> GetByIdDoctor(RequestObjection RequestObjection, int id)
         {
             return
-                            await _unitOfWork.Objections.GetByIdDoctor(id);
+                            await _unitOfWork.Objections.Find(i=>i.IdDoctor==id && i.RequestObjection== RequestObjection && i.Active==0);
         }
-        public async Task<IEnumerable<Objection>> GetByIdPharmacy(int id)
+        public async Task<IEnumerable<Objection>> GetByIdPharmacy(RequestObjection RequestObjection, int id)
         {
             return
-                            await _unitOfWork.Objections.GetByIdPharmacy(id);
+                            await _unitOfWork.Objections.Find(i => i.IdPharmacy == id && i.RequestObjection == RequestObjection && i.Active == 0);
         }
         public async Task<IEnumerable<Objection>> GetByIdActifDoctor(int Id)
         {

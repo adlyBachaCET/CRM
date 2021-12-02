@@ -1107,7 +1107,7 @@ namespace CRM_API.Controllers
 
                 DoctorProfile.VisitReports = VisitReportResources;
 
-                var Objections = await _ObjectionService.GetByIdActifDoctor(Id);
+                var Objections = await _ObjectionService.GetByIdDoctor(RequestObjection.Objection, Id);
 
                 List<ObjectionResource> ObjectionResources = new List<ObjectionResource>();
 
@@ -1121,8 +1121,21 @@ namespace CRM_API.Controllers
                     }
                 }
                 DoctorProfile.Objection = ObjectionResources;
+                var Requests = await _ObjectionService.GetByIdDoctor(RequestObjection.Request, Id);
 
-         
+                List<ObjectionResource> RequestResources = new List<ObjectionResource>();
+
+                foreach (var item in Objections)
+                {
+                    var Bu = _mapperService.Map<Objection, ObjectionResource>(item);
+
+                    if (Bu != null)
+                    {
+                        RequestResources.Add(Bu);
+                    }
+                }
+                DoctorProfile.Objection = RequestResources;
+
 
                 var Participant = await _ParticipantService.GetAllByIdDoctor(Id);
                 List<RequestRp> RequestRpList = new List<RequestRp>();
