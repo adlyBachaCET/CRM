@@ -27,7 +27,6 @@ namespace CRM.Core.Models
         public int VersionUser { get; set; }
         public virtual User IdUserNavigation { get; set; }
 
-        public ICollection<VisitRequestReport> VisitRequestReport { get; set; }
 
 
 

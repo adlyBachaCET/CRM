@@ -61,8 +61,7 @@ namespace CRM.Data
         private ITagsRepository _TagsRepository;
         private ITagsDoctorRepository _TagsDoctorRepository;
         private IWeekInYearRepository _WeekInYearRepository;
-        private IWholeSalerLocalityRepository _WholeSalerLocalityRepository;
-        private IWholeSalerRepository _WholeSaleRepository;
+
         private IUserRepository _UserRepository;
         private ISectorInYearRepository _WeekSectorCycleInYearRepository;
 
@@ -149,9 +148,6 @@ namespace CRM.Data
 
         public IWeekInYearRepository WeekInYears =>_WeekInYearRepository = _WeekInYearRepository ?? new WeekInYearRepository(_context);
 
-        public IWholeSalerLocalityRepository WholeSalerLocalitys =>_WholeSalerLocalityRepository = _WholeSalerLocalityRepository ?? new WholeSalerLocalityRepository(_context);
-
-        public IWholeSalerRepository WholeSales =>_WholeSaleRepository = _WholeSaleRepository ?? new WholeSalerRepository(_context);
 
         public UnitOfWork(MyDbContext context)
         {

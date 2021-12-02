@@ -6,7 +6,7 @@ namespace CRM.Core.Services
 {
     public interface IVisitReportService
     {
-        Task<VisitReport> GetById(int id);
+        Task<VisitReport> GetById(int? id);
 
         Task<VisitReport> Create(VisitReport newVisitReport);
         Task<List<VisitReport>> CreateRange(List<VisitReport> newVisitReport);

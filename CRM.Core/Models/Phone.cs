@@ -31,7 +31,6 @@ namespace CRM.Core.Models
         public Status Status { get; set; }
         public virtual Doctor Doctor { get; set; }
         public virtual Pharmacy Pharmacy { get; set; }
-        public virtual WholeSaler WholeSaler { get; set; }
 
     }
     public enum PhoneType

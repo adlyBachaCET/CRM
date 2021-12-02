@@ -35,7 +35,6 @@ namespace CRM.Core.Models
         public string ObjectifNextVisit { get; set; }
 
         public string CycleTtype { get; set; }
-        public ICollection<VisitRequestReport> VisitRequestReport { get; set; }
 
         public ICollection<ProductVisitReport> ProductSampleVisitReport { get; set; }
 

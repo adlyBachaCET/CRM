@@ -23,6 +23,8 @@ namespace CRM.Core.Models
         public RequestObjection RequestObjection { get; set; }
         public int? Satisfaction { get; set; }
         public Status? SatisfiedNotSatisfied { get; set; }
+        public int? IdVisitReport { get; set; }
+
 
     }
 

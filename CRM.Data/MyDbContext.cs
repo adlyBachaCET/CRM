@@ -92,8 +92,7 @@ namespace CRM.Data
         public virtual DbSet<WeekInYear> WeekInYear { get; set; }
         public virtual DbSet<SectorCycle> SectorCycle { get; set; }
         public virtual DbSet<SectorInYear> SectorCycleInYear { get; set; }
-        public virtual DbSet<WholeSaler> WholeSaler { get; set; }
-        public virtual DbSet<WholeSalerLocality> WholeSalerLocality { get; set; }
+ 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -962,38 +961,7 @@ namespace CRM.Data
                     .HasConstraintName("FK_AdresseLocality_Adresse");
             });
 
-            modelBuilder.Entity<Phone>(entity =>
-            {
-                entity.HasKey(e => new { e.IdPhone, e.Status, e.Version });
-                entity.Property(x => x.IdPhone).UseIdentityColumn();
-                entity.HasIndex(e => new { e.Active, e.IdPhone, e.Status,e.Version }).IsUnique();
-                entity.HasIndex(e => e.IdPhone).IsUnique(false);
-                entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
-
-                entity.Property(e => e.IdPharmacy).HasColumnName("idPharmacy");
-
-                entity.Property(e => e.PhoneNumber).HasMaxLength(15);
-
-
-                entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
-
-                entity.HasOne(d => d.Doctor)
-                    .WithMany(p => p.Phone)
-                    .HasForeignKey(d => new { d.IdDoctor, d.StatusDoctor, d.VersionDoctor })
-                    .HasConstraintName("FK_Phone_Doctor").IsRequired(false);
-                entity.HasOne(d => d.Pharmacy)
-                 .WithMany(p => p.Phone)
-                 .HasForeignKey(d => new { d.IdPharmacy, d.StatusPharmacy, d.VersionPharmacy })
-                 .HasConstraintName("FK_Phone_Pharmacy").IsRequired(false);
-                entity.HasOne(d => d.WholeSaler)
-                .WithMany(p => p.Phone)
-                .HasForeignKey(d => new { d.IdWholeSaler, d.StatusWholeSaler, d.VersionWholeSaler })
-                                      
-.HasConstraintName("FK_WholeSaler_Doctor").IsRequired(false);
-             
-
        
-            });
 
             modelBuilder.Entity<VisitChannel>(entity =>
             {
@@ -1042,6 +1010,10 @@ namespace CRM.Data
              .WithMany()
              .HasForeignKey(d => new { d.IdProduct, d.StatusProduct, d.VersionProduct })
              .HasConstraintName("FK_Objection_Product").IsRequired(false);
+                entity.HasOne(d => d.VisitReport)
+        .WithMany()
+        .HasForeignKey(d => new { d.IdVisitReport, d.StatusVisitReport, d.VersionVisitReport })
+        .HasConstraintName("FK_Objection_VisitReport").IsRequired(false);
             });
           
             modelBuilder.Entity<Phone>(entity =>
@@ -1066,10 +1038,7 @@ namespace CRM.Data
                  .WithMany(p => p.Phone)
                  .HasForeignKey(d => new { d.IdPharmacy, d.StatusPharmacy, d.VersionPharmacy })
                  .HasConstraintName("FK_Phone_Pharmacy").IsRequired(false);
-                entity.HasOne(d => d.WholeSaler)
-                .WithMany(p => p.Phone)
-                .HasForeignKey(d => new { d.IdWholeSaler, d.StatusWholeSaler, d.VersionWholeSaler })
-                .HasConstraintName("FK_WholeSaler_Doctor").IsRequired(false);
+   
 
 
 
@@ -1295,22 +1264,7 @@ namespace CRM.Data
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_VisitVisitReport_Report");
             });
-            modelBuilder.Entity<VisitRequestReport>(entity =>
-            {
-                entity.HasKey(e => new { e.IdVisitRequest, e.StatusVisitRequest, e.VersionVisitRequest, e.IdReport, e.StatusReport, e.VersionReport });
 
-                entity.HasOne(d => d.VisitRequest)
-                    .WithMany(p => p.VisitRequestReport)
-                    .HasForeignKey(d => new { d.IdVisitRequest, d.StatusVisitRequest, d.VersionVisitRequest })
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_VisitVisitReport_Visit");
-
-                entity.HasOne(d => d.Report)
-                    .WithMany(p => p.VisitRequestReport)
-                    .HasForeignKey(d => new { d.IdReport, d.StatusReport, d.VersionReport })
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_VisitVisitReport_Report");
-            });
 
  
             modelBuilder.Entity<TagsRequestRp>(entity =>
@@ -1540,43 +1494,7 @@ namespace CRM.Data
                     .HasConstraintName("FK_WeekSectorCycleInYear_WeekSectorCycleInYear");
             });
 
-            modelBuilder.Entity<WholeSaler>(entity =>
-            {
-                entity.HasKey(e => new { e.IdPwholeSaler, e.Status, e.Version });
-                entity.Property(x => x.IdPwholeSaler).UseIdentityColumn();
-                entity.HasIndex(e => new { e.Active, e.IdPwholeSaler, e.Status,e.Version }).IsUnique();
-                entity.HasIndex(e => e.IdPwholeSaler).IsUnique(false);
-                entity.Property(e => e.IdPwholeSaler).HasColumnName("IdPWholeSaler");
-
-                entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
-
-                entity.Property(e => e.Name)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
-            });
-
-            modelBuilder.Entity<WholeSalerLocality>(entity =>
-            {
-                entity.HasKey(e => new { e.IdLocality,e.VersionLocality,e.StatusLocality, e.IdPwholeSaler,e.StatusPwholeSaler,e.VersionPwholeSaler });
-
-                entity.Property(e => e.IdPwholeSaler).HasColumnName("IdPWholeSaler");
-
-                entity.HasOne(d => d.IdLocalityNavigation)
-                    .WithMany(p => p.WholeSalerLocality)
-                    .HasForeignKey(d => new { d.IdLocality, d.StatusLocality, d.VersionLocality })
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_WholeSalerLocality_Locality");
-
-                entity.HasOne(d => d.IdPwholeSalerNavigation)
-                    .WithMany(p => p.WholeSalerLocality)
-                    .HasForeignKey(d => new { d.IdPwholeSaler, d.StatusPwholeSaler, d.VersionPwholeSaler })
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_WholeSalerLocality_WholeSaler");
-            });
-
-            OnModelCreatingPartial(modelBuilder);
+                       OnModelCreatingPartial(modelBuilder);
         }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);

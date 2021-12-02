@@ -26,10 +26,14 @@ namespace CRM_API.Controllers
         private readonly IPharmacyService _PharmacyService;
         private readonly IProductService _ProductService;
         private readonly IBusinessUnitService _BusinessUnitService;
+        private readonly IVisitReportService _VisitReportService;
 
 
         private readonly IMapper _mapperService;
-        public ObjectionController(IBusinessUnitService BusinessUnitService, IProductService ProductService, IUserService UserService, IPharmacyService PharmacyService, IDoctorService DoctorService,IObjectionService ObjectionService, IMapper mapper)
+        public ObjectionController(IVisitReportService VisitReportService, 
+            IBusinessUnitService BusinessUnitService, IProductService ProductService, 
+            IUserService UserService, IPharmacyService PharmacyService, IDoctorService DoctorService,
+            IObjectionService ObjectionService, IMapper mapper)
         {
             _ProductService = ProductService;
             _BusinessUnitService = BusinessUnitService;
@@ -37,6 +41,7 @@ namespace CRM_API.Controllers
             _UserService = UserService;
             _PharmacyService = PharmacyService;
             _DoctorService = DoctorService;
+            _VisitReportService = VisitReportService;
 
             _ObjectionService = ObjectionService;
             _mapperService = mapper;
@@ -63,8 +68,25 @@ namespace CRM_API.Controllers
             Objection.UpdatedBy = Id;
             Objection.CreatedByName = FirstName+ " "+ LastName;
             Objection.UpdatedByName = FirstName + " " + LastName;
-            var Doctor = await _DoctorService.GetById(SaveObjectionResource.IdDoctor);
-        
+            if (SaveObjectionResource.IdVisitReport != 0)
+            {
+                var VisitReport = await _VisitReportService.GetById(SaveObjectionResource.IdVisitReport);
+
+                if (VisitReport != null)
+                {
+                    Objection.VisitReport = VisitReport;
+                    Objection.VersionVisitReport = VisitReport.Version;
+                    Objection.StatusVisitReport = VisitReport.Status;
+          
+                }
+                else
+                {
+                    Objection.VisitReport = null;
+                    Objection.VersionVisitReport = null;
+                    Objection.StatusVisitReport = null;
+                }
+            }
+            if (SaveObjectionResource.IdPharmacy != 0) { 
             var Pharmacy = await _PharmacyService.GetById(SaveObjectionResource.IdPharmacy);
 
             if (Pharmacy != null)
@@ -77,16 +99,23 @@ namespace CRM_API.Controllers
                 Objection.VersionDoctor = null;
                 Objection.StatusDoctor = null;
             }
-            if (Doctor != null)
+            }
+            if (SaveObjectionResource.IdDoctor != 0)
             {
-                Objection.Name = Doctor.Title + " " + Doctor.FirstName + " " + Doctor.LastName;
-                Objection.Doctor = Doctor;
-                Objection.VersionDoctor = Doctor.Version;
-                Objection.StatusDoctor = Doctor.Status;
 
-                Objection.Pharmacy = null;
-                Objection.VersionPharmacy = null;
-                Objection.StatusPharmacy = null;
+                var Doctor = await _DoctorService.GetById(SaveObjectionResource.IdDoctor);
+
+                if (Doctor != null)
+                {
+                    Objection.Name = Doctor.Title + " " + Doctor.FirstName + " " + Doctor.LastName;
+                    Objection.Doctor = Doctor;
+                    Objection.VersionDoctor = Doctor.Version;
+                    Objection.StatusDoctor = Doctor.Status;
+
+                    Objection.Pharmacy = null;
+                    Objection.VersionPharmacy = null;
+                    Objection.StatusPharmacy = null;
+                }
             }
             if (SaveObjectionResource.SatisfiedNotSatisfied != null)
             {
@@ -317,11 +346,28 @@ namespace CRM_API.Controllers
                 Objection.Status = Status.Pending;
             }
             }
-            var Doctor = await _DoctorService.GetById(SaveObjectionResource.IdDoctor);
+            if (SaveObjectionResource.IdVisitReport != 0)
+            {
+                var VisitReport = await _VisitReportService.GetById(SaveObjectionResource.IdVisitReport);
 
-            var Pharmacy = await _PharmacyService.GetById(SaveObjectionResource.IdPharmacy);
+                if (VisitReport != null)
+                {
+                    Objection.VisitReport = VisitReport;
+                    Objection.VersionVisitReport = VisitReport.Version;
+                    Objection.StatusVisitReport = VisitReport.Status;
+
+                }
+                else
+                {
+                    Objection.VisitReport = null;
+                    Objection.VersionVisitReport = null;
+                    Objection.StatusVisitReport = null;
+                }
+            }
             if (Objection.IdPharmacy != 0)
             {
+                var Pharmacy = await _PharmacyService.GetById(SaveObjectionResource.IdPharmacy);
+
                 if (Pharmacy.IdPharmacy != Objection.IdPharmacy)
                 {
                     Objection.Name = Pharmacy.Name;
@@ -345,6 +391,8 @@ namespace CRM_API.Controllers
             }
             if (Objection.IdDoctor != 0)
             {
+                var Doctor = await _DoctorService.GetById(SaveObjectionResource.IdDoctor);
+
                 if (Doctor.IdDoctor != Objection.IdDoctor)
                 {
                     Objection.Name = Doctor.Title + " " + Doctor.FirstName + " " + Doctor.LastName;

@@ -33,6 +33,7 @@ namespace CRM.Services.Services
 
 
         }
+
         public async Task Approuve(VisitReport VisitReportToBeUpdated, VisitReport VisitReport)
         {
             VisitReportToBeUpdated.Active = 1;
@@ -95,7 +96,7 @@ namespace CRM.Services.Services
         //          .GetAllWithArtisteAsync();
         //}
    
-        public async Task<VisitReport> GetById(int id)
+        public async Task<VisitReport> GetById(int? id)
         {
             return
                await _unitOfWork.VisitReports.SingleOrDefault(i => i.IdReport == id && i.Active == 0);

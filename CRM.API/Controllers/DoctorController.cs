@@ -175,15 +175,16 @@ namespace CRM_API.Controllers
                         Doctor.ManagerApprouved = 0;
 
                 }
+                Doctor.VersionLink = 0;
+                Doctor.StatusLink = 0;
+                Doctor.LinkedId = null;
                 Doctor.Version = 0;
                     Doctor.Active = 0;
                     Doctor.CreatedOn = DateTime.UtcNow;
                     Doctor.UpdatedOn = DateTime.UtcNow;
                     Doctor.CreatedBy = Id;
                     Doctor.UpdatedBy = Id;
-                    Doctor.VersionLink = 0;
-                    Doctor.StatusLink = 0;
-                    Doctor.LinkedId =null ;
+               
 
 
                 var NewDoctor = await _DoctorService.Create(Doctor);
@@ -1288,11 +1289,18 @@ namespace CRM_API.Controllers
             if (Role == "Manager")
             {
                 Doctor.Status = Status.Approuved;
+                Doctor.ManagerApprouved = Id;
+
             }
             else if (Role == "Delegue")
             {
                 Doctor.Status = Status.Pending;
+                Doctor.ManagerApprouved = 0;
+
             }
+            Doctor.VersionLink = 0;
+            Doctor.StatusLink = 0;
+            Doctor.LinkedId = null;
             if (SaveDoctorResource.IdSpecialty.Count > 0)
             {
                 if (SaveDoctorResource.IdSpecialty[0] != 0)

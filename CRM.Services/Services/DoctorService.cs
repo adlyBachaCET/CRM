@@ -229,13 +229,13 @@ namespace CRM.Services.Services
         public async Task<IEnumerable<Doctor>> GetAllActif()
         {
             return
-                             await _unitOfWork.Doctors.Find(i => i.Status == Status.Approuved || i.Status == Status.Pending && i.Active == 0);
+                             await _unitOfWork.Doctors.Find(i => (i.Status == Status.Approuved || i.Status == Status.Pending) && i.Active == 0);
         }
 
         public async Task<IEnumerable<Doctor>> GetAllInActif()
         {
             return
-                             await _unitOfWork.Doctors.GetAllInActif();
+                        await _unitOfWork.Doctors.Find(i => (i.Status == Status.Approuved || i.Status == Status.Pending) && i.Active == 1);
         }
 
         public async Task<IEnumerable<Service>> GetServiceByIdLocationActif(int IdLocation)

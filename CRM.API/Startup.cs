@@ -97,7 +97,6 @@ namespace CRM_API
             services.AddScoped<IBusinessUnitService, BusinessUnitService>();
             services.AddScoped<IBuDoctorService, BuDoctorService>();
             services.AddScoped<IPharmacyService, PharmacyService>();
-            services.AddScoped<IWholeSalerService, WholeSaleservice>();
             services.AddScoped<ICycleService, CycleService>();
             services.AddScoped<ICycleBuService, CycleBuService>(); 
             services.AddScoped<IPotentielSectorService, PotentielSectorService>();

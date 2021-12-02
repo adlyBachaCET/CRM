@@ -61,8 +61,7 @@ namespace CRM.Core
         ITagsRepository Tagss { get; }
 
         IWeekInYearRepository WeekInYears { get; }
-        IWholeSalerLocalityRepository WholeSalerLocalitys { get; }
-        IWholeSalerRepository WholeSales { get; }
+
         ISectorInYearRepository SectorInYear { get; }
         ISectorCycleRepository WeekSectorCycles { get; }
 

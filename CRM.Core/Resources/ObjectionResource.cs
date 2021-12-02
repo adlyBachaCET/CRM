@@ -48,6 +48,12 @@ namespace CRM.Core.Models
         public string Response { get; set; }
 
         public int? Satisfaction { get; set; }
+        public int? IdVisitReport { get; set; }
+        public int? VersionVisitReport { get; set; }
+        public Status? StatusVisitReport { get; set; }
+
+
+        public virtual VisitReportResource VisitReport { get; set; }
 
     }
 

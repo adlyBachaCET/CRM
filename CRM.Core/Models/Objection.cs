@@ -49,7 +49,12 @@ namespace CRM.Core.Models
         public virtual Product Product { get; set; }
         public string Response { get; set; }
         public RequestObjection RequestObjection { get; set; }
+        public int? IdVisitReport { get; set; }
+        public int? VersionVisitReport { get; set; }
+        public Status? StatusVisitReport { get; set; }
 
+
+        public virtual VisitReport VisitReport { get; set; }
     }
     public enum RequestObjection
     {

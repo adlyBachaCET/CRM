@@ -25,12 +25,13 @@ namespace CRM_API.Controllers
         private readonly IPharmacyService _PharmacyService;
 
         private readonly IMapper _mapperService;
-        public VisitReportController(IPharmacyService PharmacyService, IDoctorService DoctorService,IUserService UserService, IVisitReportService VisitReportService, IVisitService VisitService, IMapper mapper)
+        public VisitReportController(IPharmacyService PharmacyService, IDoctorService DoctorService,IUserService UserService,
+            IVisitReportService VisitReportService, IVisitService VisitService, IMapper mapper)
         {
             _PharmacyService = PharmacyService;
 
             _DoctorService = DoctorService;
-               _UserService = UserService;
+              _UserService = UserService;
             _VisitService = VisitService;
             _VisitReportService = VisitReportService;
             _mapperService = mapper;

@@ -9,7 +9,6 @@ namespace CRM.Core.Models
         {
             InverseIdParentNavigation = new HashSet<Locality>();
             SectorLocality = new HashSet<SectorLocality>();
-            WholeSalerLocality = new HashSet<WholeSalerLocality>();
         }
 
         public int IdLocality { get; set; }
@@ -30,7 +29,6 @@ namespace CRM.Core.Models
         public virtual Locality IdParentNavigation { get; set; }
         public virtual ICollection<Locality> InverseIdParentNavigation { get; set; }
         public virtual ICollection<SectorLocality> SectorLocality { get; set; }
-        public virtual ICollection<WholeSalerLocality> WholeSalerLocality { get; set; }
         public virtual ICollection<AdresseLocality> AdresseLocality { get; set; }
 
     }
