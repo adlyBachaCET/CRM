@@ -47,10 +47,12 @@ namespace CRM.Core.Models
         public int? IdDoctor { get; set; }
         public int? VersionDoctor { get; set; }
         public Status? StatusDoctor { get; set; }
+        public virtual DoctorResource Doctor { get; set; }
 
         public int? IdPharmacy { get; set; }
         public int? VersionPharmacy { get; set; }
         public Status? StatusPharmacy { get; set; }
+        public virtual PharmacyResource Pharmacy { get; set; }
 
 
     }

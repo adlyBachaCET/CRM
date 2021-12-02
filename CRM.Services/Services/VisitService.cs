@@ -29,6 +29,55 @@ namespace CRM.Services.Services
             await _unitOfWork.CommitAsync();
             return newVisit;
         }
+        public async Task<IEnumerable<Visit>> GetAll(Status? Status)
+        {
+
+            if (Status != null) return await _unitOfWork.Visits.Find(i => i.Status == Status && i.Active == 0);
+
+            return await _unitOfWork.Visits.Find(i => i.Status == Status && i.Active == 0);
+
+
+        }
+        public async Task<Visit> GetById(int Id, Status? Status)
+        {
+
+            if (Status != null) return await _unitOfWork.Visits.SingleOrDefault(i => i.IdVisit == Id && i.Status == Status
+            && i.Active == 0);
+
+            return await _unitOfWork.Visits.SingleOrDefault(i => i.IdVisit == Id && i.Active == 0);
+
+
+        }
+        public async Task Approuve(Visit VisitToBeUpdated, Visit Visit)
+        {
+            VisitToBeUpdated.Active = 1;
+            await _unitOfWork.CommitAsync();
+            Visit = VisitToBeUpdated;
+            Visit.Version = VisitToBeUpdated.Version + 1;
+            Visit.IdVisit = VisitToBeUpdated.IdVisit;
+            Visit.Status = Status.Approuved;
+            Visit.UpdatedOn = System.DateTime.UtcNow;
+            Visit.CreatedOn = VisitToBeUpdated.CreatedOn;
+            Visit.Active = 0;
+            await _unitOfWork.Visits.Add(Visit);
+            await _unitOfWork.CommitAsync();
+        }
+        public async Task Reject(Visit VisitToBeUpdated, Visit Visit)
+        {
+            VisitToBeUpdated.Active = 1;
+            await _unitOfWork.CommitAsync();
+            Visit = VisitToBeUpdated;
+            Visit.Version = VisitToBeUpdated.Version + 1;
+            Visit.IdVisit = VisitToBeUpdated.IdVisit;
+            Visit.Status = Status.Rejected;
+            Visit.UpdatedOn = System.DateTime.UtcNow;
+            Visit.CreatedOn = VisitToBeUpdated.CreatedOn;
+
+            Visit.Active = 0;
+
+            await _unitOfWork.Visits.Add(Visit);
+            await _unitOfWork.CommitAsync();
+        }
         public async Task<IEnumerable<Visit>> GetAll()
         {
             return

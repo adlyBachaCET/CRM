@@ -42,7 +42,7 @@ namespace CRM.Services.Services
             Doctor = DoctorToBeUpdated;
             Doctor.Version = DoctorToBeUpdated.Version + 1;
             Doctor.IdDoctor = DoctorToBeUpdated.IdDoctor;
-            Doctor.Status = Status.Rejected;
+            Doctor.Status = Status.Approuved;
             Doctor.UpdatedOn = System.DateTime.UtcNow;
             Doctor.CreatedOn = DoctorToBeUpdated.CreatedOn;
 
@@ -56,11 +56,14 @@ namespace CRM.Services.Services
         {
             DoctorToBeUpdated.Active = 1;
             await _unitOfWork.CommitAsync();
-
+            Doctor = DoctorToBeUpdated;
             Doctor.Version = DoctorToBeUpdated.Version + 1;
             Doctor.IdDoctor = DoctorToBeUpdated.IdDoctor;
             Doctor.Status = Status.Rejected;
-            Doctor.Active = 1;
+            Doctor.UpdatedOn = System.DateTime.UtcNow;
+            Doctor.CreatedOn = DoctorToBeUpdated.CreatedOn;
+
+            Doctor.Active = 0;
 
             await _unitOfWork.Doctors.Add(Doctor);
             await _unitOfWork.CommitAsync();

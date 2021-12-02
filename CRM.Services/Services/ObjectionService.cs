@@ -34,11 +34,73 @@ namespace CRM.Services.Services
                            await _unitOfWork.Objections.GetAll();
         }
 
-       /* public async Task Delete(Objection Objection)
+ 
+        public async Task<IEnumerable<Objection>> GetAll(Status? Status, RequestObjection RequestObjection)
         {
-            _unitOfWork.Objections.Remove(Objection);
+
+            if (Status != null) return await _unitOfWork.Objections.Find(i => i.Status == Status && i.Active == 0 
+            && i.RequestObjection==RequestObjection);
+
+            return await _unitOfWork.Objections.Find(i => i.Active == 0
+            && i.RequestObjection == RequestObjection);
+
+
+        }
+        public async Task<IEnumerable<Objection>> GetAll(Status? Status)
+        {
+
+            if (Status != null) return await _unitOfWork.Objections.Find(i => i.Status == Status && i.Active == 0);
+
+            return await _unitOfWork.Objections.Find(i => i.Status == Status && i.Active == 0);
+
+
+        }
+        public async Task<Objection> GetById(int Id,Status? Status, RequestObjection RequestObjection)
+        {
+
+            if (Status != null) return await _unitOfWork.Objections.SingleOrDefault(i => i.IdObjection== Id&& i.Status == Status && i.Active == 0
+            && i.RequestObjection == RequestObjection);
+
+            return await _unitOfWork.Objections.SingleOrDefault(i => i.IdObjection == Id && i.Active == 0
+            && i.RequestObjection == RequestObjection);
+
+
+        }
+        public async Task Approuve(Objection ObjectionToBeUpdated, Objection Objection)
+        {
+            ObjectionToBeUpdated.Active = 1;
             await _unitOfWork.CommitAsync();
-        }*/
+            Objection = ObjectionToBeUpdated;
+            Objection.Version = ObjectionToBeUpdated.Version + 1;
+            Objection.IdObjection = ObjectionToBeUpdated.IdObjection;
+            Objection.Status = Status.Approuved;
+            Objection.UpdatedOn = System.DateTime.UtcNow;
+            Objection.CreatedOn = ObjectionToBeUpdated.CreatedOn;
+            Objection.Active = 0;
+            await _unitOfWork.Objections.Add(Objection);
+            await _unitOfWork.CommitAsync();
+        }
+        public async Task Reject(Objection ObjectionToBeUpdated, Objection Objection)
+        {
+            ObjectionToBeUpdated.Active = 1;
+            await _unitOfWork.CommitAsync();
+            Objection = ObjectionToBeUpdated;
+            Objection.Version = ObjectionToBeUpdated.Version + 1;
+            Objection.IdObjection = ObjectionToBeUpdated.IdObjection;
+            Objection.Status = Status.Rejected;
+            Objection.UpdatedOn = System.DateTime.UtcNow;
+            Objection.CreatedOn = ObjectionToBeUpdated.CreatedOn;
+
+            Objection.Active = 0;
+
+            await _unitOfWork.Objections.Add(Objection);
+            await _unitOfWork.CommitAsync();
+        }
+        /* public async Task Delete(Objection Objection)
+         {
+             _unitOfWork.Objections.Remove(Objection);
+             await _unitOfWork.CommitAsync();
+         }*/
 
         //public async Task<IEnumerable<Objection>> GetAllWithArtiste()
         //{

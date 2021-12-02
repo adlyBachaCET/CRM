@@ -19,5 +19,10 @@ namespace CRM.Core.Services
         Task<IEnumerable<VisitReport>> GetAllInActif();
         Task<IEnumerable<VisitReport>> GetAllById(int Id);
         Task<IEnumerable<VisitReport>> GetByIdDoctor(int id);
+        Task<VisitReport> GetById(int Id, Status? Status);
+        Task<IEnumerable<VisitReport>> GetAll(Status? Status);
+        Task Approuve(VisitReport VisitReportToBeUpdated, VisitReport VisitReport);
+        Task Reject(VisitReport VisitReportToBeUpdated, VisitReport VisitReport);
+
     }
 }

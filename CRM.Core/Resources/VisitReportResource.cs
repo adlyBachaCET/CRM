@@ -31,6 +31,8 @@ namespace CRM.Core.Models
 
         public string CycleTtype { get; set; }
         public string Commentary { get; set; }
+        public bool Replacement { get; set; }
+
         public string Name_Replacement { get; set; }
 
     }

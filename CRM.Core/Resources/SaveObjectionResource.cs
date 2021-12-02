@@ -6,7 +6,7 @@ namespace CRM.Core.Models
 {
     public partial class SaveObjectionResource
     {
- 
+
 
 
         public string Description { get; set; }
@@ -20,8 +20,9 @@ namespace CRM.Core.Models
         public bool OnProduct { get; set; }
         public string Name { get; set; }
 
-
+        public RequestObjection RequestObjection { get; set; }
         public int? Satisfaction { get; set; }
+        public Status? SatisfiedNotSatisfied { get; set; }
 
     }
 

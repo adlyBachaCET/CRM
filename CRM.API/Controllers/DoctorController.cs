@@ -180,11 +180,11 @@ namespace CRM_API.Controllers
                     var NewDoctor = await _DoctorService.Create(Doctor);
                     var DoctorResource = _mapperService.Map<Doctor, DoctorResource>(NewDoctor);
 
-                if (SaveDoctorResource.Cabinet != null)
+                if (SaveDoctorResource.Cabinets != null)
                 {
-                    foreach(var item in SaveDoctorResource.Cabinet) { 
+                    foreach(var item in SaveDoctorResource.Cabinets) { 
                  //*** Mappage ***
-                        var Location = _mapperService.Map<LocationAdd, Location>(item);
+                        var Location = _mapperService.Map<LocationAdd, Location>(item.Cabinet);
                         Location.UpdatedOn = DateTime.UtcNow;
                         Location.CreatedOn = DateTime.UtcNow;
                         Location.Version = 0;
@@ -198,26 +198,26 @@ namespace CRM_API.Controllers
                         {
                             Location.Status = Status.Pending;
                         }
-                        var Locality1 = await _LocalityService.GetById(item.IdLocality1);
+                        var Locality1 = await _LocalityService.GetById(item.Cabinet.IdLocality1);
                         Location.NameLocality1 = Locality1.Name;
                         Location.VersionLocality1 = Locality1.Version;
                         Location.StatusLocality1 = Locality1.Status;
                         Location.IdLocality1 = Locality1.IdLocality;
-                        var Locality2 = await _LocalityService.GetById(item.IdLocality2);
+                        var Locality2 = await _LocalityService.GetById(item.Cabinet.IdLocality2);
                         Location.NameLocality2 = Locality2.Name;
                         Location.VersionLocality2 = Locality2.Version;
                         Location.StatusLocality2 = Locality2.Status;
                         Location.IdLocality2 = Locality1.IdLocality;
-                        var NewLocationType = await _LocationTypeService.GetById(item.IdLocationType);
+                        var NewLocationType = await _LocationTypeService.GetById(item.Cabinet.IdLocationType);
                         Location.NameLocationType = NewLocationType.Name;
                         Location.StatusLocationType = NewLocationType.Status;
                         Location.VersionLocationType = NewLocationType.Version;
                         Location.TypeLocationType = NewLocationType.Type;
                         Location.CreatedBy = Id;
                         Location.UpdatedBy = Id;
-                        if (item.IdBrick1 != 0)
+                        if (item.Cabinet.IdBrick1 != 0)
                         {
-                            var Brick1 = await _BrickService.GetByIdActif(item.IdBrick1);
+                            var Brick1 = await _BrickService.GetByIdActif(item.Cabinet.IdBrick1);
                             if (Brick1 != null)
                             {
                                 Location.IdBrick1 = Brick1.IdBrick;
@@ -236,9 +236,9 @@ namespace CRM_API.Controllers
                                 Location.NumBrick1 = 0;
                             }
                         }
-                    if (item.IdBrick2 != 0)
+                    if (item.Cabinet.IdBrick2 != 0)
                     {
-                        var Brick2 = await _BrickService.GetByIdActif(item.IdBrick2);
+                        var Brick2 = await _BrickService.GetByIdActif(item.Cabinet.IdBrick2);
                       
                             if (Brick2 != null)
                             {
@@ -271,8 +271,10 @@ namespace CRM_API.Controllers
 
               
                     LocationDoctor.IdService = 0;
+                    LocationDoctor.Order = item.Order;
 
-                  
+                    LocationDoctor.Primary = item.Primary;
+
 
                     LocationDoctor.Status = Status.Approuved;
                     LocationDoctor.Version = 0;
@@ -361,20 +363,22 @@ namespace CRM_API.Controllers
 
                         }
                     }
-                if (SaveDoctorResource.IdSpecialty1 != 0)
+                if (SaveDoctorResource.IdSpecialty[0] != 0)
                 {
-                    var Specialty1 = await _SpecialtyService.GetById(SaveDoctorResource.IdSpecialty1);
+                    var Specialty1 = await _SpecialtyService.GetById(SaveDoctorResource.IdSpecialty[1]);
                     NewDoctor.IdSpecialty1 = Specialty1.IdSpecialty;
                     NewDoctor.NameSpecialty1 = Specialty1.Name;
 
                 }
-                if (SaveDoctorResource.IdSpecialty2 != 0)
+                if (SaveDoctorResource.IdSpecialty[1] != 0)
                 {
-                    var Specialty2 = await _SpecialtyService.GetById(SaveDoctorResource.IdSpecialty2);
+                    var Specialty2 = await _SpecialtyService.GetById(SaveDoctorResource.IdSpecialty[1]);
                     NewDoctor.IdSpecialty2 = Specialty2.IdSpecialty;
                     NewDoctor.NameSpecialty2 = Specialty2.Name;
 
                 }
+            
+           
                 if (SaveDoctorResource.IdPotentiel != 0)
                 {
                     var Potentiel = await _PotentielService.GetById(SaveDoctorResource.IdPotentiel);
@@ -840,7 +844,7 @@ namespace CRM_API.Controllers
                         DoctorResource.Potentiel = PotentielDoctor;
                     }
                     List<Specialities> SpecialitiesList = new List<Specialities>();
-
+                    if (Doctors.IdSpecialty1!=0) { 
                     var Specialty1 = await _SpecialtyService.GetById(Doctors.IdSpecialty1);
                     Specialities Specialities1 = new Specialities();
                     if (Specialty1 != null)
@@ -848,19 +852,25 @@ namespace CRM_API.Controllers
                         Specialities1.IdSpecialty = Specialty1.IdSpecialty;
                         Specialities1.NameSpecialty = Specialty1.Name;
                         Specialities1.Abr = Specialty1.Abreviation;
+                            SpecialitiesList.Add(Specialities1);
 
+                        }
                     }
-                    Specialities Specialities2 = new Specialities();
+                    if (Doctors.IdSpecialty2 != 0)
+                    {
 
-                    var Specialty2 = await _SpecialtyService.GetById(Doctors.IdSpecialty2);
-                    if (Specialty2 != null) { 
-                    Specialities2.IdSpecialty = Specialty2.IdSpecialty;
-                    Specialities2.NameSpecialty = Specialty2.Name;
-                    Specialities2.Abr = Specialty2.Abreviation;
-                        SpecialitiesList.Add(Specialities2);
+                        Specialities Specialities2 = new Specialities();
 
+                        var Specialty2 = await _SpecialtyService.GetById(Doctors.IdSpecialty2);
+                        if (Specialty2 != null)
+                        {
+                            Specialities2.IdSpecialty = Specialty2.IdSpecialty;
+                            Specialities2.NameSpecialty = Specialty2.Name;
+                            Specialities2.Abr = Specialty2.Abreviation;
+                            SpecialitiesList.Add(Specialities2);
+
+                        }
                     }
-                    SpecialitiesList.Add(Specialities1);
                     DoctorResource.Specialities = SpecialitiesList;
                     DoctorListObject.Doctor = DoctorResource;
                     var TagsDoctor = await _TagsDoctorService.GetByIdActif(Id);
@@ -998,6 +1008,7 @@ namespace CRM_API.Controllers
                 Specialities2.IdSpecialty = Specialty2.IdSpecialty;
                 Specialities2.NameSpecialty = Specialty2.Name;
                 Specialities2.Abr = Specialty2.Abreviation;
+
                 List<Specialities> SpecialitiesList = new List<Specialities>();
                 SpecialitiesList.Add(Specialities1);
                 SpecialitiesList.Add(Specialities2);
@@ -1252,7 +1263,20 @@ namespace CRM_API.Controllers
             {
                 Doctor.Status = Status.Pending;
             }
+            if (SaveDoctorResource.IdSpecialty[0] != 0)
+            {
+                var Specialty1 = await _SpecialtyService.GetById(SaveDoctorResource.IdSpecialty[1]);
+                Doctor.IdSpecialty1 = Specialty1.IdSpecialty;
+                Doctor.NameSpecialty1 = Specialty1.Name;
 
+            }
+            if (SaveDoctorResource.IdSpecialty[1] != 0)
+            {
+                var Specialty2 = await _SpecialtyService.GetById(SaveDoctorResource.IdSpecialty[1]);
+                Doctor.IdSpecialty2 = Specialty2.IdSpecialty;
+                Doctor.NameSpecialty2 = Specialty2.Name;
+
+            }
             Doctor.CreatedBy = DoctorToBeModified.CreatedBy ;
             Doctor.UpdatedBy = IdUser;
             Doctor.CreatedOn = DoctorToBeModified.CreatedOn;
@@ -1264,13 +1288,13 @@ namespace CRM_API.Controllers
             var DoctorUpdated = await _DoctorService.GetById(Id);
             List<LocationDoctor> LocationDoctors = new List<LocationDoctor>();
             var OldLocationDoctor = await _LocationDoctorService.GetAll(Doctor.IdDoctor);
-            foreach (var item in SaveDoctorResource.ListOfLocations)
+            foreach (var item in SaveDoctorResource.Cabinets)
             {
 
                 if (item != null)
                 {
                     //*** Mappage ***
-                    var Location = _mapperService.Map<LocationAdd, Location>(item);
+                    var Location = _mapperService.Map<LocationAdd, Location>(item.Cabinet);
                     Location.UpdatedOn = DateTime.UtcNow;
                     Location.CreatedOn = DateTime.UtcNow;
                     Location.Version = 0;
@@ -1284,26 +1308,26 @@ namespace CRM_API.Controllers
                     {
                         Location.Status = Status.Pending;
                     }
-                    var Locality1 = await _LocalityService.GetById(item.IdLocality1);
+                    var Locality1 = await _LocalityService.GetById(item.Cabinet.IdLocality1);
                     Location.NameLocality1 = Locality1.Name;
                     Location.VersionLocality1 = Locality1.Version;
                     Location.StatusLocality1 = Locality1.Status;
                     Location.IdLocality1 = Locality1.IdLocality;
-                    var Locality2 = await _LocalityService.GetById(item.IdLocality2);
+                    var Locality2 = await _LocalityService.GetById(item.Cabinet.IdLocality2);
                     Location.NameLocality2 = Locality2.Name;
                     Location.VersionLocality2 = Locality2.Version;
                     Location.StatusLocality2 = Locality2.Status;
                     Location.IdLocality2 = Locality1.IdLocality;
-                    var NewLocationType = await _LocationTypeService.GetById(item.IdLocationType);
+                    var NewLocationType = await _LocationTypeService.GetById(item.Cabinet.IdLocationType);
                     Location.NameLocationType = NewLocationType.Name;
                     Location.StatusLocationType = NewLocationType.Status;
                     Location.VersionLocationType = NewLocationType.Version;
                     Location.TypeLocationType = NewLocationType.Type;
                     Location.CreatedBy = Id;
                     Location.UpdatedBy = Id;
-                    if (item.IdBrick1 != 0)
+                    if (item.Cabinet.IdBrick1 != 0)
                     {
-                        var Brick1 = await _BrickService.GetByIdActif(item.IdBrick1);
+                        var Brick1 = await _BrickService.GetByIdActif(item.Cabinet.IdBrick1);
                         if (Brick1 != null)
                         {
                             Location.IdBrick1 = Brick1.IdBrick;
@@ -1322,9 +1346,9 @@ namespace CRM_API.Controllers
                             Location.NumBrick1 = 0;
                         }
                     }
-                    if (item.IdBrick2 != 0)
+                    if (item.Cabinet.IdBrick2 != 0)
                     {
-                        var Brick2 = await _BrickService.GetByIdActif(item.IdBrick2);
+                        var Brick2 = await _BrickService.GetByIdActif(item.Cabinet.IdBrick2);
 
                         if (Brick2 != null)
                         {

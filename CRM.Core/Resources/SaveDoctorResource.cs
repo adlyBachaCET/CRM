@@ -5,7 +5,7 @@ namespace CRM.Core.Models
 {
     public partial class SaveDoctorResource
     {
-  
+
 
         public string Reference { get; set; }
 
@@ -18,8 +18,8 @@ namespace CRM.Core.Models
         public int VersionLink { get; set; }
         public Status StatusLink { get; set; }
         public int? ManagerApprouved { get; set; }
-        public int IdSpecialty1 { get; set; }
-        public int IdSpecialty2 { get; set; }
+        public List<int> IdSpecialty { get; set; }
+
 
 
         public int IdPotentiel { get; set; }
@@ -28,7 +28,7 @@ namespace CRM.Core.Models
         public virtual List<SaveInfoResource> Infos { get; set; }
         public virtual List<SavePhoneResource> Phones { get; set; }
         public virtual ICollection<SaveTagsResource> Tags { get; set; }
-        public virtual List<LocationAdd> Cabinet { get; set; }
+        public virtual List<ListOfCabinetsWithOrder> Cabinets { get; set; }
 
 
     }
@@ -47,8 +47,7 @@ namespace CRM.Core.Models
         public int VersionLink { get; set; }
         public Status StatusLink { get; set; }
         public int? ManagerApprouved { get; set; }
-        public int IdSpecialty1 { get; set; }
-        public int IdSpecialty2 { get; set; }
+        public List<int> IdSpecialty { get; set; }
 
 
         public int IdPotentiel { get; set; }
@@ -58,7 +57,16 @@ namespace CRM.Core.Models
         public virtual List<SavePhoneResource> Phones { get; set; }
         public virtual ICollection<SaveTagsResource> Tags { get; set; }
 
-        public virtual List<LocationAdd> ListOfLocations { get; set; }
+        public virtual List<ListOfCabinetsWithOrder> Cabinets { get; set; }
+
+
+    }
+    public class ListOfCabinetsWithOrder{
+        public virtual LocationAdd Cabinet { get; set; }
+
+
+        public int Order { get; set; }
+        public int Primary { get; set; }
 
 
     }

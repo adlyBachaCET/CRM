@@ -1,6 +1,7 @@
 using AutoMapper;
 using CRM.Core.Models;
 using CRM.Core.Services;
+using CRM_API.Helper;
 using CRM_API.Resources;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
@@ -23,9 +24,11 @@ namespace CRM_API.Controllers
         private readonly IVisitService _VisitService;
         private readonly IDoctorService _DoctorService;
         private readonly IPharmacyService _PharmacyService;
+        private readonly IUserService _UserService;
 
         private readonly IMapper _mapperService;
-        public VisitController(ILocalityService LocalityService, IBrickService BrickService, IVisitService VisitService, IPharmacyService PharmacyService, IDoctorService DoctorService, IMapper mapper)
+        public VisitController(IUserService UserService, ILocalityService LocalityService, IBrickService BrickService,
+            IVisitService VisitService, IPharmacyService PharmacyService, IDoctorService DoctorService, IMapper mapper)
         {
             _BrickService = BrickService;
 
@@ -126,58 +129,55 @@ namespace CRM_API.Controllers
             return Ok(VisitResource);
       
         }
-        [HttpGet]
-        public async Task<ActionResult<VisitResource>> GetAllVisits()
+        [HttpPost("GetAll")]
+        public async Task<ActionResult<VisitResource>> GetAllVisits(Lists Lists)
         {
             try
             {
-                var Employe = await _VisitService.GetAll();
-                if (Employe == null) return NotFound();
-                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
-                return Ok(Employe);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-        [HttpGet("Actif")]
-        public async Task<ActionResult<VisitResource>> GetAllActifVisits()
-        {
-            try
-            {
-                var Employe = await _VisitService.GetAllActif();
-                if (Employe == null) return NotFound();
-                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
-                return Ok(Employe);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-        [HttpGet("InActif")]
-        public async Task<ActionResult<VisitResource>> GetAllInactifVisits()
-        {
-            try
-            {
-                var Employe = await _VisitService.GetAllInActif();
-                if (Employe == null) return NotFound();
-                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
-                return Ok(Employe);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
+                var Visits = await _VisitService.GetAll(Lists.Status);
+                if (Visits == null) return NotFound();
+                List<VisitResource> VisitResources = new List<VisitResource>();
+                foreach (var item in Visits)
+                {
+                    var VisitResource = _mapperService.Map<Visit, VisitResource>(item);
 
-        [HttpGet("{Id}")]
-        public async Task<ActionResult<VisitResource>> GetVisitById(int Id)
+                    var Visit = await _VisitService.GetById(item.IdVisit, Lists.Status);
+                    var VisitRessource = _mapperService.Map<Visit, VisitResource>(Visit);
+                    if (Visit.IdDoctor != null)
+                    {
+                        var Doctor = await _DoctorService.GetById(Visit.IdDoctor);
+                        var DoctorResource = _mapperService.Map<Doctor, DoctorResource>(Doctor);
+                        VisitRessource.StatusDoctor = Doctor.Status;
+                        VisitRessource.VersionDoctor = Doctor.Version;
+                        VisitRessource.Doctor = DoctorResource;
+                    }
+                    if (Visit.IdPharmacy != null)
+                    {
+                        var Pharmacy = await _PharmacyService.GetById(Visit.IdPharmacy);
+                        var PharmacyResource = _mapperService.Map<Pharmacy, PharmacyResource>(Pharmacy);
+                        VisitRessource.StatusPharmacy = Pharmacy.Status;
+                        VisitRessource.VersionPharmacy = Pharmacy.Version;
+                        VisitRessource.Pharmacy = PharmacyResource;
+                    }
+        
+                    VisitResource = VisitRessource;
+                    VisitResources.Add(VisitResource);
+                }
+                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
+                return Ok(VisitResources);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+ 
+        [HttpPost("GetById")]
+        public async Task<ActionResult<VisitResource>> GetVisitById(ListsGetbyId ListsGetbyId)
         {
             try
             {
-                var Visits = await _VisitService.GetById(Id);
+                var Visits = await _VisitService.GetById(ListsGetbyId.Id, ListsGetbyId.Status);
                 if (Visits == null) return NotFound();
                 var VisitRessource = _mapperService.Map<Visit, VisitResource>(Visits);
                 return Ok(VisitRessource);

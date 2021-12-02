@@ -14,7 +14,55 @@ namespace CRM.Services.Services
         {
             _unitOfWork = unitOfWork;
         }
+        public async Task<IEnumerable<VisitReport>> GetAll(Status? Status)
+        {
 
+            if (Status != null) return await _unitOfWork.VisitReports.Find(i => i.Status == Status && i.Active == 0);
+
+            return await _unitOfWork.VisitReports.Find(i => i.Status == Status && i.Active == 0);
+
+
+        }
+        public async Task<VisitReport> GetById(int Id, Status? Status)
+        {
+
+            if (Status != null) return await _unitOfWork.VisitReports.SingleOrDefault(i => i.IdReport == Id && i.Status == Status 
+            && i.Active == 0);
+
+            return await _unitOfWork.VisitReports.SingleOrDefault(i => i.IdReport == Id && i.Active == 0);
+
+
+        }
+        public async Task Approuve(VisitReport VisitReportToBeUpdated, VisitReport VisitReport)
+        {
+            VisitReportToBeUpdated.Active = 1;
+            await _unitOfWork.CommitAsync();
+            VisitReport = VisitReportToBeUpdated;
+            VisitReport.Version = VisitReportToBeUpdated.Version + 1;
+            VisitReport.IdReport = VisitReportToBeUpdated.IdReport;
+            VisitReport.Status = Status.Approuved;
+            VisitReport.UpdatedOn = System.DateTime.UtcNow;
+            VisitReport.CreatedOn = VisitReportToBeUpdated.CreatedOn;
+            VisitReport.Active = 0;
+            await _unitOfWork.VisitReports.Add(VisitReport);
+            await _unitOfWork.CommitAsync();
+        }
+        public async Task Reject(VisitReport VisitReportToBeUpdated, VisitReport VisitReport)
+        {
+            VisitReportToBeUpdated.Active = 1;
+            await _unitOfWork.CommitAsync();
+            VisitReport = VisitReportToBeUpdated;
+            VisitReport.Version = VisitReportToBeUpdated.Version + 1;
+            VisitReport.IdReport = VisitReportToBeUpdated.IdReport;
+            VisitReport.Status = Status.Rejected;
+            VisitReport.UpdatedOn = System.DateTime.UtcNow;
+            VisitReport.CreatedOn = VisitReportToBeUpdated.CreatedOn;
+
+            VisitReport.Active = 0;
+
+            await _unitOfWork.VisitReports.Add(VisitReport);
+            await _unitOfWork.CommitAsync();
+        }
         public async Task<VisitReport> Create(VisitReport newVisitReport)
         {
 

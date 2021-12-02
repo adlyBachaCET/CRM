@@ -13,14 +13,17 @@ namespace CRM.Core.Services
         Task Delete(Objection ObjectionToBeDeleted);
         Task DeleteRange(List<Objection> Objection);
         Task<IEnumerable<Objection>> GetByIdPharmacy(int id);
-        
-    
+
+
         Task<IEnumerable<Objection>> GetAll();
         Task<IEnumerable<Objection>> GetAllActif();
         Task<IEnumerable<Objection>> GetAllInActif();
         Task<IEnumerable<Objection>> GetByIdDoctor(int id);
         Task<IEnumerable<Objection>> GetByIdActifDoctor(int Id);
         Task<IEnumerable<Objection>> GetByIdActifUser(int Id);
-
+        Task<IEnumerable<Objection>> GetAll(Status? Status, RequestObjection RequestObjection);
+        Task<Objection> GetById(int Id, Status? Status, RequestObjection RequestObjection);
+        Task Reject(Objection ObjectionToBeUpdated, Objection Objection);
+        Task Approuve(Objection ObjectionToBeUpdated, Objection Objection);
     }
 }

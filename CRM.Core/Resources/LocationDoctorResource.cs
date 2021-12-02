@@ -17,7 +17,6 @@ namespace CRM.Core.Models
         public int Order { get; set; }
         public int Primary { get; set; }
 
-        public bool ChefService { get; set; }
 
     }
 }

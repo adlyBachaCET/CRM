@@ -18,6 +18,7 @@ namespace CRM.Core.Models
         public string InfoAccompaniement { get; set; }
         public string Competitiveintelligence { get; set; }
         public string Commentary { get; set; }
+        public bool Replacement { get; set; }
         public string Name_Replacement { get; set; }
         public string Objectif { get; set; }
         public string ObjectifNextVisit { get; set; }
