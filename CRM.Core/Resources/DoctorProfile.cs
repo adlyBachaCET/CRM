@@ -18,6 +18,8 @@ namespace CRM.Core.Models
 
         public List<VisitReportResource> VisitReports { get; set; }
         public List<ObjectionResource> Objection { get; set; }
+        public List<ObjectionResource> Request { get; set; }
+
         public List<RequestRpResource> RequestRp { get; set; }
         public List<CommandeResource> Commande { get; set; }
 
