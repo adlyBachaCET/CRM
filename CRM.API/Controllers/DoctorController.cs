@@ -172,7 +172,7 @@ namespace CRM_API.Controllers
                 else if (Role == "Delegue")
                     {
                         Doctor.Status = Status.Pending;
-                        Doctor.ManagerApprouved = Id;
+                        Doctor.ManagerApprouved = 0;
 
                 }
                 Doctor.Version = 0;
@@ -181,7 +181,11 @@ namespace CRM_API.Controllers
                     Doctor.UpdatedOn = DateTime.UtcNow;
                     Doctor.CreatedBy = Id;
                     Doctor.UpdatedBy = Id;
-                    Doctor.UpdatedBy = Id;
+                    Doctor.VersionLink = 0;
+                    Doctor.StatusLink = 0;
+                    Doctor.LinkedId =null ;
+
+
                 var NewDoctor = await _DoctorService.Create(Doctor);
                     var DoctorResource = _mapperService.Map<Doctor, DoctorResource>(NewDoctor);
 
