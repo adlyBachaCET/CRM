@@ -363,20 +363,21 @@ namespace CRM_API.Controllers
 
                         }
                     }
-                if (SaveDoctorResource.IdSpecialty[0] != 0)
+                if (SaveDoctorResource.IdSpecialty.Count > 0)
                 {
-                    var Specialty1 = await _SpecialtyService.GetById(SaveDoctorResource.IdSpecialty[1]);
+                    if (SaveDoctorResource.IdSpecialty[0] != 0) { 
+                    var Specialty1 = await _SpecialtyService.GetById(SaveDoctorResource.IdSpecialty[0]);
                     NewDoctor.IdSpecialty1 = Specialty1.IdSpecialty;
                     NewDoctor.NameSpecialty1 = Specialty1.Name;
-
+                    }
+                    if (SaveDoctorResource.IdSpecialty[1] != 0 )
+                    {
+                        var Specialty2 = await _SpecialtyService.GetById(SaveDoctorResource.IdSpecialty[1]);
+                        NewDoctor.IdSpecialty2 = Specialty2.IdSpecialty;
+                        NewDoctor.NameSpecialty2 = Specialty2.Name;
+                    }
                 }
-                if (SaveDoctorResource.IdSpecialty[1] != 0)
-                {
-                    var Specialty2 = await _SpecialtyService.GetById(SaveDoctorResource.IdSpecialty[1]);
-                    NewDoctor.IdSpecialty2 = Specialty2.IdSpecialty;
-                    NewDoctor.NameSpecialty2 = Specialty2.Name;
-
-                }
+              
             
            
                 if (SaveDoctorResource.IdPotentiel != 0)
@@ -997,21 +998,28 @@ namespace CRM_API.Controllers
                 PotentielDoctor.IdPotentiel = Potentiel.IdPotentiel;
                 PotentielDoctor.NamePotentiel = Potentiel.Name;
                 DoctorResource.Potentiel = PotentielDoctor;
+                List<Specialities> SpecialitiesList = new List<Specialities>();
+
+                if (Doctors.IdSpecialty1 != 0) { 
                 var Specialty1 = await _SpecialtyService.GetById(Doctors.IdSpecialty1);
                 Specialities Specialities1 = new Specialities();
                 Specialities1.IdSpecialty = Specialty1.IdSpecialty;
                 Specialities1.NameSpecialty = Specialty1.Name;
                 Specialities1.Abr = Specialty1.Abreviation;
-                Specialities Specialities2 = new Specialities();
+                    SpecialitiesList.Add(Specialities1);
 
-                var Specialty2 = await _SpecialtyService.GetById(Doctors.IdSpecialty2);
-                Specialities2.IdSpecialty = Specialty2.IdSpecialty;
-                Specialities2.NameSpecialty = Specialty2.Name;
-                Specialities2.Abr = Specialty2.Abreviation;
+                }
+                if (Doctors.IdSpecialty2 != 0)
+                {
+                    Specialities Specialities2 = new Specialities();
 
-                List<Specialities> SpecialitiesList = new List<Specialities>();
-                SpecialitiesList.Add(Specialities1);
-                SpecialitiesList.Add(Specialities2);
+                    var Specialty2 = await _SpecialtyService.GetById(Doctors.IdSpecialty2);
+                    Specialities2.IdSpecialty = Specialty2.IdSpecialty;
+                    Specialities2.NameSpecialty = Specialty2.Name;
+                    Specialities2.Abr = Specialty2.Abreviation;
+
+                    SpecialitiesList.Add(Specialities2);
+                }
                 DoctorResource.Specialities = SpecialitiesList;
                 DoctorProfile.Doctor = DoctorResource;
                 var TagsDoctor = await _TagsDoctorService.GetByIdActif(Id);
@@ -1263,19 +1271,20 @@ namespace CRM_API.Controllers
             {
                 Doctor.Status = Status.Pending;
             }
-            if (SaveDoctorResource.IdSpecialty[0] != 0)
+            if (SaveDoctorResource.IdSpecialty.Count > 0)
             {
-                var Specialty1 = await _SpecialtyService.GetById(SaveDoctorResource.IdSpecialty[1]);
-                Doctor.IdSpecialty1 = Specialty1.IdSpecialty;
-                Doctor.NameSpecialty1 = Specialty1.Name;
-
-            }
-            if (SaveDoctorResource.IdSpecialty[1] != 0)
-            {
-                var Specialty2 = await _SpecialtyService.GetById(SaveDoctorResource.IdSpecialty[1]);
-                Doctor.IdSpecialty2 = Specialty2.IdSpecialty;
-                Doctor.NameSpecialty2 = Specialty2.Name;
-
+                if (SaveDoctorResource.IdSpecialty[0] != 0)
+                {
+                    var Specialty1 = await _SpecialtyService.GetById(SaveDoctorResource.IdSpecialty[0]);
+                    Doctor.IdSpecialty1 = Specialty1.IdSpecialty;
+                    Doctor.NameSpecialty1 = Specialty1.Name;
+                }
+                if (SaveDoctorResource.IdSpecialty[1] != 0)
+                {
+                    var Specialty2 = await _SpecialtyService.GetById(SaveDoctorResource.IdSpecialty[1]);
+                    Doctor.IdSpecialty2 = Specialty2.IdSpecialty;
+                    Doctor.NameSpecialty2 = Specialty2.Name;
+                }
             }
             Doctor.CreatedBy = DoctorToBeModified.CreatedBy ;
             Doctor.UpdatedBy = IdUser;
