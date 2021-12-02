@@ -790,7 +790,7 @@ namespace CRM.Data
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.Property(e => e.TypeInfo)
+                entity.Property(e => e.Label)
                     .HasMaxLength(50)
                     .IsUnicode(false);
 

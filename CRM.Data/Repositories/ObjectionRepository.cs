@@ -65,15 +65,15 @@ namespace CRM.Data.Repositories
             return result;
         }
 
-        public async Task<IEnumerable<Objection>> GetByIdDoctor(int id)
+        public async Task<IEnumerable<Objection>> GetByIdDoctor(RequestObjection RequestObjection,int id)
         {
-            var result = await MyDbContext.Objection.Where(a => a.Active == 0 &&  a.IdDoctor==id).ToListAsync();
+            var result = await MyDbContext.Objection.Where(a => a.Active == 0 &&  a.IdDoctor==id && a.RequestObjection== RequestObjection).ToListAsync();
             return result;
         }
 
-        public async Task<IEnumerable<Objection>> GetByIdPharmacy(int id)
+        public async Task<IEnumerable<Objection>> GetByIdPharmacy(RequestObjection RequestObjection, int id)
         {
-            var result = await MyDbContext.Objection.Where(a => a.Active == 0 && a.IdPharmacy == id).ToListAsync();
+            var result = await MyDbContext.Objection.Where(a => a.Active == 0 && a.IdPharmacy == id && a.RequestObjection == RequestObjection).ToListAsync();
             return result;
         }
         public async Task<IEnumerable<Objection>> GetByIdActifUser(int id)

@@ -15,9 +15,7 @@ namespace CRM.Core.Models
         public string Email { get; set; }
 
         public int? NbPatientsDay { get; set; }
-        public int VersionLink { get; set; }
-        public Status StatusLink { get; set; }
-        public int? ManagerApprouved { get; set; }
+
         public List<int> IdSpecialty { get; set; }
 
 

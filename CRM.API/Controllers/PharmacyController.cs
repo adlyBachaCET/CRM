@@ -440,6 +440,8 @@ namespace CRM_API.Controllers
                         ObjectionResources.Add(Objection);
                     }
                 }
+                PharmacyProfile.Objection = ObjectionResources;
+
                 var Requests = await _ObjectionService.GetByIdPharmacy(RequestObjection.Request, Id);
 
                 List<ObjectionResource> RequestResources = new List<ObjectionResource>();
@@ -453,7 +455,7 @@ namespace CRM_API.Controllers
                         RequestResources.Add(Request);
                     }
                 }
-                PharmacyProfile.Objection = ObjectionResources;
+                PharmacyProfile.Request = RequestResources;
                 var Potentiel = await _PotentielService.GetById(Pharmacys.IdPotentiel);
                 PotentielPharmacy PotentielPharmacy = new PotentielPharmacy();
                 if (Potentiel != null)

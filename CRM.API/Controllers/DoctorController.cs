@@ -166,18 +166,23 @@ namespace CRM_API.Controllers
                     if (Role == "Manager")
                     {
                         Doctor.Status = Status.Approuved;
-                    }
-                    else if (Role == "Delegue")
+                    Doctor.ManagerApprouved = Id;
+
+                }
+                else if (Role == "Delegue")
                     {
                         Doctor.Status = Status.Pending;
-                    }
-                    Doctor.Version = 0;
+                        Doctor.ManagerApprouved = Id;
+
+                }
+                Doctor.Version = 0;
                     Doctor.Active = 0;
                     Doctor.CreatedOn = DateTime.UtcNow;
                     Doctor.UpdatedOn = DateTime.UtcNow;
                     Doctor.CreatedBy = Id;
                     Doctor.UpdatedBy = Id;
-                    var NewDoctor = await _DoctorService.Create(Doctor);
+                    Doctor.UpdatedBy = Id;
+                var NewDoctor = await _DoctorService.Create(Doctor);
                     var DoctorResource = _mapperService.Map<Doctor, DoctorResource>(NewDoctor);
 
                 if (SaveDoctorResource.Cabinets != null)
@@ -1134,7 +1139,7 @@ namespace CRM_API.Controllers
                         RequestResources.Add(Bu);
                     }
                 }
-                DoctorProfile.Objection = RequestResources;
+                DoctorProfile.Request = RequestResources;
 
 
                 var Participant = await _ParticipantService.GetAllByIdDoctor(Id);

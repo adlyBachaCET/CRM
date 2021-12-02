@@ -13,11 +13,11 @@ namespace CRM.Core.Repository
         Task<IEnumerable<Objection>> GetAllPending();
         Task<IEnumerable<Objection>> GetAllRejected();
         Task<Objection> GetByIdActif(int id);
-        Task<IEnumerable<Objection>> GetByIdDoctor(int id);
+        Task<IEnumerable<Objection>> GetByIdDoctor(RequestObjection RequestObjection, int id);
         Task<IEnumerable<Objection>> GetByIdActifDoctor(int Id);
 
         Task<IEnumerable<Objection>> GetByIdActifUser(int Id);
-        Task<IEnumerable<Objection>> GetByIdPharmacy(int id);
+        Task<IEnumerable<Objection>> GetByIdPharmacy(RequestObjection RequestObjection, int id);
 
     }
 }

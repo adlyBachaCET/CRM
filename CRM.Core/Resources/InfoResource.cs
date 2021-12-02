@@ -13,7 +13,7 @@ namespace CRM.Core.Models
         public int? UpdatedBy { get; set; }
         public int Active { get; set; }
         public string Datatype { get; set; }
-        public string TypeInfo { get; set; }
+        public string Label { get; set; }
         public int? IdDoctor { get; set; }
         public int VersionDoctor { get; set; }
         public Status StatusDoctor { get; set; }
