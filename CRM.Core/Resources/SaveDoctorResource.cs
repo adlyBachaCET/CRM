@@ -16,7 +16,7 @@ namespace CRM.Core.Models
 
         public int? NbPatientsDay { get; set; }
 
-        public List<int> IdSpecialty { get; set; }
+        public List<int> SpecialtyList { get; set; }
 
 
 
@@ -45,7 +45,7 @@ namespace CRM.Core.Models
         public int VersionLink { get; set; }
         public Status StatusLink { get; set; }
         public int? ManagerApprouved { get; set; }
-        public List<int> IdSpecialty { get; set; }
+        public List<int> SpecialityList { get; set; }
 
 
         public int IdPotentiel { get; set; }

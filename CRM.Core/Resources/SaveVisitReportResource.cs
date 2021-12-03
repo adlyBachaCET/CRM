@@ -25,7 +25,12 @@ namespace CRM.Core.Models
 
         public string CycleTtype { get; set; }
 
+        public SaveVisitResource Visit { get; set; }
+        public List<SaveObjectionResource> Objections { get; set; }
+        public List<SaveObjectionResource> Requests { get; set; }
+        public List<SaveParticipantResource> Doctors { get; set; }
 
+        public List<int> IdProducts { get; set; }
 
     }
 }

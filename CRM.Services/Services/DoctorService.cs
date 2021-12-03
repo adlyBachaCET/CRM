@@ -1,6 +1,7 @@
 ﻿using CRM.Core;
 using CRM.Core.Models;
 using CRM.Core.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -27,7 +28,12 @@ namespace CRM.Services.Services
             return
                                  await _unitOfWork.Doctors.GetByExistantPhoneNumberActif(PhoneNumber);
         }
+        public async Task<List<Specialty>> GetByIdDoctor(int idDoctor)
+        {
+        
 
+            return await _unitOfWork.Doctors.GetByIdDoctor(idDoctor);
+        }
         public async Task<List<Doctor>> CreateRange(List<Doctor> newDoctor)
         {
 
@@ -200,10 +206,15 @@ namespace CRM.Services.Services
         }
         public async Task Update(Doctor DoctorToBeUpdated, Doctor Doctor)
         {
-            DoctorToBeUpdated.Active = 1;
+           DoctorToBeUpdated.Active = 1;
             await _unitOfWork.CommitAsync();
 
-
+           Doctor.Version =DoctorToBeUpdated.Version + 1;
+           Doctor.IdDoctor =DoctorToBeUpdated.IdDoctor;
+           Doctor.Status = Status.Approuved;
+           Doctor.Active = 0;
+           Doctor.CreatedOn =DoctorToBeUpdated.CreatedOn;
+           Doctor.UpdatedOn = DateTime.UtcNow;
             await _unitOfWork.Doctors.Add(Doctor);
             await _unitOfWork.CommitAsync();
         }

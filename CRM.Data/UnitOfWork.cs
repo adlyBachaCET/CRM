@@ -9,6 +9,8 @@ namespace CRM.Data
     {
         private readonly MyDbContext _context;
         private IParticipantRepository _ParticipantRepository;
+        private IParticipantVisitRepository _ParticipantVisitRepository;
+
         private IActivityRepository _ActivityRepository;
         private IActivityUserRepository _ActivityUserRepository;
         private IAppointementRepository _AppointementRepository;
@@ -29,6 +31,7 @@ namespace CRM.Data
         private IBrickRepository _BrickRepository;
         private IVisitReportRepository _VisitReportRepository;
         private IVisitRepository _VisitRepository;
+        private ISpecialtyDoctorRepository _SpecialtyDoctorRepository;
 
         private IBuDoctorRepository _BuDoctorRepository;
         private IBusinessUnitRepository _BusinessUnitRepository;
@@ -82,6 +85,7 @@ namespace CRM.Data
         public IActivityUserRepository ActivityUsers => _ActivityUserRepository = _ActivityUserRepository ?? new ActivityUserRepository(_context);
         public IAppointementRepository Appointements => _AppointementRepository = _AppointementRepository ?? new AppointementRepository(_context);
         public ISellingObjectivesRepository SellingObjectivess => _SellingObjectivesRepository = _SellingObjectivesRepository ?? new SellingObjectivesRepository(_context);
+        public IParticipantVisitRepository ParticipantVisits => _ParticipantVisitRepository = _ParticipantVisitRepository ?? new ParticipantVisitRepository(_context);
 
         public IParticipantRepository Participants => _ParticipantRepository = _ParticipantRepository ?? new ParticipantRepository(_context);
         public IRequestRpRepository RequestRps => _RequestRpRepository = _RequestRpRepository ?? new RequestRpRepository(_context);
@@ -91,6 +95,7 @@ namespace CRM.Data
         public ISectorInYearRepository SectorInYear => _WeekSectorCycleInYearRepository = _WeekSectorCycleInYearRepository ?? new SectorInYearRepository(_context);
         public ISectorCycleRepository WeekSectorCycles => _WeekSectorCycleRepository = _WeekSectorCycleRepository ?? new SectorCycleRepository(_context);
 
+        public ISpecialtyDoctorRepository SpecialtyDoctors => _SpecialtyDoctorRepository = _SpecialtyDoctorRepository ?? new SpecialtyDoctorRepository(_context);
 
         public IBuDoctorRepository BuDoctors =>_BuDoctorRepository = _BuDoctorRepository ?? new BuDoctorRepository(_context);
 

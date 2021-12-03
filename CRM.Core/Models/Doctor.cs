@@ -26,38 +26,28 @@ namespace CRM.Core.Models
         public DateTime? UpdatedOn { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
-
         public string FirstName { get; set; }
         public string Title { get; set; }
         public string Reference { get; set; }
-
         public int? NbPatientsDay { get; set; }
         public int? LinkedId { get; set; }
         public int VersionLink { get; set; }
         public Status StatusLink { get; set; }
         public virtual Doctor Linked { get; set; }
         public int? ManagerApprouved { get; set; }
-
-     
         public virtual ICollection<BuDoctor> BuDoctor { get; set; }
         public virtual ICollection<Target> Target { get; set; }
         public virtual ICollection<Info> Info { get; set; }
         public virtual ICollection<Doctor> InverseLinked { get; set; }
         public virtual ICollection<Phone> Phone { get; set; }
-        public int IdSpecialty1{ get; set; }
-        public string NameSpecialty1 { get; set; }
-
-      
         public virtual ICollection<TagsDoctor> TagsDoctor { get; set; }
-        public int IdSpecialty2 { get; set; }
-        public string NameSpecialty2 { get; set; }
-
-
         public int IdPotentiel { get; set; }
         public string NamePotentiel { get; set; }
-
-
+        public int VersionPotentiel { get; set; }
+        public Status StatusPotentiel { get; set; }
+        public virtual Potentiel Potentiel { get; set; }
         public virtual ICollection<SharedFiles> SharedFiles { get; set; }
+        public virtual ICollection<SpecialtyDoctor> SpecialtyDoctor { get; set; }
 
 
 

@@ -6,7 +6,7 @@ namespace CRM.Core.Services
 {
     public interface IRequestRpService
     {
-        Task<RequestRp> GetById(int id);
+        Task<RequestRp> GetById(int? id);
         Task<RequestRp> Create(RequestRp newRequestRp);
         Task<List<RequestRp>> CreateRange(List<RequestRp> newRequestRp);
         Task Update(RequestRp RequestRpToBeUpdated, RequestRp RequestRp);

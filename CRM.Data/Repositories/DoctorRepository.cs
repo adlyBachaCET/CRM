@@ -83,7 +83,19 @@ namespace CRM.Data.Repositories
             }
             return list;
         }
-     
+
+        public async  Task<List<Specialty>> GetByIdDoctor(int idDoctor)
+        {
+            List<Specialty> list = new List<Specialty>();
+            var result = await MyDbContext.SpecialtyDoctor.Where(a => a.Active == 0 && a.IdDoctor == idDoctor).ToListAsync();
+            foreach (var item in result)
+            {
+                var Service = await MyDbContext.Specialty.Where(a => a.Active == 0 && a.IdSpecialty == item.IdSpecialty).FirstOrDefaultAsync();
+                list.Add(Service);
+            }
+            return list;
+        }
+
         //public async Task<IEnumerable<Doctor>> GetAllWithArtisteAsync()
         //{
         //    return await MyDoctorDbContext.Doctors

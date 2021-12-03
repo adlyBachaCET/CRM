@@ -51,6 +51,7 @@ namespace CRM_API
 
             //Services 
             services.AddScoped<ISellingObjectivesService, SellingObjectivesService>();
+            services.AddScoped<ISpecialtyDoctorService, SpecialtyDoctorService>();
 
             services.AddScoped<IAppointementService, AppointementService>();
             services.AddScoped<ITargetService, TargetService>();

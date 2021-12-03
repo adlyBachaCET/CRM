@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace CRM.Core.Models
 {
-    public partial class SpecialityDoctor 
+    public partial class SpecialtyDoctor 
     {
         public int IdDoctor { get; set; }
         public Status StatusDoctor { get; set; }

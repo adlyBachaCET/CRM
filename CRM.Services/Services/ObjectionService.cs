@@ -46,6 +46,17 @@ namespace CRM.Services.Services
 
 
         }
+        public async Task<IEnumerable<Objection>> GetAllByReport(Status? Status, int IdReport)
+        {
+
+            if (Status != null) return await _unitOfWork.Objections.Find(i => i.Status == Status && i.Active == 0
+            && i.IdVisitReport == IdReport);
+
+            return await _unitOfWork.Objections.Find(i => i.Active == 0
+            && i.IdVisitReport == IdReport);
+
+
+        }
         public async Task<IEnumerable<Objection>> GetAll(Status? Status)
         {
 

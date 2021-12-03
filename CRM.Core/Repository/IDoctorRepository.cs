@@ -17,6 +17,7 @@ namespace CRM.Core.Repository
         Task<IEnumerable<Doctor>> GetAllRejected();
         Task<IEnumerable<Doctor>> GetByExistantPhoneNumberActif(int PhoneNumber);
         Task<IEnumerable<Service>> GetServiceByIdLocationActif(int IdLocation);
+        Task<List<Specialty>> GetByIdDoctor(int idDoctor);
 
     }
 }

@@ -21,6 +21,7 @@ namespace CRM.Data
         public virtual DbSet<BuDoctor> BuDoctor { get; set; }
         public virtual DbSet<BuUser> BuUser { get; set; }
         public virtual DbSet<CycleUser> CycleUser { get; set; }
+        public virtual DbSet<SpecialtyDoctor> SpecialtyDoctor { get; set; }
 
         public virtual DbSet<BuFile> BuFile { get; set; }
         public virtual DbSet<ProductFile> ProductFile { get; set; }
@@ -69,6 +70,7 @@ namespace CRM.Data
         public virtual DbSet<Location> Location { get; set; }
         public virtual DbSet<LocationDoctor> LocationDoctor { get; set; }
         public virtual DbSet<Participant> Participant { get; set; }
+        public virtual DbSet<ParticipantVisit> ParticipantVisit { get; set; }
 
         public virtual DbSet<LocationType> LocationType { get; set; }
         public virtual DbSet<Info> Info { get; set; }
@@ -236,7 +238,28 @@ namespace CRM.Data
    
 
             });
+            modelBuilder.Entity<SpecialtyDoctor>(entity =>
+            {
+                entity.HasKey(e => new { e.IdSpecialty, e.StatusSpecialty, e.VersionSpecialty, e.IdDoctor, e.StatusDoctor, e.VersionDoctor });
 
+                entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
+
+                entity.Property(e => e.UpdatedOn).HasColumnType("timestamp");
+
+                entity.HasOne(d => d.IdSpecialtyNavigation)
+                    .WithMany(p => p.SpecialtyDoctor)
+                    .HasForeignKey(d => new { d.IdSpecialty, d.StatusSpecialty, d.VersionSpecialty })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SpecialtyDoctor_SpecialtysinessUnit");
+
+                entity.HasOne(d => d.IdDoctorNavigation)
+                    .WithMany(p => p.SpecialtyDoctor)
+                    .HasForeignKey(d => new { d.IdDoctor, d.StatusDoctor, d.VersionDoctor })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SpecialtyDoctor_Doctor");
+
+
+            });
             modelBuilder.Entity<BuUser>(entity =>
             {
                 entity.HasKey(e => new { e.IdUser, e.StatusUser, e.VersionUser, e.StatusBu, e.VersionBu, e.IdBu });
@@ -547,9 +570,12 @@ namespace CRM.Data
 
                 entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
 
- 
 
-         
+
+                entity.HasOne(d => d.Potentiel)
+                  .WithMany()
+                  .HasForeignKey(d => new { d.IdPotentiel, d.StatusPotentiel, d.VersionPotentiel })
+                  .HasConstraintName("FK_Doctor_Potentiel").IsRequired(false);
 
                 entity.HasOne(d => d.Linked)
                     .WithMany(p => p.InverseLinked)
@@ -708,6 +734,45 @@ namespace CRM.Data
 
                 entity.HasOne(d => d.IdUserNavigation)
                     .WithMany(p => p.Participant)
+                    .HasForeignKey(d => new { d.IdUser, d.StatusUser, d.VersionUser })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Participant_User");
+
+            });
+            modelBuilder.Entity<ParticipantVisit>(entity =>
+            {
+                entity.HasKey(e => new {
+
+                    e.IdVisitReport,
+                    e.StatusVisitReport,
+                    e.VersionVisitReport,
+                    e.Status,
+                    e.Version,
+                });
+
+                entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
+
+                entity.Property(e => e.CreatedOn).HasColumnType("timestamp");
+
+                entity.HasOne(d => d.IdDoctorNavigation)
+                    .WithMany()
+                    .HasForeignKey(d => new { d.IdDoctor, d.StatusDoctor, d.VersionDoctor })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Participant_Doctor").IsRequired(false);
+                entity.HasOne(d => d.IdPharmacyNavigation)
+                    .WithMany()
+                    .HasForeignKey(d => new { d.IdPharmacy, d.StatusPharmacy, d.VersionPharmacy })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Participant_Pharmacy").IsRequired(false);
+
+                entity.HasOne(d => d.IdVisitReportNavigation)
+                        .WithMany()
+                        .HasForeignKey(d => new { d.IdVisitReport, d.StatusVisitReport, d.VersionVisitReport })
+                        .OnDelete(DeleteBehavior.ClientSetNull)
+                        .HasConstraintName("FK_Participant_VisitReport");
+
+                entity.HasOne(d => d.IdUserNavigation)
+                    .WithMany()
                     .HasForeignKey(d => new { d.IdUser, d.StatusUser, d.VersionUser })
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Participant_User");

@@ -47,10 +47,10 @@ namespace CRM.Services.Services
         //          .GetAllWithArtisteAsync();
         //}
 
-        public async Task<RequestRp> GetById(int id)
+        public async Task<RequestRp> GetById(int? id)
         {
             return
-                await _unitOfWork.RequestRps.GetByIdActif(id);
+                await _unitOfWork.RequestRps.SingleOrDefault(i=>i.IdRequestRp==id && i.Active==0);
         }
    
         public async Task Update(RequestRp RequestRpToBeUpdated, RequestRp RequestRp)

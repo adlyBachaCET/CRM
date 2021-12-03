@@ -33,12 +33,12 @@ namespace CRM.Services.Services
             return
                            await _unitOfWork.Specialtys.GetAll();
         }
-
-       /* public async Task Delete(Specialty Specialty)
-        {
-            _unitOfWork.Specialtys.Remove(Specialty);
-            await _unitOfWork.CommitAsync();
-        }*/
+      
+        /* public async Task Delete(Specialty Specialty)
+         {
+             _unitOfWork.Specialtys.Remove(Specialty);
+             await _unitOfWork.CommitAsync();
+         }*/
 
         //public async Task<IEnumerable<Specialty>> GetAllWithArtiste()
         //{

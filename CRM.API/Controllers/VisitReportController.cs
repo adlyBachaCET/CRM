@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 namespace CRM_API.Controllers
@@ -17,19 +18,29 @@ namespace CRM_API.Controllers
     public class VisitReportController : ControllerBase
     {
         public IList<VisitReport> VisitReports;
+        private readonly IObjectionService _ObjectionService;
 
         private readonly IVisitReportService _VisitReportService;
         private readonly IVisitService _VisitService;
         private readonly IUserService _UserService;
         private readonly IDoctorService _DoctorService;
         private readonly IPharmacyService _PharmacyService;
+        private readonly IBrickService _BrickService;
+        private readonly ILocalityService _LocalityService;
+        private readonly IProductService _ProductService;
 
         private readonly IMapper _mapperService;
-        public VisitReportController(IPharmacyService PharmacyService, IDoctorService DoctorService,IUserService UserService,
+        public VisitReportController(IObjectionService ObjectionService, ILocalityService LocalityService, IBrickService BrickService, 
+            IPharmacyService PharmacyService, IDoctorService DoctorService,IUserService UserService, IProductService ProductService,
             IVisitReportService VisitReportService, IVisitService VisitService, IMapper mapper)
         {
-            _PharmacyService = PharmacyService;
+            _BrickService = BrickService;
 
+            _LocalityService = LocalityService;
+            _PharmacyService = PharmacyService;
+            _ProductService = ProductService;
+
+            _ObjectionService = ObjectionService;
             _DoctorService = DoctorService;
               _UserService = UserService;
             _VisitService = VisitService;
@@ -114,11 +125,100 @@ namespace CRM_API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<VisitReportResource>> CreateVisitReport(SaveVisitReportResource SaveVisitReportResource)
+        public async Task<ActionResult<VisitReportResource>> CreateVisitReport([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
+        string Token,SaveVisitReportResource SaveVisitReportResource)
         {
+            var claims = _UserService.getPrincipal(Token);
+            var Role = claims.FindFirst("Role").Value;
+            var Id = int.Parse(claims.FindFirst("Id").Value);
+            var exp = DateTime.Parse(claims.FindFirst("Exipres On").Value);
+            var FirstName = claims.FindFirst("FirstName").Value;
+            var LastName = claims.FindFirst("LastName").Value;
+            
+            var Visit = _mapperService.Map<SaveVisitResource, Visit>(SaveVisitReportResource.Visit);
+
+            var Doctor = await _DoctorService.GetById(SaveVisitReportResource.Visit.IdDoctor);
+            var Pharmacy = await _PharmacyService.GetById(SaveVisitReportResource.Visit.IdPharmacy);
+            var Locality1 = await _LocalityService.GetById(SaveVisitReportResource.Visit.IdLocality1);
+
+            Visit.NameLocality1 = Locality1.Name;
+            Visit.VersionLocality1 = Locality1.Version;
+            Visit.StatusLocality1 = Locality1.Status;
+            Visit.IdLocality1 = Locality1.IdLocality;
+            var Locality2 = await _LocalityService.GetById(SaveVisitReportResource.Visit.IdLocality2);
+            Visit.NameLocality2 = Locality2.Name;
+            Visit.VersionLocality2 = Locality2.Version;
+            Visit.StatusLocality2 = Locality2.Status;
+            Visit.IdLocality2 = Locality2.IdLocality;
+            var Brick1 = await _BrickService.GetByIdActif(SaveVisitReportResource.Visit.IdBrick1);
+            var Brick2 = await _BrickService.GetByIdActif(SaveVisitReportResource.Visit.IdBrick2);
+            if (Brick1 != null)
+            {
+                Visit.IdBrick1 = Brick1.IdBrick;
+                Visit.VersionBrick1 = Brick1.Version;
+                Visit.StatusBrick1 = Brick1.Status;
+                Visit.NameBrick1 = Brick1.Name;
+                Visit.NumBrick1 = Brick1.NumSystemBrick;
+                // Pharmacy.Brick1 = Brick1;
+            }
+            else
+            {
+                Visit.IdBrick1 = null;
+                Visit.VersionBrick1 = null;
+                Visit.StatusBrick1 = null;
+                Visit.NameBrick1 = "";
+                Visit.NumBrick1 = 0;
+            }
+            if (Brick2 != null)
+            {
+                Visit.IdBrick2 = Brick2.IdBrick;
+                Visit.VersionBrick2 = Brick2.Version;
+                Visit.StatusBrick2 = Brick2.Status;
+                Visit.NameBrick2 = Brick2.Name;
+                Visit.NumBrick2 = Brick2.NumSystemBrick;
+                // Pharmacy.Brick2 = Brick2;
+            }
+            else
+            {
+                Visit.IdBrick2 = null;
+                Visit.VersionBrick2 = null;
+                Visit.StatusBrick2 = null;
+                Visit.NameBrick2 = "";
+                Visit.NumBrick2 = 0;
+            }
+            if (Pharmacy != null)
+            {
+                Visit.Name = Pharmacy.Name;
+                Visit.Pharmacy = Pharmacy;
+                Visit.VersionPharmacy = Pharmacy.Version;
+                Visit.StatusPharmacy = Pharmacy.Status;
+                Visit.Doctor = null;
+                Visit.VersionDoctor = null;
+                Visit.StatusDoctor = null;
+            }
+            if (Doctor != null)
+            {
+                Visit.Name = Doctor.Title + " " + Doctor.FirstName + " " + Doctor.LastName;
+                Visit.Doctor = Doctor;
+                Visit.VersionDoctor = Doctor.Version;
+                Visit.StatusDoctor = Doctor.Status;
+
+                Visit.Pharmacy = null;
+                Visit.VersionPharmacy = null;
+                Visit.StatusPharmacy = null;
+            }
+            Visit.CreatedOn = DateTime.UtcNow;
+            Visit.UpdatedOn = DateTime.UtcNow;
+            Visit.Active = 0;
+            Visit.Version = 0;
+            Visit.CreatedBy = 0;
+            Visit.UpdatedBy = 0;
+            //*** Creation dans la base de données ***
+            var NewVisit = await _VisitService.Create(Visit);
+            //*** Mappage ***
+            var VisitResource = _mapperService.Map<Visit, VisitResource>(NewVisit);
             //*** Mappage ***
             var VisitReport = _mapperService.Map<SaveVisitReportResource, VisitReport>(SaveVisitReportResource);
-            var Visit = await _VisitService.GetById(SaveVisitReportResource.IdVisit);
             VisitReport.IdVisit = Visit.IdVisit;
             VisitReport.StatusVisit = Visit.Status;
             VisitReport.VersionVisit = Visit.Version;
@@ -129,22 +229,194 @@ namespace CRM_API.Controllers
             VisitReport.CreatedBy = Visit.CreatedBy;
             //*** Creation dans la base de données ***
             var NewVisitReport = await _VisitReportService.Create(VisitReport);
-            //*** Mappage ***
-            var VisitReportResource = _mapperService.Map<VisitReport, VisitReportResource>(NewVisitReport);
-            return Ok(VisitReportResource);
-        }
-        [HttpPost("Range")]
-        public async Task<ActionResult<VisitReportResource>> CreateVisitReport(List<SaveVisitReportResource> SaveVisitReportResource)
-        {
-            //*** Mappage ***
-            var VisitReport = _mapperService.Map<List<SaveVisitReportResource>, VisitReport>(SaveVisitReportResource);
-            //*** Creation dans la base de données ***
-            var NewVisitReport = await _VisitReportService.Create(VisitReport);
+            foreach (var item in SaveVisitReportResource.Objections)
+            {
+                var Objection = _mapperService.Map<SaveObjectionResource, Objection>(item);
+                Objection.UpdatedOn = DateTime.UtcNow;
+                Objection.CreatedOn = DateTime.UtcNow;
+                Objection.RequestObjection = RequestObjection.Objection;
+                Objection.Active = 0;
+                Objection.Status = 0;
+                Objection.CreatedBy = Id;
+                Objection.UpdatedBy = Id;
+                Objection.CreatedByName = FirstName + " " + LastName;
+                Objection.UpdatedByName = FirstName + " " + LastName;
+                if (NewVisitReport.IdReport != 0)
+                {
+                    var VisitReportOld = await _VisitReportService.GetById(NewVisitReport.IdReport);
+
+                    if (VisitReportOld != null)
+                    {
+                        Objection.VisitReport = VisitReportOld;
+                        Objection.VersionVisitReport = VisitReportOld.Version;
+                        Objection.StatusVisitReport = VisitReportOld.Status;
+
+                    }
+                    else
+                    {
+                        Objection.VisitReport = null;
+                        Objection.VersionVisitReport = null;
+                        Objection.StatusVisitReport = null;
+                    }
+                }
+                if (item.IdPharmacy != 0)
+                {
+                    var PharmacyOld = await _PharmacyService.GetById(item.IdPharmacy);
+
+                    if (PharmacyOld != null)
+                    {
+                        Objection.Name = PharmacyOld.Name;
+                        Objection.Pharmacy = PharmacyOld;
+                        Objection.VersionPharmacy = PharmacyOld.Version;
+                        Objection.StatusPharmacy = PharmacyOld.Status;
+                        Objection.Doctor = null;
+                        Objection.VersionDoctor = null;
+                        Objection.StatusDoctor = null;
+                    }
+                }
+                if (item.IdDoctor != 0)
+                {
+
+                    var DoctorOld = await _DoctorService.GetById(item.IdDoctor);
+
+                    if (DoctorOld != null)
+                    {
+                        Objection.Name = DoctorOld.Title + " " + DoctorOld.FirstName + " " + DoctorOld.LastName;
+                        Objection.Doctor = DoctorOld;
+                        Objection.VersionDoctor = DoctorOld.Version;
+                        Objection.StatusDoctor = DoctorOld.Status;
+
+                        Objection.Pharmacy = null;
+                        Objection.VersionPharmacy = null;
+                        Objection.StatusPharmacy = null;
+                    }
+                }
+                if (item.SatisfiedNotSatisfied != null)
+                {
+                    Objection.Status = item.SatisfiedNotSatisfied.Value;
+                }
+                else
+                {
+                    if (Role == "Manager")
+                    {
+                        Objection.Status = Status.Approuved;
+                    }
+                    else if (Role == "Delegue")
+                    {
+                        Objection.Status = Status.Pending;
+                    }
+                }
+                var User = await _UserService.GetById(item.IdUser);
+                Objection.User = User;
+                Objection.VersionUser = User.Version;
+                Objection.StatusUser = User.Status;
+
+                var Product = await _ProductService.GetById(item.IdProduct);
+                Objection.Product = Product;
+                Objection.VersionProduct = Product.Version;
+                Objection.StatusProduct = Product.Status;
+                //*** Creation dans la base de données ***
+                var NewObjection = await _ObjectionService.Create(Objection);
+                //*** Mappage ***
+            }
+            foreach (var item in SaveVisitReportResource.Requests)
+            {
+                var Objection = _mapperService.Map<SaveObjectionResource, Objection>(item);
+                Objection.UpdatedOn = DateTime.UtcNow;
+                Objection.CreatedOn = DateTime.UtcNow;
+                Objection.RequestObjection = RequestObjection.Request;
+                Objection.Active = 0;
+                Objection.Status = 0;
+                Objection.CreatedBy = Id;
+                Objection.UpdatedBy = Id;
+                Objection.CreatedByName = FirstName + " " + LastName;
+                Objection.UpdatedByName = FirstName + " " + LastName;
+                if (NewVisitReport.IdReport != 0)
+                {
+                    var VisitReportOld = await _VisitReportService.GetById(NewVisitReport.IdReport);
+
+                    if (VisitReportOld != null)
+                    {
+                        Objection.VisitReport = VisitReportOld;
+                        Objection.VersionVisitReport = VisitReportOld.Version;
+                        Objection.StatusVisitReport = VisitReportOld.Status;
+
+                    }
+                    else
+                    {
+                        Objection.VisitReport = null;
+                        Objection.VersionVisitReport = null;
+                        Objection.StatusVisitReport = null;
+                    }
+                }
+                if (item.IdPharmacy != 0)
+                {
+                    var PharmacyOld = await _PharmacyService.GetById(item.IdPharmacy);
+
+                    if (PharmacyOld != null)
+                    {
+                        Objection.Name = PharmacyOld.Name;
+                        Objection.Pharmacy = PharmacyOld;
+                        Objection.VersionPharmacy = PharmacyOld.Version;
+                        Objection.StatusPharmacy = PharmacyOld.Status;
+                        Objection.Doctor = null;
+                        Objection.VersionDoctor = null;
+                        Objection.StatusDoctor = null;
+                    }
+                }
+                if (item.IdDoctor != 0)
+                {
+
+                    var DoctorOld = await _DoctorService.GetById(item.IdDoctor);
+
+                    if (DoctorOld != null)
+                    {
+                        Objection.Name = DoctorOld.Title + " " + DoctorOld.FirstName + " " + DoctorOld.LastName;
+                        Objection.Doctor = DoctorOld;
+                        Objection.VersionDoctor = DoctorOld.Version;
+                        Objection.StatusDoctor = DoctorOld.Status;
+
+                        Objection.Pharmacy = null;
+                        Objection.VersionPharmacy = null;
+                        Objection.StatusPharmacy = null;
+                    }
+                }
+                if (item.SatisfiedNotSatisfied != null)
+                {
+                    Objection.Status = item.SatisfiedNotSatisfied.Value;
+                }
+                else
+                {
+                    if (Role == "Manager")
+                    {
+                        Objection.Status = Status.Approuved;
+                    }
+                    else if (Role == "Delegue")
+                    {
+                        Objection.Status = Status.Pending;
+                    }
+                }
+                var User = await _UserService.GetById(item.IdUser);
+                Objection.User = User;
+                Objection.VersionUser = User.Version;
+                Objection.StatusUser = User.Status;
+
+                var Product = await _ProductService.GetById(item.IdProduct);
+                Objection.Product = Product;
+                Objection.VersionProduct = Product.Version;
+                Objection.StatusProduct = Product.Status;
+                //*** Creation dans la base de données ***
+                var NewObjection = await _ObjectionService.Create(Objection);
+                //*** Mappage ***
+            }
+
+
             //*** Mappage ***
             var VisitReportResource = _mapperService.Map<VisitReport, VisitReportResource>(NewVisitReport);
             return Ok(VisitReportResource);
         }
 
+  
         [HttpGet("Actif")]
         public async Task<ActionResult<VisitReportResource>> GetAllActifVisitReports()
         {

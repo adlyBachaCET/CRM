@@ -25,16 +25,12 @@ namespace CRM.Core.Models
         public int VersionLink { get; set; }
         public Status StatusLink { get; set; }
         public int? ManagerApprouved { get; set; }
-        public PotentielDoctor Potentiel { get; set; }
+        public PotentielResource Potentiel { get; set; }
 
         public List<Specialities> Specialities { get; set; }
 
     }
-    public partial class PotentielDoctor
-    {
-        public int IdPotentiel { get; set; }
-        public string NamePotentiel { get; set; }
-    }
+
     public partial class Specialities
     {
         public int IdSpecialty { get; set; }

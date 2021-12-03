@@ -14,7 +14,6 @@ namespace CRM.Core.Services
         Task Delete(Participant ParticipantToBeDeleted);
         Task DeleteRange(List<Participant> Participant);
         Task<IEnumerable<Participant>> GetAllByIdPharmacy(int Id);
-
         Task<IEnumerable<Participant>> GetAll();
         Task<IEnumerable<Participant>> GetAllActif();
         Task<IEnumerable<Participant>> GetAllInActif();

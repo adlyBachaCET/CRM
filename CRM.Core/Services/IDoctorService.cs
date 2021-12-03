@@ -27,6 +27,6 @@ namespace CRM.Core.Services
         Task Reject(Doctor DoctorToBeUpdated, Doctor Doctor); 
         Task<IEnumerable<Doctor>> GetByExistantPhoneNumberActif(int PhoneNumber);
         Task<IEnumerable<Service>> GetServiceByIdLocationActif(int IdLocation);
-
+        Task<List<Specialty>> GetByIdDoctor(int idDoctor);
     }
 }

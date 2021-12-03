@@ -3,19 +3,15 @@ using System.Collections.Generic;
 
 namespace CRM.Core.Models
 {
-    public partial class Participant
+    public partial class ParticipantVisit
     {
         public DateTime? CreatedOn { get; set; }
         public DateTime? UpdatedOn { get; set; }
         public int Active { get; set; }
-        public int? IdRequestRp{ get; set; }
-        public Status? StatusRequestRp{ get; set; }
-        public int? VersionRequestRp{ get; set; }
-        public virtual RequestRp IdRequestRpNavigation { get; set; }
-        public int? IdVisitReport { get; set; }
-        public Status? StatusVisitReport { get; set; }
-        public int? VersionVisitReport { get; set; }
-        public virtual VisitReport IdVisitReportNavigation { get; set; }
+        public int IdVisitReport{ get; set; }
+        public Status StatusVisitReport{ get; set; }
+        public int VersionVisitReport{ get; set; }
+
         public int? IdDoctor { get; set; }
         public Status? StatusDoctor { get; set; }
         public int? VersionDoctor { get; set; }
@@ -25,8 +21,7 @@ namespace CRM.Core.Models
         public int? CreatedBy { get; set; }
         public int? UpdatedBy { get; set; }
         public Status Status { get; set; }
-        public StatusParticipant StatusParticipant { get; set; }
-
+        public virtual VisitReport IdVisitReportNavigation { get; set; }
         public int? IdUser { get; set; }
         public Status? StatusUser { get; set; }
 
@@ -37,9 +32,5 @@ namespace CRM.Core.Models
         public Status? StatusPharmacy { get; set; }
         public int? VersionPharmacy { get; set; }
         public virtual Pharmacy IdPharmacyNavigation { get; set; }
-    }
-    public enum StatusParticipant
-    {
-        Visit,RP
     }
 }

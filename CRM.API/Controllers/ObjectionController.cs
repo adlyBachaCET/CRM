@@ -35,13 +35,13 @@ namespace CRM_API.Controllers
             IUserService UserService, IPharmacyService PharmacyService, IDoctorService DoctorService,
             IObjectionService ObjectionService, IMapper mapper)
         {
-            _ProductService = ProductService;
             _BusinessUnitService = BusinessUnitService;
 
             _UserService = UserService;
             _PharmacyService = PharmacyService;
             _DoctorService = DoctorService;
             _VisitReportService = VisitReportService;
+            _ProductService = ProductService;
 
             _ObjectionService = ObjectionService;
             _mapperService = mapper;
