@@ -13,6 +13,7 @@ namespace CRM.Core.Models
         public DateTime? UpdatedOn { get; set; }
         public string Description { get; set; }
         public string Name { get; set; }
+        public RequestObjection RequestObjection { get; set; }
 
         public Status Status { get; set; }
 

@@ -15,6 +15,7 @@ namespace CRM.Core.Models
         public string Name { get; set; }
         public Status Status { get; set; }
         public int? tel { get; set; }
+        public virtual ICollection<LocationDoctor> LocationDoctor { get; set; }
 
     }
 }

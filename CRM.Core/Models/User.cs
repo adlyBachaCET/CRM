@@ -19,6 +19,7 @@ namespace CRM.Core.Models
         public string Login { get; set; }
         public string Password { get; set; }
         public string GeneratedPassword { get; set; }
+        public virtual ICollection<Appointement> Appointement { get; set; }
 
         public UserType UserType { get; set; }
         public DateTime? HireDate { get; set; }
@@ -35,6 +36,7 @@ namespace CRM.Core.Models
         public virtual User DelegatesDotlineManager2 { get; set; }
 
         public virtual User DirectManager { get; set; }
+        public virtual ICollection<Commande> Commande { get; set; }
 
         public virtual User DotlineManager1 { get; set; }
         public virtual User DotlineManager2 { get; set; }
@@ -51,8 +53,8 @@ namespace CRM.Core.Models
         public Status? StatusDotlineManager2 { get; set; }
         public int? VersionDotlineManager2 { get; set; }
 
-        public int tel1 { get; set; }
-        public int tel2 { get; set; }
+        public int Tel1 { get; set; }
+        public int Tel2 { get; set; }
 
         public string Note { get; set; }
         public string StreetName { get; set; }
@@ -60,7 +62,13 @@ namespace CRM.Core.Models
         public int? IdLocality1 { get; set; }
      
         public string NameLocality1 { get; set; }
+        public Status? StatusLocality1 { get; set; }
+        public int? VersionLocality1 { get; set; }
+        public Locality Locality1 { get; set; }
         public int? IdLocality2 { get; set; }
+        public Status? StatusLocality2 { get; set; }
+        public int? VersionLocality2 { get; set; }
+        public Locality Locality2 { get; set; }
 
         public string NameLocality2 { get; set; }
         public string Email { get; set; }
@@ -74,15 +82,13 @@ namespace CRM.Core.Models
         public virtual ICollection<FavouriteFiles> FavouriteFiles { get; set; }
         public virtual ICollection<VisitUser> VisitUser { get; set; }
         public virtual ICollection<SellingObjectives> SellingObjectives { get; set; }
+        public virtual ICollection<VisitRequest> VisitRequest { get; set; }
 
         public virtual ICollection<Participant> Participant { get; set; }
         public virtual ICollection<CycleUser> CycleUser { get; set; }
+        public virtual ICollection<Objection> Objection { get; set; }
 
 
     }
-    public enum UserType
-    {
-        Manager,
-        Delegue
-    }
+ 
 }

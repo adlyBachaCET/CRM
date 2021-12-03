@@ -39,6 +39,7 @@ namespace CRM.Core.Models
         public ICollection<ProductVisitReport> ProductSampleVisitReport { get; set; }
 
         public ICollection<ProductVisitReport> ProductVisitReport { get; set; }
+        public virtual ICollection<Objection> Objection { get; set; }
 
 
     }

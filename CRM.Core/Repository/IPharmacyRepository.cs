@@ -12,7 +12,7 @@ namespace CRM.Core.Repository
         Task<IEnumerable<Pharmacy>> GetAllAcceptedInactifActif();
         Task<IEnumerable<Pharmacy>> GetAllPending();
         Task<IEnumerable<Pharmacy>> GetAllRejected();
-        Task<Pharmacy> GetByIdActif(int id);
+        Task<Pharmacy> GetByIdActif(int? id);
         Task<Pharmacy> GetByExistantEmailActif(string Email);
         Task<Pharmacy> GetByExistantLastNameActif( string LastName);
         Task<IEnumerable<Pharmacy>> GetPharmacysAssigned();

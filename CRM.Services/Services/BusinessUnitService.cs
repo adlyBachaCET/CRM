@@ -50,7 +50,7 @@ namespace CRM.Services.Services
         public async Task<BusinessUnit> GetById(int id)
         {
             return
-                await _unitOfWork.BusinessUnits.SingleOrDefault(i=>i.IdBu==id&& i.Active==0 );
+                await _unitOfWork.BusinessUnits.GetByIdActif(id);
         }
    
         public async Task Update(BusinessUnit BusinessUnitToBeUpdated, BusinessUnit BusinessUnit)

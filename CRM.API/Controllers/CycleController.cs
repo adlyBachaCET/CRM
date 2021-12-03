@@ -73,12 +73,10 @@ namespace CRM_API.Controllers
         public async Task<ActionResult<CycleResource>> CreateCycle([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
         string Token, AffectationCycleUser AffectationCycleUser)
         {
-            ErrorHandling ErrorMessag = new ErrorHandling();
 
             var claims = _UserService.getPrincipal(Token);
             var Role = claims.FindFirst("Role").Value;
             var Id = int.Parse(claims.FindFirst("Id").Value);
-            var exp = DateTime.Parse(claims.FindFirst("Exipres On").Value);
 
             //*** Mappage ***
             var Cycle = _mapperService.Map<SaveCycleResource, Cycle>(AffectationCycleUser.SaveCycleResource);
@@ -107,7 +105,7 @@ namespace CRM_API.Controllers
                     var Potentiel = await _PotentielService.GetById(item.IdPotentiel);
                     //   var Potentiel = await _PotentielService.GetById(item.IdPotentiel);
 
-                    PotentielCycle SaveCycleUserResource = new PotentielCycle();
+                    var SaveCycleUserResource = new PotentielCycle();
 
                     SaveCycleUserResource.IdCycle = CycleResource.IdCycle;
                     SaveCycleUserResource.VersionCycle = CycleResource.Version;
@@ -137,23 +135,20 @@ namespace CRM_API.Controllers
         /// <param name="ListIds">Id of the cycle and the List of ids of the users to be assigned.</param>
         [HttpPost("AsignUsersToCycle")]
         public async Task<ActionResult> AsignUsersToCycle([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
-        string Token, ListIds ListIds)
+        string Token, ListOfItemToBeAssigned ListIds)
         {
             var claims = _UserService.getPrincipal(Token);
-            var Role = claims.FindFirst("Role").Value;
             var IdUser = int.Parse(claims.FindFirst("Id").Value);
-            var exp = DateTime.Parse(claims.FindFirst("Exipres On").Value);
 
-            ErrorHandling ErrorMessag = new ErrorHandling();
 
-            if (ListIds.Ids.Count > 0)
+            if (ListIds.IdsOfItemToBeAssignedToItem.Count > 0)
             {
-                foreach (var item in ListIds.Ids)
+                foreach (var item in ListIds.IdsOfItemToBeAssignedToItem)
                 {
-                    var Cycle = await _CycleService.GetById(ListIds.Id);
+                    var Cycle = await _CycleService.GetById(ListIds.IdOfItemToBeAssigned);
                     if (Cycle != null)
                     {
-                        CycleUser CycleUser = new CycleUser();
+                        var CycleUser = new CycleUser();
                         CycleUser.IdCycle = Cycle.IdCycle;
                         CycleUser.VersionCycle = Cycle.Version;
                         CycleUser.StatusCycle = Cycle.Status;
@@ -186,32 +181,27 @@ namespace CRM_API.Controllers
         /// <param name="Ids">Id1 id of the cycle Id2 id of the User.</param>
         [HttpPost("AsignSectorsToCycle")]
         public async Task<ActionResult> AsignSectorsToCycle([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
-        string Token, UniqueId Ids)
+        string Token, ItemToBeAssigned Ids)
         {
-            Random random = new Random();
+            var random = new Random();
             int num = random.Next();
             var claims = _UserService.getPrincipal(Token);
-            var Role = claims.FindFirst("Role").Value;
             var IdUser = int.Parse(claims.FindFirst("Id").Value);
-            var exp = DateTime.Parse(claims.FindFirst("Exipres On").Value);
 
-            ErrorHandling ErrorMessag = new ErrorHandling();
-            List<Sector> Sectors = new List<Sector>();
-            List<Sector> SectorsCreated = new List<Sector>();
-            List<SectorResource> SectorResources = new List<SectorResource>();
+            var Sectors = new List<Sector>();
+            var SectorsCreated = new List<Sector>();
+            var SectorResources = new List<SectorResource>();
 
-            SectorCycle SectorCycleCreated = new SectorCycle();
-            var User = await _UserService.GetById(Ids.Id2);
+            var SectorCycleCreated = new SectorCycle();
+            var User = await _UserService.GetById(Ids.Item2);
             var UserResource = _mapperService.Map<User, UserResource>(User);
             int numTarget = 0; ;
-            var Cycle = await _CycleService.GetById(Ids.Id1);
+            var Cycle = await _CycleService.GetById(Ids.Item1);
             List<PotentielResource> PotentielResources = new List<PotentielResource>();
-            IEnumerable<Potentiel> Potentiel = Enumerable.Empty<Potentiel>();
             if (Cycle == null) return NotFound();
-            var CycleRessource = _mapperService.Map<Cycle, CycleResource>(Cycle);
             if (Cycle != null)
             {
-                Potentiel = await _PotentielCycleService.GetPotentielsById(Cycle.IdCycle);
+               var  Potentiel = await _PotentielCycleService.GetPotentielsById(Cycle.IdCycle);
 
                 foreach (var item in Potentiel)
                 {
@@ -253,7 +243,7 @@ namespace CRM_API.Controllers
                     var Target = new Target();
 
                     Target.NumTarget = num;
-                    PotentielSector PotentielSector = new PotentielSector();
+                    var PotentielSector = new PotentielSector();
                     foreach (var item in Potentiel)
                     {
                         PotentielSector.IdPotentiel = item.IdPotentiel;
@@ -276,7 +266,7 @@ namespace CRM_API.Controllers
 
 
                     }
-                    SectorCycle SectorCycle = new SectorCycle();
+                    var SectorCycle = new SectorCycle();
 
                     SectorCycle.IdCycle = Cycle.IdCycle;
                     SectorCycle.VersionCycle = Cycle.Version;
@@ -292,7 +282,7 @@ namespace CRM_API.Controllers
                     SectorCycle.CreatedBy = IdUser;
                     SectorCycle.UpdatedBy = IdUser;
 
-                    SectorCycleCreated = await _SectorCycleService.Create(SectorCycle);
+                    await _SectorCycleService.Create(SectorCycle);
                     var SectorResource = _mapperService.Map<Sector, SectorResource>(SectorsCreated[i]);
                     SectorResources.Add(SectorResource);
 
@@ -329,7 +319,7 @@ namespace CRM_API.Controllers
 
 
             }
-            var target = await getTarget(numTarget);
+            var target = await GetTarget(numTarget);
             return Ok(target);
 
         }
@@ -346,11 +336,7 @@ namespace CRM_API.Controllers
         {
             var claims = _UserService.getPrincipal(Token);
             var Role = claims.FindFirst("Role").Value;
-            var IdUser = int.Parse(claims.FindFirst("Id").Value);
-            var exp = DateTime.Parse(claims.FindFirst("Exipres On").Value);
-
-            ErrorHandling ErrorMessag = new ErrorHandling();
-
+        
             var CycleToBeModified = await _CycleService.GetById(Id);
             if (CycleToBeModified == null) return BadRequest("Le Cycle n'existe pas"); //NotFound();
             var Cycles = _mapperService.Map<SaveCycleResource, Cycle>(AffectationCycleUser.SaveCycleResource);
@@ -416,15 +402,12 @@ namespace CRM_API.Controllers
         public async Task<ActionResult<CycleResource>> GetAllCycles([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
         string Token)
         {
-            StringValues token = "";
-            ErrorHandling ErrorMessag = new ErrorHandling();
-            Request.Headers.TryGetValue("token", out token);
-            if (token != "")
-            {
-                var claims = _UserService.getPrincipal(token);
-                var Role = claims.FindFirst("Role").Value;
-                var Id = int.Parse(claims.FindFirst("Id").Value);
 
+            ErrorHandling ErrorMessag = new ErrorHandling();
+            if (Token != "")
+            {
+                var claims = _UserService.getPrincipal(Token);
+           
 
                 var Employe = await _CycleService.GetAll();
                 if (Employe == null) return NotFound();
@@ -448,15 +431,10 @@ namespace CRM_API.Controllers
         public async Task<ActionResult<CycleResource>> GetAllActifCycles([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
         string Token)
         {
-            StringValues token = "";
             ErrorHandling ErrorMessag = new ErrorHandling();
-            Request.Headers.TryGetValue("token", out token);
-            if (token != "")
+            if (Token != "")
             {
-                var claims = _UserService.getPrincipal(token);
-                var Role = claims.FindFirst("Role").Value;
-                var Id = int.Parse(claims.FindFirst("Id").Value);
-
+         
                 var Employe = await _CycleService.GetAllActif();
                 if (Employe == null) return NotFound();
                 // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
@@ -479,10 +457,8 @@ namespace CRM_API.Controllers
         public async Task<ActionResult<CycleResource>> GetAllInactifCycles([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
         string Token)
         {
-            StringValues token = "";
             ErrorHandling ErrorMessag = new ErrorHandling();
-            Request.Headers.TryGetValue("token", out token);
-            if (token != "")
+            if (Token != "")
             {
                 var Employe = await _CycleService.GetAllInActif();
                 if (Employe == null) return NotFound();
@@ -508,10 +484,9 @@ namespace CRM_API.Controllers
         public async Task<ActionResult<CycleResource>> GetCycleById([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
         string Token, int Id)
         {
-            StringValues token = "";
+
             ErrorHandling ErrorMessag = new ErrorHandling();
-            Request.Headers.TryGetValue("token", out token);
-            if (token != "")
+            if (Token != "")
             {
                 var Cycles = await _CycleService.GetById(Id);
                 var PotentielCycle = await _PotentielCycleService.GetPotentielsById(Id);
@@ -550,7 +525,7 @@ namespace CRM_API.Controllers
             var claims = _UserService.getPrincipal(Token);
             var Role = claims.FindFirst("Role").Value;
             var IdUser = int.Parse(claims.FindFirst("Id").Value);
-            var exp = DateTime.Parse(claims.FindFirst("Exipres On").Value);
+            var Exp = DateTime.Parse(claims.FindFirst("Exipres On").Value);
 
             int Year = PassToPlanification.Start.Year;
             int Month = PassToPlanification.Start.Month;
@@ -558,13 +533,13 @@ namespace CRM_API.Controllers
             List<SectorResource> SectorResources = new List<SectorResource>();
 
             var currentCulture = CultureInfo.CurrentCulture;
-            var weekNo = currentCulture.Calendar.GetWeekOfYear(
+            var WeekNo = currentCulture.Calendar.GetWeekOfYear(
             new DateTime(Year, Month, Day),
             currentCulture.DateTimeFormat.CalendarWeekRule,
             currentCulture.DateTimeFormat.FirstDayOfWeek);
             List<Sector> Sectors = new List<Sector>();
             List<Sector> SectorsCreated = new List<Sector>();
-            var Target = await getTarget(PassToPlanification.NumTarget);
+            var Target = await GetTarget(PassToPlanification.NumTarget);
 
             /*
                         if (PassToPlanification.Occurence != null)
@@ -820,7 +795,7 @@ namespace CRM_API.Controllers
             var claims = _UserService.getPrincipal(Token);
             var Role = claims.FindFirst("Role").Value;
             var IdUser = int.Parse(claims.FindFirst("Id").Value);
-            var exp = DateTime.Parse(claims.FindFirst("Exipres On").Value);
+            var Exp = DateTime.Parse(claims.FindFirst("Exipres On").Value);
             var Targets = await _TargetService.GetTargetsByIdUser(IdUser);
             List<int> TargetIds = new List<int>();
             List<string> CycleNames = new List<string>();
@@ -840,10 +815,7 @@ namespace CRM_API.Controllers
         public async Task<ActionResult> AllTargets([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
         string Token)
         {
-            var claims = _UserService.getPrincipal(Token);
-            var Role = claims.FindFirst("Role").Value;
-            var IdUser = int.Parse(claims.FindFirst("Id").Value);
-            var exp = DateTime.Parse(claims.FindFirst("Exipres On").Value);
+        
             var Targets = await _TargetService.GetTargets();
             List<int> TargetIds = new List<int>();
             List<string> CycleNames = new List<string>();
@@ -869,12 +841,11 @@ namespace CRM_API.Controllers
         public async Task<ActionResult<CycleResource>> GetTargetByNum([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
         string Token, int Num)
         {
-            StringValues token = "";
+
             ErrorHandling ErrorMessag = new ErrorHandling();
-            Request.Headers.TryGetValue("token", out token);
-            if (token != "")
+            if (Token != "")
             {
-                return Ok(await getTarget(Num));
+                return Ok(await GetTarget(Num));
             }
             else
             {
@@ -893,10 +864,9 @@ namespace CRM_API.Controllers
         public async Task<ActionResult<CycleResource>> SwapWeeks([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
         string Token, WeekSwap WeekSwap)
         {
-            StringValues token = "";
+
             ErrorHandling ErrorMessag = new ErrorHandling();
-            Request.Headers.TryGetValue("token", out token);
-            if (token != "")
+            if (Token != "")
             {
                 await _TargetService.WeekSwap(WeekSwap);
                 return Ok();
@@ -918,13 +888,12 @@ namespace CRM_API.Controllers
         public async Task<ActionResult<CycleResource>> WeekDeletion([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
         string Token, WeekDeletion WeekDeletion)
         {
-            StringValues token = "";
+
             ErrorHandling ErrorMessag = new ErrorHandling();
-            Request.Headers.TryGetValue("token", out token);
-            if (token != "")
+            if (Token != "")
             {
                 await _TargetService.DeleteWeek(WeekDeletion);
-                var Plan = getTarget(WeekDeletion.NumTarget);
+                var Plan = GetTarget(WeekDeletion.NumTarget);
                 return Ok(Plan);
             }
             else
@@ -948,14 +917,13 @@ namespace CRM_API.Controllers
             var claims = _UserService.getPrincipal(Token);
             var Role = claims.FindFirst("Role").Value;
             var IdUser = int.Parse(claims.FindFirst("Id").Value);
-            var exp = DateTime.Parse(claims.FindFirst("Exipres On").Value);
+            var Exp = DateTime.Parse(claims.FindFirst("Exipres On").Value);
             List<Target> Targets = new List<Target>();
             int NumTarget = WeekUpdate.NumTarget;
             ErrorHandling ErrorMessag = new ErrorHandling();
-            var Target = await getTarget(WeekUpdate.NumTarget);
-            StringValues token = "";
-            Request.Headers.TryGetValue("token", out token);
-            if (token != "")
+            var Target = await GetTarget(WeekUpdate.NumTarget);
+
+            if (Token != "")
             {
                 WeekDeletion WeekDeletion = new WeekDeletion();
                 WeekDeletion.IdSector1 = WeekUpdate.NewContent.IdSector;
@@ -1068,7 +1036,7 @@ namespace CRM_API.Controllers
             }
         }
         [ApiExplorerSettings(IgnoreApi = true)]
-        public async Task<Week> getTarget(int Num)
+        public async Task<Week> GetTarget(int Num)
         {
             Week Plan = new Week();
             TargetByNumber TargetByNumber = new TargetByNumber();
@@ -1083,10 +1051,8 @@ namespace CRM_API.Controllers
 
             List<Sector> Sectors = new List<Sector>();
             List<SectorResource> SectorResources = new List<SectorResource>();
-            Cycle Cycle = new Cycle();
-            CycleResource CycleResource = new CycleResource();
-            Cycle = await _TargetService.GetCycleByNumTarget(Num);
-            CycleResource = _mapperService.Map<Cycle, CycleResource>(Cycle);
+            Cycle Cycle = await _TargetService.GetCycleByNumTarget(Num);
+            CycleResource CycleResource = _mapperService.Map<Cycle, CycleResource>(Cycle);
             User = await _TargetService.GetUserByNumTarget(Num);
             UserResource = _mapperService.Map<User, UserResource>(User);
             var PotentielCycle = await _PotentielCycleService.GetPotentielsById(Cycle.IdCycle);
@@ -1104,7 +1070,6 @@ namespace CRM_API.Controllers
             foreach (var item in SectorsByTarget)
             {
                 WeekTarget target = new WeekTarget();
-                int i = 0;
                 // Week Week = new Week();
                 Plan.User = UserResource;
                 Plan.Cycle = CycleResource;
@@ -1165,11 +1130,10 @@ namespace CRM_API.Controllers
         public async Task<ActionResult<List<CycleResource>>> GetCyclesByUserById([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
         string Token, int Id)
         {
-            StringValues token = "";
+
             ErrorHandling ErrorMessag = new ErrorHandling();
-            Request.Headers.TryGetValue("token", out token);
             List<CycleResource> CycleResources = new List<CycleResource>();
-            if (token != "")
+            if (Token != "")
             {
                 var Cycles = await _CycleUserService.GetByIdUser(Id);
                 if (Cycles == null) return NotFound();
@@ -1234,9 +1198,8 @@ namespace CRM_API.Controllers
             var claims = _UserService.getPrincipal(Token);
             var Role = claims.FindFirst("Role").Value;
             var IdUser = int.Parse(claims.FindFirst("Id").Value);
-            var exp = DateTime.Parse(claims.FindFirst("Exipres On").Value);
+            var Exp = DateTime.Parse(claims.FindFirst("Exipres On").Value);
 
-            ErrorHandling ErrorMessag = new ErrorHandling();
             List<Sector> Sectors = new List<Sector>();
             List<Sector> SectorsCreated = new List<Sector>();
             List<SectorResource> SectorResources = new List<SectorResource>();
@@ -1247,7 +1210,6 @@ namespace CRM_API.Controllers
             int? numTarget = null; ;
             var Cycle = await _CycleService.GetById(Target.IdCycle);
             List<PotentielResource> PotentielResources = new List<PotentielResource>();
-            IEnumerable<Potentiel> Potentiel = Enumerable.Empty<Potentiel>();
             if (Cycle == null) return NotFound();
             var CycleRessource = _mapperService.Map<Cycle, CycleResource>(Cycle);
             var Doctor = await _DoctorService.GetById(Target.IdDoctor);
@@ -1257,7 +1219,7 @@ namespace CRM_API.Controllers
             if (Cycle != null)
             {
 
-                Potentiel = await _PotentielCycleService.GetPotentielsById(Cycle.IdCycle);
+               var  Potentiel = await _PotentielCycleService.GetPotentielsById(Cycle.IdCycle);
 
                 foreach (var item in Potentiel)
                 {
@@ -1295,7 +1257,7 @@ namespace CRM_API.Controllers
 
 
                 }
-                SectorCycle SectorCycle = new SectorCycle();
+                var SectorCycle = new SectorCycle();
 
                 SectorCycle.IdCycle = Cycle.IdCycle;
                 SectorCycle.VersionCycle = Cycle.Version;
@@ -1392,11 +1354,10 @@ namespace CRM_API.Controllers
             var claims = _UserService.getPrincipal(Token);
             var Role = claims.FindFirst("Role").Value;
             var IdUser = int.Parse(claims.FindFirst("Id").Value);
-            var exp = DateTime.Parse(claims.FindFirst("Exipres On").Value);
-            List<Target> Targets = new List<Target>();
+            var Exp = DateTime.Parse(claims.FindFirst("Exipres On").Value);
+           var Targets = new List<Target>();
             int NumTarget = TargetList.NumTarget;
-            ErrorHandling ErrorMessag = new ErrorHandling();
-            var Target = await getTarget(TargetList.NumTarget);
+            var Target = await GetTarget(TargetList.NumTarget);
 
             if (Target != null)
             {
@@ -1500,7 +1461,7 @@ namespace CRM_API.Controllers
                 }
 
             }
-            var Plan = await getTarget(NumTarget);
+            var Plan = await GetTarget(NumTarget);
             return Ok(Plan);
         }
     }

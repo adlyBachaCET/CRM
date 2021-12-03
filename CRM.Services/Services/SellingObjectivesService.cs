@@ -93,14 +93,7 @@ namespace CRM.Services.Services
         //          .GetAllWithArtisteAsync();
         //}
 
-  
-        public async Task<List<SellingObjectives>> GetByIdUser(int id)
-        {
-    
-            
-            return null;
-              
-        }
+
         public async Task Update(SellingObjectives SellingObjectivesToBeUpdated, SellingObjectives SellingObjectives)
         {
             SellingObjectivesToBeUpdated.Active = 1;
@@ -140,12 +133,7 @@ namespace CRM.Services.Services
         }
 
      
-        public async Task<IEnumerable<SellingObjectives>> GetByIdPharmacy(int id)
-        {
-            return
-                            null;
-        }
-
+   
         public Task<SellingObjectives> GetById(int? id)
         {
             throw new System.NotImplementedException();

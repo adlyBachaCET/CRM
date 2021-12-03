@@ -20,7 +20,7 @@ namespace CRM.Core.Models
         public int? CreatedBy { get; set; }
         public int? UpdatedBy { get; set; }
 
-        public virtual Tags IdTagsNavigation { get; set; }
+        public virtual Tags Tags { get; set; }
         public Status Status { get; set; }
         public DateTime? CreatedOn { get; set; }
         public DateTime? UpdatedOn { get; set; }

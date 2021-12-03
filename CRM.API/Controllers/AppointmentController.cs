@@ -98,7 +98,8 @@ namespace CRM_API.Controllers
                     var NewAppointement = await _AppointementService.Create(Appointement);
                 //*** Mappage ***
                 var AppointementResource = _mapperService.Map<Appointement, AppointementResource>(NewAppointement);
-                return Ok(AppointementResource);
+                    var NewAppointementCreated = await _AppointementService.GetById(NewAppointement.IdAppointement);
+                    return Ok(NewAppointementCreated);
             }
             else
             {
@@ -260,7 +261,7 @@ namespace CRM_API.Controllers
                 return BadRequest("Bad Token");
             }
         }
-        [HttpGet("{Id}")]
+        [HttpPost("GetById")]
         public async Task<ActionResult<AppointementResource>> GetAppointementById([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token, 
             int Id)
         {

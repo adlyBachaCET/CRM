@@ -50,8 +50,7 @@ namespace CRM.Services.Services
         public async Task<Cycle> GetById(int id)
         {
             return
-                   await _unitOfWork.Cycles.SingleOrDefault(i => i.IdCycle == id && i.Status == Status.Approuved
-                   );
+                   await _unitOfWork.Cycles.GetByIdActif(id);
         }
    
         public async Task Update(Cycle CycleToBeUpdated, Cycle Cycle)

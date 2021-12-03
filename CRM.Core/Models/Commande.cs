@@ -36,5 +36,7 @@ namespace CRM.Core.Models
         public int? VersionPharmacy { get; set; }
         public Status? StatusPharmacy { get; set; }
         public virtual Pharmacy Pharmacy { get; set; }
+        public virtual ICollection<CommandeProduct> CommandeProducts { get; set; }
+
     }
 }

@@ -3,14 +3,12 @@ using CRM.Core.Models;
 using CRM.Core.Resources;
 using CRM.Core.Services;
 using CRM_API.Helper;
-using CRM_API.Resources;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace CRM_API.Controllers
@@ -21,55 +19,30 @@ namespace CRM_API.Controllers
 
     public class PharmacyController : ControllerBase
     {
-        public IList<Pharmacy> Pharmacys;
 
         private readonly IPharmacyService _PharmacyService;
         private readonly IUserService _UserService;
         private readonly IPhoneService _PhoneService;
         private readonly IBrickService _BrickService;
-
-        private readonly IDoctorService _DoctorService;
         private readonly IVisitReportService _VisitReportService;
-
-        private readonly IBusinessUnitService _BusinessUnitService;
         private readonly IRequestRpService _RequestRpService;
         private readonly ICommandeService _CommandeService;
         private readonly ILocalityService _LocalityService;
-        private readonly IBuDoctorService _BuDoctorService;
-        private readonly IServiceService _ServiceService;
         private readonly IParticipantService _ParticipantService;
-
-        private readonly ILocationDoctorService _LocationDoctorService;
-        private readonly ILocationService _LocationService;
-
-
-        private readonly ITagsDoctorService _TagsDoctorService;
-        private readonly ITagsService _TagsService;
         private readonly IObjectionService _ObjectionService;
         private readonly IProductPharmacyService _ProductPharmacyService;
-        private readonly IProductService _ProductService;
-
-        private readonly IInfoService _InfoService;
         private readonly IPotentielService _PotentielService;
-        private readonly ISpecialtyService _SpecialtyService;
         private readonly IMapper _mapperService;
-        public PharmacyController(ILocalityService LocalityService, ILocationDoctorService LocationDoctorService,
+        public PharmacyController(ILocalityService LocalityService,
             IBrickService BrickService, IPhoneService PhoneService,
 
             IUserService UserService,
              IProductPharmacyService ProductPharmacyService,
-            ILocationService LocationService,
-            IServiceService ServiceService, IProductService ProductService,
-            IDoctorService DoctorService,
-            IPotentielService PotentielService, IObjectionService ObjectionService,
-            ISpecialtyService SpecialtyService,
-            IBusinessUnitService BusinessUnitService,
+           IPotentielService PotentielService, IObjectionService ObjectionService,
                         IParticipantService ParticipantService,
                                     IRequestRpService RequestRpService,
   ICommandeService CommandeService,
-            IInfoService InfoService,
-            ITagsService TagsService,
-            ITagsDoctorService TagsDoctorService,
+      
             IVisitReportService VisitReportService, 
             IPharmacyService PharmacyService, IMapper mapper)
         {
@@ -78,27 +51,18 @@ namespace CRM_API.Controllers
 
             _PhoneService = PhoneService;
             _VisitReportService = VisitReportService;
-            _TagsDoctorService = TagsDoctorService;
-            _LocationDoctorService = LocationDoctorService;
-            _LocationService = LocationService;
-            _TagsService = TagsService;
+  
             _PotentielService = PotentielService;
             _ProductPharmacyService = ProductPharmacyService;
-            _ProductService = ProductService;
             _PharmacyService = PharmacyService;
 
             _ObjectionService = ObjectionService;
-            _DoctorService = DoctorService;
-            _ServiceService = ServiceService;
-            _SpecialtyService = SpecialtyService;
             _PhoneService = PhoneService;
             _UserService = UserService;
             _ParticipantService = ParticipantService;
             _RequestRpService = RequestRpService;
             _CommandeService = CommandeService;
 
-            _BusinessUnitService = BusinessUnitService;
-            _InfoService = InfoService;
             _mapperService = mapper;
         }
         [HttpPost("Verify")]
@@ -195,7 +159,6 @@ namespace CRM_API.Controllers
                     var NewPharmacy = await _PharmacyService.Create(Pharmacy);
             //*** Mappage ***
             var PharmacyResource = _mapperService.Map<Pharmacy, PharmacyResource>(NewPharmacy);
-                PhoneResource PhoneResourceOld = new PhoneResource();
                 foreach (var item in SaveAddPharmacyResource.SavePhoneResource)
                 {
 
@@ -205,7 +168,7 @@ namespace CRM_API.Controllers
                     var NewPhone = await _PhoneService.Create(Phone);
                     //*** Mappage ***
                     var PhoneResource = _mapperService.Map<Phone, PhoneResource>(NewPhone);
-                    PhoneResourceOld = PhoneResource;
+                    var PhoneResourceOld = PhoneResource;
                 }
             var PharmacyObject = await PharmacyById(PharmacyResource.IdPharmacy);
 
@@ -345,19 +308,19 @@ namespace CRM_API.Controllers
             
 
 
-                var Pharmacys = await _PharmacyService.GetById(Id);
+                var Pharmacy = await _PharmacyService.GetById(Id);
 
-                var PharmacyResource = _mapperService.Map<Pharmacy, PharmacyResource>(Pharmacys);
+                var PharmacyResource = _mapperService.Map<Pharmacy, PharmacyResource>(Pharmacy);
 
                 PharmacyProfile.Pharmacy = PharmacyResource;
 
 
 
 
-                var Phone = await _PhoneService.GetByIdPharmacy(Id);
+              //  var Phone = await _PhoneService.GetByIdPharmacy(Id);
                 List<PhoneResource> PhoneResources = new List<PhoneResource>();
 
-                foreach (var item in Phone)
+                foreach (var item in Pharmacy.Phone)
                 {
                     var Bu = _mapperService.Map<Phone, PhoneResource>(item);
 
@@ -368,7 +331,7 @@ namespace CRM_API.Controllers
                 }
                 PharmacyProfile.Phone = PhoneResources;
 
-            var Potentiel = await _PotentielService.GetById(Pharmacys.IdPotentiel);
+            var Potentiel = await _PotentielService.GetById(Pharmacy.IdPotentiel);
             PotentielPharmacy PotentielPharmacy = new PotentielPharmacy();
             if (Potentiel != null)
             {
@@ -389,20 +352,20 @@ namespace CRM_API.Controllers
             {
             
 
-                var Pharmacys = await _PharmacyService.GetById(Id);
+                var Pharmacy = await _PharmacyService.GetById(Id);
 
-                var PharmacyResource = _mapperService.Map<Pharmacy, PharmacyResource>(Pharmacys);
+                var PharmacyResource = _mapperService.Map<Pharmacy, PharmacyResource>(Pharmacy);
 
                 PharmacyProfile.Pharmacy = PharmacyResource;
         
 
 
-                if (Pharmacys == null) return NotFound();
+                if (Pharmacy == null) return NotFound();
             
-                var Phone = await _PhoneService.GetByIdPharmacy(Id);
+               // var Phone = await _PhoneService.GetByIdPharmacy(Id);
                 List<PhoneResource> PhoneResources = new List<PhoneResource>();
 
-                foreach (var item in Phone)
+                foreach (var item in Pharmacy.Phone)
                 {
                     var Bu = _mapperService.Map<Phone, PhoneResource>(item);
 
@@ -427,36 +390,30 @@ namespace CRM_API.Controllers
 
                 PharmacyProfile.VisitReports = VisitReportResources;
 
-                var Objections = await _ObjectionService.GetByIdPharmacy(RequestObjection.Objection, Id);
+               // var Objections = await _ObjectionService.GetByIdPharmacy(RequestObjection.Objection, Id);
 
                 List<ObjectionResource> ObjectionResources = new List<ObjectionResource>();
 
-                foreach (var item in Objections)
-                {
-                    var Objection = _mapperService.Map<Objection, ObjectionResource>(item);
-
-                    if (Objection != null)
-                    {
-                        ObjectionResources.Add(Objection);
-                    }
-                }
-                PharmacyProfile.Objection = ObjectionResources;
-
-                var Requests = await _ObjectionService.GetByIdPharmacy(RequestObjection.Request, Id);
-
                 List<ObjectionResource> RequestResources = new List<ObjectionResource>();
 
-                foreach(var item in Objections)
+                foreach (var item in Pharmacy.Objection)
                 {
-                    var Request = _mapperService.Map<Objection, ObjectionResource>(item);
+                    var ObjectionRequest = _mapperService.Map<Objection, ObjectionResource>(item);
 
-                    if (Request != null)
+                    if (ObjectionRequest != null)
                     {
-                        RequestResources.Add(Request);
+                        if (ObjectionRequest.RequestObjection == RequestObjection.Objection)
+                            ObjectionResources.Add(ObjectionRequest);
+                        else if (ObjectionRequest.RequestObjection == RequestObjection.Request)
+                            RequestResources.Add(ObjectionRequest);
                     }
                 }
                 PharmacyProfile.Request = RequestResources;
-                var Potentiel = await _PotentielService.GetById(Pharmacys.IdPotentiel);
+
+                PharmacyProfile.Objection = ObjectionResources;
+
+               
+                var Potentiel = await _PotentielService.GetById(Pharmacy.IdPotentiel);
                 PotentielPharmacy PotentielPharmacy = new PotentielPharmacy();
                 if (Potentiel != null)
                 {
@@ -467,9 +424,9 @@ namespace CRM_API.Controllers
 
                
 
-                var Participant = await _ParticipantService.GetAllByIdPharmacy(Id);
+             //   var Participant = await _ParticipantService.GetAllByIdPharmacy(Id);
                 List<RequestRp> RequestRpList = new List<RequestRp>();
-                foreach (var item in Participant)
+                foreach (var item in Pharmacy.Participant)
                 {
                     var RequestRp = await _RequestRpService.GetById(item.IdRequestRp);
                     RequestRpList.Add(RequestRp);
@@ -488,10 +445,10 @@ namespace CRM_API.Controllers
                 PharmacyProfile.RequestRp = RequestRpResources;
 
 
-                var Commande = await _CommandeService.GetByIdActifPharmacy(Id);
+             //   var Commande = await _CommandeService.GetByIdActifPharmacy(Id);
                 List<CommandeResource> CommandeResources = new List<CommandeResource>();
 
-                foreach (var item in Commande)
+                foreach (var item in Pharmacy.Commande)
                 {
                     var Bu = _mapperService.Map<Commande, CommandeResource>(item);
 
@@ -502,12 +459,12 @@ namespace CRM_API.Controllers
                 }
                 PharmacyProfile.Commande = CommandeResources;
 
-                var ProductPharmacys = await _ProductPharmacyService.GetByIdPharmacy(Id);
+             //   var ProductPharmacys = await _ProductPharmacyService.GetByIdPharmacy(Id);
                 List<ProductResource> ProductResources = new List<ProductResource>();
 
-                foreach (var item in ProductPharmacys)
+                foreach (var item in Pharmacy.ProductPharmacy)
                 {
-                    var Product = _mapperService.Map<Product, ProductResource> (item.IdProductNavigation);
+                    var Product = _mapperService.Map<Product, ProductResource> (item.Product);
 
 
                     if (Product != null)

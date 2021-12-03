@@ -41,7 +41,7 @@ namespace CRM_API.Controllers
             BuUser.IdUser = User.IdUser;
             BuUser.StatusUser = User.Status;
             BuUser.VersionUser = User.Version;
-            BuUser.IdUserNavigation = User;
+            BuUser.User = User;
             BuUser.UpdatedOn = User.UpdatedOn;
             BuUser.CreatedOn = User.CreatedOn;
             BuUser.UpdatedBy = User.UpdatedBy;
@@ -49,7 +49,7 @@ namespace CRM_API.Controllers
             BuUser.IdUser = BusinessUnit.IdBu;
             BuUser.StatusUser = BusinessUnit.Status;
             BuUser.VersionUser = BusinessUnit.Version;
-            BuUser.IdBuNavigation = BusinessUnit;
+            BuUser.Bu = BusinessUnit;
             BuUser.UpdatedOn = BusinessUnit.UpdatedOn;
             BuUser.CreatedOn = BusinessUnit.CreatedOn;
             BuUser.UpdatedBy = BusinessUnit.UpdatedBy;

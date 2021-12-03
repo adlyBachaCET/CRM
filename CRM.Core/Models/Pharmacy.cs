@@ -17,12 +17,17 @@ namespace CRM.Core.Models
         public virtual ICollection<Phone> Phone { get; set; }
         public virtual ICollection<SellingObjectives> SellingObjectives { get; set; }
         public virtual ICollection<ProductPharmacy> ProductPharmacy { get; set; }
+        public virtual ICollection<Commande> Commande { get; set; }
 
         public string Role { get; set; }//Pharmacy ou grossicte
         public Status Status { get; set; }
+        public virtual ICollection<Appointement> Appointement { get; set; }
 
         public virtual ICollection<Target> Target { get; set; }
+        public virtual ICollection<Participant> Participant { get; set; }
+        public virtual ICollection<Objection> Objection { get; set; }
 
+        public virtual ICollection<Visit> Visit { get; set; }
 
         public int IdLocality1 { get; set; }
         public int VersionLocality1 { get; set; }
@@ -53,8 +58,10 @@ namespace CRM.Core.Models
         public string StreetName { get; set; }
         public int PostalCode { get; set; }
         public int IdPotentiel { get; set; }
-
         public string NamePotentiel { get; set; }
+        public int VersionPotentiel { get; set; }
+        public Status StatusPotentiel { get; set; }
+        public virtual Potentiel Potentiel { get; set; }
 
         public string FirstNameOwner { get; set; }
         public string LastNameOwner { get; set; }

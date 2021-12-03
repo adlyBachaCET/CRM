@@ -20,7 +20,7 @@ namespace CRM.Core.Models
         public int Version { get; set; }
 
 
-        public virtual BusinessUnit IdBuNavigation { get; set; }
+        public virtual BusinessUnit Bu { get; set; }
         public virtual Doctor IdDoctorNavigation { get; set; }
         public DateTime? CreatedOn { get; set; }
         public DateTime? UpdatedOn { get; set; }

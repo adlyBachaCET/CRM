@@ -18,7 +18,10 @@ namespace CRM_API.Mapping
 
             CreateMap<Target, IEnumerable<TargetResource>>();
             //Target
-            CreateMap<Appointement, AppointementResource>();
+            CreateMap<Appointement, AppointementResource>().
+                ForMember(dest => dest.Pharmacy, opt => opt.MapFrom(src => src.Pharmacy)).
+                ForMember(dest => dest.Doctor, opt => opt.MapFrom(src => src.Doctor)).
+                ForMember(dest => dest.User, opt => opt.MapFrom(src => src.User));
             CreateMap<Appointement, SaveAppointementResource>();
             CreateMap<Appointement, SaveAppointementResource>();
             CreateMap<SaveAppointementResource, Appointement>();
@@ -142,6 +145,7 @@ namespace CRM_API.Mapping
 
             //Doctor
             CreateMap<Doctor, DoctorResource>();
+
             CreateMap<Doctor, SaveDoctorResource>();
             CreateMap<SaveDoctorResource, Doctor>();
             CreateMap<SaveDoctorResourceUpdate, Doctor>();
@@ -318,11 +322,7 @@ namespace CRM_API.Mapping
             CreateMap<SavePhoneResource, Phone>();
             CreateMap<List<SavePhoneResource>, List<Phone>>();
             CreateMap<Phone, IEnumerable<PhoneResource>>();
-            //Adresse
-            CreateMap<Adresse, AdresseResource>();
-            CreateMap<Adresse, SaveAdresseResource>();
-            CreateMap<SaveAdresseResource, Adresse>();
-            CreateMap<Adresse, IEnumerable<AdresseResource>>();
+
         }
 
 

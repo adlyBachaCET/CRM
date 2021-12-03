@@ -49,6 +49,7 @@ namespace CRM_API.Controllers
                 Locality.CreatedOn = Parent.CreatedOn;
                 Locality.UpdatedBy = Parent.UpdatedBy;
                 Locality.CreatedBy = Parent.CreatedBy;
+                Locality.IdParentNavigation = Parent;
 
             }
 

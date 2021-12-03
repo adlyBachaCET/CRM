@@ -240,13 +240,13 @@ namespace CRM.Services.Services
         public async Task<IEnumerable<Doctor>> GetAllActif()
         {
             return
-                             await _unitOfWork.Doctors.Find(i => (i.Status == Status.Approuved || i.Status == Status.Pending) && i.Active == 0);
+                             await _unitOfWork.Doctors.GetAllAcceptedActif();
         }
 
         public async Task<IEnumerable<Doctor>> GetAllInActif()
         {
             return
-                        await _unitOfWork.Doctors.Find(i => (i.Status == Status.Approuved || i.Status == Status.Pending) && i.Active == 1);
+                        await _unitOfWork.Doctors.GetAllInActif();
         }
 
         public async Task<IEnumerable<Service>> GetServiceByIdLocationActif(int IdLocation)
@@ -257,7 +257,7 @@ namespace CRM.Services.Services
 
         public async Task<Doctor> GetById(int id)
         {
-            return await _unitOfWork.Doctors.GetById(id);  
+            return await _unitOfWork.Doctors.GetByIdActif( id);  
         }
 
         //public Task<Doctor> CreateDoctor(Doctor newDoctor)

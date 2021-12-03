@@ -25,16 +25,19 @@ namespace CRM.Core.Models
         public Status StatusUser { get; set; }
 
         public int VersionsUser { get; set; }
-        
+        public UserResource User { get; set; }
+
         public int? IdDoctor { get; set; }
         public Status? StatusDoctor { get; set; }
 
         public int? VersionsDoctor { get; set; }
+        public DoctorResource Doctor { get; set; }
 
         public int? IdPharmacy { get; set; }
         public Status? StatusPharmacy { get; set; }
 
         public int? VersionsPharmacy { get; set; }
+        public PharmacyResource Pharmacy { get; set; }
 
 
 

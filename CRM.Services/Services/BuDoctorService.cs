@@ -54,7 +54,7 @@ namespace CRM.Services.Services
         public async Task<BuDoctor> GetById(int idDoctor,int idBu)
         {
             return
-                await _unitOfWork.BuDoctors.SingleOrDefault(i => i.IdDoctor == idDoctor && i.IdBu == idBu);
+                await _unitOfWork.BuDoctors.GetById(idDoctor,idBu);
         }
         public async Task Update(BuDoctor BuDoctorToBeUpdated, BuDoctor BuDoctor)
         {
@@ -94,7 +94,7 @@ namespace CRM.Services.Services
 
         public async Task<IEnumerable<BuDoctor>> GetByIdDoctor(int id)
         {
-            return await _unitOfWork.BuDoctors.Find(i => i.IdDoctor == id&& i.Active==0);
+            return await _unitOfWork.BuDoctors.GetByIdDoctor(id);
         }
 
 

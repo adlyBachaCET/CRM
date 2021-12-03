@@ -1,7 +1,6 @@
 using AutoMapper;
 using CRM.Core.Models;
 using CRM.Core.Services;
-using CRM_API.Resources;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -17,27 +16,18 @@ namespace CRM_API.Controllers
 
     public class ProductController : ControllerBase
     {
-        public IList<Product> Products;
 
         private readonly IProductService _ProductService;
-        private readonly IDoctorService _DoctorService;
         private readonly IUserService _UserService;
-        private readonly IPharmacyService _PharmacyService;
         private readonly IBusinessUnitService _BuService;
 
-        private readonly IRequestRpService _RequestRpService;
 
         private readonly IMapper _mapperService;
-        public ProductController(IRequestRpService RequestRpService,
-            IUserService UserService, IBusinessUnitService BuService, IPharmacyService PharmacyService,
-            IDoctorService DoctorService,IProductService ProductService, IMapper mapper)
+        public ProductController(
+            IUserService UserService, IBusinessUnitService BuService,          IProductService ProductService, IMapper mapper)
         {
-            _RequestRpService = RequestRpService;
             _UserService = UserService;
             _BuService = BuService;
-            _PharmacyService = PharmacyService;
-
-            _DoctorService = DoctorService;
            _ProductService = ProductService;
             _mapperService = mapper;
         }

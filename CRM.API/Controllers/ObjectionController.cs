@@ -77,13 +77,16 @@ namespace CRM_API.Controllers
                     Objection.VisitReport = VisitReport;
                     Objection.VersionVisitReport = VisitReport.Version;
                     Objection.StatusVisitReport = VisitReport.Status;
-          
+                    Objection.IdVisitReport = VisitReport.IdReport;
+
                 }
                 else
                 {
                     Objection.VisitReport = null;
                     Objection.VersionVisitReport = null;
                     Objection.StatusVisitReport = null;
+                    Objection.IdVisitReport = null;
+
                 }
             }
             if (SaveObjectionResource.IdPharmacy != 0) { 
@@ -136,11 +139,13 @@ namespace CRM_API.Controllers
             Objection.User = User;
             Objection.VersionUser = User.Version;
             Objection.StatusUser = User.Status;
-
-            var Product = await _ProductService.GetById(SaveObjectionResource.IdProduct);
-            Objection.Product = Product;
-            Objection.VersionProduct = Product.Version;
-            Objection.StatusProduct = Product.Status;
+            if (SaveObjectionResource.IdProduct != 0)
+            {
+                var Product = await _ProductService.GetById(SaveObjectionResource.IdProduct);
+                Objection.Product = Product;
+                Objection.VersionProduct = Product.Version;
+                Objection.StatusProduct = Product.Status;
+            }
             //*** Creation dans la base de données ***
             var NewObjection = await _ObjectionService.Create(Objection);
             //*** Mappage ***
@@ -355,10 +360,13 @@ namespace CRM_API.Controllers
                     Objection.VisitReport = VisitReport;
                     Objection.VersionVisitReport = VisitReport.Version;
                     Objection.StatusVisitReport = VisitReport.Status;
+                    Objection.IdVisitReport = VisitReport.IdReport;
 
                 }
                 else
                 {
+                    Objection.IdVisitReport = null;
+
                     Objection.VisitReport = null;
                     Objection.VersionVisitReport = null;
                     Objection.StatusVisitReport = null;

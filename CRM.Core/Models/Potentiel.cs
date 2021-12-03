@@ -16,6 +16,8 @@ namespace CRM.Core.Models
         public int Active { get; set; }
         public string Name { get; set; }
         public virtual ICollection<PotentielSector> PotentielSector { get; set; }
+        public virtual ICollection<Doctor> Doctors { get; set; }
+        public virtual ICollection<Pharmacy> Pharmacys { get; set; }
 
         public virtual ICollection<PotentielCycle> PotentielCycle { get; set; }
     }

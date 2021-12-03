@@ -18,7 +18,7 @@ namespace CRM.Services.Services
     public class UserService : IUserService
     {
         protected readonly IUnitOfWork _unitOfWork;
-        private IConfiguration _config;
+        private readonly IConfiguration _config;
 
         public UserService(IUnitOfWork unitOfWork, IConfiguration config)
         {
@@ -30,7 +30,7 @@ namespace CRM.Services.Services
         public async Task<User> Create(User newUser)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+            var Credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
             await _unitOfWork.Users.Add(newUser);
             await _unitOfWork.CommitAsync();
@@ -54,7 +54,7 @@ namespace CRM.Services.Services
             var Bu =await _unitOfWork.BuUsers.SingleOrDefault(i=>i.IdUser==userInfo.IdUser&& i.Active==0) ;
            // string json = JsonConvert.SerializeObject(userInfo);
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+            var Credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
             var claims = new[] {
                           new Claim("IdBu", Bu.IdBu.ToString()),
                           new Claim("Exipres On", DateTime.UtcNow.AddMinutes(300).ToString()),
@@ -63,8 +63,8 @@ namespace CRM.Services.Services
                           new Claim("Id", userInfo.IdUser.ToString()),
                           new Claim("FirstName", userInfo.FirstName)
                         , new Claim("BirthDate", userInfo.BirthDate.ToString())
-                        , new Claim("tel1", userInfo.tel1.ToString())
-                        , new Claim("tel2", userInfo.tel2.ToString())
+                        , new Claim("tel1", userInfo.Tel1.ToString())
+                        , new Claim("tel2", userInfo.Tel2.ToString())
                         , new Claim("Role", userInfo.UserType.ToString())
                         , new Claim("PostalCode", userInfo.PostalCode.ToString())
                         , new Claim("Note", userInfo.Note.ToString())
@@ -81,7 +81,7 @@ namespace CRM.Services.Services
               _config["Jwt:Issuer"],
               claims,
               expires: DateTime.Now.AddHours(8),
-              signingCredentials: credentials);
+              signingCredentials: Credentials);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
@@ -91,7 +91,7 @@ namespace CRM.Services.Services
 
             try
             {
-                var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+                var Credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
                 JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
                 JwtSecurityToken jwtToken = (JwtSecurityToken)tokenHandler.ReadToken(token);
                 if (jwtToken == null)

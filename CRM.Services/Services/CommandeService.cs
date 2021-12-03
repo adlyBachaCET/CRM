@@ -49,7 +49,7 @@ namespace CRM.Services.Services
         public async Task<Commande> GetById(int id)
         {
              return
-               await _unitOfWork.Commandes.SingleOrDefault(i => i.IdCommande == id && i.Active == 0);
+               await _unitOfWork.Commandes.GetByIdActif(id);
         }
    
         public async Task Update(Commande CommandeToBeUpdated, Commande Commande)

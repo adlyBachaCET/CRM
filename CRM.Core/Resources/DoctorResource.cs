@@ -28,6 +28,9 @@ namespace CRM.Core.Models
         public PotentielResource Potentiel { get; set; }
 
         public List<Specialities> Specialities { get; set; }
+    
+
+        ///public List<Resource> Visit { get; set; }
 
     }
 

@@ -23,7 +23,6 @@ namespace CRM.Core.Services
         Task<IEnumerable<Sector>> GetFullSectorsByNumTarget(int id);
         Task WeekSwap(WeekSwap WeekSwap);
         Task DeleteWeek(WeekDeletion WeekSwap);
-        Task UpdateWeek(WeekUpdate WeekUpdate);
         Task<User> GetUserByNumTarget(int id);
         Task RemoveAll();
         Task<IEnumerable<Target>> GetTargets();

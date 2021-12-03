@@ -20,6 +20,11 @@ namespace CRM.Core.Models
         public Status Status { get; set; }
         public virtual ICollection<SellingObjectives> SellingObjectives { get; set; }
         public virtual ICollection<Participant> Participant { get; set; }
+        public virtual ICollection<Objection> Objection { get; set; }
+        public virtual ICollection<LocationDoctor> LocationDoctor { get; set; }
+
+        public virtual ICollection<Commande> Commande { get; set; }
+        public virtual ICollection<Visit> Visit { get; set; }
 
         public int Active { get; set; }
         public DateTime? CreatedOn { get; set; }
@@ -40,6 +45,8 @@ namespace CRM.Core.Models
         public virtual ICollection<Info> Info { get; set; }
         public virtual ICollection<Doctor> InverseLinked { get; set; }
         public virtual ICollection<Phone> Phone { get; set; }
+        public virtual ICollection<Appointement> Appointement { get; set; }
+
         public virtual ICollection<TagsDoctor> TagsDoctor { get; set; }
         public int IdPotentiel { get; set; }
         public string NamePotentiel { get; set; }

@@ -11,8 +11,7 @@ namespace CRM.Core.Services
         Task Update(SellingObjectives SellingObjectivesToBeUpdated, SellingObjectives SellingObjectives);
         Task Delete(SellingObjectives SellingObjectivesToBeDeleted);
         Task DeleteRange(List<SellingObjectives> SellingObjectives);
-        Task<IEnumerable<SellingObjectives>> GetByIdPharmacy(int id);
-        Task<List<SellingObjectives>> GetByIdUser(int id);
+    
 
 
         Task<IEnumerable<SellingObjectives>> GetAll();

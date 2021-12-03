@@ -23,41 +23,55 @@ namespace CRM.Data.Repositories
 
         public async Task<IEnumerable<BuUser>> GetAllActif()
         {
-            var result = await MyDbContext.BuUser.Where(a => a.Active == 0).ToListAsync();
+            var result = await MyDbContext.BuUser.Where(a => a.Active == 0)
+                .Include(i=>i.Bu).Include(i => i.User)
+                .ToListAsync();
             return result;
         }
 
         public async Task<IEnumerable<BuUser>> GetAllInActif()
         {
-            var result = await MyDbContext.BuUser.Where(a => a.Active == 1).ToListAsync();
+            var result = await MyDbContext.BuUser.Where(a => a.Active == 1)
+                .Include(i => i.Bu).Include(i => i.User)
+                .ToListAsync();
             return result;
         }
         public async Task<BuUser> GetByIdActif(int id)
         {
-            var result = await MyDbContext.BuUser.Where(a => a.Active == 0 && a.IdBu == id).FirstOrDefaultAsync();
+            var result = await MyDbContext.BuUser.Where(a => a.Active == 0 && a.IdBu == id)
+                .Include(i => i.Bu).Include(i => i.User)
+                .FirstOrDefaultAsync();
             return result;
         }
 
         public async Task<IEnumerable<BuUser>> GetAllAcceptedActif()
         {
-            var result = await MyDbContext.BuUser.Where(a => a.Active == 0 && a.Status == Status.Approuved).ToListAsync();
+            var result = await MyDbContext.BuUser.Where(a => a.Active == 0 && a.Status == Status.Approuved)
+                .Include(i => i.Bu).Include(i => i.User)
+                .ToListAsync();
             return result;
         }
 
         public async Task<IEnumerable<BuUser>> GetAllAcceptedInactifActif()
         {
-            var result = await MyDbContext.BuUser.Where(a => a.Active == 1 && a.Status == Status.Approuved).ToListAsync();
+            var result = await MyDbContext.BuUser.Where(a => a.Active == 1 && a.Status == Status.Approuved)
+                .Include(i => i.Bu).Include(i => i.User)
+                .ToListAsync();
             return result;
         }
 
         public async Task<IEnumerable<BuUser>> GetAllPending()
         {
-            var result = await MyDbContext.BuUser.Where(a => a.Status == Status.Pending).ToListAsync();
+            var result = await MyDbContext.BuUser.Where(a => a.Status == Status.Pending)
+                .Include(i => i.Bu).Include(i => i.User)
+                .ToListAsync();
             return result;
         }
         public async Task<IEnumerable<BuUser>> GetAllRejected()
         {
-            var result = await MyDbContext.BuUser.Where(a => a.Status == Status.Pending).ToListAsync();
+            var result = await MyDbContext.BuUser.Where(a => a.Status == Status.Rejected)
+                .Include(i => i.Bu).Include(i => i.User)
+                .ToListAsync();
             return result;
         }
         //public async Task<IEnumerable<BuUser>> GetAllWithArtisteAsync()

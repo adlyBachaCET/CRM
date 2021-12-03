@@ -49,22 +49,15 @@ namespace CRM.Services.Services
         //          .GetAllWithArtisteAsync();
         //}
 
-        public async Task<Appointement> GetById(int? id)
+        public async Task<Appointement> GetById(int Id)
         {
             return
-                      await _unitOfWork.Appointements.SingleOrDefault(i => i.IdAppointement == id && i.Active == 0);
+                      await _unitOfWork.Appointements.GetByIdActif(Id) ;
         }
-        public async Task<List<Appointement>> GetByIdUser(int id)
-        {   List<Appointement> Activities = new List<Appointement>();
-            var List = await _unitOfWork.Appointements.Find(i => i.IdUser == id && i.Active == 0);
-            foreach(var item in List)
-            {
-                var Appointement = await _unitOfWork.Appointements.SingleOrDefault(i => i.IdAppointement == item.IdAppointement && i.Active == 0);
-
-                Activities.Add(Appointement);
-            }
+        public async Task<List<Appointement>> GetByIdUser(int Id)
+        {  
                 return
-                      Activities;
+                      await _unitOfWork.Appointements.GetByIdUser(Id);
         }
         public async Task Update(Appointement AppointementToBeUpdated, Appointement Appointement)
         {
@@ -155,7 +148,7 @@ namespace CRM.Services.Services
         //    throw new NotImplementedException();
         //}
 
-        //public Task<Appointement> GetAppointementById(int id)
+        //public Task<Appointement> GetAppointementById(int Id)
         //{
         //    throw new NotImplementedException();
         //}

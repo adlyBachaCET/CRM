@@ -104,7 +104,7 @@ namespace CRM.Services.Services
         public async Task<Pharmacy> GetById(int? id)
         {
             return
-                      await _unitOfWork.Pharmacys.SingleOrDefault(i => i.IdPharmacy == id && i.Active == 0);
+                      await _unitOfWork.Pharmacys.GetByIdActif(id);
         }
    
         public async Task Update(Pharmacy PharmacyToBeUpdated, Pharmacy Pharmacy)

@@ -269,12 +269,7 @@ namespace CRM.Services.Services
            
 
         }
-        public async Task UpdateWeek(WeekUpdate WeekUpdate)
-        {
-           
-
-
-        }
+   
         public async Task Delete(Target Target)
         {
             //CycleSectorWeekDoctors musi =  _unitOfWork.CycleSectorWeekDoctors.SingleOrDefaultAsync(x=>x.Id == CycleSectorWeekDoctorsToBeUpdated.Id);

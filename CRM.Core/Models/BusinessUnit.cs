@@ -25,7 +25,7 @@ namespace CRM.Core.Models
         public virtual ICollection<BuFile> BuFile { get; set; }
 
         public virtual ICollection<CycleBu> CycleBu { get; set; }
-        public virtual ICollection<ProductBu> ProductBu { get; set; }
+        public virtual ICollection<Product> Product { get; set; }
 
         public Status Status { get; set; }
     }

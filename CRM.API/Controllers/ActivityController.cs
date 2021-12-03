@@ -45,8 +45,8 @@ namespace CRM_API.Controllers
             if (claims.Claims != null) { 
             var Role = claims.FindFirst("Role").Value;
             var Id = int.Parse(claims.FindFirst("Id").Value);
-            var exp = DateTime.Parse(claims.FindFirst("Exipres On").Value);
-            if (exp > DateTime.Now)
+            var Exp =  DateTime.Parse(claims.FindFirst("Exipres On").Value);
+            if (Exp > DateTime.Now)
             {//*** Mappage ***
                 var Activity = _mapperService.Map<SaveActivityResource, Activity>(SaveActivityResource);
                 Activity.UpdatedOn = DateTime.UtcNow;
@@ -86,7 +86,7 @@ namespace CRM_API.Controllers
                     //*** Creation dans la base de données ***
                     ActivityUser.CreatedBy = 0;
                     ActivityUser.UpdatedBy = 0;
-                    var NewActivityUser = await _ActivityUserService.Create(ActivityUser);
+                    await _ActivityUserService.Create(ActivityUser);
                     return Ok(ActivityResource);
             }
             else
@@ -106,10 +106,9 @@ namespace CRM_API.Controllers
             var claims = _UserService.getPrincipal(Token);
             if (claims.Claims != null)
             {
-                var Role = claims.FindFirst("Role").Value;
-                var Id = int.Parse(claims.FindFirst("Id").Value);
-                var exp = DateTime.Parse(claims.FindFirst("Exipres On").Value);
-                if (exp > DateTime.Now)
+
+                var Exp =  DateTime.Parse(claims.FindFirst("Exipres On").Value);
+                if (Exp > DateTime.Now)
                 {
                     try
             {
@@ -140,10 +139,9 @@ namespace CRM_API.Controllers
             var claims = _UserService.getPrincipal(Token);
             if (claims.Claims != null)
             {
-                var Role = claims.FindFirst("Role").Value;
-                var Id = int.Parse(claims.FindFirst("Id").Value);
-                var exp = DateTime.Parse(claims.FindFirst("Exipres On").Value);
-                if (exp > DateTime.Now)
+
+                var Exp =  DateTime.Parse(claims.FindFirst("Exipres On").Value);
+                if (Exp > DateTime.Now)
                 {
                     try
             {
@@ -174,10 +172,9 @@ namespace CRM_API.Controllers
             var claims = _UserService.getPrincipal(Token);
             if (claims.Claims != null)
             {
-                var Role = claims.FindFirst("Role").Value;
-                var Id = int.Parse(claims.FindFirst("Id").Value);
-                var exp = DateTime.Parse(claims.FindFirst("Exipres On").Value);
-                if (exp > DateTime.Now)
+
+                var Exp =  DateTime.Parse(claims.FindFirst("Exipres On").Value);
+                if (Exp > DateTime.Now)
                 {
                     try
             {
@@ -210,10 +207,9 @@ namespace CRM_API.Controllers
             var claims = _UserService.getPrincipal(Token);
             if (claims.Claims != null)
             {
-                var Role = claims.FindFirst("Role").Value;
-                var Iduser = int.Parse(claims.FindFirst("Id").Value);
-                var exp = DateTime.Parse(claims.FindFirst("Exipres On").Value);
-                if (exp > DateTime.Now)
+
+                var Exp =  DateTime.Parse(claims.FindFirst("Exipres On").Value);
+                if (Exp > DateTime.Now)
                 {
                     try
                     {
@@ -256,10 +252,9 @@ namespace CRM_API.Controllers
             var claims = _UserService.getPrincipal(Token);
             if (claims.Claims != null)
             {
-                var Role = claims.FindFirst("Role").Value;
-                var Iduser = int.Parse(claims.FindFirst("Id").Value);
-                var exp = DateTime.Parse(claims.FindFirst("Exipres On").Value);
-                if (exp > DateTime.Now)
+
+                var Exp =  DateTime.Parse(claims.FindFirst("Exipres On").Value);
+                if (Exp > DateTime.Now)
                 {
                     try
                     {
@@ -302,10 +297,9 @@ namespace CRM_API.Controllers
             var claims = _UserService.getPrincipal(Token);
             if (claims.Claims != null)
             {
-                var Role = claims.FindFirst("Role").Value;
-                var Iduser = int.Parse(claims.FindFirst("Id").Value);
-                var exp = DateTime.Parse(claims.FindFirst("Exipres On").Value);
-                if (exp > DateTime.Now)
+    
+                var Exp =  DateTime.Parse(claims.FindFirst("Exipres On").Value);
+                if (Exp > DateTime.Now)
                 {
                     try
             {
@@ -339,8 +333,8 @@ namespace CRM_API.Controllers
             {
                 var Role = claims.FindFirst("Role").Value;
                 var IdUser = int.Parse(claims.FindFirst("Id").Value);
-                var exp = DateTime.Parse(claims.FindFirst("Exipres On").Value);
-                if (exp > DateTime.Now)
+                var Exp =  DateTime.Parse(claims.FindFirst("Exipres On").Value);
+                if (Exp > DateTime.Now)
                 {
                     var ActivityToBeModified = await _ActivityService.GetById(Id);
             if (ActivityToBeModified == null) return BadRequest("Le Activity n'existe pas"); //NotFound();
@@ -357,7 +351,7 @@ namespace CRM_API.Controllers
                     {
                         Activity.Status = Status.Pending;
                     }
-                    Activity.UpdatedBy = Id;
+                    Activity.UpdatedBy = IdUser;
                     Activity.CreatedBy = ActivityToBeModified.CreatedBy;
                     await _ActivityService.Update(ActivityToBeModified, Activity);
 
@@ -365,7 +359,7 @@ namespace CRM_API.Controllers
 
             var ActivityResourceUpdated = _mapperService.Map<Activity, ActivityResource>(ActivityUpdated);
 
-            return Ok();
+            return Ok(ActivityResourceUpdated);
                 }
                 else
                 {
@@ -386,10 +380,9 @@ namespace CRM_API.Controllers
             var claims = _UserService.getPrincipal(Token);
             if (claims.Claims != null)
             {
-                var Role = claims.FindFirst("Role").Value;
-                var IdUser = int.Parse(claims.FindFirst("Id").Value);
-                var exp = DateTime.Parse(claims.FindFirst("Exipres On").Value);
-                if (exp > DateTime.Now)
+                
+                var Exp =  DateTime.Parse(claims.FindFirst("Exipres On").Value);
+                if (Exp > DateTime.Now)
                 {
                     try
             {
@@ -423,10 +416,9 @@ namespace CRM_API.Controllers
             var claims = _UserService.getPrincipal(Token);
             if (claims.Claims != null)
             {
-                var Role = claims.FindFirst("Role").Value;
-                var IdUser = int.Parse(claims.FindFirst("Id").Value);
-                var exp = DateTime.Parse(claims.FindFirst("Exipres On").Value);
-                if (exp > DateTime.Now)
+              
+                var Exp =  DateTime.Parse(claims.FindFirst("Exipres On").Value);
+                if (Exp > DateTime.Now)
                 {
                     try
             {
@@ -466,10 +458,9 @@ namespace CRM_API.Controllers
             var claims = _UserService.getPrincipal(Token);
             if (claims.Claims != null)
             {
-                var Role = claims.FindFirst("Role").Value;
                 var IdUser = int.Parse(claims.FindFirst("Id").Value);
-                var exp = DateTime.Parse(claims.FindFirst("Exipres On").Value);
-                if (exp > DateTime.Now)
+                var Exp =  DateTime.Parse(claims.FindFirst("Exipres On").Value);
+                if (Exp > DateTime.Now)
                 {
                     var ActivityToBeModified = await _ActivityService.GetById(Id);
                 if (ActivityToBeModified == null) return BadRequest("Le Activity n'existe pas"); //NotFound();
@@ -515,10 +506,9 @@ namespace CRM_API.Controllers
             var claims = _UserService.getPrincipal(Token);
             if (claims.Claims != null)
             {
-                var Role = claims.FindFirst("Role").Value;
                 var IdUser = int.Parse(claims.FindFirst("Id").Value);
-                var exp = DateTime.Parse(claims.FindFirst("Exipres On").Value);
-                if (exp > DateTime.Now)
+                var Exp =  DateTime.Parse(claims.FindFirst("Exipres On").Value);
+                if (Exp > DateTime.Now)
                 {
                     //var actual = new Moment(true) { Year = 1995, Month = 12, Day = 25 }.DateTime();
                     var ActivityToBeModified = await _ActivityService.GetById(Id);

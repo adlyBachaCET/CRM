@@ -21,7 +21,8 @@ namespace CRM.Core.Models
         public string NameLocationType { get; set; }
         public string TypeLocationType { get; set; }
         public string Name { get; set; }
-        public int? tel { get; set; }
+        public int? Tel { get; set; }
+        public virtual ICollection<LocationDoctor> LocationDoctor { get; set; }
 
         public virtual LocationType IdLocationTypeNavigation { get; set; }
 

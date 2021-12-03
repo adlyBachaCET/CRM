@@ -10,7 +10,7 @@ namespace CRM.Core.Models
         public int VersionUser { get; set; }
         public int? CreatedBy { get; set; }
         public int? UpdatedBy { get; set; }
-        public virtual User IdUserNavigation { get; set; }
+        public virtual User User { get; set; }
 
         public int IdBu { get; set; }
         public Status StatusBu { get; set; }
@@ -24,6 +24,6 @@ namespace CRM.Core.Models
         public DateTime? UpdatedOn { get; set; }
         public int Active { get; set; }
         public Status Status { get; set; }
-        public virtual BusinessUnit IdBuNavigation { get; set; }
+        public virtual BusinessUnit Bu { get; set; }
     }
 }

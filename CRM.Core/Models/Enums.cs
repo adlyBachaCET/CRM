@@ -13,5 +13,13 @@ namespace CRM.Core.Models
         NotSatisfied,
 
     }
-
+    public enum UserType
+    {
+        Manager,
+        Delegue
+    }
+    public enum RequestObjection
+    {
+        Request, Objection
+    }
 }

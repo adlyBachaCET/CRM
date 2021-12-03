@@ -56,9 +56,6 @@ namespace CRM.Core.Models
 
         public virtual VisitReport VisitReport { get; set; }
     }
-    public enum RequestObjection
-    {
-        Request, Objection
-    }
+
 
 }

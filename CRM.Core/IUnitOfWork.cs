@@ -18,7 +18,6 @@ namespace CRM.Core
 
         IVisitUserRepository VisitUsers { get; }
         IParticipantRepository Participants { get; }
-        IParticipantVisitRepository ParticipantVisits { get; }
 
         IRequestRpRepository RequestRps { get; }
         ICommandeRepository Commandes { get; }
@@ -41,8 +40,7 @@ namespace CRM.Core
         ITargetRepository Target { get; }
         IDoctorRepository Doctors{ get; }
         ILocationDoctorRepository LocationDoctors { get; }
-        IAdresseRepository Adresses { get; }
-        IAdresseLocalityRepository AdresseLocalitys { get; }
+
 
         ILocationRepository Locations { get; }
         IUserRepository Users { get; }

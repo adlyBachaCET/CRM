@@ -8,7 +8,7 @@ namespace CRM.Core.Services
     public interface IAppointementService
     {
         Task<List<Appointement>> GetByIdUser(int id);
-        Task<Appointement> GetById(int? id);
+        Task<Appointement> GetById(int id);
         Task<Appointement> Create(Appointement newAppointement);
         Task<List<Appointement>> CreateRange(List<Appointement> newAppointement);
         Task Update(Appointement AppointementToBeUpdated, Appointement Appointement);

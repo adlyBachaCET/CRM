@@ -32,8 +32,10 @@ namespace CRM.Core.Models
         public BusinessUnit Bu { get; set; }
         public virtual ICollection<ProductFile> ProductFile { get; set; }
         public virtual ICollection<ProductPharmacy> ProductPharmacy { get; set; }
+        public virtual ICollection<Objection> Objection { get; set; }
 
         public ICollection<ProductVisitReport> ProductVisitReport { get; set; }
+        public virtual ICollection<CommandeProduct> CommandeProducts { get; set; }
 
     }
 }
