@@ -40,6 +40,7 @@ namespace CRM_API.Controllers
         [HttpPost]
         public async Task<ActionResult<WeekSectorCycleInYearResource>> CreateWeekSectorCycleInYear(SaveWeekSectorCycleInYearResource SaveWeekSectorCycleInYearResource)
         {
+            try { 
             //*** Mappage ***
             var SectorInYear = _mapperService.Map<SaveWeekSectorCycleInYearResource, SectorInYear>(SaveWeekSectorCycleInYearResource);
             SectorInYear.CreatedOn = DateTime.UtcNow;
@@ -71,6 +72,11 @@ namespace CRM_API.Controllers
             //*** Mappage ***
             var WeekSectorCycleInYearResource = _mapperService.Map<SectorInYear, WeekSectorCycleInYearResource>(NewWeekSectorCycleInYear);
             return Ok(WeekSectorCycleInYearResource);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpGet]
@@ -80,7 +86,6 @@ namespace CRM_API.Controllers
             {
                 var Employe = await _SectorInYearService.GetAll();
                 if (Employe == null) return NotFound();
-                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
                 return Ok(Employe);
             }
             catch (Exception ex)
@@ -95,7 +100,6 @@ namespace CRM_API.Controllers
             {
                 var Employe = await _SectorInYearService.GetAllActif();
                 if (Employe == null) return NotFound();
-                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
                 return Ok(Employe);
             }
             catch (Exception ex)
@@ -110,7 +114,6 @@ namespace CRM_API.Controllers
             {
                 var Employe = await _SectorInYearService.GetAllInActif();
                 if (Employe == null) return NotFound();
-                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
                 return Ok(Employe);
             }
             catch (Exception ex)
@@ -160,23 +163,7 @@ namespace CRM_API.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        /*[HttpPut("{Id}")]
-        public async Task<ActionResult<WeekSectorCycleInYear>> UpdateWeekSectorCycleInYear(int Id, SaveWeekSectorCycleInYearResource SaveWeekSectorCycleInYearResource)
-        {
-
-            var WeekSectorCycleInYearToBeModified = await _WeekSectorCycleInYearService.GetById(Id);
-            if (WeekSectorCycleInYearToBeModified == null) return BadRequest("Le WeekSectorCycleInYear n'existe pas"); //NotFound();
-            var WeekSectorCycleInYears = _mapperService.Map<SaveWeekSectorCycleInYearResource, WeekSectorCycleInYear>(SaveWeekSectorCycleInYearResource);
-            //var newWeekSectorCycleInYear = await _WeekSectorCycleInYearService.Create(WeekSectorCycleInYears);
-
-            await _WeekSectorCycleInYearService.Update(WeekSectorCycleInYearToBeModified, WeekSectorCycleInYears);
-
-            var WeekSectorCycleInYearUpdated = await _WeekSectorCycleInYearService.GetById(Id);
-
-            var WeekSectorCycleInYearResourceUpdated = _mapperService.Map<WeekSectorCycleInYear, WeekSectorCycleInYearResource>(WeekSectorCycleInYearUpdated);
-
-            return Ok();
-        }*/
+        
 
 
         [HttpDelete("{Id}")]
@@ -186,9 +173,9 @@ namespace CRM_API.Controllers
             {
 
                 var sub = await _SectorInYearService.GetById(Id);
-                if (sub == null) return BadRequest("Le WeekSectorCycleInYear  n'existe pas"); //NotFound();
+                if (sub == null) return BadRequest("Le WeekSectorCycleInYear  n'existe pas"); 
                 await _SectorInYearService.Delete(sub);
-                ;
+             
                 return NoContent();
             }
             catch (Exception ex)
@@ -206,11 +193,11 @@ namespace CRM_API.Controllers
                 {
                     var sub = await _SectorInYearService.GetById(item);
                     empty.Add(sub);
-                    if (sub == null) return BadRequest("Le WeekSectorCycleInYear  n'existe pas"); //NotFound();
+                    if (sub == null) return BadRequest("Le WeekSectorCycleInYear  n'existe pas"); 
 
                 }
                 await _SectorInYearService.DeleteRange(empty);
-                ;
+               
                 return NoContent();
             }
             catch (Exception ex)

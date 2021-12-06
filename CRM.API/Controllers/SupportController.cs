@@ -36,6 +36,7 @@ namespace CRM_API.Controllers
         [HttpPost]
         public async Task<ActionResult<SupportResource>> CreateSupport(SaveSupportResource SaveSupportResource)
         {
+            try { 
             //*** Mappage ***
             var Support = _mapperService.Map<SaveSupportResource, Support>(SaveSupportResource);
             Support.CreatedOn = DateTime.UtcNow;
@@ -49,10 +50,16 @@ namespace CRM_API.Controllers
             //*** Mappage ***
             var SupportResource = _mapperService.Map<Support, SupportResource>(NewSupport);
             return Ok(SupportResource);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         [HttpPost("Send")]
         public async Task<ActionResult> Send(SendMail SendMail)
         {
+            try { 
             //  var UserExist =await _UserService 
             var mail = await _SupportService.Send(SendMail.Name, SendMail.EmailLogin);
             //*** Creation dans la base de données ***
@@ -64,8 +71,12 @@ namespace CRM_API.Controllers
             {
                 return NotFound("L'utilisateur n'est pas trouvé");
             }
-            //*** Mappage ***
-            ///var SupportResource = _mapperService.Map<Support, SupportResource>(NewSupport);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+          
         }
         [HttpGet]
         public async Task<ActionResult<SupportResource>> GetAllSupports()
@@ -74,7 +85,6 @@ namespace CRM_API.Controllers
             {
                 var Employe = await _SupportService.GetAll();
                 if (Employe == null) return NotFound();
-                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
                 return Ok(Employe);
             }
             catch (Exception ex)
@@ -89,7 +99,6 @@ namespace CRM_API.Controllers
             {
                 var Employe = await _SupportService.GetAllActif();
                 if (Employe == null) return NotFound();
-                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
                 return Ok(Employe);
             }
             catch (Exception ex)
@@ -115,30 +124,29 @@ namespace CRM_API.Controllers
         [HttpGet("VerifyToken/{token}")]
         public async Task<ActionResult> VerifyToken(string token)
         {
-           // StringValues token = "";
+            try { 
             ErrorHandling ErrorMessag = new ErrorHandling();
-          //  Request.Headers.TryGetValue("token", out token);
 
-            try
-            {
+          
                 var Supports = await _SupportService.getPrincipal(token);
                 if (Supports == null) return NotFound();
                 ErrorMessag.ErrorMessage = "Token Found";
                 ErrorMessag.StatusCode = 200;
                 return Ok(new{ ErrorHandling = ErrorMessag, Supports= Supports.Claims });
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
+
             }
-            catch (Exception ex)
-            {
-                ErrorMessag.ErrorMessage = ex.Message;
-                ErrorMessag.StatusCode = 404;
-                return BadRequest(ErrorMessag);
-            }
-        }
         [HttpPost("SendMobile")]
         public async Task<ActionResult> SendMobile(SendMailHtml SendMailHtml)
         {
-            //  var UserExist =await _UserService 
-            var mail = await _SupportService.SendMailMobile(SendMailHtml.Name, SendMailHtml.EmailLogin, SendMailHtml.Html);
+            try
+            {
+
+                var mail = await _SupportService.SendMailMobile(SendMailHtml.Name, SendMailHtml.EmailLogin, SendMailHtml.Html);
             //*** Creation dans la base de données ***
             if (mail == true)
             {
@@ -148,8 +156,11 @@ namespace CRM_API.Controllers
             {
                 return NotFound("L'utilisateur n'est pas trouvé");
             }
-            //*** Mappage ***
-            ///var SupportResource = _mapperService.Map<Support, SupportResource>(NewSupport);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         [HttpPost("VerifyMobile")]
         public async Task<ActionResult> VerifyToken([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token,

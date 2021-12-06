@@ -33,6 +33,7 @@ namespace CRM_API.Controllers
         [HttpPost]
         public async Task<ActionResult<WeekInYearResource>> CreateWeekInYear(SaveWeekInYearResource SaveWeekInYearResource)
         {
+            try { 
             //*** Mappage ***
             var WeekInYear = _mapperService.Map<SaveWeekInYearResource, WeekInYear>(SaveWeekInYearResource);
             WeekInYear.CreatedOn = DateTime.UtcNow;
@@ -46,6 +47,11 @@ namespace CRM_API.Controllers
             //*** Mappage ***
             var WeekInYearResource = _mapperService.Map<WeekInYear, WeekInYearResource>(NewWeekInYear);
             return Ok(WeekInYearResource);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         [HttpGet]
         public async Task<ActionResult<WeekInYearResource>> GetAllWeekInYears()
@@ -54,7 +60,6 @@ namespace CRM_API.Controllers
             {
                 var Employe = await _WeekInYearService.GetAll();
                 if (Employe == null) return NotFound();
-                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
                 return Ok(Employe);
             }
             catch (Exception ex)
@@ -69,7 +74,6 @@ namespace CRM_API.Controllers
             {
                 var Employe = await _WeekInYearService.GetAllActif();
                 if (Employe == null) return NotFound();
-                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
                 return Ok(Employe);
             }
             catch (Exception ex)
@@ -84,7 +88,6 @@ namespace CRM_API.Controllers
             {
                 var Employe = await _WeekInYearService.GetAllInActif();
                 if (Employe == null) return NotFound();
-                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
                 return Ok(Employe);
             }
             catch (Exception ex)
@@ -115,7 +118,6 @@ namespace CRM_API.Controllers
             var WeekInYearToBeModified = await _WeekInYearService.GetById(Order, Year);
             if (WeekInYearToBeModified == null) return BadRequest("Le WeekInYear n'existe pas"); //NotFound();
             var WeekInYear = _mapperService.Map<SaveWeekInYearResource, WeekInYear>(SaveWeekInYearResource);
-            //var newWeekInYear = await _WeekInYearService.Create(WeekInYears);
             WeekInYear.CreatedOn = DateTime.UtcNow;
             WeekInYear.UpdatedOn = DateTime.UtcNow;
             WeekInYear.Active = 0;
@@ -139,7 +141,7 @@ namespace CRM_API.Controllers
             {
 
                 var sub = await _WeekInYearService.GetById(Order, Year);
-                if (sub == null) return BadRequest("Le WeekInYear  n'existe pas"); //NotFound();
+                if (sub == null) return BadRequest("Le WeekInYear  n'existe pas"); 
                 await _WeekInYearService.Delete(sub);
                 ;
                 return NoContent();

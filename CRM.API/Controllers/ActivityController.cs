@@ -19,11 +19,10 @@ namespace CRM_API.Controllers
 
     public class ActivityController : ControllerBase
     {
-        public IList<Activity> Activitys;
         
         private readonly IActivityService _ActivityService;
         private readonly IUserService _UserService;
-                private readonly IActivityUserService _ActivityUserService;
+        private readonly IActivityUserService _ActivityUserService;
 
         private readonly IMapper _mapperService;
         public ActivityController(IUserService UserService,
@@ -41,7 +40,9 @@ namespace CRM_API.Controllers
         public async Task<ActionResult<ActivityResource>> CreateActivity([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token, 
             SaveActivityResource SaveActivityResource)
         {
-            var claims = _UserService.getPrincipal(Token);
+            try
+            {
+                var claims = _UserService.getPrincipal(Token);
             if (claims.Claims != null) { 
             var Role = claims.FindFirst("Role").Value;
             var Id = int.Parse(claims.FindFirst("Id").Value);
@@ -99,11 +100,17 @@ namespace CRM_API.Controllers
             {
                 return BadRequest("Bad Token");
             }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         [HttpGet]
         public async Task<ActionResult<ActivityResource>> GetAllActivitys([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token)
         {
-            var claims = _UserService.getPrincipal(Token);
+            try{
+                var claims = _UserService.getPrincipal(Token);
             if (claims.Claims != null)
             {
 
@@ -131,10 +138,16 @@ namespace CRM_API.Controllers
             {
                 return BadRequest("Bad Token");
             }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         [HttpGet("Actif")]
         public async Task<ActionResult<ActivityResource>> GetAllActifActivitys([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token)
         {
+            try { 
             var claims = _UserService.getPrincipal(Token);
             if (claims.Claims != null)
             {
@@ -163,10 +176,16 @@ namespace CRM_API.Controllers
             {
                 return BadRequest("Bad Token");
             }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         [HttpGet("InActif")]
         public async Task<ActionResult<ActivityResource>> GetAllInactifActivitys([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token)
         {
+            try { 
             var claims = _UserService.getPrincipal(Token);
             if (claims.Claims != null)
             {
@@ -195,12 +214,19 @@ namespace CRM_API.Controllers
             {
                 return BadRequest("Bad Token");
             }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpGet("ActivityByUser/{Id}")]
         public async Task<ActionResult<ActivityResource>> GetActivityByIdUser([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token,
             int Id)
         {
+            try { 
+            
             var claims = _UserService.getPrincipal(Token);
             if (claims.Claims != null)
             {
@@ -241,11 +267,17 @@ namespace CRM_API.Controllers
             {
                 return BadRequest("Bad Token");
             }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         [HttpGet("ActivityByUserToday/{Id}")]
         public async Task<ActionResult<ActivityResource>> GetActivityByIdUserToday([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token,
            int Id)
         {
+            try { 
             var claims = _UserService.getPrincipal(Token);
             if (claims.Claims != null)
             {
@@ -286,11 +318,17 @@ namespace CRM_API.Controllers
             {
                 return BadRequest("Bad Token");
             }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         [HttpGet("{Id}")]
         public async Task<ActionResult<ActivityResource>> GetActivityById([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token, 
             int Id)
         {
+            try { 
             var claims = _UserService.getPrincipal(Token);
             if (claims.Claims != null)
             {
@@ -320,11 +358,17 @@ namespace CRM_API.Controllers
             {
                 return BadRequest("Bad Token");
             }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         [HttpPut("{Id}")]
         public async Task<ActionResult<ActivityResource>> UpdateActivity([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token, 
             int Id, SaveActivityResource SaveActivityResource)
         {
+            try { 
             var claims = _UserService.getPrincipal(Token);
             if (claims.Claims != null)
             {
@@ -368,12 +412,18 @@ namespace CRM_API.Controllers
             {
                 return BadRequest("Bad Token");
             }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
 
         [HttpDelete("{Id}")]
         public async Task<ActionResult> DeleteActivity([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token, int Id)
         {
+            try { 
             var claims = _UserService.getPrincipal(Token);
             if (claims.Claims != null)
             {
@@ -405,11 +455,17 @@ namespace CRM_API.Controllers
             {
                 return BadRequest("Bad Token");
             }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         [HttpPost("DeleteRange")]
         public async Task<ActionResult> DeleteRange(
             [FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token, List<int> Ids)
         {
+            try { 
             var claims = _UserService.getPrincipal(Token);
             if (claims.Claims != null)
             {
@@ -446,12 +502,18 @@ namespace CRM_API.Controllers
             {
                 return BadRequest("Bad Token");
             }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         [HttpPut("Approuve/{Id}")]
         public async Task<ActionResult<ActivityResource>> ApprouveActivity(
             [FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token,
             int Id)
         {
+            try { 
             var claims = _UserService.getPrincipal(Token);
             if (claims.Claims != null)
             {
@@ -486,7 +548,12 @@ namespace CRM_API.Controllers
             {
                 return BadRequest("Bad Token");
     }
-}
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
         /// <summary>
         ///  This function is used to Reject a Activity
         /// </summary>
@@ -496,7 +563,7 @@ namespace CRM_API.Controllers
         public async Task<ActionResult<ActivityResource>> RejectActivity([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token, int Id)
         {
 
-
+            try { 
           //  var dateFormatVal1 = moment().format('DD-MMM-YYYY');
 
 
@@ -532,6 +599,11 @@ namespace CRM_API.Controllers
             else
             {
                 return BadRequest("Bad Token");
+            }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
 

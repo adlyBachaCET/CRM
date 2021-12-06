@@ -30,6 +30,7 @@ namespace CRM_API.Controllers
         [HttpPost]
         public async Task<ActionResult<InfoResource>> CreateInfo(SaveInfoResource SaveInfoResource)
         {
+            try { 
             //*** Mappage ***
             var Info = _mapperService.Map<SaveInfoResource, Info>(SaveInfoResource);
             Info.Version = 0;
@@ -43,6 +44,11 @@ namespace CRM_API.Controllers
             //*** Mappage ***
             var InfoResource = _mapperService.Map<Info, InfoResource>(NewInfo);
             return Ok(InfoResource);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         [HttpGet]
         public async Task<ActionResult<InfoResource>> GetAllInfos()
@@ -105,7 +111,7 @@ namespace CRM_API.Controllers
         [HttpPut("{Id}")]
         public async Task<ActionResult<InfoResource>> UpdateInfo(int Id, SaveInfoResource SaveInfoResource)
         {
-
+            try { 
             var InfoToBeModified = await _InfoService.GetById(Id);
             if (InfoToBeModified == null) return BadRequest("Le Info n'existe pas");
             var Info = _mapperService.Map<SaveInfoResource, Info>(SaveInfoResource);
@@ -122,6 +128,11 @@ namespace CRM_API.Controllers
             var InfoResourceUpdated = _mapperService.Map<Info, InfoResource>(InfoUpdated);
 
             return Ok(InfoResourceUpdated);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
 

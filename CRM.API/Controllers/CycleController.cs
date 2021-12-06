@@ -72,7 +72,7 @@ namespace CRM_API.Controllers
         public async Task<ActionResult<CycleResource>> CreateCycle([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
         string Token, AffectationCycleUser AffectationCycleUser)
         {
-
+            try { 
             var claims = _UserService.getPrincipal(Token);
             var Role = claims.FindFirst("Role").Value;
             var Id = int.Parse(claims.FindFirst("Id").Value);
@@ -124,7 +124,11 @@ namespace CRM_API.Controllers
             }
 
             return Ok(CycleResource);
-
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         /// <summary>
         ///  This function Asign Users To a Cycle
@@ -186,6 +190,7 @@ namespace CRM_API.Controllers
         public async Task<ActionResult> AsignSectorsToCycle([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
         string Token, ItemToBeAssigned Ids)
         {
+            try { 
             var random = new Random();
             int num = random.Next();
             var claims = _UserService.getPrincipal(Token);
@@ -320,7 +325,11 @@ namespace CRM_API.Controllers
             }
             var target = await GetTarget(numTarget);
             return Ok(target);
-
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         /// <summary>
@@ -333,6 +342,7 @@ namespace CRM_API.Controllers
         public async Task<ActionResult<CycleResource>> UpdateCycle([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
         string Token, int Id, AffectationCycleUser AffectationCycleUser)
         {
+            try { 
             var claims = _UserService.getPrincipal(Token);
             var Role = claims.FindFirst("Role").Value;
 
@@ -388,7 +398,11 @@ namespace CRM_API.Controllers
 
 
             return Ok(CycleUpdated);
-
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         /// <summary>
@@ -400,7 +414,7 @@ namespace CRM_API.Controllers
         public async Task<ActionResult<CycleResource>> GetAllCycles([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
         string Token)
         {
-
+            try { 
             ErrorHandling ErrorMessag = new ErrorHandling();
             if (Token != "")
             {
@@ -418,6 +432,11 @@ namespace CRM_API.Controllers
                 return Ok(ErrorMessag);
 
             }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         /// <summary>
         ///  This function gets the list of all actif cycles
@@ -428,6 +447,7 @@ namespace CRM_API.Controllers
         public async Task<ActionResult<CycleResource>> GetAllActifCycles([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
         string Token)
         {
+            try { 
             ErrorHandling ErrorMessag = new ErrorHandling();
             if (Token != "")
             {
@@ -443,6 +463,11 @@ namespace CRM_API.Controllers
                 return Ok(ErrorMessag);
 
             }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         /// <summary>
         ///  This function gets the list of all inactif cycles
@@ -453,6 +478,7 @@ namespace CRM_API.Controllers
         public async Task<ActionResult<CycleResource>> GetAllInactifCycles([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
         string Token)
         {
+            try { 
             ErrorHandling ErrorMessag = new ErrorHandling();
             if (Token != "")
             {
@@ -467,6 +493,11 @@ namespace CRM_API.Controllers
                 return Ok(ErrorMessag);
 
             }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         /// <summary>
@@ -479,8 +510,8 @@ namespace CRM_API.Controllers
         public async Task<ActionResult<CycleResource>> GetCycleById([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
         string Token, int Id)
         {
-
-            ErrorHandling ErrorMessag = new ErrorHandling();
+            try { 
+                ErrorHandling ErrorMessag = new ErrorHandling();
             if (Token != "")
             {
                 var Cycles = await _CycleService.GetById(Id);
@@ -506,6 +537,11 @@ namespace CRM_API.Controllers
                 return Ok(ErrorMessag);
 
             }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         /// <summary>
         ///  This function gets the cycle by id
@@ -517,6 +553,7 @@ namespace CRM_API.Controllers
         public async Task<ActionResult> c([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
         string Token, PassToPlanification PassToPlanification)
         {
+            try { 
             var claims = _UserService.getPrincipal(Token);
             var Role = claims.FindFirst("Role").Value;
             var IdUser = int.Parse(claims.FindFirst("Id").Value);
@@ -776,7 +813,11 @@ namespace CRM_API.Controllers
                         }
                        */
             return Ok();
-
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }     /// <summary>
               ///  This function gets the cycle by id
               /// </summary>
@@ -787,6 +828,7 @@ namespace CRM_API.Controllers
         public async Task<ActionResult> GetTargetsById([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
         string Token)
         {
+            try { 
             var claims = _UserService.getPrincipal(Token);
             var Role = claims.FindFirst("Role").Value;
             var IdUser = int.Parse(claims.FindFirst("Id").Value);
@@ -804,13 +846,17 @@ namespace CRM_API.Controllers
             }
 
             return Ok(new { TargetResources = TargetIds, CycleNames = CycleNames });
-
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         [HttpGet("AllTargets")]
         public async Task<ActionResult> AllTargets([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
         string Token)
         {
-
+            try { 
             var Targets = await _TargetService.GetTargets();
             List<int> TargetIds = new List<int>();
             List<string> CycleNames = new List<string>();
@@ -824,7 +870,11 @@ namespace CRM_API.Controllers
             }
 
             return Ok(new { TargetResources = TargetIds, CycleNames = CycleNames });
-
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         /// <summary>
         ///  This function gets the cycle by id
@@ -836,7 +886,7 @@ namespace CRM_API.Controllers
         public async Task<ActionResult<CycleResource>> GetTargetByNum([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
         string Token, int Num)
         {
-
+            try { 
             ErrorHandling ErrorMessag = new ErrorHandling();
             if (Token != "")
             {
@@ -849,6 +899,11 @@ namespace CRM_API.Controllers
                 return Ok(ErrorMessag);
 
             }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         /// <summary>
         ///  This function Swaps  
@@ -859,7 +914,7 @@ namespace CRM_API.Controllers
         public async Task<ActionResult<CycleResource>> SwapWeeks([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
         string Token, WeekSwap WeekSwap)
         {
-
+            try { 
             ErrorHandling ErrorMessag = new ErrorHandling();
             if (Token != "")
             {
@@ -873,6 +928,11 @@ namespace CRM_API.Controllers
                 return Ok(ErrorMessag);
 
             }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         /// <summary>
         ///  This function Swaps  
@@ -883,6 +943,7 @@ namespace CRM_API.Controllers
         public async Task<ActionResult<CycleResource>> WeekDeletion([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
         string Token, WeekDeletion WeekDeletion)
         {
+            try { 
 
             ErrorHandling ErrorMessag = new ErrorHandling();
             if (Token != "")
@@ -898,6 +959,11 @@ namespace CRM_API.Controllers
                 return Ok(ErrorMessag);
 
             }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         /// <summary>
@@ -909,6 +975,7 @@ namespace CRM_API.Controllers
         public async Task<ActionResult<CycleResource>> UpdateWeek([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
         string Token, WeekUpdate WeekUpdate)
         {
+            try { 
             var claims = _UserService.getPrincipal(Token);
             var Role = claims.FindFirst("Role").Value;
             var IdUser = int.Parse(claims.FindFirst("Id").Value);
@@ -1029,6 +1096,11 @@ namespace CRM_API.Controllers
                 return Ok(ErrorMessag);
 
             }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         [ApiExplorerSettings(IgnoreApi = true)]
         public async Task<Week> GetTarget(int Num)
@@ -1124,7 +1196,7 @@ namespace CRM_API.Controllers
         public async Task<ActionResult<List<CycleResource>>> GetCyclesByUserById([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
         string Token, int Id)
         {
-
+            try { 
             ErrorHandling ErrorMessag = new ErrorHandling();
             List<CycleResource> CycleResources = new List<CycleResource>();
             if (Token != "")
@@ -1145,6 +1217,11 @@ namespace CRM_API.Controllers
                 return Ok(ErrorMessag);
 
             }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         /// <summary>
         ///  This function deactivates the cycle By Id
@@ -1155,14 +1232,18 @@ namespace CRM_API.Controllers
         public async Task<ActionResult> DeleteCycle([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
         string Token, int Id)
         {
-
+            try { 
 
             var sub = await _CycleService.GetById(Id);
             if (sub == null) return BadRequest("Le Cycle  n'existe pas"); //NotFound();
             await _CycleService.Delete(sub);
 
             return NoContent();
-
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         /// <summary>
         ///  This function deactivates the cycle By Id
@@ -1174,10 +1255,15 @@ namespace CRM_API.Controllers
         string Token)
         {
 
-
+            try { 
             await _TargetService.RemoveAll();
 
             return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
 
         }
         /// <summary>
@@ -1189,6 +1275,7 @@ namespace CRM_API.Controllers
         public async Task<ActionResult> CreateTarget([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
         string Token, SaveTargetResource Target)
         {
+            try { 
             var claims = _UserService.getPrincipal(Token);
             var Role = claims.FindFirst("Role").Value;
             var IdUser = int.Parse(claims.FindFirst("Id").Value);
@@ -1321,6 +1408,11 @@ namespace CRM_API.Controllers
                 Sector = SectorResources,
                 numTarget = numTarget
             });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
 
         }
         /// <summary>
@@ -1332,6 +1424,7 @@ namespace CRM_API.Controllers
         public async Task<ActionResult> CreateTargetList([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
         string Token, TargetList TargetList)
         {
+            try { 
             var claims = _UserService.getPrincipal(Token);
             var Role = claims.FindFirst("Role").Value;
             var IdUser = int.Parse(claims.FindFirst("Id").Value);
@@ -1481,6 +1574,12 @@ namespace CRM_API.Controllers
 
             var Plan = await GetTarget(NumTarget);
             return Ok(Plan);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
+
     }
 }

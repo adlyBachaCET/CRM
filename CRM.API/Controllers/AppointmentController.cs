@@ -43,6 +43,7 @@ namespace CRM_API.Controllers
         public async Task<ActionResult<AppointementResource>> CreateAppointement([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token, 
             SaveAppointementResource SaveAppointementResource)
         {
+            try { 
             var claims = _UserService.getPrincipal(Token);
             if (claims.Claims != null) { 
             var Role = claims.FindFirst("Role").Value;
@@ -111,10 +112,16 @@ namespace CRM_API.Controllers
             {
                 return BadRequest("Bad Token");
             }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         [HttpGet]
         public async Task<ActionResult<AppointementResource>> GetAllAppointements([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token)
         {
+            try { 
             var claims = _UserService.getPrincipal(Token);
             if (claims.Claims != null)
             {
@@ -145,10 +152,16 @@ namespace CRM_API.Controllers
             {
                 return BadRequest("Bad Token");
             }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         [HttpGet("Actif")]
         public async Task<ActionResult<AppointementResource>> GetAllActifAppointements([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token)
         {
+            try { 
             var claims = _UserService.getPrincipal(Token);
             if (claims.Claims != null)
             {
@@ -179,10 +192,16 @@ namespace CRM_API.Controllers
             {
                 return BadRequest("Bad Token");
             }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         [HttpGet("InActif")]
         public async Task<ActionResult<AppointementResource>> GetAllInactifAppointements([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token)
         {
+            try { 
             var claims = _UserService.getPrincipal(Token);
             if (claims.Claims != null)
             {
@@ -212,6 +231,11 @@ namespace CRM_API.Controllers
             else
             {
                 return BadRequest("Bad Token");
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
 
@@ -219,6 +243,7 @@ namespace CRM_API.Controllers
         public async Task<ActionResult<AppointementResource>> GetAppointementByIdUser([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token,
             int Id)
         {
+            try { 
             var claims = _UserService.getPrincipal(Token);
             if (claims.Claims != null)
             {
@@ -260,11 +285,17 @@ namespace CRM_API.Controllers
             {
                 return BadRequest("Bad Token");
             }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         [HttpPost("GetById")]
         public async Task<ActionResult<AppointementResource>> GetAppointementById([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token, 
             int Id)
         {
+            try { 
             var claims = _UserService.getPrincipal(Token);
             if (claims.Claims != null)
             {
@@ -295,12 +326,18 @@ namespace CRM_API.Controllers
             {
                 return BadRequest("Bad Token");
             }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         [HttpPut("{Id}")]
         public async Task<ActionResult<AppointementResource>> UpdateAppointement([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token, 
             int Id, SaveAppointementResource SaveAppointementResource)
         {
-            var claims = _UserService.getPrincipal(Token);
+            try { 
+                var claims = _UserService.getPrincipal(Token);
             if (claims.Claims != null)
             {
                 var Role = claims.FindFirst("Role").Value;
@@ -343,12 +380,18 @@ namespace CRM_API.Controllers
             {
                 return BadRequest("Bad Token");
             }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
 
         [HttpDelete("{Id}")]
         public async Task<ActionResult> DeleteAppointement([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token, int Id)
         {
+            try { 
             var claims = _UserService.getPrincipal(Token);
             if (claims.Claims != null)
             {
@@ -381,11 +424,17 @@ namespace CRM_API.Controllers
             {
                 return BadRequest("Bad Token");
             }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         [HttpPost("DeleteRange")]
         public async Task<ActionResult> DeleteRange(
             [FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token, List<int> Ids)
         {
+            try { 
             var claims = _UserService.getPrincipal(Token);
             if (claims.Claims != null)
             {
@@ -423,12 +472,18 @@ namespace CRM_API.Controllers
             {
                 return BadRequest("Bad Token");
             }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         [HttpPut("Approuve/{Id}")]
         public async Task<ActionResult<AppointementResource>> ApprouveAppointement(
             [FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token,
             int Id)
         {
+            try { 
             var claims = _UserService.getPrincipal(Token);
             if (claims.Claims != null)
             {
@@ -464,7 +519,12 @@ namespace CRM_API.Controllers
             {
                 return BadRequest("Bad Token");
     }
-}
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
         /// <summary>
         ///  This function is used to Reject a Appointement
         /// </summary>
@@ -474,45 +534,50 @@ namespace CRM_API.Controllers
         public async Task<ActionResult<AppointementResource>> RejectAppointement([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token, int Id)
         {
 
-
-          //  var dateFormatVal1 = moment().format('DD-MMM-YYYY');
-
-
-            var claims = _UserService.getPrincipal(Token);
-            if (claims.Claims != null)
+            try
             {
-                var Role = claims.FindFirst("Role").Value;
-                var IdUser = int.Parse(claims.FindFirst("Id").Value);
-                var exp = DateTime.Parse(claims.FindFirst("Exipres On").Value);
-                if (exp > DateTime.Now)
+                //  var dateFormatVal1 = moment().format('DD-MMM-YYYY');
+
+
+                var claims = _UserService.getPrincipal(Token);
+                if (claims.Claims != null)
                 {
-                    //var actual = new Moment(true) { Year = 1995, Month = 12, Day = 25 }.DateTime();
-                    var AppointementToBeModified = await _AppointementService.GetById(Id);
-                if (AppointementToBeModified == null) return BadRequest("Le Appointement n'existe pas"); //NotFound();
-                                                                                             //var newAppointement = await _AppointementService.Create(Appointements);
-                                                                                             // Appointements.CreatedOn = SaveAppointementResource.;
-                AppointementToBeModified.UpdatedOn = DateTime.UtcNow;
-                AppointementToBeModified.UpdatedBy = IdUser;
+                    var Role = claims.FindFirst("Role").Value;
+                    var IdUser = int.Parse(claims.FindFirst("Id").Value);
+                    var exp = DateTime.Parse(claims.FindFirst("Exipres On").Value);
+                    if (exp > DateTime.Now)
+                    {
+                        //var actual = new Moment(true) { Year = 1995, Month = 12, Day = 25 }.DateTime();
+                        var AppointementToBeModified = await _AppointementService.GetById(Id);
+                        if (AppointementToBeModified == null) return BadRequest("Le Appointement n'existe pas"); //NotFound();
+                                                                                                                 //var newAppointement = await _AppointementService.Create(Appointements);
+                                                                                                                 // Appointements.CreatedOn = SaveAppointementResource.;
+                        AppointementToBeModified.UpdatedOn = DateTime.UtcNow;
+                        AppointementToBeModified.UpdatedBy = IdUser;
 
-                await _AppointementService.Reject(AppointementToBeModified, AppointementToBeModified);
+                        await _AppointementService.Reject(AppointementToBeModified, AppointementToBeModified);
 
-                var AppointementUpdated = await _AppointementService.GetById(Id);
+                        var AppointementUpdated = await _AppointementService.GetById(Id);
 
-                var AppointementResourceUpdated = _mapperService.Map<Appointement, AppointementResource>(AppointementUpdated);
+                        var AppointementResourceUpdated = _mapperService.Map<Appointement, AppointementResource>(AppointementUpdated);
 
-                return Ok(AppointementResourceUpdated);
-            }
-            else
-                {
-                    return BadRequest("Session Expired");
+                        return Ok(AppointementResourceUpdated);
+                    }
+                    else
+                    {
+                        return BadRequest("Session Expired");
+                    }
+
                 }
-
+                else
+                {
+                    return BadRequest("Bad Token");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return BadRequest("Bad Token");
+                return BadRequest(ex.Message);
             }
         }
-
-    }
+}
 }

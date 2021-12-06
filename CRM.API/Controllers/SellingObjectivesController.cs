@@ -30,7 +30,8 @@ namespace CRM_API.Controllers
 
         [HttpPost]
         public async Task<ActionResult<SellingObjectivesResource>> CreateSellingObjectives(SaveSellingObjectivesResource SaveSellingObjectivesResource)
-  {     
+        {
+            try { 
             //*** Mappage ***
             var SellingObjectives = _mapperService.Map<SaveSellingObjectivesResource, SellingObjectives>(SaveSellingObjectivesResource);
             SellingObjectives.CreatedOn = DateTime.UtcNow;
@@ -44,7 +45,12 @@ namespace CRM_API.Controllers
             //*** Mappage ***
             var SellingObjectivesResource = _mapperService.Map<SellingObjectives, SellingObjectivesResource>(NewSellingObjectives);
             return Ok(SellingObjectivesResource);
-      
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
         }
         [HttpGet]
         public async Task<ActionResult<SellingObjectivesResource>> GetAllSellingObjectivess()
@@ -53,7 +59,6 @@ namespace CRM_API.Controllers
             {
                 var Employe = await _SellingObjectivesService.GetAll();
                 if (Employe == null) return NotFound();
-                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
                 return Ok(Employe);
             }
             catch (Exception ex)
@@ -68,7 +73,6 @@ namespace CRM_API.Controllers
             {
                 var Employe = await _SellingObjectivesService.GetAllActif();
                 if (Employe == null) return NotFound();
-                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
                 return Ok(Employe);
             }
             catch (Exception ex)
@@ -83,7 +87,6 @@ namespace CRM_API.Controllers
             {
                 var Employe = await _SellingObjectivesService.GetAllInActif();
                 if (Employe == null) return NotFound();
-                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
                 return Ok(Employe);
             }
             catch (Exception ex)
@@ -110,11 +113,10 @@ namespace CRM_API.Controllers
         [HttpPut("{Id}")]
         public async Task<ActionResult<SellingObjectivesResource>> UpdateSellingObjectives(int Id, SaveSellingObjectivesResource SaveSellingObjectivesResource)
         {
-
+            try { 
             var SellingObjectivesToBeModified = await _SellingObjectivesService.GetById(Id);
-            if (SellingObjectivesToBeModified == null) return BadRequest("Le SellingObjectives n'existe pas"); //NotFound();
+            if (SellingObjectivesToBeModified == null) return BadRequest("Le SellingObjectives n'existe pas");
             var SellingObjectivess = _mapperService.Map<SaveSellingObjectivesResource, SellingObjectives>(SaveSellingObjectivesResource);
-            //var newSellingObjectives = await _SellingObjectivesService.Create(SellingObjectivess);
 
             await _SellingObjectivesService.Update(SellingObjectivesToBeModified, SellingObjectivess);
 
@@ -122,7 +124,12 @@ namespace CRM_API.Controllers
 
             var SellingObjectivesResourceUpdated = _mapperService.Map<SellingObjectives, SellingObjectivesResource>(SellingObjectivesUpdated);
 
-            return Ok();
+            return Ok(SellingObjectivesResourceUpdated);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
 
@@ -133,9 +140,8 @@ namespace CRM_API.Controllers
             {
 
                 var sub = await _SellingObjectivesService.GetById(Id);
-                if (sub == null) return BadRequest("Le SellingObjectives  n'existe pas"); //NotFound();
+                if (sub == null) return BadRequest("Le SellingObjectives  n'existe pas");
                 await _SellingObjectivesService.Delete(sub);
-                ;
                 return NoContent();
             }
             catch (Exception ex)
@@ -153,11 +159,10 @@ namespace CRM_API.Controllers
                 {
                     var sub = await _SellingObjectivesService.GetById(item);
                     empty.Add(sub);
-                    if (sub == null) return BadRequest("Le SellingObjectives  n'existe pas"); //NotFound();
-
+                    if (sub == null) return BadRequest("Le SellingObjectives  n'existe pas");
                 }
                 await _SellingObjectivesService.DeleteRange(empty);
-                ;
+                
                 return NoContent();
             }
             catch (Exception ex)

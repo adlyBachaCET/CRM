@@ -80,6 +80,7 @@ namespace CRM_API.Controllers
         [HttpPost]
         public async Task<ActionResult<UserResource>> CreateUser(SaveUserResource SaveUserResource)
         {
+            try { 
             //*** Mappage ***
             var User = _mapperService.Map<SaveUserResource, User>(SaveUserResource);
             User.UpdatedOn = DateTime.UtcNow;
@@ -97,6 +98,11 @@ namespace CRM_API.Controllers
             //*** Mappage ***
             var UserResource = _mapperService.Map<User, UserResource>(NewUser);
             return Ok(UserResource);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
     
@@ -106,6 +112,7 @@ namespace CRM_API.Controllers
         [HttpPost("Login/Manager")]
         public async Task<IActionResult> LoginManager(LoginModel lm)
         {
+            try { 
             IActionResult response = Unauthorized();
             ErrorHandling errorHandling = new ErrorHandling();
             var user = await _UserService.AuthenticateManager(lm);
@@ -134,7 +141,11 @@ namespace CRM_API.Controllers
                 errorHandling.StatusCode = 401;
                 return StatusCode(401, errorHandling);
             }
-
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
 
         } 
 
@@ -144,6 +155,7 @@ namespace CRM_API.Controllers
         [HttpPost("Login/Delegate")]
         public async Task<IActionResult> LoginDelegate(LoginModel lm)
         {
+            try { 
             IActionResult response = Unauthorized();
             ErrorHandling errorHandling = new ErrorHandling();
             var user = await _UserService.AuthenticateDelegate(lm);
@@ -172,25 +184,19 @@ namespace CRM_API.Controllers
                 errorHandling.StatusCode = 401;
                 return StatusCode(401, errorHandling);
             }
-        }
-        [HttpPost("Token")]
-        public IActionResult Token(Token lm)
-        {
-            IEnumerable<Claim> claimList = Enumerable.Empty<Claim>();
-
-            var claims = _UserService.getPrincipal(lm.TokenString);
-            foreach (var item in claims.Claims)
-            { 
-                claimList.Append(item);
             }
-
-            return Ok(claims.Claims);
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
+     
         /// <summary>This method returns the list of All the details of the selected user (Profil) .</summary>
         /// <param name="Id">Id of the user .</param>
         [HttpGet("Profil/{Id}")]
         public async Task<ActionResult<User>> GetAllProfilById(int Id)
         {
+            try { 
             UserProfile Profile = new UserProfile();
  
 
@@ -298,7 +304,11 @@ namespace CRM_API.Controllers
             Profile.Commande = CommandeResources;
 
             return Ok(Profile);
-            
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         /// <summary>This method returns the list of All the delegate of the same BusinessUnit .</summary>
         /// <param name="Id">Id of the BusinessUnit .</param>
@@ -376,6 +386,7 @@ namespace CRM_API.Controllers
         public async Task<IActionResult> Photo([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
         string Token, IFormCollection File)
         {
+            try { 
             var claims = _UserService.getPrincipal(Token);
             var Role = claims.FindFirst("Role").Value;
             var IdUser = int.Parse(claims.FindFirst("Id").Value);
@@ -406,8 +417,12 @@ namespace CRM_API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
 
-            //*** Mappage ***
-
+                //*** Mappage ***
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
 
         }
         [HttpPut("{Id}")]

@@ -42,8 +42,9 @@ namespace CRM_API.Controllers
 
         [HttpPost]
         public async Task<ActionResult<ParticipantResource>> CreateParticipant(SaveParticipantResource SaveParticipantResource)
-  {     
-            //*** Mappage ***
+        {
+            try { 
+                //*** Mappage ***
             var Participant = _mapperService.Map<SaveParticipantResource, Participant>(SaveParticipantResource);
             Participant.UpdatedOn = DateTime.UtcNow;
             Participant.CreatedOn = DateTime.UtcNow;
@@ -97,12 +98,16 @@ namespace CRM_API.Controllers
             //*** Mappage ***
             var ParticipantResource = _mapperService.Map<Participant, ParticipantResource>(NewParticipant);
             return Ok(ParticipantResource);
-      
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         [HttpPost("Range")]
         public async Task<ActionResult<ParticipantResource>> CreateRangeParticipant(ListSaveParticipantResource SaveParticipantResource)
         {
-
+            try { 
             if (SaveParticipantResource.IdDoctor.Count>0)
             {
                 foreach(var item in SaveParticipantResource.IdDoctor) { 
@@ -221,7 +226,11 @@ namespace CRM_API.Controllers
             //*** Mappage ***
 
             return Ok();
-
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         [HttpGet]
         public async Task<ActionResult<ParticipantResource>> GetAllParticipants()
@@ -230,7 +239,6 @@ namespace CRM_API.Controllers
             {
                 var Employe = await _ParticipantService.GetAll();
                 if (Employe == null) return NotFound();
-                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
                 return Ok(Employe);
             }
             catch (Exception ex)
@@ -245,7 +253,6 @@ namespace CRM_API.Controllers
             {
                 var Employe = await _ParticipantService.GetAllActif();
                 if (Employe == null) return NotFound();
-                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
                 return Ok(Employe);
             }
             catch (Exception ex)
@@ -260,7 +267,6 @@ namespace CRM_API.Controllers
             {
                 var Employe = await _ParticipantService.GetAllInActif();
                 if (Employe == null) return NotFound();
-                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
                 return Ok(Employe);
             }
             catch (Exception ex)
@@ -287,11 +293,10 @@ namespace CRM_API.Controllers
         [HttpPut("{Id}")]
         public async Task<ActionResult<ParticipantResource>> UpdateParticipant(int Id, SaveParticipantResource SaveParticipantResource)
         {
-
+            try { 
             var ParticipantToBeModified = await _ParticipantService.GetById(Id);
-            if (ParticipantToBeModified == null) return BadRequest("Le Participant n'existe pas"); //NotFound();
+            if (ParticipantToBeModified == null) return BadRequest("Le Participant n'existe pas"); 
             var Participants = _mapperService.Map<SaveParticipantResource, Participant>(SaveParticipantResource);
-            //var newParticipant = await _ParticipantService.Create(Participants);
 
             await _ParticipantService.Update(ParticipantToBeModified, Participants);
 
@@ -299,7 +304,12 @@ namespace CRM_API.Controllers
 
             var ParticipantResourceUpdated = _mapperService.Map<Participant, ParticipantResource>(ParticipantUpdated);
 
-            return Ok();
+            return Ok(ParticipantResourceUpdated);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
 
@@ -310,9 +320,8 @@ namespace CRM_API.Controllers
             {
 
                 var sub = await _ParticipantService.GetById(Id);
-                if (sub == null) return BadRequest("Le Participant  n'existe pas"); //NotFound();
+                if (sub == null) return BadRequest("Le Participant  n'existe pas");
                 await _ParticipantService.Delete(sub);
-                ;
                 return NoContent();
             }
             catch (Exception ex)
@@ -330,11 +339,11 @@ namespace CRM_API.Controllers
                 {
                     var sub = await _ParticipantService.GetById(item);
                     empty.Add(sub);
-                    if (sub == null) return BadRequest("Le Participant  n'existe pas"); //NotFound();
+                    if (sub == null) return BadRequest("Le Participant  n'existe pas");
 
                 }
                 await _ParticipantService.DeleteRange(empty);
-                ;
+                
                 return NoContent();
             }
             catch (Exception ex)

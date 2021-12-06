@@ -99,9 +99,11 @@ namespace CRM_API.Controllers
         /// <param name="VerifyDoctor">Data of the Doctor to be verified.</param>
         /// <returns>returns the created cycle.</returns>
         [HttpPost("Verify")]
-        public async Task<ActionResult<DoctorResource>> Verify([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token,VerifyDoctor VerifyDoctor)
+        public async Task<ActionResult<DoctorResource>> Verify([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token
+            ,VerifyDoctor VerifyDoctor)
         {
-            var CheckDoctor = await _DoctorService.GetExist(VerifyDoctor.FirstName, VerifyDoctor.LastName, VerifyDoctor.Email);
+           try {
+                var CheckDoctor = await _DoctorService.GetExist(VerifyDoctor.FirstName, VerifyDoctor.LastName, VerifyDoctor.Email);
             var FirstLast = _mapperService.Map<Doctor, DoctorResource>(CheckDoctor.FirstLast);
             var LastFirst = _mapperService.Map<Doctor, DoctorResource>(CheckDoctor.LastFirst);
             var DoctorEmail = _mapperService.Map<Doctor, DoctorResource>(CheckDoctor.DoctorEmail);
@@ -137,7 +139,11 @@ namespace CRM_API.Controllers
 
             }
             return Ok(DoctorExisteResource);
-
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         /// <summary>
         ///  This function creates a Doctor.
@@ -149,6 +155,7 @@ namespace CRM_API.Controllers
         public async Task<ActionResult<DoctorListObject>> CreateDoctor([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token,
             SaveDoctorResource SaveDoctorResource)
         {
+            try { 
             ErrorHandling ErrorMessag = new ErrorHandling();
             if (Token != "")
             {
@@ -522,8 +529,12 @@ namespace CRM_API.Controllers
                 return Ok(ErrorMessag);
 
             }
-
         }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+    }
+}
         /// <summary>
         ///  This function gets the list of the doctor by number
         /// </summary>
@@ -923,9 +934,10 @@ namespace CRM_API.Controllers
         [HttpGet("{Id}")]
         public async Task<ActionResult<DoctorProfile>> GetDoctorById([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token, int Id)
         {
-            DoctorProfile DoctorProfile = new DoctorProfile();
             try
             {
+                DoctorProfile DoctorProfile = new DoctorProfile();
+           
                 var BuDoctor = (List<BuDoctor>)await _BuDoctorService.GetByIdDoctor(Id);
                 List<string> Names = new List<string>();
                 List<BusinessUnit> BusinessUnits = new List<BusinessUnit>();
@@ -1141,7 +1153,9 @@ namespace CRM_API.Controllers
         public async Task<ActionResult<DoctorResource>> ApprouveDoctor([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] 
         string Token, int Id)
         {
-            ErrorHandling ErrorMessag = new ErrorHandling();
+            try
+            {
+                ErrorHandling ErrorMessag = new ErrorHandling();
             if (Token != "")
             {
                 var claims = _UserService.getPrincipal(Token);
@@ -1168,6 +1182,11 @@ namespace CRM_API.Controllers
                 ErrorMessag.StatusCode = 400;
                 return Ok(ErrorMessag);
 
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
         /// <summary>
@@ -1178,7 +1197,9 @@ namespace CRM_API.Controllers
         [HttpPut("Reject/{Id}")]
         public async Task<ActionResult<DoctorResource>> RejectDoctor([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token,int Id)
         {
-            ErrorHandling ErrorMessag = new ErrorHandling();
+            try
+            {
+                ErrorHandling ErrorMessag = new ErrorHandling();
             if (Token != "")
             {
                 var claims = _UserService.getPrincipal(Token);
@@ -1205,6 +1226,11 @@ namespace CRM_API.Controllers
                 return Ok(ErrorMessag);
 
             }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         /// <summary>
         ///  This function is used to Update a Doctor
@@ -1217,6 +1243,7 @@ namespace CRM_API.Controllers
         string Token,
             int Id, SaveDoctorResourceUpdate SaveDoctorResource)
         {
+            try { 
             var claims = _UserService.getPrincipal(Token);
             var IdUser = int.Parse(claims.FindFirst("Id").Value);
             var Role = claims.FindFirst("Role").Value;
@@ -1585,6 +1612,11 @@ namespace CRM_API.Controllers
             var DoctorResourceInfo = await GetById(DoctorResourceUpdated.IdDoctor);
 
             return Ok(DoctorResourceInfo);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         

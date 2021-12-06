@@ -145,6 +145,7 @@ namespace CRM_API.Controllers
         public async Task<ActionResult<VisitReportResource>> CreateVisitReport([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
         string Token,SaveVisitReportResource SaveVisitReportResource)
         {
+            try { 
             var claims = _UserService.getPrincipal(Token);
             var Role = claims.FindFirst("Role").Value;
             var Id = int.Parse(claims.FindFirst("Id").Value);
@@ -518,6 +519,11 @@ namespace CRM_API.Controllers
             //*** Mappage ***
             var VisitReportResource = _mapperService.Map<VisitReport, VisitReportResource>(NewVisitReport);
             return Ok(VisitReportResource);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
   
@@ -568,7 +574,10 @@ namespace CRM_API.Controllers
         [HttpPut("{Id}")]
         public async Task<ActionResult<VisitReportResource>> UpdateVisitReport(int Id, SaveVisitReportResource SaveVisitReportResource)
         {
+            try
+            {
 
+          
             var VisitReportToBeModified = await _VisitReportService.GetById(Id);
             if (VisitReportToBeModified == null) return BadRequest("Le VisitReport n'existe pas"); //NotFound();
             var VisitReport = _mapperService.Map<SaveVisitReportResource, VisitReport>(SaveVisitReportResource);
@@ -588,6 +597,11 @@ namespace CRM_API.Controllers
             var VisitReportResourceUpdated = _mapperService.Map<VisitReport, VisitReportResource>(VisitReportUpdated);
 
             return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
 
@@ -598,9 +612,9 @@ namespace CRM_API.Controllers
             {
 
                 var sub = await _VisitReportService.GetById(Id);
-                if (sub == null) return BadRequest("Le VisitReport  n'existe pas"); //NotFound();
+                if (sub == null) return BadRequest("Le VisitReport  n'existe pas");
                 await _VisitReportService.Delete(sub);
-                ;
+                
                 return NoContent();
             }
             catch (Exception ex)
@@ -618,11 +632,11 @@ namespace CRM_API.Controllers
                 {
                     var sub = await _VisitReportService.GetById(item);
                     empty.Add(sub);
-                    if (sub == null) return BadRequest("Le VisitReport  n'existe pas"); //NotFound();
+                    if (sub == null) return BadRequest("Le VisitReport  n'existe pas");
 
                 }
                 await _VisitReportService.DeleteRange(empty);
-                ;
+                
                 return NoContent();
             }
             catch (Exception ex)

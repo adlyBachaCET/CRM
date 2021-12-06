@@ -39,6 +39,7 @@ namespace CRM_API.Controllers
         public async Task<ActionResult<PlanificationResource>> CreatePlanification([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token, 
             SavePlanificationResource SavePlanificationResource)
         {
+            try { 
             var claims = _UserService.getPrincipal(Token);
             if (claims.Claims != null) { 
             var Role = claims.FindFirst("Role").Value;
@@ -76,10 +77,16 @@ namespace CRM_API.Controllers
             {
                 return BadRequest("Bad Token");
             }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         [HttpGet]
         public async Task<ActionResult<PlanificationResource>> GetAllPlanifications([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token)
         {
+            try { 
             var claims = _UserService.getPrincipal(Token);
             if (claims.Claims != null)
             {
@@ -109,11 +116,17 @@ namespace CRM_API.Controllers
             else
             {
                 return BadRequest("Bad Token");
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
         [HttpGet("Actif")]
         public async Task<ActionResult<PlanificationResource>> GetAllActifPlanifications([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token)
         {
+            try { 
             var claims = _UserService.getPrincipal(Token);
             if (claims.Claims != null)
             {
@@ -143,11 +156,17 @@ namespace CRM_API.Controllers
             else
             {
                 return BadRequest("Bad Token");
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
         [HttpGet("InActif")]
         public async Task<ActionResult<PlanificationResource>> GetAllInactifPlanifications([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token)
         {
+            try { 
             var claims = _UserService.getPrincipal(Token);
             if (claims.Claims != null)
             {
@@ -177,6 +196,11 @@ namespace CRM_API.Controllers
             else
             {
                 return BadRequest("Bad Token");
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
 
@@ -184,6 +208,7 @@ namespace CRM_API.Controllers
         public async Task<ActionResult<PlanificationResource>> GetPlanificationById([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token, 
             int Id)
         {
+            try { 
             var claims = _UserService.getPrincipal(Token);
             if (claims.Claims != null)
             {
@@ -213,12 +238,18 @@ namespace CRM_API.Controllers
             else
             {
                 return BadRequest("Bad Token");
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
         [HttpPut("{Id}")]
         public async Task<ActionResult<PlanificationResource>> UpdatePlanification([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token, 
             int Id, SavePlanificationResource SavePlanificationResource)
         {
+            try { 
             var claims = _UserService.getPrincipal(Token);
             if (claims.Claims != null)
             {
@@ -250,7 +281,7 @@ namespace CRM_API.Controllers
 
             var PlanificationResourceUpdated = _mapperService.Map<Planification, PlanificationResource>(PlanificationUpdated);
 
-            return Ok();
+            return Ok(PlanificationResourceUpdated);
                 }
                 else
                 {
@@ -262,12 +293,18 @@ namespace CRM_API.Controllers
             {
                 return BadRequest("Bad Token");
             }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
 
         [HttpDelete("{Id}")]
         public async Task<ActionResult> DeletePlanification([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token, int Id)
         {
+            try { 
             var claims = _UserService.getPrincipal(Token);
             if (claims.Claims != null)
             {
@@ -300,11 +337,17 @@ namespace CRM_API.Controllers
             {
                 return BadRequest("Bad Token");
             }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         [HttpPost("DeleteRange")]
         public async Task<ActionResult> DeleteRange(
             [FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token, List<int> Ids)
         {
+            try { 
             var claims = _UserService.getPrincipal(Token);
             if (claims.Claims != null)
             {
@@ -341,6 +384,11 @@ namespace CRM_API.Controllers
             else
             {
                 return BadRequest("Bad Token");
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
         [HttpPut("Approuve/{Id}")]
@@ -348,6 +396,7 @@ namespace CRM_API.Controllers
             [FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token,
             int Id)
         {
+            try { 
             var claims = _UserService.getPrincipal(Token);
             if (claims.Claims != null)
             {
@@ -383,7 +432,12 @@ namespace CRM_API.Controllers
             {
                 return BadRequest("Bad Token");
     }
-}
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
         /// <summary>
         ///  This function is used to Reject a Planification
         /// </summary>
@@ -394,9 +448,9 @@ namespace CRM_API.Controllers
         {
 
 
-          //  var dateFormatVal1 = moment().format('DD-MMM-YYYY');
+            //  var dateFormatVal1 = moment().format('DD-MMM-YYYY');
 
-
+            try { 
             var claims = _UserService.getPrincipal(Token);
             if (claims.Claims != null)
             {
@@ -430,6 +484,11 @@ namespace CRM_API.Controllers
             else
             {
                 return BadRequest("Bad Token");
+            }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
 

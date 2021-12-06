@@ -31,6 +31,7 @@ namespace CRM_API.Controllers
         [HttpPost]
         public async Task<ActionResult<WeekSectorCycleResource>> CreateWeekSectorCycle(SaveWeekSectorCycleResource SaveWeekSectorCycleResource)
         {
+            try { 
             //*** Mappage ***
             var WeekSectorCycle = _mapperService.Map<SaveWeekSectorCycleResource, SectorCycle>(SaveWeekSectorCycleResource);
             WeekSectorCycle.CreatedOn = DateTime.UtcNow;
@@ -44,6 +45,11 @@ namespace CRM_API.Controllers
             //*** Mappage ***
             var WeekSectorCycleResource = _mapperService.Map<SectorCycle, WeekSectorCycleResource>(NewWeekSectorCycle);
             return Ok(WeekSectorCycleResource);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         [HttpGet]
         public async Task<ActionResult<WeekSectorCycleResource>> GetAllWeekSectorCycles()
@@ -106,23 +112,7 @@ namespace CRM_API.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        /*[HttpPut("{Id}")]
-        public async Task<ActionResult<WeekSectorCycle>> UpdateWeekSectorCycle(int Id, SaveWeekSectorCycleResource SaveWeekSectorCycleResource)
-        {
-
-            var WeekSectorCycleToBeModified = await _WeekSectorCycleService.GetById(Id);
-            if (WeekSectorCycleToBeModified == null) return BadRequest("Le WeekSectorCycle n'existe pas"); //NotFound();
-            var WeekSectorCycles = _mapperService.Map<SaveWeekSectorCycleResource, WeekSectorCycle>(SaveWeekSectorCycleResource);
-            //var newWeekSectorCycle = await _WeekSectorCycleService.Create(WeekSectorCycles);
-
-            await _WeekSectorCycleService.Update(WeekSectorCycleToBeModified, WeekSectorCycles);
-
-            var WeekSectorCycleUpdated = await _WeekSectorCycleService.GetById(Id);
-
-            var WeekSectorCycleResourceUpdated = _mapperService.Map<WeekSectorCycle, WeekSectorCycleResource>(WeekSectorCycleUpdated);
-
-            return Ok();
-        }*/
+ 
 
 
         [HttpDelete("{Id}")]
@@ -134,7 +124,7 @@ namespace CRM_API.Controllers
                 var sub = await _WeekSectorCycleService.GetById(Id);
                 if (sub == null) return BadRequest("Le WeekSectorCycle  n'existe pas"); //NotFound();
                 await _WeekSectorCycleService.Delete(sub);
-                ;
+               
                 return NoContent();
             }
             catch (Exception ex)
@@ -152,11 +142,9 @@ namespace CRM_API.Controllers
                 {
                     var sub = await _WeekSectorCycleService.GetById(item);
                     empty.Add(sub);
-                    if (sub == null) return BadRequest("Le WeekSectorCycle  n'existe pas"); //NotFound();
-
+                    if (sub == null) return BadRequest("Le WeekSectorCycle  n'existe pas");
                 }
                 await _WeekSectorCycleService.DeleteRange(empty);
-                ;
                 return NoContent();
             }
             catch (Exception ex)

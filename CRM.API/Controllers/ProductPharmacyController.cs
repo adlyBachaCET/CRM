@@ -43,6 +43,7 @@ namespace CRM_API.Controllers
         [HttpPost]
         public async Task<ActionResult<ProductPharmacyResource>> CreateProductPharmacy(SaveProductPharmacyResource SaveProductPharmacyResource)
   {
+            try { 
             var ProductPharmacy = _mapperService.Map<SaveProductPharmacyResource, ProductPharmacy>(SaveProductPharmacyResource);
             ProductPharmacy.UpdatedOn = DateTime.UtcNow;
             ProductPharmacy.CreatedOn = DateTime.UtcNow;
@@ -66,7 +67,11 @@ namespace CRM_API.Controllers
             //  *** Mappage ***
              var ProductPharmacyResource = _mapperService.Map<ProductPharmacy, ProductPharmacyResource>(NewProductPharmacy);
             return Ok(ProductPharmacyResource);
-
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         [HttpGet]
         public async Task<ActionResult<ProductPharmacyResource>> GetAllProductPharmacys()
@@ -132,7 +137,7 @@ namespace CRM_API.Controllers
         [HttpPut("{Id}")]
         public async Task<ActionResult<ProductPharmacyResource>> UpdateProductPharmacy(int Id, SaveProductPharmacyResource SaveProductPharmacyResource)
         {
-
+            try { 
             var ProductPharmacyToBeModified = await _ProductPharmacyService.GetById(Id);
             if (ProductPharmacyToBeModified == null) return BadRequest("Le ProductPharmacy n'existe pas"); //NotFound();
             var ProductPharmacys = _mapperService.Map<SaveProductPharmacyResource, ProductPharmacy>(SaveProductPharmacyResource);
@@ -144,7 +149,12 @@ namespace CRM_API.Controllers
 
             var ProductPharmacyResourceUpdated = _mapperService.Map<ProductPharmacy, ProductPharmacyResource>(ProductPharmacyUpdated);
 
-            return Ok();
+            return Ok(ProductPharmacyResourceUpdated);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
 
@@ -155,9 +165,8 @@ namespace CRM_API.Controllers
             {
 
                 var sub = await _ProductPharmacyService.GetById(Id);
-                if (sub == null) return BadRequest("Le ProductPharmacy  n'existe pas"); //NotFound();
+                if (sub == null) return BadRequest("Le ProductPharmacy  n'existe pas");
                 await _ProductPharmacyService.Delete(sub);
-                ;
                 return NoContent();
             }
             catch (Exception ex)
@@ -175,11 +184,11 @@ namespace CRM_API.Controllers
                 {
                     var sub = await _ProductPharmacyService.GetById(item);
                     empty.Add(sub);
-                    if (sub == null) return BadRequest("Le ProductPharmacy  n'existe pas"); //NotFound();
+                    if (sub == null) return BadRequest("Le ProductPharmacy  n'existe pas");
 
                 }
                 await _ProductPharmacyService.DeleteRange(empty);
-                ;
+               
                 return NoContent();
             }
             catch (Exception ex)

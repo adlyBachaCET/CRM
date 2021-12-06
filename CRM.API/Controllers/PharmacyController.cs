@@ -69,6 +69,7 @@ namespace CRM_API.Controllers
         public async Task<ActionResult> Verify([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token,
                 SaveAddPharmacyResource SaveAddPharmacyResource)
         {
+            try { 
             var Exist = await _PharmacyService.Verify(SaveAddPharmacyResource);
 
             if (!Exist.ExistPharmacyEmail && !Exist.ExistPharmacyFirstName && !Exist.ExistPharmacyLastName && !Exist.ExistPharmacyName) {
@@ -81,12 +82,17 @@ namespace CRM_API.Controllers
                 return Ok(genericResult);
             }
         }
+              catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+    }
+}
 
         [HttpPost]
         public async Task<ActionResult<PharmacyObjectList>> CreatePharmacy([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token,
        SaveAddPharmacyResource SaveAddPharmacyResource)
         {
-                     
+            try {  
             var claims = _UserService.getPrincipal(Token);
             var Role = claims.FindFirst("Role").Value;
             var Id = int.Parse(claims.FindFirst("Id").Value);
@@ -177,9 +183,13 @@ namespace CRM_API.Controllers
 
 
             return Ok(PharmacyObject);
-            
-              
-            }
+
+        }
+              catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+    }
+}
         [HttpGet("Phone/{Number}")]
         public async Task<ActionResult<PharmacyObjectList>> GetPharmacysNumber([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token,
       int Number)
@@ -310,6 +320,7 @@ namespace CRM_API.Controllers
         [ApiExplorerSettings(IgnoreApi = true)]
         public async Task<PharmacyObjectList> PharmacyById(int Id)
         {
+            
             PharmacyObjectList PharmacyProfile = new PharmacyObjectList();
             
 
@@ -343,7 +354,8 @@ namespace CRM_API.Controllers
             }
 
             return PharmacyProfile;
-        }
+    
+            }
 
         [HttpGet("{Id}")]
         public async Task<ActionResult<PharmacyProfile>> GetPharmacyById([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token,
@@ -486,7 +498,7 @@ namespace CRM_API.Controllers
         public async Task<ActionResult<PharmacyObjectList>> UpdatePharmacy([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token,
       int Id, SavePharmacyResource SavePharmacyResource)
         {
-    
+            try { 
                 var claims = _UserService.getPrincipal(Token);
                 var Role = claims.FindFirst("Role").Value;
                 var IdUser = int.Parse(claims.FindFirst("Role").Value);
@@ -568,8 +580,12 @@ namespace CRM_API.Controllers
             var PharmacyResourceUpdated = _mapperService.Map<Pharmacy, PharmacyResource>(PharmacyUpdated);
             var PharmacyUpdatedNew = await PharmacyById(PharmacyResourceUpdated.Id);
             return Ok(PharmacyUpdatedNew);
-           
         }
+              catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+    }
+}
         [HttpPost("GetAll")]
         public async Task<ActionResult<List<ObjectionResource>>> GetAll([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
         string Token, GrossistePharmacyStatus GrossistePharmacyStatus)
@@ -626,7 +642,9 @@ namespace CRM_API.Controllers
         public async Task<ActionResult<PharmacyResource>> ApprouvePharmacy([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token,
       int Id)
         {
-            StringValues token = "";
+            try
+            {
+                StringValues token = "";
             ErrorHandling ErrorMessag = new ErrorHandling();
             Request.Headers.TryGetValue("token", out token);
             if (token != "")
@@ -636,7 +654,7 @@ namespace CRM_API.Controllers
                 var IdUser = int.Parse(claims.FindFirst("Id").Value);
                 var PharmacyToBeModified = await _PharmacyService.GetById(Id);
                 if (PharmacyToBeModified == null) return BadRequest("Le Pharmacy n'existe pas");
-                        PharmacyToBeModified.UpdatedOn = DateTime.UtcNow;
+                PharmacyToBeModified.UpdatedOn = DateTime.UtcNow;
                 PharmacyToBeModified.UpdatedBy = IdUser;
 
                 await _PharmacyService.Approuve(PharmacyToBeModified, PharmacyToBeModified);
@@ -655,11 +673,18 @@ namespace CRM_API.Controllers
 
             }
         }
+              catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
         [HttpPut("Reject/{Id}")]
         public async Task<ActionResult<PharmacyResource>> RejectPharmacy([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token,
       int Id)
         {
-            StringValues token = "";
+            try
+            {
+                StringValues token = "";
             ErrorHandling ErrorMessag = new ErrorHandling();
             Request.Headers.TryGetValue("token", out token);
             if (token != "")
@@ -688,6 +713,11 @@ namespace CRM_API.Controllers
                 ErrorMessag.StatusCode = 400;
                 return Ok(ErrorMessag);
 
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
         [HttpDelete("{Id}")]

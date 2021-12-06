@@ -9,7 +9,10 @@ namespace CRM.Core.Models
         {
             BuDoctor = new HashSet<BuDoctor>();
             BuUser = new HashSet<BuUser>();
+            BuFile = new HashSet<BuFile>();
             CycleBu = new HashSet<CycleBu>();
+            Product = new HashSet<Product>();
+
         }
         public int Version { get; set; }
         public int? CreatedBy { get; set; }

@@ -24,7 +24,8 @@ namespace CRM_API.Controllers
 
         private readonly IMapper _mapperService;
         public ProductController(
-            IUserService UserService, IBusinessUnitService BuService,          IProductService ProductService, IMapper mapper)
+            IUserService UserService, IBusinessUnitService BuService,        
+            IProductService ProductService, IMapper mapper)
         {
             _UserService = UserService;
             _BuService = BuService;
@@ -37,6 +38,7 @@ namespace CRM_API.Controllers
         public async Task<ActionResult<ProductResource>> CreateProduct([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
         string Token, SaveProductResource SaveProductResource)
   {
+            try { 
             var claims = _UserService.getPrincipal(Token);
             var Role = claims.FindFirst("Role").Value;
             var IdUser = int.Parse(claims.FindFirst("Id").Value);
@@ -72,7 +74,11 @@ namespace CRM_API.Controllers
             //  *** Mappage ***
             var ProductResource = _mapperService.Map<Product, ProductResource>(NewProduct);
             return Ok(ProductResource);
-
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         [HttpGet]
         public async Task<ActionResult<ProductResource>> GetAllProducts([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
@@ -256,6 +262,7 @@ namespace CRM_API.Controllers
         public async Task<ActionResult<ProductResource>> UpdateProduct([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
         string Token, int Id, SaveProductResource SaveProductResource)
         {
+            try { 
             var claims = _UserService.getPrincipal(Token);
             var Role = claims.FindFirst("Role").Value;
             var IdUser = int.Parse(claims.FindFirst("Id").Value);
@@ -298,6 +305,11 @@ namespace CRM_API.Controllers
 
             ProductResourceUpdated.Bu = BusinessUnit;
             return Ok(ProductResourceUpdated);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
 
@@ -337,11 +349,11 @@ namespace CRM_API.Controllers
                 {
                     var sub = await _ProductService.GetById(item);
                     empty.Add(sub);
-                    if (sub == null) return BadRequest("Le Product  n'existe pas"); //NotFound();
+                    if (sub == null) return BadRequest("Le Product  n'existe pas");
 
                 }
                 await _ProductService.DeleteRange(empty);
-                ;
+                
                 return NoContent();
             }
             catch (Exception ex)

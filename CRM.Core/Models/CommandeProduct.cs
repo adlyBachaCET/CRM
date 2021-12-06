@@ -6,6 +6,7 @@ namespace CRM.Core.Models
 {
     public class CommandeProduct
     {
+
         public int IdCommandeProduct { get; set; }
         public int Version { get; set; }
         public Status Status { get; set; }

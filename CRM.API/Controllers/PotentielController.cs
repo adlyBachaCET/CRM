@@ -30,7 +30,8 @@ namespace CRM_API.Controllers
 
         [HttpPost]
         public async Task<ActionResult<PotentielResource>> CreatePotentiel(SavePotentielResource SavePotentielResource)
-  {     
+        {
+            try { 
             //*** Mappage ***
             var Potentiel = _mapperService.Map<SavePotentielResource, Potentiel>(SavePotentielResource);
             Potentiel.CreatedOn = DateTime.UtcNow;
@@ -44,7 +45,12 @@ namespace CRM_API.Controllers
             //*** Mappage ***
             var PotentielResource = _mapperService.Map<Potentiel, PotentielResource>(NewPotentiel);
             return Ok(PotentielResource);
-      
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
         }
         [HttpGet]
         public async Task<ActionResult<PotentielResource>> GetAllPotentiels()
@@ -110,7 +116,7 @@ namespace CRM_API.Controllers
         [HttpPut("{Id}")]
         public async Task<ActionResult<PotentielResource>> UpdatePotentiel(int Id, SavePotentielResource SavePotentielResource)
         {
-
+            try { 
             var PotentielToBeModified = await _PotentielService.GetById(Id);
             if (PotentielToBeModified == null) return BadRequest("Le Potentiel n'existe pas"); //NotFound();
             var Potentiels = _mapperService.Map<SavePotentielResource, Potentiel>(SavePotentielResource);
@@ -122,7 +128,12 @@ namespace CRM_API.Controllers
 
             var PotentielResourceUpdated = _mapperService.Map<Potentiel, PotentielResource>(PotentielUpdated);
 
-            return Ok();
+            return Ok(PotentielResourceUpdated);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
 
@@ -133,9 +144,9 @@ namespace CRM_API.Controllers
             {
 
                 var sub = await _PotentielService.GetById(Id);
-                if (sub == null) return BadRequest("Le Potentiel  n'existe pas"); //NotFound();
+                if (sub == null) return BadRequest("Le Potentiel  n'existe pas");
                 await _PotentielService.Delete(sub);
-                ;
+                
                 return NoContent();
             }
             catch (Exception ex)
@@ -153,11 +164,11 @@ namespace CRM_API.Controllers
                 {
                     var sub = await _PotentielService.GetById(item);
                     empty.Add(sub);
-                    if (sub == null) return BadRequest("Le Potentiel  n'existe pas"); //NotFound();
+                    if (sub == null) return BadRequest("Le Potentiel  n'existe pas"); 
 
                 }
                 await _PotentielService.DeleteRange(empty);
-                ;
+                
                 return NoContent();
             }
             catch (Exception ex)

@@ -33,6 +33,7 @@ namespace CRM_API.Controllers
         [HttpPost]
         public async Task<ActionResult<PhoneResource>> CreatePhone(SavePhoneResource SavePhoneResource)
         {
+            try { 
             //*** Mappage ***
             var Phone = _mapperService.Map<SavePhoneResource, Phone>(SavePhoneResource);
             Phone.CreatedOn = DateTime.UtcNow;
@@ -46,6 +47,11 @@ namespace CRM_API.Controllers
             //*** Mappage ***
             var PhoneResource = _mapperService.Map<Phone, PhoneResource>(NewPhone);
             return Ok(PhoneResource);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         [HttpGet]
         public async Task<ActionResult<PhoneResource>> GetAllPhones()
@@ -157,7 +163,7 @@ namespace CRM_API.Controllers
         [HttpPut("{Id}")]
         public async Task<ActionResult<PhoneResource>> UpdatePhone(int Id, SavePhoneResource SavePhoneResource)
         {
-
+            try { 
             var PhoneToBeModified = await _PhoneService.GetById(Id);
             if (PhoneToBeModified == null) return BadRequest("Le Phone n'existe pas"); //NotFound();
             var Phones = _mapperService.Map<SavePhoneResource, Phone>(SavePhoneResource);
@@ -169,7 +175,12 @@ namespace CRM_API.Controllers
 
             var PhoneResourceUpdated = _mapperService.Map<Phone, PhoneResource>(PhoneUpdated);
 
-            return Ok();
+            return Ok(PhoneResourceUpdated);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
 
@@ -180,9 +191,8 @@ namespace CRM_API.Controllers
             {
 
                 var sub = await _PhoneService.GetById(Id);
-                if (sub == null) return BadRequest("Le Phone  n'existe pas"); //NotFound();
-                await _PhoneService.Delete(sub);
-                ;
+                if (sub == null) return BadRequest("Le Phone  n'existe pas"); 
+                await _PhoneService.Delete(sub);              
                 return NoContent();
             }
             catch (Exception ex)
@@ -200,11 +210,9 @@ namespace CRM_API.Controllers
                 {
                     var sub = await _PhoneService.GetById(item);
                     empty.Add(sub);
-                    if (sub == null) return BadRequest("Le Phone  n'existe pas"); //NotFound();
-
+                    if (sub == null) return BadRequest("Le Phone  n'existe pas");
                 }
                 await _PhoneService.DeleteRange(empty);
-                ;
                 return NoContent();
             }
             catch (Exception ex)

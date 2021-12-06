@@ -31,6 +31,7 @@ namespace CRM_API.Controllers
         [HttpPost]
         public async Task<ActionResult<ServiceResource>> CreateService(SaveServiceResource SaveServiceResource)
         {
+            try { 
             //*** Mappage ***
             var Service = _mapperService.Map<SaveServiceResource, Service>(SaveServiceResource);
             Service.CreatedOn = DateTime.UtcNow;
@@ -44,6 +45,11 @@ namespace CRM_API.Controllers
             //*** Mappage ***
             var ServiceResource = _mapperService.Map<Service, ServiceResource>(NewService);
             return Ok(ServiceResource);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         [HttpGet]
         public async Task<ActionResult<ServiceResource>> GetAllServices()
@@ -67,7 +73,6 @@ namespace CRM_API.Controllers
             {
                 var Employe = await _ServiceService.GetAllActif();
                 if (Employe == null) return NotFound();
-                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
                 return Ok(Employe);
             }
             catch (Exception ex)
@@ -82,7 +87,6 @@ namespace CRM_API.Controllers
             {
                 var Employe = await _ServiceService.GetAllInActif();
                 if (Employe == null) return NotFound();
-                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
                 return Ok(Employe);
             }
             catch (Exception ex)
@@ -109,11 +113,10 @@ namespace CRM_API.Controllers
         [HttpPut("{Id}")]
         public async Task<ActionResult<ServiceResource>> UpdateService(int Id, SaveServiceResource SaveServiceResource)
         {
-
+            try { 
             var ServiceToBeModified = await _ServiceService.GetById(Id);
             if (ServiceToBeModified == null) return BadRequest("Le Service n'existe pas"); //NotFound();
             var Service = _mapperService.Map<SaveServiceResource, Service>(SaveServiceResource);
-            //var newService = await _ServiceService.Create(Services);
             Service.UpdatedOn = DateTime.UtcNow;
             Service.CreatedOn = ServiceToBeModified.CreatedOn;
             Service.Active = 0;
@@ -127,6 +130,11 @@ namespace CRM_API.Controllers
             var ServiceResourceUpdated = _mapperService.Map<Service, ServiceResource>(ServiceUpdated);
 
             return Ok(ServiceResourceUpdated);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
 
@@ -137,9 +145,9 @@ namespace CRM_API.Controllers
             {
 
                 var sub = await _ServiceService.GetById(Id);
-                if (sub == null) return BadRequest("Le Service  n'existe pas"); //NotFound();
+                if (sub == null) return BadRequest("Le Service  n'existe pas");
                 await _ServiceService.Delete(sub);
-                ;
+                
                 return NoContent();
             }
             catch (Exception ex)
@@ -157,11 +165,11 @@ namespace CRM_API.Controllers
                 {
                     var sub = await _ServiceService.GetById(item);
                     empty.Add(sub);
-                    if (sub == null) return BadRequest("Le Service  n'existe pas"); //NotFound();
+                    if (sub == null) return BadRequest("Le Service  n'existe pas");
 
                 }
                 await _ServiceService.DeleteRange(empty);
-                ;
+                
                 return NoContent();
             }
             catch (Exception ex)

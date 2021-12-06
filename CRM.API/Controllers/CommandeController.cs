@@ -39,7 +39,7 @@ namespace CRM_API.Controllers
         [HttpPost]
         public async Task<ActionResult<CommandeResource>> CreateCommande(SaveCommandeResource SaveCommandeResource)
         {
-       
+            try { 
           //*** Mappage ***
           var Commande = _mapperService.Map<SaveCommandeResource, Commande>(SaveCommandeResource);
             Commande.UpdatedOn = DateTime.UtcNow;
@@ -79,7 +79,11 @@ namespace CRM_API.Controllers
             //*** Mappage ***
             var CommandeResource = _mapperService.Map<Commande, CommandeResource>(NewCommande);
             return Ok(CommandeResource);
-      
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         [HttpGet]
         public async Task<ActionResult<CommandeResource>> GetAllCommandes()
@@ -88,11 +92,7 @@ namespace CRM_API.Controllers
             {
                 var Employe = await _CommandeService.GetAll();
                 if (Employe == null) return NotFound();
-                
-#pragma warning disable S125 // Sections of code should not be commented out
-// var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
                 return Ok(Employe);
-#pragma warning restore S125 // Sections of code should not be commented out
             }
             catch (Exception ex)
             {
@@ -105,12 +105,8 @@ namespace CRM_API.Controllers
             try
             {
                 var Employe = await _CommandeService.GetAllActif();
-                if (Employe == null) return NotFound();
-                
-#pragma warning disable S125 // Sections of code should not be commented out
-// var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
+                if (Employe == null) return NotFound();   
                 return Ok(Employe);
-#pragma warning restore S125 // Sections of code should not be commented out
             }
             catch (Exception ex)
             {
@@ -123,12 +119,8 @@ namespace CRM_API.Controllers
             try
             {
                 var Employe = await _CommandeService.GetAllInActif();
-                if (Employe == null) return NotFound();
-                
-#pragma warning disable S125 // Sections of code should not be commented out
-// var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
+                if (Employe == null) return NotFound();               
                 return Ok(Employe);
-#pragma warning restore S125 // Sections of code should not be commented out
             }
             catch (Exception ex)
             {
@@ -173,24 +165,21 @@ namespace CRM_API.Controllers
         [HttpPut("{Id}")]
         public async Task<ActionResult<CommandeResource>> UpdateCommande(int Id, SaveCommandeResource SaveCommandeResource)
         {
-
+            try { 
             var CommandeToBeModified = await _CommandeService.GetById(Id);
-#pragma warning disable S125 // Sections of code should not be commented out
-            if (CommandeToBeModified == null) return BadRequest("Le Commande n'existe pas"); //NotFound();
-#pragma warning restore S125 // Sections of code should not be commented out
+            if (CommandeToBeModified == null) return BadRequest("Le Commande n'existe pas"); 
             var Commandes = _mapperService.Map<SaveCommandeResource, Commande>(SaveCommandeResource);
-            
-#pragma warning disable S125 // Sections of code should not be commented out
-//var newCommande = await _CommandeService.Create(Commandes);
-
             await _CommandeService.Update(CommandeToBeModified, Commandes);
-#pragma warning restore S125 // Sections of code should not be commented out
-
             var CommandeUpdated = await _CommandeService.GetById(Id);
 
             var CommandeResourceUpdated = _mapperService.Map<Commande, CommandeResource>(CommandeUpdated);
 
             return Ok(CommandeResourceUpdated);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
 
@@ -201,9 +190,7 @@ namespace CRM_API.Controllers
             {
 
                 var sub = await _CommandeService.GetById(Id);
-#pragma warning disable S125 // Sections of code should not be commented out
-                if (sub == null) return BadRequest("Le Commande  n'existe pas"); //NotFound();
-#pragma warning restore S125 // Sections of code should not be commented out
+                if (sub == null) return BadRequest("Le Commande  n'existe pas");
                 await _CommandeService.Delete(sub);
                 
                 return NoContent();
@@ -227,9 +214,7 @@ namespace CRM_API.Controllers
 
                 }
                 await _CommandeService.DeleteRange(empty);
-#pragma warning disable S1116 // Empty statements should be removed
                 ;
-#pragma warning restore S1116 // Empty statements should be removed
                 return NoContent();
             }
             catch (Exception ex)

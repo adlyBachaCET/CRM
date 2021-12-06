@@ -6,6 +6,10 @@ namespace CRM.Core.Models
 {
     public class Commande
     {
+        public Commande()
+        {
+            CommandeProducts = new HashSet<CommandeProduct>();
+        }
         public int IdCommande { get; set; }
         public int Version { get; set; }
         public Status Status { get; set; }

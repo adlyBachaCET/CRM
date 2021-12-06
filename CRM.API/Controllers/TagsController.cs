@@ -31,6 +31,7 @@ namespace CRM_API.Controllers
         [HttpPost]
         public async Task<ActionResult<TagsResource>> CreateTags(SaveTagsResource SaveTagsResource)
         {
+            try { 
             var Exist = await _TagsService.GetByExistantActif(SaveTagsResource.Name);
             if(Exist == null){ 
             //*** Mappage ***
@@ -51,6 +52,11 @@ namespace CRM_API.Controllers
             {
                 var genericResult = new { Exist = "Already exists", Location = Exist };
                 return Ok(genericResult);
+            }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
         [HttpGet]
@@ -117,11 +123,10 @@ namespace CRM_API.Controllers
         [HttpPut("{Id}")]
         public async Task<ActionResult<TagsResource>> UpdateTags(int Id, SaveTagsResource SaveTagsResource)
         {
-
+            try { 
             var TagsToBeModified = await _TagsService.GetById(Id);
-            if (TagsToBeModified == null) return BadRequest("Le Tags n'existe pas"); //NotFound();
+            if (TagsToBeModified == null) return BadRequest("Le Tags n'existe pas");
             var Tags = _mapperService.Map<SaveTagsResource, Tags>(SaveTagsResource);
-            //var newTags = await _TagsService.Create(Tagss);
             Tags.UpdatedOn = DateTime.UtcNow;
             Tags.CreatedOn = TagsToBeModified.CreatedOn;
             Tags.Active = 0;
@@ -134,7 +139,12 @@ namespace CRM_API.Controllers
 
             var TagsResourceUpdated = _mapperService.Map<Tags, TagsResource>(TagsUpdated);
 
-            return Ok();
+            return Ok(TagsResourceUpdated);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
 
@@ -145,9 +155,9 @@ namespace CRM_API.Controllers
             {
 
                 var sub = await _TagsService.GetById(Id);
-                if (sub == null) return BadRequest("Le Tags  n'existe pas"); //NotFound();
+                if (sub == null) return BadRequest("Le Tags  n'existe pas"); 
                 await _TagsService.Delete(sub);
-                ;
+                
                 return NoContent();
             }
             catch (Exception ex)
@@ -165,11 +175,11 @@ namespace CRM_API.Controllers
                 {
                     var sub = await _TagsService.GetById(item);
                     empty.Add(sub);
-                    if (sub == null) return BadRequest("Le Tags  n'existe pas"); //NotFound();
+                    if (sub == null) return BadRequest("Le Tags  n'existe pas"); 
 
                 }
                 await _TagsService.DeleteRange(empty);
-                ;
+                
                 return NoContent();
             }
             catch (Exception ex)

@@ -37,6 +37,7 @@ namespace CRM_API.Controllers
         [HttpPost]
         public async Task<ActionResult<BuUserResource>> CreateBuUser(SaveBuUserResource SaveBuUserResource)
         {
+            try { 
             //*** Mappage ***
             var BuUser = _mapperService.Map<SaveBuUserResource, BuUser>(SaveBuUserResource);
             var User = await _UserService.GetById(SaveBuUserResource.IdUser);
@@ -62,6 +63,11 @@ namespace CRM_API.Controllers
             //*** Mappage ***
             var BuUserResource = _mapperService.Map<BuUser, BuUserResource>(NewBuUser);
             return Ok(BuUserResource);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         
     }

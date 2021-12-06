@@ -31,6 +31,7 @@ namespace CRM_API.Controllers
         [HttpPost]
         public async Task<ActionResult<SpecialtyResource>> CreateSpecialty(SaveSpecialtyResource SaveSpecialtyResource)
         {
+            try { 
             //*** Mappage ***
             var Specialty = _mapperService.Map<SaveSpecialtyResource, Specialty>(SaveSpecialtyResource);
             Specialty.CreatedOn = DateTime.UtcNow;
@@ -44,6 +45,11 @@ namespace CRM_API.Controllers
             //*** Mappage ***
             var SpecialtyResource = _mapperService.Map<Specialty, SpecialtyResource>(NewSpecialty);
             return Ok(SpecialtyResource);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         [HttpGet]
         public async Task<ActionResult<SpecialtyResource>> GetAllSpecialtys()
@@ -52,7 +58,6 @@ namespace CRM_API.Controllers
             {
                 var Employe = await _SpecialtyService.GetAll();
                 if (Employe == null) return NotFound();
-                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
                 return Ok(Employe);
             }
             catch (Exception ex)
@@ -67,7 +72,6 @@ namespace CRM_API.Controllers
             {
                 var Employe = await _SpecialtyService.GetAllActif();
                 if (Employe == null) return NotFound();
-                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
                 return Ok(Employe);
             }
             catch (Exception ex)
@@ -82,7 +86,6 @@ namespace CRM_API.Controllers
             {
                 var Employe = await _SpecialtyService.GetAllInActif();
                 if (Employe == null) return NotFound();
-                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
                 return Ok(Employe);
             }
             catch (Exception ex)
@@ -109,11 +112,10 @@ namespace CRM_API.Controllers
         [HttpPut("{Id}")]
         public async Task<ActionResult<SpecialtyResource>> UpdateSpecialty(int Id, SaveSpecialtyResource SaveSpecialtyResource)
         {
-
+            try { 
             var SpecialtyToBeModified = await _SpecialtyService.GetById(Id);
             if (SpecialtyToBeModified == null) return BadRequest("Le Specialty n'existe pas"); //NotFound();
             var Specialty = _mapperService.Map<SaveSpecialtyResource, Specialty>(SaveSpecialtyResource);
-            //var newSpecialty = await _SpecialtyService.Create(Specialtys);
             Specialty.UpdatedOn = DateTime.UtcNow;
             Specialty.CreatedOn = SpecialtyToBeModified.CreatedOn;
             Specialty.Active = 0;
@@ -127,6 +129,11 @@ namespace CRM_API.Controllers
             var SpecialtyResourceUpdated = _mapperService.Map<Specialty, SpecialtyResource>(SpecialtyUpdated);
 
             return Ok(SpecialtyResourceUpdated);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
 
@@ -137,9 +144,9 @@ namespace CRM_API.Controllers
             {
 
                 var sub = await _SpecialtyService.GetById(Id);
-                if (sub == null) return BadRequest("Le Specialty  n'existe pas"); //NotFound();
+                if (sub == null) return BadRequest("Le Specialty  n'existe pas"); 
                 await _SpecialtyService.Delete(sub);
-                ;
+              
                 return NoContent();
             }
             catch (Exception ex)
@@ -157,11 +164,11 @@ namespace CRM_API.Controllers
                 {
                     var sub = await _SpecialtyService.GetById(item);
                     empty.Add(sub);
-                    if (sub == null) return BadRequest("Le Specialty  n'existe pas"); //NotFound();
+                    if (sub == null) return BadRequest("Le Specialty  n'existe pas");
 
                 }
                 await _SpecialtyService.DeleteRange(empty);
-                ;
+               
                 return NoContent();
             }
             catch (Exception ex)
