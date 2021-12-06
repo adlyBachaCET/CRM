@@ -23,7 +23,8 @@ namespace CRM.Data.Repositories
 
         public async Task<IEnumerable<Planification>> GetAllActif()
         {
-            var result = await MyDbContext.Planification.Where(a => a.Active == 0).ToListAsync();
+            var result = await MyDbContext.Planification.Where(a => a.Active == 0)
+                .ToListAsync();
             return result;
         }
 
@@ -66,10 +67,6 @@ namespace CRM.Data.Repositories
             var result = await MyDbContext.Planification.Where(a =>a.Active==0 && a.IdPlanification==Id).ToListAsync();
             return result;
         }
-        //public async Task<IEnumerable<Planification>> GetAllWithArtisteAsync()
-        //{
-        //    return await MyPlanificationDbContext.Planifications
-        //        .Include(x => x.Artiste).ToListAsync();
-        //}
+
     }
 }

@@ -22,4 +22,13 @@ namespace CRM.Core.Models
     {
         Request, Objection
     }
+    public enum GrossistePharmacy
+    {
+        Grossiste, Pharmacy
+    }
+
+    public enum StatusParticipant
+    {
+        Visit, RP
+    }
 }

@@ -49,7 +49,7 @@ namespace CRM.Services.Services
         public async Task<Locality> GetById(int id)
         {
             return
-                 await _unitOfWork.Localitys.SingleOrDefault(i => i.IdLocality == id && i.Active == 0);
+                 await _unitOfWork.Localitys.GetByIdActif(id);
         }
         public async Task<Locality> GetByIdActif(int? id)
         {
@@ -72,7 +72,6 @@ namespace CRM.Services.Services
 
         public async Task Delete(Locality Locality)
         {
-            //Locality musi =  _unitOfWork.Localitys.SingleOrDefaultAsync(x=>x.Id == LocalityToBeUpdated.Id);
             Locality.Active = 1;
 
             await _unitOfWork.CommitAsync();

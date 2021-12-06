@@ -5,7 +5,7 @@ namespace CRM.Core.Models
 {
     public partial class Pharmacy 
     {
-        public int IdPharmacy { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
         public int Version { get; set; }
 
@@ -21,6 +21,8 @@ namespace CRM.Core.Models
 
         public string Role { get; set; }//Pharmacy ou grossicte
         public Status Status { get; set; }
+        public GrossistePharmacy GrossistePharmacy { get; set; }
+
         public virtual ICollection<Appointement> Appointement { get; set; }
 
         public virtual ICollection<Target> Target { get; set; }

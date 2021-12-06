@@ -16,7 +16,7 @@ namespace CRM_API.Controllers
 
     public class LocalityController : ControllerBase
     {
-        public IList<Locality> Localitys;
+
 
         private readonly ILocalityService _LocalityService;
 
@@ -43,7 +43,8 @@ namespace CRM_API.Controllers
             if (SaveLocalityResource.IdParent!=null)
             {
                 Locality.IdParent = SaveLocalityResource.IdParent;
-               // Locality.InverseIdParentNavigation.Add(LocalityParent);
+               
+
                 Locality.StatusParent = Parent.Status;
                 Locality.UpdatedOn = Parent.UpdatedOn;
                 Locality.CreatedOn = Parent.CreatedOn;
@@ -76,8 +77,11 @@ namespace CRM_API.Controllers
                     var Locality = _mapperService.Map<Locality, LocalityResource>(item);
                     LocalityResource.Add(Locality);
                 }
-                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
+                
+#pragma warning disable S125 // Sections of code should not be commented out
+// var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
                 return Ok(LocalityResource);
+#pragma warning restore S125 // Sections of code should not be commented out
             }
             catch (Exception ex)
             {
@@ -97,7 +101,8 @@ namespace CRM_API.Controllers
                      var Locality = _mapperService.Map<Locality, LocalityResource>(item);
                     LocalityResource.Add(Locality);
                 }
-                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
+                
+
                 return Ok(LocalityResource);
             }
             catch (Exception ex)
@@ -118,8 +123,11 @@ namespace CRM_API.Controllers
                     var Locality = _mapperService.Map<Locality, LocalityResource>(item);
                     LocalityResource.Add(Locality);
                 }
-                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
+                
+#pragma warning disable S125 // Sections of code should not be commented out
+// var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
                 return Ok(LocalityResource);
+#pragma warning restore S125 // Sections of code should not be commented out
 
 
             }
@@ -141,8 +149,11 @@ namespace CRM_API.Controllers
                     var Locality = _mapperService.Map<Locality, LocalityResource>(item);
                     LocalityResource.Add(Locality);
                 }
-                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
+                
+#pragma warning disable S125 // Sections of code should not be commented out
+// var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
                 return Ok(LocalityResource);
+#pragma warning restore S125 // Sections of code should not be commented out
 
             }
             catch (Exception ex)
@@ -163,8 +174,11 @@ namespace CRM_API.Controllers
                     var Locality = _mapperService.Map<Locality, LocalityResource>(item);
                     LocalityResource.Add(Locality);
                 }
-                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
+                
+#pragma warning disable S125 // Sections of code should not be commented out
+// var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
                 return Ok(LocalityResource);
+#pragma warning restore S125 // Sections of code should not be commented out
             }
             catch (Exception ex)
             {
@@ -177,7 +191,9 @@ namespace CRM_API.Controllers
         {
             try
             {
+#pragma warning disable S1117 // Local variables should not shadow class fields
                 var Localitys = await _LocalityService.GetById(Id);
+#pragma warning restore S1117 // Local variables should not shadow class fields
                 if (Localitys == null) return NotFound();
                 var LocalityRessource = _mapperService.Map<Locality, LocalityResource>(Localitys);
                 return Ok(LocalityRessource);
@@ -192,15 +208,24 @@ namespace CRM_API.Controllers
         {
 
             var LocalityToBeModified = await _LocalityService.GetById(Id);
+#pragma warning disable S125 // Sections of code should not be commented out
             if (LocalityToBeModified == null) return BadRequest("Le Locality n'existe pas"); //NotFound();
+#pragma warning restore S125 // Sections of code should not be commented out
+#pragma warning disable S1117 // Local variables should not shadow class fields
             var Localitys = _mapperService.Map<SaveLocalityResource, Locality>(SaveLocalityResource);
-            //var newLocality = await _LocalityService.Create(Localitys);
+#pragma warning restore S1117 // Local variables should not shadow class fields
+            
+#pragma warning disable S125 // Sections of code should not be commented out
+//var newLocality = await _LocalityService.Create(Localitys);
 
             await _LocalityService.Update(LocalityToBeModified, Localitys);
+#pragma warning restore S125 // Sections of code should not be commented out
 
             var LocalityUpdated = await _LocalityService.GetById(Id);
 
+#pragma warning disable S1481 // Unused local variables should be removed
             var LocalityResourceUpdated = _mapperService.Map<Locality, LocalityResource>(LocalityUpdated);
+#pragma warning restore S1481 // Unused local variables should be removed
 
             return Ok();
         }
@@ -213,9 +238,13 @@ namespace CRM_API.Controllers
             {
 
                 var sub = await _LocalityService.GetById(Id);
+#pragma warning disable S125 // Sections of code should not be commented out
                 if (sub == null) return BadRequest("Le Locality  n'existe pas"); //NotFound();
+#pragma warning restore S125 // Sections of code should not be commented out
                 await _LocalityService.Delete(sub);
+#pragma warning disable S1116 // Empty statements should be removed
                 ;
+#pragma warning restore S1116 // Empty statements should be removed
                 return NoContent();
             }
             catch (Exception ex)
@@ -233,11 +262,15 @@ namespace CRM_API.Controllers
                 {
                     var sub = await _LocalityService.GetById(item);
                     empty.Add(sub);
+#pragma warning disable S125 // Sections of code should not be commented out
                     if (sub == null) return BadRequest("Le Locality  n'existe pas"); //NotFound();
+#pragma warning restore S125 // Sections of code should not be commented out
 
                 }
                 await _LocalityService.DeleteRange(empty);
+#pragma warning disable S1116 // Empty statements should be removed
                 ;
+#pragma warning restore S1116 // Empty statements should be removed
                 return NoContent();
             }
             catch (Exception ex)

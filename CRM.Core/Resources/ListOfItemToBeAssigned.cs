@@ -6,14 +6,14 @@ namespace CRM.Core.Resources
 {
    public class ListOfItemToBeAssigned
     {
-        public int IdOfItemToBeAssigned { get; set; }
+        public int Cycle { get; set; }
 
-        public List<int> IdsOfItemToBeAssignedToItem { get;set; }
+        public List<int> Users { get;set; }
     }
     public class ItemToBeAssigned
     {
-        public int Item1 { get; set; }
-        public int Item2 { get; set; }
+        public int Cycle { get; set; }
+        public int User { get; set; }
 
     }
 }

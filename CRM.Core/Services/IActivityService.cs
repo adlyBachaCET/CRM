@@ -8,7 +8,7 @@ namespace CRM.Core.Services
     public interface IActivityService
     {
         Task<List<Activity>> GetByIdUser(int id);
-        Task<Activity> GetById(int? id);
+        Task<Activity> GetById(int id);
         Task<Activity> Create(Activity newActivity);
         Task<List<Activity>> CreateRange(List<Activity> newActivity);
         Task Update(Activity ActivityToBeUpdated, Activity Activity);

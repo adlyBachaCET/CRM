@@ -6,6 +6,10 @@ namespace CRM.Core.Repository
 {
     public interface IPharmacyRepository : IRepository<Pharmacy>
     {
+        Task<IEnumerable<Pharmacy>> GetAll(Status? Status, GrossistePharmacy GrossistePharmacy);
+        Task<Pharmacy> GetById(int Id, Status? Status, GrossistePharmacy GrossistePharmacy);
+        Task<IEnumerable<Pharmacy>> GetPharmacysByLocalities(List<int> IdLocalities);
+        Task<IEnumerable<Pharmacy>> GetMyPharmacysWithoutAppointment(int Id);
         Task<IEnumerable<Pharmacy>> GetAllActif();
         Task<IEnumerable<Pharmacy>> GetAllInActif();
         Task<IEnumerable<Pharmacy>> GetAllAcceptedActif();

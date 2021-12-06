@@ -36,20 +36,14 @@ namespace CRM.Data.Repositories
                 .ToListAsync();
             return result;
         }
-        public async Task<Commande> GetByIdActif(int id)
+        public async Task<Commande> GetByIdActif(int Id)
         {
-            var result = await MyDbContext.Commande.Where(a => a.Active == 0 && a.IdCommande == id)
+            var result = await MyDbContext.Commande.Where(a => a.Active == 0 && a.IdCommande == Id)
                 .Include(i => i.Doctor).Include(i => i.Pharmacy).Include(i => i.CommandeProducts).Include(i => i.User)
                 .FirstOrDefaultAsync();
             return result;
         }
-        public async Task<IEnumerable<Commande>> GetByIdActifDoctor(int id)
-        {
-            var result = await MyDbContext.Commande.Where(a => a.Active == 0 && a.IdDoctor == id)
-                .Include(i => i.Doctor).Include(i => i.Pharmacy).Include(i => i.CommandeProducts).Include(i => i.User)
-                .ToListAsync();
-            return result;
-        }
+   
         public async Task<IEnumerable<Commande>> GetAllAcceptedActif()
         {
             var result = await MyDbContext.Commande.Where(a => a.Active == 0 && a.Status == Status.Approuved)
@@ -75,37 +69,33 @@ namespace CRM.Data.Repositories
         }
         public async Task<IEnumerable<Commande>> GetAllRejected()
         {
-            var result = await MyDbContext.Commande.Where(a => a.Status == Status.Pending)
+            var result = await MyDbContext.Commande.Where(a => a.Status == Status.Rejected)
                 .Include(i => i.Doctor).Include(i => i.Pharmacy).Include(i => i.CommandeProducts).Include(i => i.User)
                 .ToListAsync();
             return result;
         }
 
-        public async Task<IEnumerable<Commande>> GetByIdDoctor(int id)
+        public async Task<IEnumerable<Commande>> GetByIdDoctor(int Id)
         {
-            var result = await MyDbContext.Commande.Where(a => a.Active == 0 &&  a.IdDoctor==id)
+            var result = await MyDbContext.Commande.Where(a => a.Active == 0 &&  a.IdDoctor==Id)
                 .Include(i => i.Doctor).Include(i => i.Pharmacy).Include(i => i.CommandeProducts).Include(i => i.User)
                 .ToListAsync();
             return result;
         }
-        public async Task<IEnumerable<Commande>> GetByIdActifUser(int id)
+        public async Task<IEnumerable<Commande>> GetByIdActifUser(int Id)
         {
-            var result = await MyDbContext.Commande.Where(a => a.Active == 0 && a.IdUser == id)
+            var result = await MyDbContext.Commande.Where(a => a.Active == 0 && a.IdUser == Id)
                 .Include(i => i.Doctor).Include(i => i.Pharmacy).Include(i => i.CommandeProducts).Include(i => i.User)
                 .ToListAsync();
             return result;
         }
-        public async Task<IEnumerable<Commande>> GetByIdActifPharmacy(int id)
+        public async Task<IEnumerable<Commande>> GetByIdActifPharmacy(int Id)
         {
-            var result = await MyDbContext.Commande.Where(a => a.Active == 0 && a.IdDoctor == id)
+            var result = await MyDbContext.Commande.Where(a => a.Active == 0 && a.IdPharmacy == Id)
                 .Include(i => i.Doctor).Include(i => i.Pharmacy).Include(i => i.CommandeProducts).Include(i => i.User)
                 .ToListAsync();
             return result;
         }
-        //public async Task<IEnumerable<Commande>> GetAllWithArtisteAsync()
-        //{
-        //    return await MyCommandeDbContext.Commandes
-        //        .Include(x => x.Artiste).ToListAsync();
-        //}
+
     }
 }

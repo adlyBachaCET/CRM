@@ -17,14 +17,12 @@ namespace CRM_API.Controllers
 
     public class VisitController : ControllerBase
     {
-        public IList<Visit> Visits;
         private readonly IBrickService _BrickService;
         private readonly ILocalityService _LocalityService;
 
         private readonly IVisitService _VisitService;
         private readonly IDoctorService _DoctorService;
         private readonly IPharmacyService _PharmacyService;
-        private readonly IUserService _UserService;
 
         private readonly IMapper _mapperService;
         public VisitController(IUserService UserService, ILocalityService LocalityService, IBrickService BrickService,
@@ -68,7 +66,8 @@ namespace CRM_API.Controllers
                 Visit.StatusBrick1 = Brick1.Status;
                 Visit.NameBrick1 = Brick1.Name;
                 Visit.NumBrick1 = Brick1.NumSystemBrick;
-                // Pharmacy.Brick1 = Brick1;
+                
+
             }
             else
             {
@@ -85,8 +84,11 @@ namespace CRM_API.Controllers
                 Visit.StatusBrick2 = Brick2.Status;
                 Visit.NameBrick2 = Brick2.Name;
                 Visit.NumBrick2 = Brick2.NumSystemBrick;
-                // Pharmacy.Brick2 = Brick2;
+                
+#pragma warning disable S125 // Sections of code should not be commented out
+// Pharmacy.Brick2 = Brick2;
             }
+#pragma warning restore S125 // Sections of code should not be commented out
             else
             {
                 Visit.IdBrick2 = null;
@@ -163,7 +165,8 @@ namespace CRM_API.Controllers
                     VisitResource = VisitRessource;
                     VisitResources.Add(VisitResource);
                 }
-                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
+                
+
                 return Ok(VisitResources);
             }
             catch (Exception ex)
@@ -192,9 +195,10 @@ namespace CRM_API.Controllers
         {
 
             var VisitToBeModified = await _VisitService.GetById(Id);
-            if (VisitToBeModified == null) return BadRequest("Le Visit n'existe pas"); //NotFound();
+            if (VisitToBeModified == null) return BadRequest("Le Visit n'existe pas"); 
             var Visit = _mapperService.Map<SaveVisitResource, Visit>(SaveVisitResource);
-            //var newVisit = await _VisitService.Create(Visits);
+            
+
             var Doctor = await _DoctorService.GetById(SaveVisitResource.IdDoctor);
             var Pharmacy = await _PharmacyService.GetById(SaveVisitResource.IdPharmacy);
             Visit.UpdatedOn = DateTime.UtcNow;
@@ -203,7 +207,7 @@ namespace CRM_API.Controllers
             Visit.Status = 0;
             Visit.UpdatedBy = 0;
             Visit.CreatedBy = VisitToBeModified.CreatedBy;
-            if (Pharmacy.IdPharmacy != VisitToBeModified.IdPharmacy)
+            if (Pharmacy.Id != VisitToBeModified.IdPharmacy)
             {
                 Visit.Name = Pharmacy.Name;
                 Visit.Pharmacy = Pharmacy;
@@ -243,9 +247,9 @@ namespace CRM_API.Controllers
             {
 
                 var sub = await _VisitService.GetById(Id);
-                if (sub == null) return BadRequest("Le Visit  n'existe pas"); //NotFound();
+                if (sub == null) return BadRequest("Le Visit  n'existe pas"); 
                 await _VisitService.Delete(sub);
-                ;
+                
                 return NoContent();
             }
             catch (Exception ex)
@@ -263,11 +267,11 @@ namespace CRM_API.Controllers
                 {
                     var sub = await _VisitService.GetById(item);
                     empty.Add(sub);
-                    if (sub == null) return BadRequest("Le Visit  n'existe pas"); //NotFound();
+                    if (sub == null) return BadRequest("Le Visit  n'existe pas"); 
 
                 }
                 await _VisitService.DeleteRange(empty);
-                ;
+                
                 return NoContent();
             }
             catch (Exception ex)

@@ -23,54 +23,106 @@ namespace CRM.Data.Repositories
 
         public async Task<IEnumerable<RequestRp>> GetAllActif()
         {
-            var result = await MyDbContext.RequestRp.Where(a => a.Active == 0).ToListAsync();
+            var result = await MyDbContext.RequestRp.Where(a => a.Active == 0)
+                .Include(i => i.Participant).ThenInclude(i => i.IdUserNavigation)
+                 .Include(i => i.Participant).ThenInclude(i => i.IdDoctorNavigation)
+                .Include(i => i.Participant).ThenInclude(i => i.IdRequestRpNavigation)
+                 .Include(i => i.Participant).ThenInclude(i => i.IdPharmacyNavigation)
+                 .Include(i => i.Participant).ThenInclude(i => i.IdVisitReportNavigation).ThenInclude(i=>i.Visit)
+                .Include(i => i.TagsRequestRp).ThenInclude(i=>i.IdTagsNavigation)
+                .ToListAsync();
             return result;
         }
 
         public async Task<IEnumerable<RequestRp>> GetAllInActif()
         {
-            var result = await MyDbContext.RequestRp.Where(a => a.Active == 1).ToListAsync();
+            var result = await MyDbContext.RequestRp.Where(a => a.Active == 1)
+                  .Include(i => i.Participant).ThenInclude(i => i.IdUserNavigation)
+                 .Include(i => i.Participant).ThenInclude(i => i.IdDoctorNavigation)
+                .Include(i => i.Participant).ThenInclude(i => i.IdRequestRpNavigation)
+                 .Include(i => i.Participant).ThenInclude(i => i.IdPharmacyNavigation)
+                 .Include(i => i.Participant).ThenInclude(i => i.IdVisitReportNavigation).ThenInclude(i => i.Visit)
+                .Include(i => i.TagsRequestRp).ThenInclude(i => i.IdTagsNavigation)
+                .ToListAsync();
             return result;
         }
         public async Task<RequestRp> GetByIdActif(int id)
         {
-            var result = await MyDbContext.RequestRp.Where(a => a.Active == 0 && a.IdRequestRp== id).FirstOrDefaultAsync();
+            var result = await MyDbContext.RequestRp.Where(a => a.Active == 0 && a.IdRequestRp== id)
+                  .Include(i => i.Participant).ThenInclude(i => i.IdUserNavigation)
+                 .Include(i => i.Participant).ThenInclude(i => i.IdDoctorNavigation)
+                .Include(i => i.Participant).ThenInclude(i => i.IdRequestRpNavigation)
+                 .Include(i => i.Participant).ThenInclude(i => i.IdPharmacyNavigation)
+                 .Include(i => i.Participant).ThenInclude(i => i.IdVisitReportNavigation).ThenInclude(i => i.Visit)
+                .Include(i => i.TagsRequestRp).ThenInclude(i => i.IdTagsNavigation)
+                .FirstOrDefaultAsync();
             return result;
         }
 
         public async Task<IEnumerable<RequestRp>> GetAllAcceptedActif()
         {
-            var result = await MyDbContext.RequestRp.Where(a => a.Active == 0 && a.Status == Status.Approuved).ToListAsync();
+            var result = await MyDbContext.RequestRp.Where(a => a.Active == 0 && a.Status == Status.Approuved)
+                  .Include(i => i.Participant).ThenInclude(i => i.IdUserNavigation)
+                 .Include(i => i.Participant).ThenInclude(i => i.IdDoctorNavigation)
+                .Include(i => i.Participant).ThenInclude(i => i.IdRequestRpNavigation)
+                 .Include(i => i.Participant).ThenInclude(i => i.IdPharmacyNavigation)
+                 .Include(i => i.Participant).ThenInclude(i => i.IdVisitReportNavigation).ThenInclude(i => i.Visit)
+                .Include(i => i.TagsRequestRp).ThenInclude(i => i.IdTagsNavigation)
+                .ToListAsync();
             return result;
         }
 
         public async Task<IEnumerable<RequestRp>> GetAllAcceptedInactifActif()
         {
-            var result = await MyDbContext.RequestRp.Where(a => a.Active == 1 && a.Status == Status.Approuved).ToListAsync();
+            var result = await MyDbContext.RequestRp.Where(a => a.Active == 1 && a.Status == Status.Approuved)
+                  .Include(i => i.Participant).ThenInclude(i => i.IdUserNavigation)
+                 .Include(i => i.Participant).ThenInclude(i => i.IdDoctorNavigation)
+                .Include(i => i.Participant).ThenInclude(i => i.IdRequestRpNavigation)
+                 .Include(i => i.Participant).ThenInclude(i => i.IdPharmacyNavigation)
+                 .Include(i => i.Participant).ThenInclude(i => i.IdVisitReportNavigation).ThenInclude(i => i.Visit)
+                .Include(i => i.TagsRequestRp).ThenInclude(i => i.IdTagsNavigation)
+                .ToListAsync();
             return result;
         }
 
         public async Task<IEnumerable<RequestRp>> GetAllPending()
         {
-            var result = await MyDbContext.RequestRp.Where(a => a.Status == Status.Pending).ToListAsync();
+            var result = await MyDbContext.RequestRp.Where(a => a.Status == Status.Pending)
+                  .Include(i => i.Participant).ThenInclude(i => i.IdUserNavigation)
+                 .Include(i => i.Participant).ThenInclude(i => i.IdDoctorNavigation)
+                .Include(i => i.Participant).ThenInclude(i => i.IdRequestRpNavigation)
+                 .Include(i => i.Participant).ThenInclude(i => i.IdPharmacyNavigation)
+                 .Include(i => i.Participant).ThenInclude(i => i.IdVisitReportNavigation).ThenInclude(i => i.Visit)
+                .Include(i => i.TagsRequestRp).ThenInclude(i => i.IdTagsNavigation)
+                .ToListAsync();
             return result;
         }
         public async Task<IEnumerable<RequestRp>> GetAllRejected()
         {
-            var result = await MyDbContext.RequestRp.Where(a => a.Status == Status.Pending).ToListAsync();
+            var result = await MyDbContext.RequestRp.Where(a => a.Status == Status.Rejected)
+                  .Include(i => i.Participant).ThenInclude(i => i.IdUserNavigation)
+                 .Include(i => i.Participant).ThenInclude(i => i.IdDoctorNavigation)
+                .Include(i => i.Participant).ThenInclude(i => i.IdRequestRpNavigation)
+                 .Include(i => i.Participant).ThenInclude(i => i.IdPharmacyNavigation)
+                 .Include(i => i.Participant).ThenInclude(i => i.IdVisitReportNavigation).ThenInclude(i => i.Visit)
+                .Include(i => i.TagsRequestRp).ThenInclude(i => i.IdTagsNavigation)
+                .ToListAsync();
             return result;
         }
 
         public async  Task<RequestRp> GetByNames(string Names)
         {
-            var result = await MyDbContext.RequestRp.Where(a => a.Active == 0 && a.Name== Names).FirstOrDefaultAsync();
+            var result = await MyDbContext.RequestRp.Where(a => a.Active == 0 && a.Name== Names)
+                  .Include(i => i.Participant).ThenInclude(i => i.IdUserNavigation)
+                 .Include(i => i.Participant).ThenInclude(i => i.IdDoctorNavigation)
+                .Include(i => i.Participant).ThenInclude(i => i.IdRequestRpNavigation)
+                 .Include(i => i.Participant).ThenInclude(i => i.IdPharmacyNavigation)
+                 .Include(i => i.Participant).ThenInclude(i => i.IdVisitReportNavigation).ThenInclude(i => i.Visit)
+                .Include(i => i.TagsRequestRp).ThenInclude(i => i.IdTagsNavigation)
+                .FirstOrDefaultAsync();
             return result;
         }
 
-        //public async Task<IEnumerable<RequestRp>> GetAllWithArtisteAsync()
-        //{
-        //    return await MyRequestRpDbContext.RequestRps
-        //        .Include(x => x.Artiste).ToListAsync();
-        //}
+   
     }
 }

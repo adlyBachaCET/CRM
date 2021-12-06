@@ -52,7 +52,7 @@ namespace CRM.Data.Repositories
         public async Task<Appointement> GetByIdActif(int id)
         {
             var result = await MyDbContext.Appointement.Where(a => a.Active == 0 && a.IdAppointement == id).Include(a => a.Doctor)
-               .Include(a => a.User).Include(a=>a.Pharmacy)
+               .Include(a => a.User).Include(a => a.Pharmacy)
                 .FirstOrDefaultAsync();
             return result;
         }
@@ -86,14 +86,10 @@ namespace CRM.Data.Repositories
 
         public async Task<IEnumerable<Appointement>> GetAllById(int Id)
         {
-            var result = await MyDbContext.Appointement.Where(a =>a.Active==0 && a.IdAppointement==Id).Include(a => a.Doctor)
+            var result = await MyDbContext.Appointement.Where(a => a.Active == 0 && a.IdAppointement == Id).Include(a => a.Doctor)
                .Include(a => a.User).Include(a => a.Pharmacy).ToListAsync();
             return result;
         }
-        //public async Task<IEnumerable<Appointement>> GetAllWithArtisteAsync()
-        //{
-        //    return await MyAppointementDbContext.Appointements
-        //        .Include(x => x.Artiste).ToListAsync();
-        //}
+
     }
 }

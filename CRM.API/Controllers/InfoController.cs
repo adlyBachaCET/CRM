@@ -16,7 +16,6 @@ namespace CRM_API.Controllers
 
     public class InfoController : ControllerBase
     {
-        public IList<Info> Infos;
 
         private readonly IInfoService _InfoService;
 
@@ -52,7 +51,6 @@ namespace CRM_API.Controllers
             {
                 var Employe = await _InfoService.GetAll();
                 if (Employe == null) return NotFound();
-                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
                 return Ok(Employe);
             }
             catch (Exception ex)
@@ -67,7 +65,6 @@ namespace CRM_API.Controllers
             {
                 var Employe = await _InfoService.GetAllActif();
                 if (Employe == null) return NotFound();
-                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
                 return Ok(Employe);
             }
             catch (Exception ex)
@@ -82,7 +79,6 @@ namespace CRM_API.Controllers
             {
                 var Employe = await _InfoService.GetAllInActif();
                 if (Employe == null) return NotFound();
-                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
                 return Ok(Employe);
             }
             catch (Exception ex)
@@ -111,9 +107,8 @@ namespace CRM_API.Controllers
         {
 
             var InfoToBeModified = await _InfoService.GetById(Id);
-            if (InfoToBeModified == null) return BadRequest("Le Info n'existe pas"); //NotFound();
+            if (InfoToBeModified == null) return BadRequest("Le Info n'existe pas");
             var Info = _mapperService.Map<SaveInfoResource, Info>(SaveInfoResource);
-            //var newInfo = await _InfoService.Create(Infos);
             Info.Version = InfoToBeModified.Version+1;
             Info.Active = 0;
             Info.CreatedOn = InfoToBeModified.CreatedOn;
@@ -137,9 +132,9 @@ namespace CRM_API.Controllers
             {
 
                 var sub = await _InfoService.GetById(Id);
-                if (sub == null) return BadRequest("Le Info  n'existe pas"); //NotFound();
+                if (sub == null) return BadRequest("Le Info  n'existe pas"); 
                 await _InfoService.Delete(sub);
-                ;
+               
                 return NoContent();
             }
             catch (Exception ex)
@@ -157,11 +152,11 @@ namespace CRM_API.Controllers
                 {
                     var sub = await _InfoService.GetById(item);
                     empty.Add(sub);
-                    if (sub == null) return BadRequest("Le Info  n'existe pas"); //NotFound();
+                    if (sub == null) return BadRequest("Le Info  n'existe pas"); 
 
                 }
                 await _InfoService.DeleteRange(empty);
-                ;
+                
                 return NoContent();
             }
             catch (Exception ex)

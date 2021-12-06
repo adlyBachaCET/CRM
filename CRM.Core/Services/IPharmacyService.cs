@@ -7,6 +7,10 @@ namespace CRM.Core.Services
 {
     public interface IPharmacyService
     {
+        Task<IEnumerable<Pharmacy>> GetAll(Status? Status, GrossistePharmacy GrossistePharmacy);
+        Task<Pharmacy> GetById(int Id, Status? Status, GrossistePharmacy GrossistePharmacy);
+        Task<IEnumerable<Pharmacy>> GetMyPharmacysWithoutAppointment(int Id);
+        Task<IEnumerable<Pharmacy>> GetPharmacysByLocalities(List<int> IdLocalities);
         Task<Pharmacy> GetById(int? id);
         Task<Pharmacy> Create(Pharmacy newPharmacy);
         Task<List<Pharmacy>> CreateRange(List<Pharmacy> newPharmacy);

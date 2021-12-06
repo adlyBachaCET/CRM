@@ -20,71 +20,131 @@ namespace CRM.Data.Repositories
         {
 
         }
-
+        public async Task<IEnumerable<Participant>> GetByIdDoctor(int id)
+        {
+            var result = await MyDbContext.Participant.Where(a => a.IdDoctor==id && a.Active == 0)
+              .Include(i => i.IdUserNavigation)
+              .Include(i => i.IdRequestRpNavigation)
+              .Include(i => i.IdPharmacyNavigation)
+              .Include(i => i.IdVisitReportNavigation).ThenInclude(i => i.Visit)
+              .ToListAsync();
+            return result;
+        }
         public async Task<IEnumerable<Participant>> GetAllActif()
         {
-            var result = await MyDbContext.Participant.Where(a => a.Active == 0).ToListAsync();
+            var result = await MyDbContext.Participant.Where(a => a.Active == 0)
+                .Include(i => i.IdUserNavigation)
+                .Include(i => i.IdRequestRpNavigation)
+                .Include(i => i.IdPharmacyNavigation)
+                .Include(i => i.IdVisitReportNavigation).ThenInclude(i=>i.Visit)
+                .ToListAsync();
             return result;
         }
 
         public async Task<IEnumerable<Participant>> GetAllInActif()
         {
-            var result = await MyDbContext.Participant.Where(a => a.Active == 1).ToListAsync();
+            var result = await MyDbContext.Participant.Where(a => a.Active == 1)
+                .Include(i => i.IdUserNavigation)
+                .Include(i => i.IdRequestRpNavigation)
+                .Include(i => i.IdPharmacyNavigation)
+                .Include(i => i.IdVisitReportNavigation).ThenInclude(i => i.Visit)
+                .ToListAsync();
             return result;
         }
         public async Task<Participant> GetByIdActif(int id)
         {
-            var result = await MyDbContext.Participant.Where(a => a.Active == 0 && a.IdUser == id).FirstOrDefaultAsync();
+            var result = await MyDbContext.Participant.Where(a => a.Active == 0 && a.IdUser == id)
+                  .Include(i => i.IdUserNavigation)
+                .Include(i => i.IdRequestRpNavigation)
+                .Include(i => i.IdPharmacyNavigation)
+                .Include(i => i.IdVisitReportNavigation).ThenInclude(i => i.Visit)
+                .FirstOrDefaultAsync();
             return result;
         }
 
         public async Task<IEnumerable<Participant>> GetAllAcceptedActif()
         {
-            var result = await MyDbContext.Participant.Where(a => a.Active == 0 && a.Status == Status.Approuved).ToListAsync();
+            var result = await MyDbContext.Participant.Where(a => a.Active == 0 && a.Status == Status.Approuved)
+                 .Include(i => i.IdUserNavigation)
+                .Include(i => i.IdRequestRpNavigation)
+                .Include(i => i.IdPharmacyNavigation)
+                .Include(i => i.IdVisitReportNavigation).ThenInclude(i => i.Visit)
+                .ToListAsync();
             return result;
         }
 
         public async Task<IEnumerable<Participant>> GetAllAcceptedInactifActif()
         {
-            var result = await MyDbContext.Participant.Where(a => a.Active == 1 && a.Status == Status.Approuved).ToListAsync();
+            var result = await MyDbContext.Participant.Where(a => a.Active == 1 && a.Status == Status.Approuved)
+                  .Include(i => i.IdUserNavigation)
+                .Include(i => i.IdRequestRpNavigation)
+                .Include(i => i.IdPharmacyNavigation)
+                .Include(i => i.IdVisitReportNavigation).ThenInclude(i => i.Visit)
+                .ToListAsync();
             return result;
         }
 
         public async Task<IEnumerable<Participant>> GetAllPending()
         {
-            var result = await MyDbContext.Participant.Where(a => a.Status == Status.Pending).ToListAsync();
+            var result = await MyDbContext.Participant.Where(a => a.Status == Status.Pending)
+                  .Include(i => i.IdUserNavigation)
+                .Include(i => i.IdRequestRpNavigation)
+                .Include(i => i.IdPharmacyNavigation)
+                .Include(i => i.IdVisitReportNavigation).ThenInclude(i => i.Visit)
+                .ToListAsync();
             return result;
         }
         public async Task<IEnumerable<Participant>> GetAllRejected()
         {
-            var result = await MyDbContext.Participant.Where(a => a.Status == Status.Pending).ToListAsync();
+            var result = await MyDbContext.Participant.Where(a => a.Status == Status.Rejected)
+                  .Include(i => i.IdUserNavigation)
+                .Include(i => i.IdRequestRpNavigation)
+                .Include(i => i.IdPharmacyNavigation)
+                .Include(i => i.IdVisitReportNavigation).ThenInclude(i => i.Visit)
+                .ToListAsync();
             return result;
         }
 
         public async Task<IEnumerable<Participant>> GetAllById(int Id)
         {
-            var result = await MyDbContext.Participant.Where(a =>a.Active==0 && a.IdUser==Id).ToListAsync();
+            var result = await MyDbContext.Participant.Where(a =>a.Active==0 && a.IdUser==Id)
+                  .Include(i => i.IdUserNavigation)
+                .Include(i => i.IdRequestRpNavigation)
+                .Include(i => i.IdPharmacyNavigation)
+                .Include(i => i.IdVisitReportNavigation).ThenInclude(i => i.Visit)
+                .ToListAsync();
             return result;
         }
         public async Task<IEnumerable<Participant>> GetAllByIdDoctor(int Id)
         {
-            var result = await MyDbContext.Participant.Where(a => a.Active == 0 && a.IdDoctor == Id).ToListAsync();
+            var result = await MyDbContext.Participant.Where(a => a.Active == 0 && a.IdDoctor == Id)
+                  .Include(i => i.IdUserNavigation)
+                .Include(i => i.IdRequestRpNavigation)
+                .Include(i => i.IdPharmacyNavigation)
+                .Include(i => i.IdVisitReportNavigation).ThenInclude(i => i.Visit)
+                .ToListAsync();
             return result;
         }
         public async Task<IEnumerable<Participant>> GetAllByIdPharmacy(int Id)
         {
-            var result = await MyDbContext.Participant.Where(a => a.Active == 0 && a.IdPharmacy == Id).ToListAsync();
+            var result = await MyDbContext.Participant.Where(a => a.Active == 0 && a.IdPharmacy == Id)
+                  .Include(i => i.IdUserNavigation)
+                .Include(i => i.IdRequestRpNavigation)
+                .Include(i => i.IdPharmacyNavigation)
+                .Include(i => i.IdVisitReportNavigation).ThenInclude(i => i.Visit)
+                .ToListAsync();
             return result;
         }
         public async Task<IEnumerable<Participant>> GetAllByIdRequest(int Id)
         {
-            var result = await MyDbContext.Participant.Where(a => a.Active == 0 && a.IdRequestRp == Id).ToListAsync();
+            var result = await MyDbContext.Participant.Where(a => a.Active == 0 && a.IdRequestRp == Id)
+                  .Include(i => i.IdUserNavigation)
+                .Include(i => i.IdRequestRpNavigation)
+                .Include(i => i.IdPharmacyNavigation)
+                .Include(i => i.IdVisitReportNavigation).ThenInclude(i => i.Visit)
+                .ToListAsync();
             return result;
         }
-        //public async Task<IEnumerable<Participant>> GetAllWithArtisteAsync()
-        //{
-        //    return await MyParticipantDbContext.Participants
-        //        .Include(x => x.Artiste).ToListAsync();
-        //}
+      
     }
 }

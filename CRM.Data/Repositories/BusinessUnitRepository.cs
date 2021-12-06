@@ -57,7 +57,7 @@ namespace CRM.Data.Repositories
         }
         public async Task<IEnumerable<BusinessUnit>> GetAllRejected()
         {
-            var result = await MyDbContext.BusinessUnit.Where(a => a.Status == Status.Pending).ToListAsync();
+            var result = await MyDbContext.BusinessUnit.Where(a => a.Status == Status.Rejected).ToListAsync();
             return result;
         }
 
@@ -67,10 +67,6 @@ namespace CRM.Data.Repositories
             return result;
         }
 
-        //public async Task<IEnumerable<BusinessUnit>> GetAllWithArtisteAsync()
-        //{
-        //    return await MyBusinessUnitDbContext.BusinessUnits
-        //        .Include(x => x.Artiste).ToListAsync();
-        //}
+ 
     }
 }

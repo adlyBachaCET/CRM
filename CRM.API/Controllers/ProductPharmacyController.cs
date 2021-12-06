@@ -55,7 +55,7 @@ namespace CRM_API.Controllers
             if (Pharmacy != null)
             {
                 ProductPharmacy.Name = Pharmacy.Name;
-                ProductPharmacy.IdPharmacyNavigation = Pharmacy;
+                ProductPharmacy.Pharmacy = Pharmacy;
                 ProductPharmacy.VersionPharmacy = Pharmacy.Version;
                 ProductPharmacy.StatusPharmacy = Pharmacy.Status;
        

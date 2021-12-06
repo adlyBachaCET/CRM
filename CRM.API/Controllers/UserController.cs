@@ -181,7 +181,6 @@ namespace CRM_API.Controllers
             var claims = _UserService.getPrincipal(lm.TokenString);
             foreach (var item in claims.Claims)
             { 
-               // var claims2 = item.Subject.Claims.;
                 claimList.Append(item);
             }
 
@@ -190,7 +189,7 @@ namespace CRM_API.Controllers
         /// <summary>This method returns the list of All the details of the selected user (Profil) .</summary>
         /// <param name="Id">Id of the user .</param>
         [HttpGet("Profil/{Id}")]
-        public async Task<ActionResult<UserProfile>> GetAllProfilById(int Id)
+        public async Task<ActionResult<User>> GetAllProfilById(int Id)
         {
             UserProfile Profile = new UserProfile();
  
@@ -214,7 +213,6 @@ namespace CRM_API.Controllers
 
             Profile.BusinessUnit = BuResource;
             var Delegates = await _UserService.GetAllDelegateByIdBu(MyBusinessUnit.IdBu);
-            //var Users = _mapperService.Map< IEnumerable < User >, IEnumerable<SaveUserResource>>(Delegates);
             List<UserResource> UserResources = new List<UserResource>();
             foreach (var item in Delegates)
             {
@@ -235,7 +233,6 @@ namespace CRM_API.Controllers
             var Objection = await _ObjectionService.GetByIdActifUser(Id);
 
             List<ObjectionResource> ObjectionResources = new List<ObjectionResource>();
-            //var Users = _mapperService.Map< IEnumerable < User >, IEnumerable<SaveUserResource>>(Delegates);
             foreach (var item in Objection)
             {
                 var NewRequestDoctor = _mapperService.Map<Objection, ObjectionResource>(item);

@@ -35,7 +35,22 @@ namespace CRM.Data.Repositories
 
         public async Task<User> GetByIdActif(int id)
         {
-            var result = await MyDbContext.User.Where(a => a.Active == 0 && a.IdUser == id).FirstOrDefaultAsync();
+            var result = await MyDbContext.User.Where(a => a.Active == 0 && a.IdUser == id).Include(i => i.SellingObjectives)
+                    .Include(i => i.Appointement)
+                    .Include(i => i.ActivityUser)
+                    .Include(i => i.Target)
+                    .Include(i => i.Commande).ThenInclude(i=>i.Pharmacy)
+                    .Include(i => i.Commande).ThenInclude(i => i.Doctor)
+                    .Include(i => i.Objection)
+                    .Include(i => i.DelegatesDotlineManager1)
+                    .Include(i => i.DelegatesDotlineManager2)
+                    .Include(i => i.DirectManager)
+                    .Include(i => i.BuUser).ThenInclude(i=>i.Bu)
+                    .Include(i => i.CycleUser).ThenInclude(i=>i.Cycle).ThenInclude(i=>i.PotentielCycle)
+                    .Include(i => i.BuUser)
+                    .Include(i => i.Locality1).ThenInclude(i => i.IdParentNavigation)
+                    .Include(i => i.Locality2).ThenInclude(i => i.IdParentNavigation)
+                    .FirstOrDefaultAsync();
             return result;
         }
 
@@ -58,7 +73,7 @@ namespace CRM.Data.Repositories
         }
         public async Task<IEnumerable<User>> GetAllRejected()
         {
-            var result = await MyDbContext.User.Where(a => a.Status == Status.Pending).ToListAsync();
+            var result = await MyDbContext.User.Where(a => a.Status == Status.Rejected).ToListAsync();
             return result;
         }
 

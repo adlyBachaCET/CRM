@@ -57,7 +57,7 @@ namespace CRM.Data.Repositories
         }
         public async Task<IEnumerable<Info>> GetAllRejected()
         {
-            var result = await MyDbContext.Info.Where(a => a.Status == Status.Pending).ToListAsync();
+            var result = await MyDbContext.Info.Where(a => a.Status == Status.Rejected).ToListAsync();
             return result;
         }
 
@@ -66,10 +66,6 @@ namespace CRM.Data.Repositories
             var result = await MyDbContext.Info.Where(a => a.Active == 0 &&  a.IdDoctor==id).ToListAsync();
             return result;
         }
-        //public async Task<IEnumerable<Info>> GetAllWithArtisteAsync()
-        //{
-        //    return await MyInfoDbContext.Infos
-        //        .Include(x => x.Artiste).ToListAsync();
-        //}
+ 
     }
 }

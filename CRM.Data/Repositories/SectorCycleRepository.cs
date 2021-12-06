@@ -29,36 +29,54 @@ namespace CRM.Data.Repositories
 
         public async Task<IEnumerable<SectorCycle>> GetAllInActif()
         {
-            var result = await MyDbContext.SectorCycle.Where(a => a.Active == 1).ToListAsync();
+            var result = await MyDbContext.SectorCycle.Where(a => a.Active == 1)
+                  .Include(i => i.IdSectorNavigation)
+                 .Include(i => i.IdCycleNavigation)
+                .ToListAsync();
             return result;
         }
 
         public async Task<SectorCycle> GetByIdActif(int id)
         {
-            var result = await MyDbContext.SectorCycle.Where(a => a.Active == 0 && a.IdCycle == id).FirstOrDefaultAsync();
+            var result = await MyDbContext.SectorCycle.Where(a => a.Active == 0 && a.IdCycle == id)
+                 .Include(i => i.IdSectorNavigation)
+                 .Include(i => i.IdCycleNavigation)
+                .FirstOrDefaultAsync();
             return result;
         }
 
         public async Task<IEnumerable<SectorCycle>> GetAllAcceptedActif()
         {
-            var result = await MyDbContext.SectorCycle.Where(a => a.Active == 0 && a.Status == Status.Approuved).ToListAsync();
+            var result = await MyDbContext.SectorCycle.Where(a => a.Active == 0 && a.Status == Status.Approuved)
+                 .Include(i => i.IdSectorNavigation)
+                 .Include(i => i.IdCycleNavigation)
+                .ToListAsync();
             return result;
         }
 
         public async Task<IEnumerable<SectorCycle>> GetAllAcceptedInactifActif()
         {
-            var result = await MyDbContext.SectorCycle.Where(a => a.Active == 1 && a.Status == Status.Approuved).ToListAsync();
+            var result = await MyDbContext.SectorCycle.Where(a => a.Active == 1 && a.Status == Status.Approuved)
+                 .Include(i => i.IdSectorNavigation)
+                 .Include(i => i.IdCycleNavigation)
+                .ToListAsync();
             return result;
         }
 
         public async Task<IEnumerable<SectorCycle>> GetAllPending()
         {
-            var result = await MyDbContext.SectorCycle.Where(a => a.Status == Status.Pending).ToListAsync();
+            var result = await MyDbContext.SectorCycle.Where(a => a.Status == Status.Pending)
+                 .Include(i => i.IdSectorNavigation)
+                 .Include(i => i.IdCycleNavigation)
+                .ToListAsync();
             return result;
         }
         public async Task<IEnumerable<SectorCycle>> GetAllRejected()
         {
-            var result = await MyDbContext.SectorCycle.Where(a => a.Status == Status.Pending).ToListAsync();
+            var result = await MyDbContext.SectorCycle.Where(a => a.Status == Status.Rejected)
+                 .Include(i => i.IdSectorNavigation)
+                 .Include(i => i.IdCycleNavigation)
+                .ToListAsync();
             return result;
         } 
     }

@@ -9,6 +9,7 @@ namespace CRM.Data
     {
         private readonly MyDbContext _context;
         private IParticipantRepository _ParticipantRepository;
+        private IExternalsRepository _ExternalsRepository;
 
         private IActivityRepository _ActivityRepository;
         private IActivityUserRepository _ActivityUserRepository;
@@ -18,6 +19,7 @@ namespace CRM.Data
         private IProductRepository _ProductRepository;
         private IProductPharmacyRepository _ProductPharmacyRepository;
         private IPlanificationRepository _PlanificationRepository;
+        private IProductVisitReportRepository _ProductVisitReportRepository;
 
 
         private IRequestRpRepository _RequestRpRepository;
@@ -77,11 +79,14 @@ namespace CRM.Data
         public IVisitUserRepository VisitUsers => _VisitUserRepository = _VisitUserRepository ?? new VisitUserRepository(_context);
         public IProductRepository Products => _ProductRepository = _ProductRepository ?? new ProductRepository(_context);
         public IProductPharmacyRepository ProductPharmacys => _ProductPharmacyRepository = _ProductPharmacyRepository ?? new ProductPharmacyRepository(_context);
+        public IProductVisitReportRepository ProductVisitReports => _ProductVisitReportRepository = _ProductVisitReportRepository ?? new ProductVisitReportRepository(_context);
+
         public IPlanificationRepository Planifications => _PlanificationRepository = _PlanificationRepository ?? new PlanificationRepository(_context);
         public IActivityRepository Activitys => _ActivityRepository = _ActivityRepository ?? new ActivityRepository(_context);
         public IActivityUserRepository ActivityUsers => _ActivityUserRepository = _ActivityUserRepository ?? new ActivityUserRepository(_context);
         public IAppointementRepository Appointements => _AppointementRepository = _AppointementRepository ?? new AppointementRepository(_context);
         public ISellingObjectivesRepository SellingObjectivess => _SellingObjectivesRepository = _SellingObjectivesRepository ?? new SellingObjectivesRepository(_context);
+        public IExternalsRepository Externalss => _ExternalsRepository = _ExternalsRepository ?? new ExternalsRepository(_context);
 
         public IParticipantRepository Participants => _ParticipantRepository = _ParticipantRepository ?? new ParticipantRepository(_context);
         public IRequestRpRepository RequestRps => _RequestRpRepository = _RequestRpRepository ?? new RequestRpRepository(_context);

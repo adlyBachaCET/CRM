@@ -23,47 +23,57 @@ namespace CRM.Data.Repositories
 
         public async Task<IEnumerable<Sector>> GetAllActif()
         {
-            var result = await MyDbContext.Sector.Where(a => a.Active == 0).ToListAsync();
+            var result = await MyDbContext.Sector.Where(a => a.Active == 0)
+                .Include(i => i.SectorLocality).ThenInclude(i=>i.IdLocalityNavigation)
+                .ToListAsync();
             return result;
         }
 
         public async Task<IEnumerable<Sector>> GetAllInActif()
         {
-            var result = await MyDbContext.Sector.Where(a => a.Active == 1).ToListAsync();
+            var result = await MyDbContext.Sector.Where(a => a.Active == 1)
+                .Include(i => i.SectorLocality).ThenInclude(i => i.IdLocalityNavigation)
+                .ToListAsync();
             return result;
         }
         public async Task<Sector> GetByIdActif(int id)
         {
-            var result = await MyDbContext.Sector.Where(a => a.Active == 0 && a.IdSector == id).FirstOrDefaultAsync();
+            var result = await MyDbContext.Sector.Where(a => a.Active == 0 && a.IdSector == id)
+                .Include(i => i.SectorLocality).ThenInclude(i => i.IdLocalityNavigation)
+                .FirstOrDefaultAsync();
             return result;
         }
 
         public async Task<IEnumerable<Sector>> GetAllAcceptedActif()
         {
-            var result = await MyDbContext.Sector.Where(a => a.Active == 0 && a.Status == Status.Approuved).ToListAsync();
+            var result = await MyDbContext.Sector.Where(a => a.Active == 0 && a.Status == Status.Approuved)
+                .Include(i => i.SectorLocality).ThenInclude(i => i.IdLocalityNavigation)
+                .ToListAsync();
             return result;
         }
 
         public async Task<IEnumerable<Sector>> GetAllAcceptedInactifActif()
         {
-            var result = await MyDbContext.Sector.Where(a => a.Active == 1 && a.Status == Status.Approuved).ToListAsync();
+            var result = await MyDbContext.Sector.Where(a => a.Active == 1 && a.Status == Status.Approuved)
+                .Include(i => i.SectorLocality).ThenInclude(i => i.IdLocalityNavigation)
+                .ToListAsync();
             return result;
         }
 
         public async Task<IEnumerable<Sector>> GetAllPending()
         {
-            var result = await MyDbContext.Sector.Where(a => a.Status == Status.Pending).ToListAsync();
+            var result = await MyDbContext.Sector.Where(a => a.Status == Status.Pending)
+                .Include(i => i.SectorLocality).ThenInclude(i => i.IdLocalityNavigation)
+                .ToListAsync();
             return result;
         }
         public async Task<IEnumerable<Sector>> GetAllRejected()
         {
-            var result = await MyDbContext.Sector.Where(a => a.Status == Status.Pending).ToListAsync();
+            var result = await MyDbContext.Sector.Where(a => a.Status == Status.Rejected)
+           .Include(i => i.SectorLocality).ThenInclude(i => i.IdLocalityNavigation)
+           .ToListAsync();
             return result;
         }
-        //public async Task<IEnumerable<Sector>> GetAllWithArtisteAsync()
-        //{
-        //    return await MySectorDbContext.Sectors
-        //        .Include(x => x.Artiste).ToListAsync();
-        //}
+ 
     }
 }

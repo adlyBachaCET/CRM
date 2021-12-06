@@ -28,14 +28,31 @@ namespace CRM_API.Controllers
         private readonly IBrickService _BrickService;
         private readonly ILocalityService _LocalityService;
         private readonly IProductService _ProductService;
+        private readonly IParticipantService _ParticipantService;
+        private readonly IProductVisitReportService _ProductVisitReporService;
+        private readonly IExternalsService _ExternalsService;
 
         private readonly IMapper _mapperService;
-        public VisitReportController(IObjectionService ObjectionService, ILocalityService LocalityService, IBrickService BrickService, 
-            IPharmacyService PharmacyService, IDoctorService DoctorService,IUserService UserService, IProductService ProductService,
-            IVisitReportService VisitReportService, IVisitService VisitService, IMapper mapper)
-        {
-            _BrickService = BrickService;
+        public VisitReportController(IParticipantService ParticipantService,
+            IObjectionService ObjectionService,
+            ILocalityService LocalityService, 
+            IBrickService BrickService, 
+            IPharmacyService PharmacyService,
+            IDoctorService DoctorService,
+            IUserService UserService,
+            IProductService ProductService,
+            IProductVisitReportService ProductVisitReportService,
+                        IExternalsService ExternalsService,
 
+            IVisitReportService VisitReportService,
+            IVisitService VisitService,
+            IMapper mapper)
+        {
+            _ExternalsService = ExternalsService;
+
+            _ParticipantService = ParticipantService;
+            _BrickService = BrickService;
+            _ProductVisitReporService = ProductVisitReportService;
             _LocalityService = LocalityService;
             _PharmacyService = PharmacyService;
             _ProductService = ProductService;
@@ -45,6 +62,7 @@ namespace CRM_API.Controllers
               _UserService = UserService;
             _VisitService = VisitService;
             _VisitReportService = VisitReportService;
+
             _mapperService = mapper;
         }
         [HttpPost("GetAll")]
@@ -79,7 +97,6 @@ namespace CRM_API.Controllers
                     VisitReportResource.Visit = VisitRessource;
                     VisitReportResources.Add(VisitReportResource);
                 }
-                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
                 return Ok(VisitReportResources);
             }
             catch (Exception ex)
@@ -159,7 +176,6 @@ namespace CRM_API.Controllers
                 Visit.StatusBrick1 = Brick1.Status;
                 Visit.NameBrick1 = Brick1.Name;
                 Visit.NumBrick1 = Brick1.NumSystemBrick;
-                // Pharmacy.Brick1 = Brick1;
             }
             else
             {
@@ -176,7 +192,6 @@ namespace CRM_API.Controllers
                 Visit.StatusBrick2 = Brick2.Status;
                 Visit.NameBrick2 = Brick2.Name;
                 Visit.NumBrick2 = Brick2.NumSystemBrick;
-                // Pharmacy.Brick2 = Brick2;
             }
             else
             {
@@ -215,6 +230,8 @@ namespace CRM_API.Controllers
             Visit.UpdatedBy = 0;
             //*** Creation dans la base de données ***
             var NewVisit = await _VisitService.Create(Visit);
+
+
             //*** Mappage ***
             var VisitResource = _mapperService.Map<Visit, VisitResource>(NewVisit);
             //*** Mappage ***
@@ -411,6 +428,93 @@ namespace CRM_API.Controllers
             }
 
 
+            foreach(var item in SaveVisitReportResource.ParticipantPharmacys)
+            {
+                var Participant = new Participant();
+                Participant.UpdatedOn = DateTime.UtcNow;
+                Participant.CreatedOn = DateTime.UtcNow;
+                Participant.Context = StatusParticipant.Visit;
+                Participant.Active = 0;
+                Participant.Status = 0;
+                Participant.CreatedBy = Id;
+                Participant.UpdatedBy = Id;
+                var PharmacyOld = await _PharmacyService.GetById(item);
+                Participant.IdDoctor = PharmacyOld.Id;
+                Participant.VersionPharmacy = PharmacyOld.Version;
+                Participant.StatusPharmacy = PharmacyOld.Status;
+                Participant.IdPharmacyNavigation = PharmacyOld;
+              await _ParticipantService.Create(Participant);
+
+            }
+            foreach (var item in SaveVisitReportResource.ParticipantDoctors)
+            {
+                var Participant = new Participant();
+                Participant.UpdatedOn = DateTime.UtcNow;
+                Participant.CreatedOn = DateTime.UtcNow;
+                Participant.Context = StatusParticipant.Visit;
+                Participant.Active = 0;
+                Participant.Status = 0;
+                Participant.CreatedBy = Id;
+                Participant.UpdatedBy = Id;
+                var DoctorOld = await _DoctorService.GetById(item);
+                Participant.IdDoctor = DoctorOld.IdDoctor;
+                Participant.VersionDoctor = DoctorOld.Version;
+                Participant.StatusDoctor = DoctorOld.Status;
+                Participant.IdDoctorNavigation = DoctorOld;
+
+                await _ParticipantService.Create(Participant);
+
+            }
+            foreach (var item in SaveVisitReportResource.ListOfProducts)
+            {
+                var ProductVisitReport = new ProductVisitReport();
+                ProductVisitReport.UpdatedOn = DateTime.UtcNow;
+                ProductVisitReport.CreatedOn = DateTime.UtcNow;
+                ProductVisitReport.Active = 0;
+                ProductVisitReport.Status = 0;
+                ProductVisitReport.CreatedBy = Id;
+                ProductVisitReport.UpdatedBy = Id;
+                var Product = await _ProductService.GetById(item);
+                ProductVisitReport.IdProduct = Product.IdProduct;
+                ProductVisitReport.VersionProduct = Product.Version;
+                ProductVisitReport.StatusProduct = Product.Status;
+                ProductVisitReport.Product = Product;
+
+                ProductVisitReport.VersionProduct = Product.Version;
+                ProductVisitReport.StatusProduct = Product.Status;
+
+                ProductVisitReport.Report = NewVisitReport;
+                ProductVisitReport.IdReport = NewVisitReport.IdReport;
+                ProductVisitReport.StatusReport = NewVisitReport.Status;
+                ProductVisitReport.VersionReport = NewVisitReport.Version;
+                await _ProductVisitReporService.Create(ProductVisitReport);
+
+            }
+            foreach (var item in SaveVisitReportResource.Externals)
+            {
+                var Externals = new Externals();
+                Externals.UpdatedOn = DateTime.UtcNow;
+                Externals.CreatedOn = DateTime.UtcNow;
+                Externals.Active = 0;
+                Externals.Status = 0;
+                Externals.CreatedBy = Id;
+                Externals.UpdatedBy = Id;
+
+                Externals.FullName = item.FullName;
+                Externals.Email = item.Email;
+
+                Externals.Context = StatusParticipant.Visit;
+                Externals.IdVisitReportNavigation = NewVisitReport;
+                Externals.IdVisitReport = NewVisitReport.IdReport;
+                Externals.StatusVisitReport = NewVisitReport.Status;
+                Externals.VersionVisitReport = NewVisitReport.Version;
+                Externals.IdRequestRpNavigation = null;
+                Externals.IdRequestRp = null;
+                Externals.StatusRequestRp = null;
+                Externals.VersionRequestRp = null;
+                await _ExternalsService.Create(Externals);
+
+            }
             //*** Mappage ***
             var VisitReportResource = _mapperService.Map<VisitReport, VisitReportResource>(NewVisitReport);
             return Ok(VisitReportResource);
@@ -424,7 +528,6 @@ namespace CRM_API.Controllers
             {
                 var Employe = await _VisitReportService.GetAllActif();
                 if (Employe == null) return NotFound();
-                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
                 return Ok(Employe);
             }
             catch (Exception ex)
@@ -439,7 +542,6 @@ namespace CRM_API.Controllers
             {
                 var Employe = await _VisitReportService.GetAllInActif();
                 if (Employe == null) return NotFound();
-                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
                 return Ok(Employe);
             }
             catch (Exception ex)
@@ -470,7 +572,6 @@ namespace CRM_API.Controllers
             var VisitReportToBeModified = await _VisitReportService.GetById(Id);
             if (VisitReportToBeModified == null) return BadRequest("Le VisitReport n'existe pas"); //NotFound();
             var VisitReport = _mapperService.Map<SaveVisitReportResource, VisitReport>(SaveVisitReportResource);
-            //var newVisitReport = await _VisitReportService.Create(VisitReports);
             var Visit = await _VisitService.GetById(SaveVisitReportResource.IdVisit);
             VisitReport.IdVisit = Visit.IdVisit;
             VisitReport.StatusVisit = Visit.Status;

@@ -49,7 +49,7 @@ namespace CRM.Services.Services
         public async Task<Info> GetById(int id)
         {
              return
-               await _unitOfWork.Infos.SingleOrDefault(i => i.IdInf == id && i.Active == 0);
+               await _unitOfWork.Infos.GetByIdActif(id);
         }
    
         public async Task Update(Info InfoToBeUpdated, Info Info)
@@ -68,7 +68,6 @@ namespace CRM.Services.Services
 
         public async Task Delete(Info Info)
         {
-            //Info musi =  _unitOfWork.Infos.SingleOrDefaultAsync(x=>x.Id == InfoToBeUpdated.Id);
             Info.Active = 1;
 
             await _unitOfWork.CommitAsync();
@@ -104,33 +103,9 @@ namespace CRM.Services.Services
 
         public async Task<Info> GetBy(string Type, string Data)
         {
-            //Info musi =  _unitOfWork.Infos.SingleOrDefaultAsync(x=>x.Id == InfoToBeUpdated.Id);
 
 return await _unitOfWork.Infos.SingleOrDefault(x => x.Data == Data&& x.Datatype==Type);
         }
-        //public Task<Info> CreateInfo(Info newInfo)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public Task DeleteInfo(Info Info)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public Task<Info> GetInfoById(int id)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public Task<IEnumerable<Info>> GetInfosByArtisteId(int artiste)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public Task UpdateInfo(Info InfoToBeUpdated, Info Info)
-        //{
-        //    throw new NotImplementedException();
-        //}
+        
     }
 }

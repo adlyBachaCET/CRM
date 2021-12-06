@@ -36,7 +36,7 @@ namespace CRM.Core.Models
         public int IdProduct { get; set; }
         public Status StatusProduct { get; set; }
         public int VersionProduct { get; set; }
-        public virtual Product IdProductNavigation { get; set; }
+        public virtual Product Product { get; set; }
         public int Quantity { get; set; }
     }
 }

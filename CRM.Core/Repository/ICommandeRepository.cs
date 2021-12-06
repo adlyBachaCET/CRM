@@ -12,9 +12,8 @@ namespace CRM.Core.Repository
         Task<IEnumerable<Commande>> GetAllAcceptedInactifActif();
         Task<IEnumerable<Commande>> GetAllPending();
         Task<IEnumerable<Commande>> GetAllRejected();
-        Task<Commande> GetByIdActif(int id);
-        Task<IEnumerable<Commande>> GetByIdDoctor(int id);
-        Task<IEnumerable<Commande>> GetByIdActifDoctor(int Id);
+        Task<Commande> GetByIdActif(int Id);
+        Task<IEnumerable<Commande>> GetByIdDoctor(int Id);
 
         Task<IEnumerable<Commande>> GetByIdActifUser(int Id);
         Task<IEnumerable<Commande>> GetByIdActifPharmacy(int Id);

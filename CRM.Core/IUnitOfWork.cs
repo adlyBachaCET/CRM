@@ -11,12 +11,14 @@ namespace CRM.Core
         IPlanificationRepository Planifications { get; }
         IActivityRepository Activitys { get; }
         IActivityUserRepository ActivityUsers { get; }
+        IProductVisitReportRepository ProductVisitReports { get; }
 
         IProductPharmacyRepository ProductPharmacys { get; }
         IProductRepository Products { get; }
         ISellingObjectivesRepository SellingObjectivess { get; }
 
         IVisitUserRepository VisitUsers { get; }
+        IExternalsRepository Externalss { get; }
         IParticipantRepository Participants { get; }
 
         IRequestRpRepository RequestRps { get; }

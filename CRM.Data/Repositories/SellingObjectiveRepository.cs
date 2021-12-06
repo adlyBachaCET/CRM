@@ -23,55 +23,90 @@ namespace CRM.Data.Repositories
 
         public async Task<IEnumerable<SellingObjectives>> GetAllActif()
         {
-            var result = await MyDbContext.SellingObjectives.Where(a => a.Active == 0).ToListAsync();
+            var result = await MyDbContext.SellingObjectives.Where(a => a.Active == 0)
+           .Include(i => i.Product)
+           .Include(i => i.Pharmacy)
+           .Include(i => i.User)
+                .ToListAsync();
             return result;
         }
 
         public async Task<IEnumerable<SellingObjectives>> GetAllInActif()
         {
-            var result = await MyDbContext.SellingObjectives.Where(a => a.Active == 1).ToListAsync();
+            var result = await MyDbContext.SellingObjectives.Where(a => a.Active == 1)
+                .Include(i => i.Product)
+                .Include(i => i.Pharmacy)
+                 .Include(i => i.Doctor)
+                 .Include(i => i.User)
+                .ToListAsync();
             return result;
         }
         public async Task<SellingObjectives> GetByIdActif(int id)
         {
-            var result = await MyDbContext.SellingObjectives.Where(a => a.Active == 0 && a.IdSellingObjectives == id).FirstOrDefaultAsync();
+            var result = await MyDbContext.SellingObjectives.Where(a => a.Active == 0 && a.IdSellingObjectives == id)
+                     .Include(i => i.Product)
+                .Include(i => i.Pharmacy)
+                 .Include(i => i.Doctor)
+                 .Include(i => i.User)
+                .FirstOrDefaultAsync();
             return result;
         }
 
         public async Task<IEnumerable<SellingObjectives>> GetAllAcceptedActif()
         {
-            var result = await MyDbContext.SellingObjectives.Where(a => a.Active == 0 && a.Status == Status.Approuved).ToListAsync();
+            var result = await MyDbContext.SellingObjectives.Where(a => a.Active == 0 && a.Status == Status.Approuved)
+                .Include(i => i.Product)
+                .Include(i => i.Pharmacy)
+                .Include(i => i.Doctor)
+                .Include(i => i.User)
+                .ToListAsync();
             return result;
         }
 
         public async Task<IEnumerable<SellingObjectives>> GetAllAcceptedInactifActif()
         {
-            var result = await MyDbContext.SellingObjectives.Where(a => a.Active == 1 && a.Status == Status.Approuved).ToListAsync();
+            var result = await MyDbContext.SellingObjectives.Where(a => a.Active == 1 && a.Status == Status.Approuved)
+                .Include(i => i.Product)
+                .Include(i => i.Pharmacy)
+                 .Include(i => i.Doctor)
+                 .Include(i => i.User)
+                .ToListAsync();
             return result;
         }
 
         public async Task<IEnumerable<SellingObjectives>> GetAllPending()
         {
-            var result = await MyDbContext.SellingObjectives.Where(a => a.Status == Status.Pending).ToListAsync();
+            var result = await MyDbContext.SellingObjectives.Where(a => a.Status == Status.Pending)
+                     .Include(i => i.Product)
+                .Include(i => i.Pharmacy)
+                 .Include(i => i.Doctor)
+                 .Include(i => i.User)
+                .ToListAsync();
             return result;
         }
         public async Task<IEnumerable<SellingObjectives>> GetAllRejected()
         {
-            var result = await MyDbContext.SellingObjectives.Where(a => a.Status == Status.Pending).ToListAsync();
+            var result = await MyDbContext.SellingObjectives.Where(a => a.Status == Status.Rejected)
+                     .Include(i => i.Product)
+                .Include(i => i.Pharmacy)
+                 .Include(i => i.Doctor)
+                 .Include(i => i.User)
+                .ToListAsync();
             return result;
         }
 
      
         public async Task<IEnumerable<SellingObjectives>> GetByIdSellingObjectives(int id)
         {
-            var result = await MyDbContext.SellingObjectives.Where(a => a.Active == 0 && a.IdSellingObjectives == id).ToListAsync();
+            var result = await MyDbContext.SellingObjectives.Where(a => a.Active == 0 && a.IdSellingObjectives == id)
+                     .Include(i => i.Product)
+                .Include(i => i.Pharmacy)
+                 .Include(i => i.Doctor)
+                 .Include(i => i.User)
+                .ToListAsync();
             return result;
         }
      
-        //public async Task<IEnumerable<SellingObjectives>> GetAllWithArtisteAsync()
-        //{
-        //    return await MySellingObjectivesDbContext.SellingObjectivess
-        //        .Include(x => x.Artiste).ToListAsync();
-        //}
+
     }
 }

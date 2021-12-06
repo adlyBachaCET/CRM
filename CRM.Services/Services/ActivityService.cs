@@ -30,54 +30,29 @@ namespace CRM.Services.Services
             await _unitOfWork.CommitAsync();
             return newActivity;
         }
-  
+
         public async Task<IEnumerable<Activity>> GetAll()
         {
             return
                            await _unitOfWork.Activitys.GetAll();
         }
-       
-        /* public async Task Delete(Activity Activity)
-         {
-             _unitOfWork.Activitys.Remove(Activity);
-             await _unitOfWork.CommitAsync();
-         }*/
 
-        //public async Task<IEnumerable<Activity>> GetAllWithArtiste()
-        //{
-        //    return await _unitOfWork.Activitys
-        //          .GetAllWithArtisteAsync();
-        //}
 
-        public async Task<Activity> GetById(int? id)
+
+        public async Task<Activity> GetById(int id)
         {
             return
-                      await _unitOfWork.Activitys.SingleOrDefault(i => i.IdActivity == id && i.Active == 0);
+                      await _unitOfWork.Activitys.GetById(id);
         }
         public async Task<List<Activity>> GetByIdUser(int id)
-        {   List<Activity> Activities = new List<Activity>();
-            var List = await _unitOfWork.ActivityUsers.Find(i => i.IdUser == id && i.Active == 0);
-            foreach(var item in List)
-            {
-                var Activity = await _unitOfWork.Activitys.SingleOrDefault(i => i.IdActivity == item.IdActivity && i.Active == 0);
-
-                Activities.Add(Activity);
-            }
-                return
-                      Activities;
+        {
+            return
+                  await _unitOfWork.Activitys.GetByIdUser(id);
         }
         public async Task<List<Activity>> GetByIdUserByToday(int id)
         {
-            List<Activity> Activities = new List<Activity>();
-            var List = await _unitOfWork.ActivityUsers.Find(i => i.IdUser == id && i.Active == 0);
-            foreach (var item in List)
-            {
-                var Activity = await _unitOfWork.Activitys.SingleOrDefault(i => i.IdActivity == item.IdActivity && i.Active == 0 &&i.Start.Date==DateTime.Now.Date);
-
-                Activities.Add(Activity);
-            }
             return
-                  Activities;
+               await _unitOfWork.Activitys.GetByIdUserByToday(id);
         }
         public async Task Update(Activity ActivityToBeUpdated, Activity Activity)
         {
@@ -122,10 +97,9 @@ namespace CRM.Services.Services
             await _unitOfWork.Activitys.Add(Activity);
             await _unitOfWork.CommitAsync();
         }
-        public async Task Delete(Activity Activity)
+        public async Task Delete(Activity ActivityToBeDeleted)
         {
-            //Activity musi =  _unitOfWork.Activitys.SingleOrDefaultAsync(x=>x.Id == ActivityToBeUpdated.Id);
-            Activity.Active = 1;
+            ActivityToBeDeleted.Active = 1;
 
             await _unitOfWork.CommitAsync();
         }
@@ -158,29 +132,5 @@ namespace CRM.Services.Services
         {
             throw new NotImplementedException();
         }
-        //public Task<Activity> CreateActivity(Activity newActivity)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public Task DeleteActivity(Activity Activity)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public Task<Activity> GetActivityById(int id)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public Task<IEnumerable<Activity>> GetActivitysByArtisteId(int artiste)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public Task UpdateActivity(Activity ActivityToBeUpdated, Activity Activity)
-        //{
-        //    throw new NotImplementedException();
-        //}
     }
 }

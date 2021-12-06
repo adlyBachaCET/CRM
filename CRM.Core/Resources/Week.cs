@@ -21,6 +21,8 @@ namespace CRM.Core.Models
         public List<PharmacyResource> Pharmacys { get; set; }
         public List<DoctorResource> Doctors { get; set; }
         public SectorResource Sector { get; set; }
+        public List<LocalityResource> Localitys { get; set; }
+
         public PotentielTotal PotentielTotal { get; set; }
 
     }

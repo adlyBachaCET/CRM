@@ -58,13 +58,9 @@ namespace CRM.Data.Repositories
         }
         public async Task<IEnumerable<Brick>> GetAllRejected()
         {
-            var result = await MyDbContext.Brick.Where(a => a.Status == Status.Pending).ToListAsync();
+            var result = await MyDbContext.Brick.Where(a => a.Status == Status.Rejected).ToListAsync();
             return result;
         }
-        //public async Task<IEnumerable<Brick>> GetAllWithArtisteAsync()
-        //{
-        //    return await MyBrickDbContext.Bricks
-        //        .Include(x => x.Artiste).ToListAsync();
-        //}
+   
     }
 }

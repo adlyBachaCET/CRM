@@ -16,7 +16,6 @@ namespace CRM_API.Controllers
 
     public class CommandeController : ControllerBase
     {
-        public IList<Commande> Commandes;
 
         private readonly ICommandeService _CommandeService;
         private readonly IDoctorService _DoctorService;
@@ -89,8 +88,11 @@ namespace CRM_API.Controllers
             {
                 var Employe = await _CommandeService.GetAll();
                 if (Employe == null) return NotFound();
-                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
+                
+#pragma warning disable S125 // Sections of code should not be commented out
+// var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
                 return Ok(Employe);
+#pragma warning restore S125 // Sections of code should not be commented out
             }
             catch (Exception ex)
             {
@@ -104,8 +106,11 @@ namespace CRM_API.Controllers
             {
                 var Employe = await _CommandeService.GetAllActif();
                 if (Employe == null) return NotFound();
-                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
+                
+#pragma warning disable S125 // Sections of code should not be commented out
+// var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
                 return Ok(Employe);
+#pragma warning restore S125 // Sections of code should not be commented out
             }
             catch (Exception ex)
             {
@@ -119,8 +124,11 @@ namespace CRM_API.Controllers
             {
                 var Employe = await _CommandeService.GetAllInActif();
                 if (Employe == null) return NotFound();
-                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
+                
+#pragma warning disable S125 // Sections of code should not be commented out
+// var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
                 return Ok(Employe);
+#pragma warning restore S125 // Sections of code should not be commented out
             }
             catch (Exception ex)
             {
@@ -167,17 +175,22 @@ namespace CRM_API.Controllers
         {
 
             var CommandeToBeModified = await _CommandeService.GetById(Id);
+#pragma warning disable S125 // Sections of code should not be commented out
             if (CommandeToBeModified == null) return BadRequest("Le Commande n'existe pas"); //NotFound();
+#pragma warning restore S125 // Sections of code should not be commented out
             var Commandes = _mapperService.Map<SaveCommandeResource, Commande>(SaveCommandeResource);
-            //var newCommande = await _CommandeService.Create(Commandes);
+            
+#pragma warning disable S125 // Sections of code should not be commented out
+//var newCommande = await _CommandeService.Create(Commandes);
 
             await _CommandeService.Update(CommandeToBeModified, Commandes);
+#pragma warning restore S125 // Sections of code should not be commented out
 
             var CommandeUpdated = await _CommandeService.GetById(Id);
 
             var CommandeResourceUpdated = _mapperService.Map<Commande, CommandeResource>(CommandeUpdated);
 
-            return Ok();
+            return Ok(CommandeResourceUpdated);
         }
 
 
@@ -188,9 +201,11 @@ namespace CRM_API.Controllers
             {
 
                 var sub = await _CommandeService.GetById(Id);
+#pragma warning disable S125 // Sections of code should not be commented out
                 if (sub == null) return BadRequest("Le Commande  n'existe pas"); //NotFound();
+#pragma warning restore S125 // Sections of code should not be commented out
                 await _CommandeService.Delete(sub);
-                ;
+                
                 return NoContent();
             }
             catch (Exception ex)
@@ -208,11 +223,13 @@ namespace CRM_API.Controllers
                 {
                     var sub = await _CommandeService.GetById(item);
                     empty.Add(sub);
-                    if (sub == null) return BadRequest("Le Commande  n'existe pas"); //NotFound();
+                    if (sub == null) return BadRequest("Le Commande  n'existe pas"); 
 
                 }
                 await _CommandeService.DeleteRange(empty);
+#pragma warning disable S1116 // Empty statements should be removed
                 ;
+#pragma warning restore S1116 // Empty statements should be removed
                 return NoContent();
             }
             catch (Exception ex)

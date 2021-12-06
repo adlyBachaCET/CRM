@@ -55,6 +55,8 @@ namespace CRM_API
 
             services.AddScoped<IAppointementService, AppointementService>();
             services.AddScoped<ITargetService, TargetService>();
+            services.AddScoped<IProductVisitReportService, ProductVisitReportService>();
+            services.AddScoped<IExternalsService, ExternalsService>();
 
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IProductPharmacyService, ProductPharmacyService>();
@@ -105,6 +107,7 @@ namespace CRM_API
             services.AddScoped<ISectorCycleService, SectorCycleService>();
             services.AddScoped<ISectorService, SectorService>();
             services.AddScoped<ISectorInYearService, SectorInYearService>();
+            services.AddScoped<ISectorLocalityService, SectorLocalityService>();
 
             services.AddScoped<ISpecialtyService, SpecialtyService>();
 

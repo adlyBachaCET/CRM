@@ -16,7 +16,9 @@ namespace CRM_API.Controllers
 
     public class BuUserController : ControllerBase
     {
+#pragma warning disable S1104 // Fields should not have public accessibility
         public IList<BuUser> BuUsers;
+#pragma warning restore S1104 // Fields should not have public accessibility
 
         private readonly IBuUserService _BuUserService;
         private readonly IBusinessUnitService _BuService;

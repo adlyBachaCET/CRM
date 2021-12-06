@@ -75,14 +75,14 @@ namespace CRM_API.Controllers
                     ActivityUser.UpdatedOn = User.UpdatedOn;
                     ActivityUser.CreatedOn = User.CreatedOn;
                     ActivityUser.UpdatedBy = User.UpdatedBy;
-                    var ActivitysinessUnit = await _ActivityService.GetById(ActivityResource.IdActivity);
-                    ActivityUser.IdUser = ActivitysinessUnit.IdActivity;
-                    ActivityUser.StatusUser = ActivitysinessUnit.Status;
-                    ActivityUser.VersionUser = ActivitysinessUnit.Version;
-                    ActivityUser.Activity = ActivitysinessUnit;
-                    ActivityUser.UpdatedOn = ActivitysinessUnit.UpdatedOn;
-                    ActivityUser.CreatedOn = ActivitysinessUnit.CreatedOn;
-                    ActivityUser.UpdatedBy = ActivitysinessUnit.UpdatedBy;
+                    var ActivityCreated = await _ActivityService.GetById(ActivityResource.IdActivity);
+                    ActivityUser.IdUser = ActivityCreated.IdActivity;
+                    ActivityUser.StatusUser = ActivityCreated.Status;
+                    ActivityUser.VersionUser = ActivityCreated.Version;
+                    ActivityUser.Activity = ActivityCreated;
+                    ActivityUser.UpdatedOn = ActivityCreated.UpdatedOn;
+                    ActivityUser.CreatedOn = ActivityCreated.CreatedOn;
+                    ActivityUser.UpdatedBy = ActivityCreated.UpdatedBy;
                     //*** Creation dans la base de données ***
                     ActivityUser.CreatedBy = 0;
                     ActivityUser.UpdatedBy = 0;
@@ -114,7 +114,6 @@ namespace CRM_API.Controllers
             {
                 var Employe = await _ActivityService.GetAll();
                 if (Employe == null) return NotFound();
-                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
                 return Ok(Employe);
             }
             catch (Exception ex)
@@ -147,7 +146,6 @@ namespace CRM_API.Controllers
             {
                 var Employe = await _ActivityService.GetAllActif();
                 if (Employe == null) return NotFound();
-                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
                 return Ok(Employe);
             }
             catch (Exception ex)
@@ -180,7 +178,6 @@ namespace CRM_API.Controllers
             {
                 var Employe = await _ActivityService.GetAllInActif();
                 if (Employe == null) return NotFound();
-                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
                 return Ok(Employe);
             }
             catch (Exception ex)
@@ -220,11 +217,11 @@ namespace CRM_API.Controllers
 
                         foreach (var item in Activitys)
                         {
-                            var Bu = _mapperService.Map<Activity, ActivityResource>(item);
+                            var Activity = _mapperService.Map<Activity, ActivityResource>(item);
 
-                            if (Bu != null)
+                            if (Activity != null)
                             {
-                                ActivityResources.Add(Bu);
+                                ActivityResources.Add(Activity);
                             }
                         }
                         return Ok(ActivityResources);
@@ -390,7 +387,7 @@ namespace CRM_API.Controllers
                 var sub = await _ActivityService.GetById(Id);
                 if (sub == null) return BadRequest("Le Activity  n'existe pas"); //NotFound();
                 await _ActivityService.Delete(sub);
-                ;
+                
                 return NoContent();
             }
             catch (Exception ex)

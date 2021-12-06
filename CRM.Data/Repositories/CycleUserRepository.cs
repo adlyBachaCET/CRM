@@ -20,11 +20,35 @@ namespace CRM.Data.Repositories
         {
 
         }
+        public async Task<CycleUser> GetByIdCycleUser(int idCycle, int idUser)
+        {
+            return
+                            await MyDbContext.CycleUser.Where(i => i.IdCycle == idCycle && i.IdUser == idUser && i.Active == 0)
+                            .Include(i => i.Cycle).ThenInclude(i => i.PotentielCycle)
+                .Include(i => i.User)
+                .FirstOrDefaultAsync(); 
+        }
+        public async Task<List<Cycle>> GetByIdUser(int id)
+        {
+            var CycleUser = await MyDbContext.CycleUser.Where(i => i.IdUser == id && i.Active == 0)
+                      .Include(i => i.Cycle).ThenInclude(i => i.PotentielCycle)
+                .Include(i => i.User)
+                .ToListAsync();
+            List<Cycle> List = new List<Cycle>();
 
+            foreach (var item in CycleUser)
+            {
+                var Cycle = item.Cycle;
+                List.Add(Cycle);
+            }
+            return
+                List;
+        }
         public async Task<IEnumerable<CycleUser>> GetAllActif()
         {
             var result = await MyDbContext.CycleUser.Where(a => a.Active == 0)
-                .Include(i => i.Cycle).Include(i => i.User)
+                .Include(i => i.Cycle).ThenInclude(i=>i.PotentielCycle)
+                .Include(i => i.User)
                 .ToListAsync();
             return result;
         }
@@ -74,10 +98,6 @@ namespace CRM.Data.Repositories
                     .ToListAsync();
             return result;
         }
-        //public async Task<IEnumerable<CycleUser>> GetAllWithArtisteAsync()
-        //{
-        //    return await MyCycleUserDbContext.CycleUsers
-        //        .Include(x => x.Artiste).ToListAsync();
-        //}
+     
     }
 }

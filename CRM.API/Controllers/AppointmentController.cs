@@ -73,7 +73,7 @@ namespace CRM_API.Controllers
                     Appointement.StatusUser = User.Status;
                     if (Pharmacy != null)
                     {
-                        Appointement.IdPharmacy = Pharmacy.IdPharmacy;
+                        Appointement.IdPharmacy = Pharmacy.Id;
 
                         Appointement.Pharmacy = Pharmacy;
                         Appointement.VersionsPharmacy = Pharmacy.Version;

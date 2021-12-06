@@ -23,55 +23,75 @@ namespace CRM.Data.Repositories
 
         public async Task<IEnumerable<ProductPharmacy>> GetAllActif()
         {
-            var result = await MyDbContext.ProductPharmacy.Where(a => a.Active == 0).ToListAsync();
+            var result = await MyDbContext.ProductPharmacy.Where(a => a.Active == 0)
+                .Include(i => i.Pharmacy)
+                .Include(i => i.Product)
+                .ToListAsync();
             return result;
         }
 
         public async Task<IEnumerable<ProductPharmacy>> GetAllInActif()
         {
-            var result = await MyDbContext.ProductPharmacy.Where(a => a.Active == 1).ToListAsync();
+            var result = await MyDbContext.ProductPharmacy.Where(a => a.Active == 1)
+                .Include(i => i.Pharmacy)
+                .Include(i => i.Product)
+                .ToListAsync();
             return result;
         }
         public async Task<ProductPharmacy> GetByIdActif(int id)
         {
-            var result = await MyDbContext.ProductPharmacy.Where(a => a.Active == 0 && a.IdPharmacy == id).FirstOrDefaultAsync();
+            var result = await MyDbContext.ProductPharmacy.Where(a => a.Active == 0 && a.IdPharmacy == id)
+                .Include(i => i.Pharmacy)
+                .Include(i => i.Product)
+                .FirstOrDefaultAsync();
             return result;
         }
 
         public async Task<IEnumerable<ProductPharmacy>> GetAllAcceptedActif()
         {
-            var result = await MyDbContext.ProductPharmacy.Where(a => a.Active == 0 && a.Status == Status.Approuved).ToListAsync();
+            var result = await MyDbContext.ProductPharmacy.Where(a => a.Active == 0 && a.Status == Status.Approuved)
+                .Include(i => i.Pharmacy)
+                .Include(i => i.Product)
+                .ToListAsync();
             return result;
         }
 
         public async Task<IEnumerable<ProductPharmacy>> GetAllAcceptedInactifActif()
         {
-            var result = await MyDbContext.ProductPharmacy.Where(a => a.Active == 1 && a.Status == Status.Approuved).ToListAsync();
+            var result = await MyDbContext.ProductPharmacy.Where(a => a.Active == 1 && a.Status == Status.Approuved)
+                .Include(i => i.Pharmacy)
+                .Include(i => i.Product)
+                .ToListAsync();
             return result;
         }
 
         public async Task<IEnumerable<ProductPharmacy>> GetAllPending()
         {
-            var result = await MyDbContext.ProductPharmacy.Where(a => a.Status == Status.Pending).ToListAsync();
+            var result = await MyDbContext.ProductPharmacy.Where(a => a.Status == Status.Pending)
+                .Include(i => i.Pharmacy)
+                .Include(i => i.Product)
+                .ToListAsync();
             return result;
         }
         public async Task<IEnumerable<ProductPharmacy>> GetAllRejected()
         {
-            var result = await MyDbContext.ProductPharmacy.Where(a => a.Status == Status.Pending).ToListAsync();
+            var result = await MyDbContext.ProductPharmacy.Where(a => a.Status == Status.Rejected)
+                .Include(i => i.Pharmacy)
+                .Include(i => i.Product)
+                .ToListAsync();
             return result;
         }
 
      
         public async Task<IEnumerable<ProductPharmacy>> GetByIdPharmacy(int id)
         {
-            var result = await MyDbContext.ProductPharmacy.Where(a => a.Active == 0 && a.IdPharmacy == id).ToListAsync();
+            var result = await MyDbContext.ProductPharmacy.Where(a => a.Active == 0 && a.IdPharmacy == id)
+                .Include(i => i.Pharmacy)
+                .Include(i => i.Product)
+                .ToListAsync();
             return result;
         }
      
-        //public async Task<IEnumerable<ProductPharmacy>> GetAllWithArtisteAsync()
-        //{
-        //    return await MyProductPharmacyDbContext.ProductPharmacys
-        //        .Include(x => x.Artiste).ToListAsync();
-        //}
+  
     }
 }

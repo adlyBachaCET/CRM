@@ -25,9 +25,9 @@ namespace CRM.Core.Models
         public int VersionDoctor { get; set; }
         public Doctor Doctor { get; set; }
 
-        public int IdService { get; set; }
-        public Status StatusService { get; set; }
-        public int VersionService { get; set; }
+        public int? IdService { get; set; }
+        public Status? StatusService { get; set; }
+        public int? VersionService { get; set; }
         public Service Service { get; set; }
         public int Order { get; set; }
         public int Primary { get; set; }

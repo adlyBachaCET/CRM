@@ -29,7 +29,9 @@ namespace CRM.Core.Models
         public string Name_Replacement { get; set; }
         public bool Replacement { get; set; }
 
-        // public string Competitiveintelligence { get; set; }
+        public virtual ICollection<Participant> Participant { get; set; }
+        public virtual ICollection<Externals> Externals { get; set; }
+
 
         public string Objectif { get; set; }
         public string ObjectifNextVisit { get; set; }

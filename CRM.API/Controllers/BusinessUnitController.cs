@@ -16,7 +16,9 @@ namespace CRM_API.Controllers
 
     public class BusinessUnitController : ControllerBase
     {
+#pragma warning disable S1104 // Fields should not have public accessibility
         public IList<BusinessUnit> BusinessUnits;
+#pragma warning restore S1104 // Fields should not have public accessibility
 
         private readonly IBusinessUnitService _BusinessUnitService;
 
@@ -52,8 +54,11 @@ namespace CRM_API.Controllers
             {
                 var Employe = await _BusinessUnitService.GetAll();
                 if (Employe == null) return NotFound();
-                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
+                
+#pragma warning disable S125 // Sections of code should not be commented out
+// var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
                 return Ok(Employe);
+#pragma warning restore S125 // Sections of code should not be commented out
             }
             catch (Exception ex)
             {
@@ -67,8 +72,11 @@ namespace CRM_API.Controllers
             {
                 var Employe = await _BusinessUnitService.GetAllActif();
                 if (Employe == null) return NotFound();
-                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
+                
+#pragma warning disable S125 // Sections of code should not be commented out
+// var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
                 return Ok(Employe);
+#pragma warning restore S125 // Sections of code should not be commented out
             }
             catch (Exception ex)
             {
@@ -82,8 +90,11 @@ namespace CRM_API.Controllers
             {
                 var Employe = await _BusinessUnitService.GetAllInActif();
                 if (Employe == null) return NotFound();
-                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
+                
+#pragma warning disable S125 // Sections of code should not be commented out
+// var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
                 return Ok(Employe);
+#pragma warning restore S125 // Sections of code should not be commented out
             }
             catch (Exception ex)
             {
@@ -96,7 +107,9 @@ namespace CRM_API.Controllers
         {
             try
             {
+#pragma warning disable S1117 // Local variables should not shadow class fields
                 var BusinessUnits = await _BusinessUnitService.GetById(Id);
+#pragma warning restore S1117 // Local variables should not shadow class fields
                 if (BusinessUnits == null) return NotFound();
                 var BusinessUnitRessource = _mapperService.Map<BusinessUnit, BusinessUnitResource>(BusinessUnits);
                 return Ok(BusinessUnitRessource);
@@ -111,17 +124,24 @@ namespace CRM_API.Controllers
         {
 
             var BusinessUnitToBeModified = await _BusinessUnitService.GetById(Id);
+#pragma warning disable S125 // Sections of code should not be commented out
             if (BusinessUnitToBeModified == null) return BadRequest("Le BusinessUnit n'existe pas"); //NotFound();
+#pragma warning restore S125 // Sections of code should not be commented out
+#pragma warning disable S1117 // Local variables should not shadow class fields
             var BusinessUnits = _mapperService.Map<SaveBusinessUnitResource, BusinessUnit>(SaveBusinessUnitResource);
-            //var newBusinessUnit = await _BusinessUnitService.Create(BusinessUnits);
+#pragma warning restore S1117 // Local variables should not shadow class fields
+            
+#pragma warning disable S125 // Sections of code should not be commented out
+//var newBusinessUnit = await _BusinessUnitService.Create(BusinessUnits);
 
             await _BusinessUnitService.Update(BusinessUnitToBeModified, BusinessUnits);
+#pragma warning restore S125 // Sections of code should not be commented out
 
             var BusinessUnitUpdated = await _BusinessUnitService.GetById(Id);
 
             var BusinessUnitResourceUpdated = _mapperService.Map<BusinessUnit, BusinessUnitResource>(BusinessUnitUpdated);
 
-            return Ok();
+            return Ok(BusinessUnitResourceUpdated);
         }
 
 
@@ -132,9 +152,13 @@ namespace CRM_API.Controllers
             {
 
                 var sub = await _BusinessUnitService.GetById(Id);
+#pragma warning disable S125 // Sections of code should not be commented out
                 if (sub == null) return BadRequest("Le BusinessUnit  n'existe pas"); //NotFound();
+#pragma warning restore S125 // Sections of code should not be commented out
                 await _BusinessUnitService.Delete(sub);
+#pragma warning disable S1116 // Empty statements should be removed
                 ;
+#pragma warning restore S1116 // Empty statements should be removed
                 return NoContent();
             }
             catch (Exception ex)
@@ -152,11 +176,15 @@ namespace CRM_API.Controllers
                 {
                     var sub = await _BusinessUnitService.GetById(item);
                     empty.Add(sub);
+#pragma warning disable S125 // Sections of code should not be commented out
                     if (sub == null) return BadRequest("Le BusinessUnit  n'existe pas"); //NotFound();
+#pragma warning restore S125 // Sections of code should not be commented out
 
                 }
                 await _BusinessUnitService.DeleteRange(empty);
+#pragma warning disable S1116 // Empty statements should be removed
                 ;
+#pragma warning restore S1116 // Empty statements should be removed
                 return NoContent();
             }
             catch (Exception ex)

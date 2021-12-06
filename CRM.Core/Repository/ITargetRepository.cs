@@ -6,6 +6,8 @@ namespace CRM.Core.Repository
 {
     public interface ITargetRepository : IRepository<Target>
     {
+        Task<IEnumerable<Target>> GetByFullTarget(int id);
+        Task<IEnumerable<Target>> GetEmptyTargetByNumTarget(int id);
         Task<IEnumerable<Target>> GetAllActif();
         Task<IEnumerable<Target>> GetAllInActif();
         Task<Target> GetByIdActif(int id);

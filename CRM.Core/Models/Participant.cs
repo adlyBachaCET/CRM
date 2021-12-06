@@ -25,21 +25,17 @@ namespace CRM.Core.Models
         public int? CreatedBy { get; set; }
         public int? UpdatedBy { get; set; }
         public Status Status { get; set; }
-        public StatusParticipant StatusParticipant { get; set; }
+        public StatusParticipant Context { get; set; }
 
         public int? IdUser { get; set; }
         public Status? StatusUser { get; set; }
 
         public int? VersionUser { get; set; }
         public virtual User IdUserNavigation { get; set; }
-        public string Organisme { get; set; }
         public int? IdPharmacy { get; set; }
         public Status? StatusPharmacy { get; set; }
         public int? VersionPharmacy { get; set; }
         public virtual Pharmacy IdPharmacyNavigation { get; set; }
     }
-    public enum StatusParticipant
-    {
-        Visit,RP
-    }
+
 }

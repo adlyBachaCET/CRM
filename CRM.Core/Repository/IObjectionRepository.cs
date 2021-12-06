@@ -6,6 +6,10 @@ namespace CRM.Core.Repository
 {
     public interface IObjectionRepository : IRepository<Objection>
     {
+        Task<IEnumerable<Objection>> GetAll(Status? Status, RequestObjection RequestObjection);
+        Task<IEnumerable<Objection>> GetAllByReport(Status? Status, int IdReport);
+        Task<IEnumerable<Objection>> GetAll(Status? Status);
+        Task<Objection> GetById(int Id, Status? Status, RequestObjection RequestObjection);
         Task<IEnumerable<Objection>> GetAllActif();
         Task<IEnumerable<Objection>> GetAllInActif();
         Task<IEnumerable<Objection>> GetAllAcceptedActif();

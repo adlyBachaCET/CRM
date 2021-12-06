@@ -72,7 +72,7 @@ namespace CRM.Data.Repositories
         }
         public async Task<IEnumerable<BuDoctor>> GetAllRejected()
         {
-            var result = await MyDbContext.BuDoctor.Where(a => a.Status == Status.Pending)
+            var result = await MyDbContext.BuDoctor.Where(a => a.Status == Status.Rejected)
                 .Include(p => p.Bu).Include(p => p.IdDoctorNavigation)
                 .ToListAsync();
             return result;
@@ -84,10 +84,6 @@ namespace CRM.Data.Repositories
                    .ToListAsync();
             return result;
         }
-        //public async Task<IEnumerable<BuDoctor>> GetAllWithArtisteAsync()
-        //{
-        //    return await MyBuDoctorDbContext.BuDoctors
-        //        .Include(x => x.Artiste).ToListAsync();
-        //}
+
     }
 }

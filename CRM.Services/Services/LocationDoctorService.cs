@@ -34,18 +34,6 @@ namespace CRM.Services.Services
                            await _unitOfWork.LocationDoctors.Find(i=>i.IdDoctor==IdDoctor &&i.Active==0);
         }
 
-       /* public async Task Delete(EstablishmentDoctor EstablishmentDoctor)
-        {
-            _unitOfWork.EstablishmentDoctors.Remove(EstablishmentDoctor);
-            await _unitOfWork.CommitAsync();
-        }*/
-
-        //public async Task<IEnumerable<EstablishmentDoctor>> GetAllWithArtiste()
-        //{
-        //    return await _unitOfWork.EstablishmentDoctors
-        //          .GetAllWithArtisteAsync();
-        //}
-
         public async Task<LocationDoctor> GetByIdActif(int id,int IdLocation)
         {
             return
@@ -54,7 +42,7 @@ namespace CRM.Services.Services
         public async Task<LocationDoctor> GetByIdLocationAndService(int id, int IdLocation)
         {
             return
-                await _unitOfWork.LocationDoctors.SingleOrDefault(i=>i.IdService==id&& i.IdLocation==IdLocation && i.Active ==0);
+                await _unitOfWork.LocationDoctors.GetByIdLocationAndService(id,IdLocation);
         }
         public async Task Update(LocationDoctor EstablishmentDoctorToBeUpdated, LocationDoctor EstablishmentDoctor)
         {
@@ -64,7 +52,6 @@ namespace CRM.Services.Services
 
         public async Task Delete(LocationDoctor EstablishmentDoctor)
         {
-            //EstablishmentDoctor musi =  _unitOfWork.EstablishmentDoctors.SingleOrDefaultAsync(x=>x.Id == EstablishmentDoctorToBeUpdated.Id);
             EstablishmentDoctor.Active = 1;
 
             await _unitOfWork.CommitAsync();
@@ -101,31 +88,8 @@ namespace CRM.Services.Services
         public async Task<LocationDoctor> GetById(int id1, int Id2)
         {
             return
-                                    await _unitOfWork.LocationDoctors.SingleOrDefault(i=>i.IdDoctor==id1&&i.IdLocation==Id2);
+                                    await _unitOfWork.LocationDoctors.GetById(id1,Id2);
         }
-        //public Task<EstablishmentDoctor> CreateEstablishmentDoctor(EstablishmentDoctor newEstablishmentDoctor)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public Task DeleteEstablishmentDoctor(EstablishmentDoctor EstablishmentDoctor)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public Task<EstablishmentDoctor> GetEstablishmentDoctorById(int id)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public Task<IEnumerable<EstablishmentDoctor>> GetEstablishmentDoctorsByArtisteId(int artiste)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public Task UpdateEstablishmentDoctor(EstablishmentDoctor EstablishmentDoctorToBeUpdated, EstablishmentDoctor EstablishmentDoctor)
-        //{
-        //    throw new NotImplementedException();
-        //}
+       
     }
 }

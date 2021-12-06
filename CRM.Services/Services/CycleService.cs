@@ -35,18 +35,6 @@ namespace CRM.Services.Services
                            await _unitOfWork.Cycles.GetAll();
         }
 
-       /* public async Task Delete(Cycle Cycle)
-        {
-            _unitOfWork.Cycles.Remove(Cycle);
-            await _unitOfWork.CommitAsync();
-        }*/
-
-        //public async Task<IEnumerable<Cycle>> GetAllWithArtiste()
-        //{
-        //    return await _unitOfWork.Cycles
-        //          .GetAllWithArtisteAsync();
-        //}
-
         public async Task<Cycle> GetById(int id)
         {
             return
@@ -69,7 +57,6 @@ namespace CRM.Services.Services
 
         public async Task Delete(Cycle Cycle)
         {
-            //Cycle musi =  _unitOfWork.Cycles.SingleOrDefaultAsync(x=>x.Id == CycleToBeUpdated.Id);
             Cycle.Active = 1;
 
             await _unitOfWork.CommitAsync();
@@ -96,29 +83,6 @@ namespace CRM.Services.Services
             return
                              await _unitOfWork.Cycles.GetAllInActif();
         }
-        //public Task<Cycle> CreateCycle(Cycle newCycle)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public Task DeleteCycle(Cycle Cycle)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public Task<Cycle> GetCycleById(int id)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public Task<IEnumerable<Cycle>> GetCyclesByArtisteId(int artiste)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public Task UpdateCycle(Cycle CycleToBeUpdated, Cycle Cycle)
-        //{
-        //    throw new NotImplementedException();
-        //}
+       
     }
 }

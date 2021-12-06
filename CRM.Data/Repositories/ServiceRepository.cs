@@ -66,13 +66,9 @@ namespace CRM.Data.Repositories
         }
         public async Task<IEnumerable<Service>> GetAllRejected()
         {
-            var result = await MyDbContext.Service.Where(a => a.Status == Status.Pending).ToListAsync();
+            var result = await MyDbContext.Service.Where(a => a.Status == Status.Rejected).ToListAsync();
             return result;
         }
-        //public async Task<IEnumerable<Service>> GetAllWithArtisteAsync()
-        //{
-        //    return await MyServiceDbContext.Services
-        //        .Include(x => x.Artiste).ToListAsync();
-        //}
+      
     }
 }

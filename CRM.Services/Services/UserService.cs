@@ -144,7 +144,7 @@ namespace CRM.Services.Services
         public async Task<User> GetById(int id)
         {
             return
-                        await _unitOfWork.Users.SingleOrDefault(i => i.IdUser == id && i.Active == 0);
+                        await _unitOfWork.Users.GetByIdActif(id);
         }
    
         public async Task Update(User UserToBeUpdated, User User)

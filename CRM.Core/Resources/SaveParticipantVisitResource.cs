@@ -13,6 +13,7 @@ namespace CRM.Core.Models
         public int IdUser { get; set; }
 
         public string Organisme { get; set; }
+        public StatusParticipant StatusParticipant { get; set; }
 
     }
 
@@ -26,6 +27,7 @@ namespace CRM.Core.Models
         public List<int> IdUser { get; set; }
 
         public List<string> Organisme { get; set; }
+        public StatusParticipant StatusParticipant { get; set; }
 
     }
 }

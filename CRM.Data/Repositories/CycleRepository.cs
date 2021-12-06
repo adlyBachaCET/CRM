@@ -73,10 +73,6 @@ namespace CRM.Data.Repositories
             return result;
         }
 
-        //public async Task<IEnumerable<Cycle>> GetAllWithArtisteAsync()
-        //{
-        //    return await MyCycleDbContext.Cycles
-        //        .Include(x => x.Artiste).ToListAsync();
-        //}
+    
     }
 }

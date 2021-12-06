@@ -37,17 +37,7 @@ namespace CRM.Services.Services
                            await _unitOfWork.Appointements.GetAll();
         }
        
-        /* public async Task Delete(Appointement Appointement)
-         {
-             _unitOfWork.Appointements.Remove(Appointement);
-             await _unitOfWork.CommitAsync();
-         }*/
-
-        //public async Task<IEnumerable<Appointement>> GetAllWithArtiste()
-        //{
-        //    return await _unitOfWork.Appointements
-        //          .GetAllWithArtisteAsync();
-        //}
+     
 
         public async Task<Appointement> GetById(int Id)
         {
@@ -104,7 +94,6 @@ namespace CRM.Services.Services
         }
         public async Task Delete(Appointement Appointement)
         {
-            //Appointement musi =  _unitOfWork.Appointements.SingleOrDefaultAsync(x=>x.Id == AppointementToBeUpdated.Id);
             Appointement.Active = 1;
 
             await _unitOfWork.CommitAsync();
@@ -138,29 +127,6 @@ namespace CRM.Services.Services
         {
             throw new NotImplementedException();
         }
-        //public Task<Appointement> CreateAppointement(Appointement newAppointement)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public Task DeleteAppointement(Appointement Appointement)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public Task<Appointement> GetAppointementById(int Id)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public Task<IEnumerable<Appointement>> GetAppointementsByArtisteId(int artiste)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public Task UpdateAppointement(Appointement AppointementToBeUpdated, Appointement Appointement)
-        //{
-        //    throw new NotImplementedException();
-        //}
+       
     }
 }

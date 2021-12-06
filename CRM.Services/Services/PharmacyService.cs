@@ -75,31 +75,10 @@ namespace CRM.Services.Services
                 Object.PharmacyName = PharmacyName;
                 Object.ExistPharmacyName = true;
             }
-            /*      var PharmacysNearBy = await _unitOfWork.Pharmacys.Find(i => i.NameLocality1 == SaveAddPharmacyResource.SavePharmacyResource.NameLocality1
-                  && i.NameLocality2 == SaveAddPharmacyResource.SavePharmacyResource.NameLocality2
-                              && i.NameLocality3 == SaveAddPharmacyResource.SavePharmacyResource.NameLocality3
-                     && i.Active == 0);
-                  if (PharmacysNearBy != null)
-                  {
-                      Object.PharmacyNearBy = PharmacysNearBy;
-                  }*/
-
-
-
             return
                            Object;
         }
-        /* public async Task Delete(Pharmacy Pharmacy)
-         {
-             _unitOfWork.Pharmacys.Remove(Pharmacy);
-             await _unitOfWork.CommitAsync();
-         }*/
-
-        //public async Task<IEnumerable<Pharmacy>> GetAllWithArtiste()
-        //{
-        //    return await _unitOfWork.Pharmacys
-        //          .GetAllWithArtisteAsync();
-        //}
+        
 
         public async Task<Pharmacy> GetById(int? id)
         {
@@ -113,7 +92,7 @@ namespace CRM.Services.Services
             await _unitOfWork.CommitAsync();
 
             Pharmacy.Version = PharmacyToBeUpdated.Version + 1;
-            Pharmacy.IdPharmacy = PharmacyToBeUpdated.IdPharmacy;
+            Pharmacy.Id = PharmacyToBeUpdated.Id;
             Pharmacy.Status = Status.Pending;
             Pharmacy.Active = 0;
 
@@ -126,7 +105,7 @@ namespace CRM.Services.Services
             await _unitOfWork.CommitAsync();
             Pharmacy = PharmacyToBeUpdated;
             Pharmacy.Version = PharmacyToBeUpdated.Version + 1;
-            Pharmacy.IdPharmacy = PharmacyToBeUpdated.IdPharmacy;
+            Pharmacy.Id = PharmacyToBeUpdated.Id;
             Pharmacy.Status = Status.Rejected;
             Pharmacy.UpdatedOn = System.DateTime.UtcNow;
             Pharmacy.CreatedOn = PharmacyToBeUpdated.CreatedOn;
@@ -143,7 +122,7 @@ namespace CRM.Services.Services
             await _unitOfWork.CommitAsync();
 
             Pharmacy.Version = PharmacyToBeUpdated.Version + 1;
-            Pharmacy.IdPharmacy = PharmacyToBeUpdated.IdPharmacy;
+            Pharmacy.Id = PharmacyToBeUpdated.Id;
             Pharmacy.Status = Status.Rejected;
             Pharmacy.Active = 1;
 
@@ -152,9 +131,7 @@ namespace CRM.Services.Services
         }
         public async Task Delete(Pharmacy Pharmacy)
         {
-            //Pharmacy musi =  _unitOfWork.Pharmacys.SingleOrDefaultAsync(x=>x.Id == PharmacyToBeUpdated.Id);
             Pharmacy.Active = 1;
-
             await _unitOfWork.CommitAsync();
         }
 
@@ -199,43 +176,26 @@ namespace CRM.Services.Services
 
         public async Task<IEnumerable<Pharmacy>> GetMyPharmacysWithoutAppointment(int Id)
         {
-          //  var BuUser = await _unitOfWork.BuUsers.SingleOrDefault(i => i.IdUser == Id && i.Active == 0);
-
-      
-            List<Pharmacy> PharmacysWithoutAppointment = new List<Pharmacy>();
-            var list1 = await _unitOfWork.Appointements.Find(i => i.Pharmacy.Active == 0 && i.Pharmacy != null && i.IdUser == Id);
-            foreach (var item in list1)
-            {
-                var Pharmacy = await _unitOfWork.Pharmacys.SingleOrDefault(i => i.Active == 0 && i.IdPharmacy == item.IdPharmacy);
-                PharmacysWithoutAppointment.Add(Pharmacy);
-            }
-            var AllPharmacys = await _unitOfWork.Pharmacys.Find(i => i.Status == Status.Approuved && i.Active == 0);
-            var result = AllPharmacys.Except(PharmacysWithoutAppointment).ToList();
-            return result;
+            return
+                   await _unitOfWork.Pharmacys.GetMyPharmacysWithoutAppointment(Id);
         }
-        //public Task<Pharmacy> CreatePharmacy(Pharmacy newPharmacy)
-        //{
-        //    throw new NotImplementedException();
-        //}
 
-        //public Task DeletePharmacy(Pharmacy Pharmacy)
-        //{
-        //    throw new NotImplementedException();
-        //}
+        public async Task<IEnumerable<Pharmacy>> GetPharmacysByLocalities(List<int> IdLocalities)
+        {
+            return
+                await _unitOfWork.Pharmacys.GetPharmacysByLocalities(IdLocalities);
+        }
 
-        //public Task<Pharmacy> GetPharmacyById(int id)
-        //{
-        //    throw new NotImplementedException();
-        //}
+        public async Task<IEnumerable<Pharmacy>> GetAll(Status? Status, GrossistePharmacy GrossistePharmacy)
+        {
+            return
+                                         await _unitOfWork.Pharmacys.GetAll(Status,GrossistePharmacy);
+        }
 
-        //public Task<IEnumerable<Pharmacy>> GetPharmacysByArtisteId(int artiste)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public Task UpdatePharmacy(Pharmacy PharmacyToBeUpdated, Pharmacy Pharmacy)
-        //{
-        //    throw new NotImplementedException();
-        //}
+        public async Task<Pharmacy> GetById(int Id, Status? Status, GrossistePharmacy GrossistePharmacy)
+        {
+            return
+                                      await _unitOfWork.Pharmacys.GetById(Id,Status,GrossistePharmacy);
+        }
     }
 }

@@ -43,30 +43,14 @@ namespace CRM.Services.Services
         public async Task<IEnumerable<Location>> GetAllByType(int TypeName)
         {
             return
-                           await _unitOfWork.Locations.Find(i=>i.IdLocationType==TypeName&& i.Active==0);
+                           await _unitOfWork.Locations.GetAllByType(TypeName);
         }
         public async Task<IEnumerable<Service>> GetAllServices(int Id)
         {
-            List<Service> Services = new List<Service>();
-            var ServicesLocation = await _unitOfWork.LocationDoctors.Find(i => i.IdLocation == Id && i.IdDoctor==null && i.Active == 0);
-            foreach(var item in ServicesLocation)
-            {
-                var Service = await _unitOfWork.Services.GetByIdActif(item.IdService);
-                Services.Add(Service);
-            }
-            return Services;
+            return
+                                await _unitOfWork.Locations.GetAllServices(Id);
         }
-        /* public async Task Delete(Establishment Establishment)
-         {
-             _unitOfWork.Establishments.Remove(Establishment);
-             await _unitOfWork.CommitAsync();
-         }*/
-
-        //public async Task<IEnumerable<Establishment>> GetAllWithArtiste()
-        //{
-        //    return await _unitOfWork.Establishments
-        //          .GetAllWithArtisteAsync();
-        //}
+       
         public async Task Approuve(Location LocationToBeUpdated, Location Location)
         {
             LocationToBeUpdated.Active = 1;
@@ -119,7 +103,6 @@ namespace CRM.Services.Services
 
         public async Task Delete(Location Establishment)
         {
-            //Establishment musi =  _unitOfWork.Establishments.SingleOrDefaultAsync(x=>x.Id == EstablishmentToBeUpdated.Id);
             Establishment.Active = 1;
 
             await _unitOfWork.CommitAsync();

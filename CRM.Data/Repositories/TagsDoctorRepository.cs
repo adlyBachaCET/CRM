@@ -62,14 +62,10 @@ namespace CRM.Data.Repositories
         }
         public async Task<IEnumerable<TagsDoctor>> GetAllRejected()
         {
-            var result = await MyDbContext.TagsDoctor.Where(a => a.Status == Status.Pending).ToListAsync();
+            var result = await MyDbContext.TagsDoctor.Where(a => a.Status == Status.Rejected).ToListAsync();
             return result;
         }
 
-        //public async Task<IEnumerable<TagsDoctor>> GetAllWithArtisteAsync()
-        //{
-        //    return await MyTagsDoctorDbContext.TagsDoctors
-        //        .Include(x => x.Artiste).ToListAsync();
-        //}
+       
     }
 }

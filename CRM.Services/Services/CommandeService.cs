@@ -34,17 +34,7 @@ namespace CRM.Services.Services
                            await _unitOfWork.Commandes.GetAll();
         }
 
-       /* public async Task Delete(Commande Commande)
-        {
-            _unitOfWork.Commandes.Remove(Commande);
-            await _unitOfWork.CommitAsync();
-        }*/
-
-        //public async Task<IEnumerable<Commande>> GetAllWithArtiste()
-        //{
-        //    return await _unitOfWork.Commandes
-        //          .GetAllWithArtisteAsync();
-        //}
+ 
 
         public async Task<Commande> GetById(int id)
         {
@@ -68,7 +58,6 @@ namespace CRM.Services.Services
 
         public async Task Delete(Commande Commande)
         {
-            //Commande musi =  _unitOfWork.Commandes.SingleOrDefaultAsync(x=>x.Id == CommandeToBeUpdated.Id);
              _unitOfWork.Commandes.Remove(Commande);
 
             await _unitOfWork.CommitAsync();
@@ -102,11 +91,7 @@ namespace CRM.Services.Services
                             await _unitOfWork.Commandes.GetByIdDoctor(id);
         }
 
-        public async Task<IEnumerable<Commande>> GetByIdActifDoctor(int Id)
-        {
-            return
-                  await _unitOfWork.Commandes.GetByIdActifDoctor(Id);
-        }
+
         public async Task<IEnumerable<Commande>> GetByIdActifUser(int Id)
         {
             return
@@ -118,29 +103,6 @@ namespace CRM.Services.Services
             return
          await _unitOfWork.Commandes.GetByIdActifPharmacy(Id);
         }
-        //public Task<Commande> CreateCommande(Commande newCommande)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public Task DeleteCommande(Commande Commande)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public Task<Commande> GetCommandeById(int id)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public Task<IEnumerable<Commande>> GetCommandesByArtisteId(int artiste)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public Task UpdateCommande(Commande CommandeToBeUpdated, Commande Commande)
-        //{
-        //    throw new NotImplementedException();
-        //}
+      
     }
 }

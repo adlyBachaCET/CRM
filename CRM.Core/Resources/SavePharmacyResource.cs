@@ -18,5 +18,7 @@ namespace CRM.Core.Models
         public string Email { get; set; }
         public int? IdBrick1 { get; set; }
         public int? IdBrick2 { get; set; }
+        public GrossistePharmacy GrossistePharmacy { get; set; }
+
     }
 }

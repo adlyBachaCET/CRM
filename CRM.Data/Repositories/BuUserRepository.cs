@@ -36,6 +36,13 @@ namespace CRM.Data.Repositories
                 .ToListAsync();
             return result;
         }
+        public async Task<BuUser> GetByIdUser(int id)
+        {
+            return
+                await MyDbContext.BuUser.Where(i => i.IdUser == id && i.Active==0)
+                .Include(i => i.Bu).Include(i => i.User)
+                .FirstOrDefaultAsync(); 
+        }
         public async Task<BuUser> GetByIdActif(int id)
         {
             var result = await MyDbContext.BuUser.Where(a => a.Active == 0 && a.IdBu == id)
@@ -74,10 +81,6 @@ namespace CRM.Data.Repositories
                 .ToListAsync();
             return result;
         }
-        //public async Task<IEnumerable<BuUser>> GetAllWithArtisteAsync()
-        //{
-        //    return await MyBuUserDbContext.BuUsers
-        //        .Include(x => x.Artiste).ToListAsync();
-        //}
+    
     }
 }

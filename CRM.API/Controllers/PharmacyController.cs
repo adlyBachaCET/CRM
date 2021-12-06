@@ -71,8 +71,7 @@ namespace CRM_API.Controllers
         {
             var Exist = await _PharmacyService.Verify(SaveAddPharmacyResource);
 
-            if (Exist.ExistPharmacyEmail == false && Exist.ExistPharmacyFirstName == false
-                && Exist.ExistPharmacyLastName == false && Exist.ExistPharmacyName == false) {
+            if (!Exist.ExistPharmacyEmail && !Exist.ExistPharmacyFirstName && !Exist.ExistPharmacyLastName && !Exist.ExistPharmacyName) {
                 return BadRequest();
             }
             else
@@ -121,7 +120,6 @@ namespace CRM_API.Controllers
                         Pharmacy.StatusBrick1 = Brick1.Status;
                         Pharmacy.NameBrick1 = Brick1.Name;
                         Pharmacy.NumBrick1 = Brick1.NumSystemBrick;
-                        // Pharmacy.Brick1 = Brick1;
                     }
                     else
                     {
@@ -138,7 +136,8 @@ namespace CRM_API.Controllers
                         Pharmacy.StatusBrick2 = Brick2.Status;
                         Pharmacy.NameBrick2 = Brick2.Name;
                         Pharmacy.NumBrick2 = Brick2.NumSystemBrick;
-                        // Pharmacy.Brick2 = Brick2;
+                        
+
                     }
                     else
                     {
@@ -163,14 +162,18 @@ namespace CRM_API.Controllers
                 {
 
                     var Phone = _mapperService.Map<SavePhoneResource, Phone>(item);
-                    Phone.IdPharmacy = PharmacyResource.IdPharmacy;
-                    //*** Creation dans la base de données ***
-                    var NewPhone = await _PhoneService.Create(Phone);
+                    Phone.IdPharmacy = PharmacyResource.Id;
+                Phone.VersionPharmacy = PharmacyResource.Version;
+                Phone.StatusPharmacy = PharmacyResource.Status;
+                Phone.Pharmacy = Pharmacy;
+
+                //*** Creation dans la base de données ***
+                var NewPhone = await _PhoneService.Create(Phone);
                     //*** Mappage ***
                     var PhoneResource = _mapperService.Map<Phone, PhoneResource>(NewPhone);
                     var PhoneResourceOld = PhoneResource;
                 }
-            var PharmacyObject = await PharmacyById(PharmacyResource.IdPharmacy);
+            var PharmacyObject = await PharmacyById(NewPharmacy.Id);
 
 
             return Ok(PharmacyObject);
@@ -190,10 +193,11 @@ namespace CRM_API.Controllers
                 if (Employe == null) return NotFound();
                 foreach (var item in Employe)
                 {
-                    var Pharmacy = await PharmacyById(item.IdPharmacy);
+                    var Pharmacy = await PharmacyById(item.Id);
                     PharmacyObjectList.Add(Pharmacy);
                 }
-                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
+                
+
                 return Ok(PharmacyObjectList);
             }
             catch (Exception ex)
@@ -214,10 +218,11 @@ namespace CRM_API.Controllers
                 if (Employe == null) return NotFound();
                 foreach (var item in Employe)
                 {
-                    var Pharmacy = await PharmacyById(item.IdPharmacy);
+                    var Pharmacy = await PharmacyById(item.Id);
                     PharmacyObjectList.Add(Pharmacy);
                 }
-                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
+                
+
                 return Ok(PharmacyObjectList);
             }
             catch (Exception ex)
@@ -238,10 +243,11 @@ namespace CRM_API.Controllers
                 if (Employe == null) return NotFound();
                 foreach (var item in Employe)
                 {
-                    var Pharmacy = await PharmacyById(item.IdPharmacy);
+                    var Pharmacy = await PharmacyById(item.Id);
                     PharmacyObjectList.Add(Pharmacy);
                 }
-                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
+                
+
                 return Ok(PharmacyObjectList);
             }
             catch (Exception ex)
@@ -259,7 +265,7 @@ namespace CRM_API.Controllers
             {
                 var Employe = await _PharmacyService.GetPharmacysAssigned();
                 if (Employe == null) return NotFound();
-                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
+                
                 return Ok(Employe);
             }
             catch (Exception ex)
@@ -277,7 +283,7 @@ namespace CRM_API.Controllers
             {
                 var Employe = await _PharmacyService.GetAllActif();
                 if (Employe == null) return NotFound();
-                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
+                
                 return Ok(Employe);
             }
             catch (Exception ex)
@@ -293,7 +299,7 @@ namespace CRM_API.Controllers
             {
                 var Employe = await _PharmacyService.GetAllInActif();
                 if (Employe == null) return NotFound();
-                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
+                
                 return Ok(Employe);
             }
             catch (Exception ex)
@@ -314,10 +320,6 @@ namespace CRM_API.Controllers
 
                 PharmacyProfile.Pharmacy = PharmacyResource;
 
-
-
-
-              //  var Phone = await _PhoneService.GetByIdPharmacy(Id);
                 List<PhoneResource> PhoneResources = new List<PhoneResource>();
 
                 foreach (var item in Pharmacy.Phone)
@@ -357,12 +359,7 @@ namespace CRM_API.Controllers
                 var PharmacyResource = _mapperService.Map<Pharmacy, PharmacyResource>(Pharmacy);
 
                 PharmacyProfile.Pharmacy = PharmacyResource;
-        
-
-
                 if (Pharmacy == null) return NotFound();
-            
-               // var Phone = await _PhoneService.GetByIdPharmacy(Id);
                 List<PhoneResource> PhoneResources = new List<PhoneResource>();
 
                 foreach (var item in Pharmacy.Phone)
@@ -390,7 +387,7 @@ namespace CRM_API.Controllers
 
                 PharmacyProfile.VisitReports = VisitReportResources;
 
-               // var Objections = await _ObjectionService.GetByIdPharmacy(RequestObjection.Objection, Id);
+               
 
                 List<ObjectionResource> ObjectionResources = new List<ObjectionResource>();
 
@@ -424,7 +421,8 @@ namespace CRM_API.Controllers
 
                
 
-             //   var Participant = await _ParticipantService.GetAllByIdPharmacy(Id);
+             
+
                 List<RequestRp> RequestRpList = new List<RequestRp>();
                 foreach (var item in Pharmacy.Participant)
                 {
@@ -445,7 +443,8 @@ namespace CRM_API.Controllers
                 PharmacyProfile.RequestRp = RequestRpResources;
 
 
-             //   var Commande = await _CommandeService.GetByIdActifPharmacy(Id);
+             
+
                 List<CommandeResource> CommandeResources = new List<CommandeResource>();
 
                 foreach (var item in Pharmacy.Commande)
@@ -459,8 +458,10 @@ namespace CRM_API.Controllers
                 }
                 PharmacyProfile.Commande = CommandeResources;
 
-             //   var ProductPharmacys = await _ProductPharmacyService.GetByIdPharmacy(Id);
+             
+
                 List<ProductResource> ProductResources = new List<ProductResource>();
+
 
                 foreach (var item in Pharmacy.ProductPharmacy)
                 {
@@ -491,7 +492,8 @@ namespace CRM_API.Controllers
                 var IdUser = int.Parse(claims.FindFirst("Role").Value);
 
                 var PharmacyToBeModified = await _PharmacyService.GetById(Id);
-            if (PharmacyToBeModified == null) return BadRequest("Le Pharmacy n'existe pas"); //NotFound();
+
+            if (PharmacyToBeModified == null) return BadRequest("Le Pharmacy n'existe pas"); 
             var Pharmacys = _mapperService.Map<SavePharmacyResource, Pharmacy>(SavePharmacyResource);
  
 
@@ -524,7 +526,7 @@ namespace CRM_API.Controllers
                 Pharmacy.StatusBrick1 = Brick1.Status;
                 Pharmacy.NameBrick1 = Brick1.Name;
                 Pharmacy.NumBrick1 = Brick1.NumSystemBrick;
-                // Pharmacy.Brick1 = Brick1;
+  
             }
             else
             {
@@ -541,7 +543,7 @@ namespace CRM_API.Controllers
                 Pharmacy.StatusBrick2 = Brick2.Status;
                 Pharmacy.NameBrick2 = Brick2.Name;
                 Pharmacy.NumBrick2 = Brick2.NumSystemBrick;
-                // Pharmacy.Brick2 = Brick2;
+                
             }
             else
             {
@@ -564,9 +566,61 @@ namespace CRM_API.Controllers
             var PharmacyUpdated = await _PharmacyService.GetById(Id);
 
             var PharmacyResourceUpdated = _mapperService.Map<Pharmacy, PharmacyResource>(PharmacyUpdated);
-            var PharmacyUpdatedNew = await PharmacyById(PharmacyResourceUpdated.IdPharmacy);
+            var PharmacyUpdatedNew = await PharmacyById(PharmacyResourceUpdated.Id);
             return Ok(PharmacyUpdatedNew);
            
+        }
+        [HttpPost("GetAll")]
+        public async Task<ActionResult<List<ObjectionResource>>> GetAll([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
+        string Token, GrossistePharmacyStatus GrossistePharmacyStatus)
+        {
+            try
+            {
+                var claims = _UserService.getPrincipal(Token);
+                var Role = claims.FindFirst("Role").Value;
+
+                List<PharmacyObjectList> PharmacyObjectList = new List<PharmacyObjectList>();
+                var Id = int.Parse(claims.FindFirst("Id").Value);
+                var exp = DateTime.Parse(claims.FindFirst("Exipres On").Value);
+                var Pharmacys = await _PharmacyService.GetAll(GrossistePharmacyStatus.Status, GrossistePharmacyStatus.GrossistePharmacy);
+                foreach (var item in Pharmacys)
+                {
+                    var Pharmacy = await PharmacyById(item.Id);
+                    PharmacyObjectList.Add(Pharmacy);
+                }
+
+
+                return Ok(PharmacyObjectList);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost("GetById")]
+        public async Task<ActionResult<PharmacyObjectList>> GetById([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")]
+        string Token, GrossistePharmacyStatusById GrossistePharmacyStatusById)
+        {
+            try
+            {
+                var claims = _UserService.getPrincipal(Token);
+                var Role = claims.FindFirst("Role").Value;
+
+
+                var Id = int.Parse(claims.FindFirst("Id").Value);
+                var exp = DateTime.Parse(claims.FindFirst("Exipres On").Value);
+                var Pharmacys = await _PharmacyService.GetById(GrossistePharmacyStatusById.Id, GrossistePharmacyStatusById.Status, GrossistePharmacyStatusById.GrossistePharmacy);
+                if (Pharmacys == null) return NotFound();
+                var PharmacyObject = await PharmacyById(Pharmacys.Id);
+
+
+                return Ok(PharmacyObject);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         [HttpPut("Approuve/{Id}")]
         public async Task<ActionResult<PharmacyResource>> ApprouvePharmacy([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token,
@@ -581,10 +635,8 @@ namespace CRM_API.Controllers
                 var Role = claims.FindFirst("Role").Value;
                 var IdUser = int.Parse(claims.FindFirst("Id").Value);
                 var PharmacyToBeModified = await _PharmacyService.GetById(Id);
-                if (PharmacyToBeModified == null) return BadRequest("Le Pharmacy n'existe pas"); //NotFound();
-                                                                                                 //var newPharmacy = await _PharmacyService.Create(Pharmacys);
-                                                                                                 // Pharmacys.CreatedOn = SavePharmacyResource.;
-                PharmacyToBeModified.UpdatedOn = DateTime.UtcNow;
+                if (PharmacyToBeModified == null) return BadRequest("Le Pharmacy n'existe pas");
+                        PharmacyToBeModified.UpdatedOn = DateTime.UtcNow;
                 PharmacyToBeModified.UpdatedBy = IdUser;
 
                 await _PharmacyService.Approuve(PharmacyToBeModified, PharmacyToBeModified);
@@ -592,7 +644,7 @@ namespace CRM_API.Controllers
                 var PharmacyUpdated = await _PharmacyService.GetById(Id);
 
                 var PharmacyResourceUpdated = _mapperService.Map<Pharmacy, PharmacyResource>(PharmacyUpdated);
-                var PharmacyUpdatedNew = await PharmacyById(PharmacyResourceUpdated.IdPharmacy);
+                var PharmacyUpdatedNew = await PharmacyById(PharmacyResourceUpdated.Id);
                 return Ok(PharmacyUpdatedNew);
             }
             else
@@ -616,9 +668,9 @@ namespace CRM_API.Controllers
                 var Role = claims.FindFirst("Role").Value;
                 var IdUser = int.Parse(claims.FindFirst("Id").Value);
                 var PharmacyToBeModified = await _PharmacyService.GetById(Id);
-                if (PharmacyToBeModified == null) return BadRequest("Le Pharmacy n'existe pas"); //NotFound();
-                                                                                                 //var newPharmacy = await _PharmacyService.Create(Pharmacys);
-                                                                                                 // Pharmacys.CreatedOn = SavePharmacyResource.;
+                if (PharmacyToBeModified == null) return BadRequest("Le Pharmacy n'existe pas"); 
+                                                                                                 
+
                 PharmacyToBeModified.UpdatedOn = DateTime.UtcNow;
                 PharmacyToBeModified.UpdatedBy = IdUser;
 
@@ -627,7 +679,7 @@ namespace CRM_API.Controllers
                 var PharmacyUpdated = await _PharmacyService.GetById(Id);
 
                 var PharmacyResourceUpdated = _mapperService.Map<Pharmacy, PharmacyResource>(PharmacyUpdated);
-                var PharmacyUpdatedNew = await PharmacyById(PharmacyResourceUpdated.IdPharmacy);
+                var PharmacyUpdatedNew = await PharmacyById(PharmacyResourceUpdated.Id);
                 return Ok(PharmacyUpdatedNew);
             }
             else
@@ -646,9 +698,9 @@ namespace CRM_API.Controllers
             {
 
                 var sub = await _PharmacyService.GetById(Id);
-                if (sub == null) return BadRequest("Le Pharmacy  n'existe pas"); //NotFound();
+                if (sub == null) return BadRequest("Le Pharmacy  n'existe pas"); 
                 await _PharmacyService.Delete(sub);
-                ;
+                
                 return NoContent();
             }
             catch (Exception ex)
@@ -667,11 +719,11 @@ namespace CRM_API.Controllers
                 {
                     var sub = await _PharmacyService.GetById(item);
                     empty.Add(sub);
-                    if (sub == null) return BadRequest("Le Pharmacy  n'existe pas"); //NotFound();
+                    if (sub == null) return BadRequest("Le Pharmacy  n'existe pas"); 
 
                 }
                 await _PharmacyService.DeleteRange(empty);
-                ;
+                
                 return NoContent();
             }
             catch (Exception ex)

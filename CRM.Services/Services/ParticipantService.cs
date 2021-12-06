@@ -35,17 +35,7 @@ namespace CRM.Services.Services
                            await _unitOfWork.Participants.GetAll();
         }
 
-        /* public async Task Delete(Participant Participant)
-         {
-             _unitOfWork.Participants.Remove(Participant);
-             await _unitOfWork.CommitAsync();
-         }*/
-
-        //public async Task<IEnumerable<Participant>> GetAllWithArtiste()
-        //{
-        //    return await _unitOfWork.Participants
-        //          .GetAllWithArtisteAsync();
-        //}
+        
    
         public async Task<Participant> GetById(int id)
         {
@@ -58,7 +48,7 @@ namespace CRM.Services.Services
         public async Task<IEnumerable<Participant>> GetByIdDoctor(int id)
         {
             return
-               await _unitOfWork.Participants.Find(i => i.IdDoctor == id && i.Active == 0);
+               await _unitOfWork.Participants.GetByIdDoctor(id);
         }
         public async Task<IEnumerable<Participant>> GetAllById(int id)
         {
@@ -71,7 +61,6 @@ namespace CRM.Services.Services
             await _unitOfWork.CommitAsync();
 
             Participant.Version = ParticipantToBeUpdated.Version + 1;
-          //  Participant.IdParticipant = ParticipantToBeUpdated.IdParticipant;
             Participant.Status = Status.Pending;
             Participant.Active = 0;
 
@@ -81,7 +70,6 @@ namespace CRM.Services.Services
 
         public async Task Delete(Participant Participant)
         {
-            //Participant musi =  _unitOfWork.Participants.SingleOrDefaultAsync(x=>x.Id == ParticipantToBeUpdated.Id);
             Participant.Active = 1;
 
             await _unitOfWork.CommitAsync();
@@ -131,29 +119,6 @@ namespace CRM.Services.Services
         }
 
 
-        //public Task<Participant> CreateParticipant(Participant newParticipant)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public Task DeleteParticipant(Participant Participant)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public Task<Participant> GetParticipantById(int id)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public Task<IEnumerable<Participant>> GetParticipantsByArtisteId(int artiste)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public Task UpdateParticipant(Participant ParticipantToBeUpdated, Participant Participant)
-        //{
-        //    throw new NotImplementedException();
-        //}
+      
     }
 }

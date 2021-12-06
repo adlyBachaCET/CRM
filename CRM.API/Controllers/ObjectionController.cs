@@ -376,7 +376,7 @@ namespace CRM_API.Controllers
             {
                 var Pharmacy = await _PharmacyService.GetById(SaveObjectionResource.IdPharmacy);
 
-                if (Pharmacy.IdPharmacy != Objection.IdPharmacy)
+                if (Pharmacy.Id != Objection.IdPharmacy)
                 {
                     Objection.Name = Pharmacy.Name;
                     Objection.Pharmacy = Pharmacy;

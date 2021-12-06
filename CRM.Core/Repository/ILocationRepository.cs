@@ -6,6 +6,8 @@ namespace CRM.Core.Repository
 {
     public interface ILocationRepository : IRepository<Location>
     {
+        Task<IEnumerable<Location>> GetAllByType(int TypeName);
+        Task<IEnumerable<Service>> GetAllServices(int Id);
         Task<IEnumerable<Location>> GetAllActif();
         Task<IEnumerable<Location>> GetAllInActif();
         Task<IEnumerable<Location>> GetAllAcceptedActif();

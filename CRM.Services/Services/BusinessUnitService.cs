@@ -69,7 +69,6 @@ namespace CRM.Services.Services
 
         public async Task Delete(BusinessUnit BusinessUnit)
         {
-            //BusinessUnit musi =  _unitOfWork.BusinessUnits.SingleOrDefaultAsync(x=>x.Id == BusinessUnitToBeUpdated.Id);
             BusinessUnit.Active = 1;
 
             await _unitOfWork.CommitAsync();

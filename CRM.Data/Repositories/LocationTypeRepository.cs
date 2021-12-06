@@ -57,7 +57,7 @@ namespace CRM.Data.Repositories
         }
         public async Task<IEnumerable<LocationType>> GetAllRejected()
         {
-            var result = await MyDbContext.LocationType.Where(a => a.Status == Status.Pending).ToListAsync();
+            var result = await MyDbContext.LocationType.Where(a => a.Status == Status.Rejected).ToListAsync();
             return result;
         }
 
@@ -66,10 +66,6 @@ namespace CRM.Data.Repositories
             var result = await MyDbContext.LocationType.Where(a => a.Name == Name&& a.Type==Type && a.Active==0).FirstOrDefaultAsync();
             return result;
         }
-        //public async Task<IEnumerable<LocationType>> GetAllWithArtisteAsync()
-        //{
-        //    return await MyLocationTypeDbContext.LocationTypes
-        //        .Include(x => x.Artiste).ToListAsync();
-        //}
+   
     }
 }

@@ -11,7 +11,7 @@ namespace CRM.Core.Models
             Target = new HashSet<Target>();
             Info = new HashSet<Info>();
             InverseLinked = new HashSet<Doctor>();
-            Phone = new HashSet<Phone>();
+            Phones = new HashSet<Phone>();
         }
         public int? CreatedBy { get; set; }
         public int? UpdatedBy { get; set; }
@@ -44,7 +44,7 @@ namespace CRM.Core.Models
         public virtual ICollection<Target> Target { get; set; }
         public virtual ICollection<Info> Info { get; set; }
         public virtual ICollection<Doctor> InverseLinked { get; set; }
-        public virtual ICollection<Phone> Phone { get; set; }
+        public virtual ICollection<Phone> Phones { get; set; }
         public virtual ICollection<Appointement> Appointement { get; set; }
 
         public virtual ICollection<TagsDoctor> TagsDoctor { get; set; }

@@ -5,7 +5,7 @@ namespace CRM.Core.Models
 {
     public partial class Objection 
     {
-        public int IdObjection { get; set; }
+        public int Id { get; set; }
         public int Active { get; set; }
         public int Version { get; set; }
 

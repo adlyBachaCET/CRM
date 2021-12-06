@@ -15,6 +15,12 @@ namespace CRM_API.Mapping
             CreateMap<SaveTargetResource, Target>();
             CreateMap<SaveTargetResource, TargetResource>();
             CreateMap<TargetResource, Target>();
+            //Externals
+            CreateMap<Externals, ExternalsResource>();
+            CreateMap<Externals, SaveExternalsResource>();
+            CreateMap<SaveExternalsResource, Externals>();
+            CreateMap<SaveExternalsResource, ExternalsResource>();
+            CreateMap<ExternalsResource, Externals>();
 
             CreateMap<Target, IEnumerable<TargetResource>>();
             //Target

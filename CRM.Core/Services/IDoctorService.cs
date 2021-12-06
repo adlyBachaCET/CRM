@@ -6,7 +6,8 @@ namespace CRM.Core.Services
 {
     public interface IDoctorService
     {
-        Task<Doctor> GetById(int id);
+        Task<IEnumerable<Doctor>> GetDoctorsByLocalities(List<int> IdLocalities);
+        Task<List<Locality>> GetLocalitiesFromDoctors(List<Doctor> DoctorList);
         Task<Doctor> GetById(int? id);
         Task<DoctorExiste> GetExist(string FirstName, string LastName, string Email);
         Task<Doctor> Create(Doctor newDoctor);

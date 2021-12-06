@@ -66,10 +66,6 @@ namespace CRM.Data.Repositories
             var result = await MyDbContext.Phone.Where(a =>a.Active==0 && a.IdDoctor==Id).ToListAsync();
             return result;
         }
-        //public async Task<IEnumerable<Phone>> GetAllWithArtisteAsync()
-        //{
-        //    return await MyPhoneDbContext.Phones
-        //        .Include(x => x.Artiste).ToListAsync();
-        //}
+       
     }
 }

@@ -5,7 +5,7 @@ namespace CRM.Core.Models
 {
     public partial class PharmacyResource
     {
-        public int IdPharmacy { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
         public int Version { get; set; }
         public int? CreatedBy { get; set; }
@@ -19,6 +19,7 @@ namespace CRM.Core.Models
         public string NameBrick2 { get; set; }
         public int NumBrick1 { get; set; }
         public int NumBrick2 { get; set; }
+        public GrossistePharmacy GrossistePharmacy { get; set; }
 
         public string Role { get; set; }//Pharmacy ou grossicte
         public Status Status { get; set; }

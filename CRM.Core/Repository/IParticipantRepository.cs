@@ -6,6 +6,7 @@ namespace CRM.Core.Repository
 {
     public interface IParticipantRepository : IRepository<Participant>
     {
+        Task<IEnumerable<Participant>> GetByIdDoctor(int id);
         Task<IEnumerable<Participant>> GetAllActif();
         Task<IEnumerable<Participant>> GetAllInActif();
         Task<IEnumerable<Participant>> GetAllAcceptedActif();

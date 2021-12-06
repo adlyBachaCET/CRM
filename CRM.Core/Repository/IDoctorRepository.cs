@@ -6,6 +6,15 @@ namespace CRM.Core.Repository
 {
     public interface IDoctorRepository : IRepository<Doctor>
     {
+        Task<List<Locality>> GetLocalitiesFromDoctors(List<Doctor> DoctorList);
+        Task<IEnumerable<Doctor>> GetDoctorsByLocalities(List<int> IdLocalities);
+        Task<DoctorExiste> GetExist(string FirstName, string LastName, string Email);
+        Task<IEnumerable<Doctor>> GetDoctorsNotAssigned();
+        Task<IEnumerable<Doctor>> GetDoctorsAssigned();
+        Task<IEnumerable<Doctor>> GetMyDoctorsWithoutAppointment(int Id);
+        Task<IEnumerable<Doctor>> GetDoctorsNotAssignedByBu(int Id);
+        Task<IEnumerable<Doctor>> GetDoctorsAssignedByBu(int Id);
+        Task<IEnumerable<Doctor>> GetAllDoctorsByBu(int Id);
         Task<IEnumerable<Doctor>> GetAllActif();
         Task<IEnumerable<Doctor>> GetAllInActif();
         Task<Doctor> GetByIdActif(int id);

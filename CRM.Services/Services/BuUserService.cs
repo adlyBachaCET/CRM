@@ -34,17 +34,6 @@ namespace CRM.Services.Services
                            await _unitOfWork.BuUsers.GetAll();
         }
 
-       /* public async Task Delete(BuUser BuUser)
-        {
-            _unitOfWork.BuUsers.Remove(BuUser);
-            await _unitOfWork.CommitAsync();
-        }*/
-
-        //public async Task<IEnumerable<BuUser>> GetAllWithArtiste()
-        //{
-        //    return await _unitOfWork.BuUsers
-        //          .GetAllWithArtisteAsync();
-        //}
 
         public async Task<BuUser> GetById(int id)
         {
@@ -54,7 +43,7 @@ namespace CRM.Services.Services
         public async Task<BuUser> GetByIdUser(int id)
         {
             return
-                await _unitOfWork.BuUsers.SingleOrDefault(i=>i.IdUser==id);
+                await _unitOfWork.BuUsers.GetByIdUser(id);
         }
 
         public async Task Update(BuUser BuUserToBeUpdated, BuUser BuUser)
@@ -65,7 +54,6 @@ namespace CRM.Services.Services
 
         public async Task Delete(BuUser BuUser)
         {
-            //BuUser musi =  _unitOfWork.BuUsers.SingleOrDefaultAsync(x=>x.Id == BuUserToBeUpdated.Id);
             BuUser.Active = 1;
 
             await _unitOfWork.CommitAsync();
@@ -92,29 +80,6 @@ namespace CRM.Services.Services
             return
                              await _unitOfWork.BuUsers.GetAllInActif();
         }
-        //public Task<BuUser> CreateBuUser(BuUser newBuUser)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public Task DeleteBuUser(BuUser BuUser)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public Task<BuUser> GetBuUserById(int id)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public Task<IEnumerable<BuUser>> GetBuUsersByArtisteId(int artiste)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public Task UpdateBuUser(BuUser BuUserToBeUpdated, BuUser BuUser)
-        //{
-        //    throw new NotImplementedException();
-        //}
+        
     }
 }

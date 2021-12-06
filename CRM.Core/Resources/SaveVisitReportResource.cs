@@ -28,9 +28,11 @@ namespace CRM.Core.Models
         public SaveVisitResource Visit { get; set; }
         public List<SaveObjectionResource> Objections { get; set; }
         public List<SaveObjectionResource> Requests { get; set; }
-        public List<SaveParticipantResource> Doctors { get; set; }
+        public List<int> ParticipantDoctors { get; set; }
+        public List<int> ParticipantPharmacys { get; set; }
 
-        public List<int> IdProducts { get; set; }
+        public List<int> ListOfProducts { get; set; }
+        public List<SaveExternalsResource> Externals { get; set; }
 
     }
 }

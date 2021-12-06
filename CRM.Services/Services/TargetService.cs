@@ -66,10 +66,16 @@ namespace CRM.Services.Services
 
         }
 
-            public async Task<IEnumerable<Target>> GetByNumTarget(int id)
+            public async Task<IEnumerable<Target>> GetEmptyTargetByNumTarget(int id)
         {
             return
-                await _unitOfWork.Target.Find(i=>i.NumTarget==id);
+                await _unitOfWork.Target.GetEmptyTargetByNumTarget(id);
+        }
+
+        public async Task<IEnumerable<Target>> GetByFullTarget(int id)
+        {
+            return
+                await _unitOfWork.Target.GetByFullTarget(id);
         }
         public async Task<IEnumerable<Sector>> GetSectorsByNumTarget(int id)
         {var Target = await _unitOfWork.Target.Find(i => i.NumTarget == id
@@ -135,7 +141,7 @@ namespace CRM.Services.Services
 
             foreach (var item in Target)
             {
-                Pharmacy Pharmacy = await _unitOfWork.Pharmacys.SingleOrDefault(i => i.IdPharmacy == item.IdPharmacy);
+                Pharmacy Pharmacy = await _unitOfWork.Pharmacys.SingleOrDefault(i => i.Id == item.IdPharmacy);
                 if (!Pharmacys.Contains(Pharmacy) && Pharmacy != null)
                 {
                     Pharmacys.Add(Pharmacy);

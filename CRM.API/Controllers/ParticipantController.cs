@@ -57,7 +57,7 @@ namespace CRM_API.Controllers
 
             if (Pharmacy != null)
             {
-                Participant.IdPharmacy = Pharmacy.IdPharmacy;
+                Participant.IdPharmacy = Pharmacy.Id;
 
                 Participant.IdPharmacyNavigation = Pharmacy;
                 Participant.VersionPharmacy = Pharmacy.Version;
@@ -158,7 +158,7 @@ namespace CRM_API.Controllers
                     Participant.IdDoctorNavigation = null;
                     Participant.VersionDoctor = null;
                     Participant.StatusDoctor = null;
-                    Participant.IdPharmacy = Pharmacy.IdPharmacy;
+                    Participant.IdPharmacy = Pharmacy.Id;
                     Participant.IdPharmacyNavigation = Pharmacy;
                     Participant.VersionPharmacy = Pharmacy.Version;
                     Participant.StatusPharmacy = Pharmacy.Status;

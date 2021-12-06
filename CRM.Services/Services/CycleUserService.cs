@@ -34,17 +34,7 @@ namespace CRM.Services.Services
                            await _unitOfWork.CycleUsers.GetAll();
         }
 
-       /* public async Task Delete(CycleUser CycleUser)
-        {
-            _unitOfWork.CycleUsers.Remove(CycleUser);
-            await _unitOfWork.CommitAsync();
-        }*/
-
-        //public async Task<IEnumerable<CycleUser>> GetAllWithArtiste()
-        //{
-        //    return await _unitOfWork.CycleUsers
-        //          .GetAllWithArtisteAsync();
-        //}
+      
 
         public async Task<CycleUser> GetById(int id)
         {
@@ -53,15 +43,8 @@ namespace CRM.Services.Services
         }
         public async Task<List<Cycle>> GetByIdUser(int id)
         {
-            List<Cycle> List = new List<Cycle>();
-            var CycleUser = await _unitOfWork.CycleUsers.Find(i => i.IdUser == id && i.Active == 0);
-            foreach(var item in CycleUser)
-            {
-                var Cycle = await _unitOfWork.Cycles.SingleOrDefault(i => i.IdCycle == item.IdCycle && i.Active == 0);
-                List.Add(Cycle);
-            }
             return
-                List;
+                  await _unitOfWork.CycleUsers.GetByIdUser(id);
         }
 
         public async Task Update(CycleUser CycleUserToBeUpdated, CycleUser CycleUser)
@@ -72,7 +55,6 @@ namespace CRM.Services.Services
 
         public async Task Delete(CycleUser CycleUser)
         {
-            //CycleUser musi =  _unitOfWork.CycleUsers.SingleOrDefaultAsync(x=>x.Id == CycleUserToBeUpdated.Id);
             CycleUser.Active = 1;
 
             await _unitOfWork.CommitAsync();
@@ -103,31 +85,8 @@ namespace CRM.Services.Services
         public async  Task<CycleUser> GetByIdCycleUser(int idCycle, int idUser)
         {
             return
-                            await _unitOfWork.CycleUsers.SingleOrDefault(i => i.IdCycle == idCycle && i.IdUser == idCycle && i.Active == 0);
+                            await _unitOfWork.CycleUsers.GetByIdCycleUser(idCycle,idUser);
         }
-        //public Task<CycleUser> CreateCycleUser(CycleUser newCycleUser)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public Task DeleteCycleUser(CycleUser CycleUser)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public Task<CycleUser> GetCycleUserById(int id)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public Task<IEnumerable<CycleUser>> GetCycleUsersByArtisteId(int artiste)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public Task UpdateCycleUser(CycleUser CycleUserToBeUpdated, CycleUser CycleUser)
-        //{
-        //    throw new NotImplementedException();
-        //}
+       
     }
 }

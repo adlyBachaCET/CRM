@@ -6,6 +6,7 @@ namespace CRM.Core.Repository
 {
     public interface IBuUserRepository : IRepository<BuUser>
     {
+        Task<BuUser> GetByIdUser(int id);
         Task<IEnumerable<BuUser>> GetAllActif();
         Task<IEnumerable<BuUser>> GetAllInActif();
         Task<BuUser> GetByIdActif(int id);

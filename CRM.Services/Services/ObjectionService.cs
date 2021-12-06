@@ -38,41 +38,35 @@ namespace CRM.Services.Services
         public async Task<IEnumerable<Objection>> GetAll(Status? Status, RequestObjection RequestObjection)
         {
 
-            if (Status != null) return await _unitOfWork.Objections.Find(i => i.Status == Status && i.Active == 0 
-            && i.RequestObjection==RequestObjection);
+         return await _unitOfWork.Objections.GetAll(Status,RequestObjection);
 
-            return await _unitOfWork.Objections.Find(i => i.Active == 0
-            && i.RequestObjection == RequestObjection);
+           
 
 
         }
         public async Task<IEnumerable<Objection>> GetAllByReport(Status? Status, int IdReport)
         {
 
-            if (Status != null) return await _unitOfWork.Objections.Find(i => i.Status == Status && i.Active == 0
-            && i.IdVisitReport == IdReport);
-
-            return await _unitOfWork.Objections.Find(i => i.Active == 0
-            && i.IdVisitReport == IdReport);
+           
+            return await _unitOfWork.Objections.GetAllByReport(Status, IdReport);
 
 
         }
         public async Task<IEnumerable<Objection>> GetAll(Status? Status)
         {
 
-            if (Status != null) return await _unitOfWork.Objections.Find(i => i.Status == Status && i.Active == 0);
 
-            return await _unitOfWork.Objections.Find(i => i.Status == Status && i.Active == 0);
+            return await _unitOfWork.Objections.GetAll( Status);
 
 
         }
         public async Task<Objection> GetById(int Id,Status? Status, RequestObjection RequestObjection)
         {
 
-            if (Status != null) return await _unitOfWork.Objections.SingleOrDefault(i => i.IdObjection== Id&& i.Status == Status && i.Active == 0
+            if (Status != null) return await _unitOfWork.Objections.SingleOrDefault(i => i.Id== Id&& i.Status == Status && i.Active == 0
             && i.RequestObjection == RequestObjection);
 
-            return await _unitOfWork.Objections.SingleOrDefault(i => i.IdObjection == Id && i.Active == 0
+            return await _unitOfWork.Objections.SingleOrDefault(i => i.Id == Id && i.Active == 0
             && i.RequestObjection == RequestObjection);
 
 
@@ -83,7 +77,7 @@ namespace CRM.Services.Services
             await _unitOfWork.CommitAsync();
             Objection = ObjectionToBeUpdated;
             Objection.Version = ObjectionToBeUpdated.Version + 1;
-            Objection.IdObjection = ObjectionToBeUpdated.IdObjection;
+            Objection.Id = ObjectionToBeUpdated.Id;
             Objection.Status = Status.Approuved;
             Objection.UpdatedOn = System.DateTime.UtcNow;
             Objection.CreatedOn = ObjectionToBeUpdated.CreatedOn;
@@ -97,7 +91,7 @@ namespace CRM.Services.Services
             await _unitOfWork.CommitAsync();
             Objection = ObjectionToBeUpdated;
             Objection.Version = ObjectionToBeUpdated.Version + 1;
-            Objection.IdObjection = ObjectionToBeUpdated.IdObjection;
+            Objection.Id = ObjectionToBeUpdated.Id;
             Objection.Status = Status.Rejected;
             Objection.UpdatedOn = System.DateTime.UtcNow;
             Objection.CreatedOn = ObjectionToBeUpdated.CreatedOn;
@@ -122,7 +116,7 @@ namespace CRM.Services.Services
         public async Task<Objection> GetById(int id)
         {
              return
-               await _unitOfWork.Objections.SingleOrDefault(i => i.IdObjection == id && i.Active == 0);
+               await _unitOfWork.Objections.SingleOrDefault(i => i.Id == id && i.Active == 0);
         }
    
         public async Task Update(Objection ObjectionToBeUpdated, Objection Objection)
@@ -131,7 +125,7 @@ namespace CRM.Services.Services
             await _unitOfWork.CommitAsync();
 
             Objection.Version = ObjectionToBeUpdated.Version + 1;
-            Objection.IdObjection = ObjectionToBeUpdated.IdObjection;
+            Objection.Id = ObjectionToBeUpdated.Id;
             Objection.Status = Status.Pending;
             Objection.Active = 0;
 

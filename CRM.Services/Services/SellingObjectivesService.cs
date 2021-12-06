@@ -22,7 +22,7 @@ namespace CRM.Services.Services
                 newSellingObjectives.IdProduct = Product.IdProduct;
                 newSellingObjectives.VersionProduct = Product.Version;
                 newSellingObjectives.StatusProduct = Product.Status;
-                newSellingObjectives.IdProductNavigation = Product;
+                newSellingObjectives.Product = Product;
 
             }
        
@@ -43,8 +43,8 @@ namespace CRM.Services.Services
             }
             if (newSellingObjectives.IdPharmacy != 0)
             {
-                var Pharmacy = await _unitOfWork.Pharmacys.SingleOrDefault(a => a.IdPharmacy == newSellingObjectives.IdPharmacy && a.Active == 0);
-                newSellingObjectives.IdPharmacy = Pharmacy.IdPharmacy;
+                var Pharmacy = await _unitOfWork.Pharmacys.SingleOrDefault(a => a.Id == newSellingObjectives.IdPharmacy && a.Active == 0);
+                newSellingObjectives.IdPharmacy = Pharmacy.Id;
                 newSellingObjectives.VersionPharmacy = Pharmacy.Version;
                 newSellingObjectives.StatusPharmacy = Pharmacy.Status;
                 newSellingObjectives.Pharmacy = Pharmacy;
