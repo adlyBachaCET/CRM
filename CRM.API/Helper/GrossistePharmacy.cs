@@ -17,7 +17,6 @@ namespace CRM_API.Helper
         public int Id { get; set; }
 
 
-        public Status? Status { get; set; }
         public GrossistePharmacy GrossistePharmacy { get; set; }
 
     }

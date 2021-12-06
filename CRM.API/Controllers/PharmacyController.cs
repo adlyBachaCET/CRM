@@ -610,7 +610,7 @@ namespace CRM_API.Controllers
 
                 var Id = int.Parse(claims.FindFirst("Id").Value);
                 var exp = DateTime.Parse(claims.FindFirst("Exipres On").Value);
-                var Pharmacys = await _PharmacyService.GetById(GrossistePharmacyStatusById.Id, GrossistePharmacyStatusById.Status, GrossistePharmacyStatusById.GrossistePharmacy);
+                var Pharmacys = await _PharmacyService.GetById(GrossistePharmacyStatusById.Id, null, GrossistePharmacyStatusById.GrossistePharmacy);
                 if (Pharmacys == null) return NotFound();
                 var PharmacyObject = await PharmacyById(Pharmacys.Id);
 
