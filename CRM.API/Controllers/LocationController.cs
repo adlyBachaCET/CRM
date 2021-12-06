@@ -49,40 +49,39 @@ namespace CRM_API.Controllers
         }
 
         [HttpPut("Approuve/{Id}")]
-        public async Task<ActionResult<LocationResource>> ApprouveLocation(int Id)
+        public async Task<ActionResult<LocationResource>> ApprouveLocation([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token,
+      int Id)
         {
             try
             {
-                StringValues token = "";
-            ErrorHandling ErrorMessag = new ErrorHandling();
-            Request.Headers.TryGetValue("token", out token);
-            if (token != "")
-            {
-                var claims = _UserService.getPrincipal(token);
+
+                var claims = _UserService.getPrincipal(Token);
+
+                if (claims == null)
+                {
+                    throw new InvalidOperationException("Invalid Token = " + Token);
+                }
                 var Role = claims.FindFirst("Role").Value;
                 var IdUser = int.Parse(claims.FindFirst("Id").Value);
                 var LocationToBeModified = await _LocationService.GetById(Id);
-                if (LocationToBeModified == null) return BadRequest("Le Location n'existe pas"); //NotFound();
-                                                                                                 //var newLocation = await _LocationService.Create(Locations);
-                                                                                                 // Locations.CreatedOn = SaveLocationResource.;
+                if (LocationToBeModified == null)
+                {
+                    throw new InvalidOperationException("No Location to be modified found with Id " + Id);
+                }
                 LocationToBeModified.UpdatedOn = DateTime.UtcNow;
                 LocationToBeModified.UpdatedBy = IdUser;
 
                 await _LocationService.Approuve(LocationToBeModified, LocationToBeModified);
 
                 var LocationUpdated = await _LocationService.GetById(Id);
-
+                if (LocationUpdated == null)
+                {
+                    throw new InvalidOperationException("No Location Updated found with Id " + Id);
+                }
                 var LocationResourceUpdated = _mapperService.Map<Location, LocationResource>(LocationUpdated);
 
                 return Ok(LocationResourceUpdated);
-            }
-            else
-            {
-                ErrorMessag.ErrorMessage = "Empty Token";
-                ErrorMessag.StatusCode = 400;
-                return Ok(ErrorMessag);
-
-            }
+           
             }
             catch (Exception ex)
             {
@@ -90,40 +89,39 @@ namespace CRM_API.Controllers
             }
         }
         [HttpPut("Reject/{Id}")]
-        public async Task<ActionResult<LocationResource>> RejectLocation(int Id)
+        public async Task<ActionResult<LocationResource>> RejectLocation([FromHeader(Name = "Token")][Required(ErrorMessage = "Token is required")] string Token,
+      int Id)
         {
             try
             {
-                StringValues token = "";
-            ErrorHandling ErrorMessag = new ErrorHandling();
-            Request.Headers.TryGetValue("token", out token);
-            if (token != "")
-            {
-            var claims = _UserService.getPrincipal(token);
-            var Role = claims.FindFirst("Role").Value;
+
+                var claims = _UserService.getPrincipal(Token);
+
+                if (claims == null)
+                {
+                    throw new InvalidOperationException("Invalid Token = " + Token);
+                }
+                var Role = claims.FindFirst("Role").Value;
             var IdUser = int.Parse(claims.FindFirst("Id").Value);
             var LocationToBeModified = await _LocationService.GetById(Id);
-            if (LocationToBeModified == null) return BadRequest("Le Location n'existe pas"); //NotFound();
-            //var newLocation = await _LocationService.Create(Locations);
-            // Locations.CreatedOn = SaveLocationResource.;
-            LocationToBeModified.UpdatedOn = DateTime.UtcNow;
+                if (LocationToBeModified == null)
+                {
+                    throw new InvalidOperationException("No Location To Be Modified Updated found with Id " + Id);
+                }    
+                LocationToBeModified.UpdatedOn = DateTime.UtcNow;
             LocationToBeModified.UpdatedBy = IdUser;
 
             await _LocationService.Reject(LocationToBeModified, LocationToBeModified);
 
             var LocationUpdated = await _LocationService.GetById(Id);
-
-            var LocationResourceUpdated = _mapperService.Map<Location, LocationResource>(LocationUpdated);
+                if (LocationToBeModified == null)
+                {
+                    throw new InvalidOperationException("No Location Updated found with Id " + Id);
+                }
+                var LocationResourceUpdated = _mapperService.Map<Location, LocationResource>(LocationUpdated);
 
             return Ok(LocationResourceUpdated);
-            }
-            else
-            {
-                ErrorMessag.ErrorMessage = "Empty Token";
-                ErrorMessag.StatusCode = 400;
-                return Ok(ErrorMessag);
-
-            }
+            
             }
             catch (Exception ex)
             {
@@ -137,6 +135,11 @@ namespace CRM_API.Controllers
             try
             {
                 var claims = _UserService.getPrincipal(Token);
+
+                if (claims == null)
+                {
+                    throw new InvalidOperationException("Invalid Token = " + Token);
+                }
                 var Role = claims.FindFirst("Role").Value;
                 var Id = int.Parse(claims.FindFirst("Id").Value);
 
@@ -157,12 +160,20 @@ namespace CRM_API.Controllers
                         Location.Status = Status.Pending;
                     }
                     var Locality1 = await _LocalityService.GetById(SaveLocationResource.LocationDetails.IdLocality1);
-                    Location.NameLocality1 = Locality1.Name;
+                if (Locality1 == null)
+                {
+                    throw new InvalidOperationException("No Locality1 found with Id " + SaveLocationResource.LocationDetails.IdLocality1);
+                }
+                Location.NameLocality1 = Locality1.Name;
                     Location.VersionLocality1 = Locality1.Version;
                     Location.StatusLocality1 = Locality1.Status;
                     Location.IdLocality1 = Locality1.IdLocality;
                     var Locality2 = await _LocalityService.GetById(SaveLocationResource.LocationDetails.IdLocality2);
-                    Location.NameLocality2 = Locality2.Name;
+                if (Locality2 == null)
+                {
+                    throw new InvalidOperationException("No Locality1 found with Id " + SaveLocationResource.LocationDetails.IdLocality2);
+                }
+                Location.NameLocality2 = Locality2.Name;
                     Location.VersionLocality2 = Locality2.Version;
                     Location.StatusLocality2 = Locality2.Status;
                     Location.IdLocality2 = Locality1.IdLocality;
@@ -174,8 +185,16 @@ namespace CRM_API.Controllers
                     Location.CreatedBy = Id;
                     Location.UpdatedBy = Id;
                     var Brick1 = await _BrickService.GetByIdActif(SaveLocationResource.LocationDetails.IdBrick1);
-                    var Brick2 = await _BrickService.GetByIdActif(SaveLocationResource.LocationDetails.IdBrick2);
-                    if (Brick1 != null)
+                if (Brick1 == null)
+                {
+                    throw new InvalidOperationException("No Brick1 found with Id " + SaveLocationResource.LocationDetails.IdBrick1);
+                }
+                var Brick2 = await _BrickService.GetByIdActif(SaveLocationResource.LocationDetails.IdBrick2);
+                if (Brick2 == null)
+                {
+                    throw new InvalidOperationException("No Brick2 found with Id " + SaveLocationResource.LocationDetails.IdBrick2);
+                }
+                if (Brick1 != null)
                     {
                         Location.IdBrick1 = Brick1.IdBrick;
                         Location.VersionBrick1 = Brick1.Version;
@@ -231,12 +250,20 @@ namespace CRM_API.Controllers
                             Service.Status = Status.Pending;
                         }
                         var NewService = await _ServiceService.Create(Service);
-                        Services.Add(NewService);
+                    if (NewService == null)
+                    {
+                        throw new InvalidOperationException("No New Service Created");
+                    }
+                    Services.Add(NewService);
                     }
                     //*** Creation dans la base de données ***
                     var NewLocation = await _LocationService.Create(Location);
-                    //*** Mappage ***
-                    var LocationResource = _mapperService.Map<Location, LocationResource>(NewLocation);
+                if (NewLocation == null)
+                {
+                    throw new InvalidOperationException("No New Location Created");
+                }
+                //*** Mappage ***
+                var LocationResource = _mapperService.Map<Location, LocationResource>(NewLocation);
                     foreach (var item in Services)
                     {
                     LocationDoctor LocationDoctor = new LocationDoctor();
@@ -267,6 +294,10 @@ namespace CRM_API.Controllers
                         LocationDoctor.CreatedBy = Id;
                         LocationDoctor.UpdatedBy = Id;
                         var NewLocationDoctor = await _LocationDoctorService.Create(LocationDoctor);
+                        if (NewLocationDoctor == null)
+                        {
+                            throw new InvalidOperationException("No New Location Doctor Created");
+                        }
                     }
 
                 
@@ -288,10 +319,18 @@ namespace CRM_API.Controllers
         {
             try
             {
-                var Employe = await _LocationService.GetAll();
-                if (Employe == null) return NotFound();
-                // var EmployeResource = _mapperService.Map<Employe, EmployeResource>(Employe);
-                return Ok(Employe);
+                var claims = _UserService.getPrincipal(Token);
+
+                if (claims == null)
+                {
+                    throw new InvalidOperationException("Invalid Token = " + Token);
+                }
+                var Locations = await _LocationService.GetAll();
+                if (Locations == null)
+                {
+                    throw new InvalidOperationException("No Locations Found");
+                }
+                return Ok(Locations);
             }
             catch (Exception ex)
             {
@@ -305,8 +344,17 @@ namespace CRM_API.Controllers
         {
             try
             {
+                var claims = _UserService.getPrincipal(Token);
+
+                if (claims == null)
+                {
+                    throw new InvalidOperationException("Invalid Token = " + Token);
+                }
                 var Locations = await _LocationService.GetAllByType(Id);
-                if (Locations == null) return NotFound();
+                if (Locations == null)
+                {
+                    throw new InvalidOperationException("No Locations Found");
+                }
                 List<LocationResource> LocationResources = new List<LocationResource>();
                 foreach (var item in Locations)
                 {
@@ -325,8 +373,17 @@ namespace CRM_API.Controllers
         {
             try
             {
+                var claims = _UserService.getPrincipal(Token);
+
+                if (claims == null)
+                {
+                    throw new InvalidOperationException("Invalid Token = " + Token);
+                }
                 var Locations = await _LocationService.GetAllActif();
-                if (Locations == null) return NotFound();
+                if (Locations == null)
+                {
+                    throw new InvalidOperationException("No Locations Found");
+                }
                 List<LocationResource> LocationResources = new List<LocationResource>();
                 foreach (var item in Locations)
                 {
@@ -345,8 +402,17 @@ namespace CRM_API.Controllers
         {
             try
             {
+                var claims = _UserService.getPrincipal(Token);
+
+                if (claims == null)
+                {
+                    throw new InvalidOperationException("Invalid Token = " + Token);
+                }
                 var Locations = await _LocationService.GetAllInActif();
-                if (Locations == null) return NotFound();
+                if (Locations == null)
+                {
+                    throw new InvalidOperationException("No Locations Found");
+                }
                 List<LocationResource> LocationResources = new List<LocationResource>();
                 foreach (var item in Locations)
                 {
@@ -366,8 +432,17 @@ namespace CRM_API.Controllers
         {
             try
             {
+                var claims = _UserService.getPrincipal(Token);
+
+                if (claims == null)
+                {
+                    throw new InvalidOperationException("Invalid Token = " + Token);
+                }
                 var Locations = await _LocationService.GetById(Id);
-                if (Locations == null) return NotFound();
+                if (Locations == null)
+                {
+                    throw new InvalidOperationException("No Locations Found");
+                }
                 var LocationRessource = _mapperService.Map<Location, LocationResource>(Locations);
                 return Ok(LocationRessource);
             }
@@ -381,8 +456,17 @@ namespace CRM_API.Controllers
         {
             try
             {
+                var claims = _UserService.getPrincipal(Token);
+
+                if (claims == null)
+                {
+                    throw new InvalidOperationException("Invalid Token = " + Token);
+                }
                 var Locations = await _LocationService.GetAllServices(Id);
-                if (Locations == null) return NotFound();
+                if (Locations == null)
+                {
+                    throw new InvalidOperationException("No Locations Found");
+                }
                 List<ServiceResource> Services = new List<ServiceResource>();
                 foreach(var item in Locations) {
                 var ServiceRessource = _mapperService.Map<Service, ServiceResource>(item);
@@ -401,6 +485,11 @@ namespace CRM_API.Controllers
             try
             {
                 var claims = _UserService.getPrincipal(Token);
+
+                if (claims == null)
+                {
+                    throw new InvalidOperationException("Invalid Token = " + Token);
+                }
                 var Role = claims.FindFirst("Role").Value;
                 var IdUser = int.Parse(claims.FindFirst("Id").Value);
 
@@ -409,23 +498,43 @@ namespace CRM_API.Controllers
                 var Location = _mapperService.Map<SaveLocationResource, Location>(SaveLocationResource);
                 //var newLocation = await _LocationService.Create(Locations);
                 var Locality1 = await _LocalityService.GetById(SaveLocationResource.LocationDetails.IdLocality1);
+                if (Locality1 == null)
+                {
+                    throw new InvalidOperationException("No Locality1 found with Id " + SaveLocationResource.LocationDetails.IdLocality1);
+                }
                 Location.NameLocality1 = Locality1.Name;
                 Location.VersionLocality1 = Locality1.Version;
                 Location.StatusLocality1 = Locality1.Status;
                 Location.IdLocality1 = Locality1.IdLocality;
                 var Locality2 = await _LocalityService.GetById(SaveLocationResource.LocationDetails.IdLocality2);
+                if (Locality2 == null)
+                {
+                    throw new InvalidOperationException("No Locality2 found with Id " + SaveLocationResource.LocationDetails.IdLocality2);
+                }
                 Location.NameLocality2 = Locality2.Name;
                 Location.VersionLocality2 = Locality2.Version;
                 Location.StatusLocality2 = Locality2.Status;
                 Location.IdLocality2 = Locality1.IdLocality;
                 var NewLocationType = await _LocationTypeService.GetById(SaveLocationResource.LocationDetails.IdLocationType);
+                if (NewLocationType == null)
+                {
+                    throw new InvalidOperationException("No LocationType found with Id " + SaveLocationResource.LocationDetails.IdLocationType);
+                }
                 Location.NameLocationType = NewLocationType.Name;
                 Location.StatusLocationType = NewLocationType.Status;
                 Location.VersionLocationType = NewLocationType.Version;
                 Location.TypeLocationType = NewLocationType.Type;
 
                 var Brick1 = await _BrickService.GetByIdActif(SaveLocationResource.LocationDetails.IdBrick1);
+                if (Brick1 == null)
+                {
+                    throw new InvalidOperationException("No Brick1 found with Id " + SaveLocationResource.LocationDetails.IdBrick1);
+                }
                 var Brick2 = await _BrickService.GetByIdActif(SaveLocationResource.LocationDetails.IdBrick2);
+                if (Brick2 == null)
+                {
+                    throw new InvalidOperationException("No Brick2 found with Id " + SaveLocationResource.LocationDetails.IdBrick2);
+                }
                 if (Brick1 != null)
                 {
                     Location.IdBrick1 = Brick1.IdBrick;
@@ -479,7 +588,10 @@ namespace CRM_API.Controllers
                 await _LocationService.Update(LocationToBeModified, Location);
 
                 var LocationUpdated = await _LocationService.GetById(Id);
-
+                if (LocationUpdated == null)
+                {
+                    throw new InvalidOperationException("No Location Updated found with Id " + Id);
+                }
                 var LocationResourceUpdated = _mapperService.Map<Location, LocationResource>(LocationUpdated);
                 List<Service> Services = new List<Service>();
 
@@ -502,6 +614,10 @@ namespace CRM_API.Controllers
                         Service.Status = Status.Pending;
                     }
                     var NewService = await _ServiceService.Create(Service);
+                    if (NewService == null)
+                    {
+                        throw new InvalidOperationException("No NewService Created " + NewService);
+                    }
                     Services.Add(NewService);
                 }
                 foreach (var item in Services)
@@ -519,6 +635,10 @@ namespace CRM_API.Controllers
                         if (item.IdService != 0)
                         {
                             var NewService = await _ServiceService.GetById(item.IdService);
+                            if (NewService == null)
+                            {
+                                throw new InvalidOperationException("No NewService Found in services list " + NewService);
+                            }
                             LocationDoctor.IdService = NewService.IdService;
 
                         }
@@ -535,6 +655,10 @@ namespace CRM_API.Controllers
                         LocationDoctor.CreatedBy = Id;
                         LocationDoctor.UpdatedBy = Id;
                         var NewLocationDoctor = await _LocationDoctorService.Create(LocationDoctor);
+                        if (NewLocationDoctor == null)
+                        {
+                            throw new InvalidOperationException("No New Location Doctor Created " + NewLocationDoctor);
+                        }
                     }
                 }
                 return Ok(LocationResourceUpdated);
@@ -553,11 +677,16 @@ namespace CRM_API.Controllers
         {
             try
             {
+                var claims = _UserService.getPrincipal(Token);
 
+                if (claims == null)
+                {
+                    throw new InvalidOperationException("Invalid Token = " + Token);
+                }
                 var sub = await _LocationService.GetById(Id);
                 if (sub == null) return BadRequest("Le Location  n'existe pas"); //NotFound();
                 await _LocationService.Delete(sub);
-                ;
+                
                 return NoContent();
             }
             catch (Exception ex)
@@ -570,16 +699,24 @@ namespace CRM_API.Controllers
         {
             try
             {
+                var claims = _UserService.getPrincipal(Token);
+
+                if (claims == null)
+                {
+                    throw new InvalidOperationException("Invalid Token = " + Token);
+                }
                 List<Location> empty = new List<Location>();
                 foreach (var item in Ids)
                 {
-                    var sub = await _LocationService.GetById(item);
-                    empty.Add(sub);
-                    if (sub == null) return BadRequest("Le Location  n'existe pas"); //NotFound();
-
+                    var Location = await _LocationService.GetById(item);
+                    empty.Add(Location);
+                    if (Location == null)
+                    {
+                        throw new InvalidOperationException("No Locations Found");
+                    }
                 }
                 await _LocationService.DeleteRange(empty);
-                ;
+                
                 return NoContent();
             }
             catch (Exception ex)

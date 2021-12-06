@@ -87,8 +87,16 @@ namespace CRM_API.Controllers
             User.CreatedOn = DateTime.UtcNow;
             var Locality1 = await _LocalityService.GetById(SaveUserResource.IdLocality1);
             var Locality2 = await _LocalityService.GetById(SaveUserResource.IdLocality2);
+                if(Locality1 == null)
+                {
+                    throw new InvalidOperationException("IdLocality1 is not correct");
+                }
+                if (Locality2 == null)
+                {
+                    throw new InvalidOperationException("IdLocality2 is not correct");
+                }
 
-            User.NameLocality1 = Locality1.Name;
+                User.NameLocality1 = Locality1.Name;
        
             User.IdLocality1 = Locality1.IdLocality;
             User.NameLocality2 = Locality2.Name;

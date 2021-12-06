@@ -41,7 +41,7 @@ namespace CRM_API.Controllers
             Locality.UpdatedBy = 0;
             Locality.CreatedBy = 0;
             var Parent = await _LocalityService.GetByIdActif(SaveLocalityResource.IdParent);
-            if (SaveLocalityResource.IdParent!=null)
+            if (Parent!=null )
             {
                 Locality.IdParent = SaveLocalityResource.IdParent;
                

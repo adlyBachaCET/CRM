@@ -54,19 +54,22 @@ namespace CRM.TEST
         #endregion
 
         [Fact]
-        public async Task Test1()
+        public async Task CreateDoctorTest()
         {
             var Docotrs = SaveDoctorDoctor();
             //Arrange
             string Token = "";
             SaveDoctorResource SaveDoctorResource = Docotrs[0];
-
+           
             mock.Setup(p => p.CreateDoctor(Token, SaveDoctorResource));
             //Assert
+           
             var CreatedDoctor = await DoctorController.CreateDoctor(Token, SaveDoctorResource);
-
+        
             //Assert
-         }
+            var result = CreatedDoctor.Result;
+            Assert.IsType<CreatedAtRouteResult>(result);
+        }
         private List<SaveDoctorResource> SaveDoctorDoctor()
         {    
             SaveInfoResource Info1 = new SaveInfoResource();
